@@ -6,8 +6,9 @@ Usage examples of the adapters available here:
 
 Database
 --------
+This adapter uses a database backend to store session data:
 
-``php
+```php
 
 $di->set('session', function() {
 
