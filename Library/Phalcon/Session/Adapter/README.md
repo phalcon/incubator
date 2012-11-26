@@ -16,7 +16,7 @@ $di->set('session', function() {
 	$connection = new \Phalcon\Db\Adapter\Pdo\Mysql(array(
 	    "host" => "localhost",
 	    "username" => "root",
-	    "password" => "hea101",
+	    "password" => "secret",
 	    "dbname" => "test"
 	));
 
@@ -26,6 +26,20 @@ $di->set('session', function() {
 	));
 
 	$session->start();
+
+	return $session;
 });
 
+```
+
+This adapter uses the following table to store the data:
+
+```sql
+ CREATE TABLE `session_data` (
+  `session_id` varchar(35) NOT NULL,
+  `data` text NOT NULL,
+  `created_at` int(15) unsigned NOT NULL,
+  `modified_at` int(15) unsigned DEFAULT NULL,
+  PRIMARY KEY (`session_id`)
+)
 ```
