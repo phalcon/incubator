@@ -20,6 +20,7 @@ To be implemented:
 
 * Sluggable - populates slug field based on the value of title field.
 * Paranoid - lazy delete an entry by setting a deleted flag. Flag will be considered by all selects.
+
 ...
 
 Defining a behavior
