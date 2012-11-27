@@ -21,6 +21,10 @@ class Database extends Backend implements BackendInterface
 			throw new Exception("Parameter 'db' is required");
 		}
 
+		if (!isset($options['table'])) {
+			throw new Exception("Parameter 'table' is required");
+		}
+
 		parent::__construct($frontend, $options);
 	}
 

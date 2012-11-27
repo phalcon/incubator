@@ -24,27 +24,23 @@ use \Phalcon\Session\Adapter,
 	\Phalcon\Session\AdapterInterface;
 
 /**
- * Phalcon\Session\Adapter\Database
+ * Phalcon\Session\Adapter\Mongo
  *
- * Database adapter for Phalcon\Session
+ * Mongo adapter for Phalcon\Session
  */
-class Database extends Adapter implements AdapterInterface
+class Mongo extends Adapter implements AdapterInterface
 {
 
 	/**
-	 * Phalcon\Session\Adapter\Database constructor
+	 * Phalcon\Session\Adapter\Mongo constructor
 	 *
 	 * @param array $options
 	 */
 	public function __construct($options=null)
 	{
 
-		if(!isset($options['db'])){
-			throw new Exception("The parameter 'db' is required");
-		}
-
-		if(!isset($options['table'])){
-			throw new Exception("The parameter 'table' is required");
+		if(!isset($options['collection'])){
+			throw new Exception("The parameter 'collection' is required");
 		}
 
 		session_set_save_handler(
@@ -79,10 +75,13 @@ class Database extends Adapter implements AdapterInterface
 	public function read($sessionId)
 	{
 		$options = $this->getOptions();
-		$sessionData = $options['db']->fetchOne("SELECT * FROM ".$options['table']." WHERE session_id = '".$sessionId."'");
-		if ($sessionData) {
+
+		$sessionData = $options['collection']->findOne(array('session_id' => $sessionId));
+		if(is_array($sessionData)){
 			return $sessionData['data'];
 		}
+
+		return null;
 	}
 
 	/**
@@ -94,12 +93,16 @@ class Database extends Adapter implements AdapterInterface
 	public function write($sessionId, $data)
 	{
 		$options = $this->getOptions();
-		$exists = $options['db']->fetchOne("SELECT COUNT(*) FROM ".$options['table']." WHERE session_id = '".$sessionId."'");
-		if ($exists[0]) {
-			$options['db']->execute("UPDATE ".$options['table']." SET data = '".$data."', modified_at = ".time()." WHERE session_id = '".$sessionId."'");
+
+		$sessionData = $options['collection']->findOne(array('session_id' => $sessionId));
+		if(is_array($sessionData)){
+			$sessionData['data'] = $data;
 		} else {
-			$options['db']->execute("INSERT INTO ".$options['table']." VALUES ('".$sessionId."', '".$data."', ".time().", 0)");
+			$sessionData = array('session_id' => $sessionId, 'data' => $data);
 		}
+
+		$options['collection']->save($sessionData);
+
 	}
 
 	/**
@@ -109,7 +112,10 @@ class Database extends Adapter implements AdapterInterface
 	public function destroy()
 	{
 		$options = $this->getOptions();
-		$options['db']->execute("DELETE FROM ".$options['table']." WHERE session_id = '".session_id()."'");
+		$sessionData = $options['collection']->findOne(array('session_id' => session_id()));
+		if(is_array($sessionData)){
+			$options['collection']->remove($sessionData);
+		}
 	}
 
 	/**

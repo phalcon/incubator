@@ -43,3 +43,26 @@ This adapter uses the following table to store the data:
   PRIMARY KEY (`session_id`)
 )
 ```
+
+Mongo
+-----
+This adapter uses a Mongo database backend to store session data:
+
+```php
+
+$di->set('session', function() {
+
+	//Create a connection to mongo
+	$mongo = new Mongo();
+
+	//Passing a collection to the adapter
+	$session = new Phalcon\Session\Adapter\Mongo(array(
+	    'collection' => $mongo->test->session_data
+	));
+
+	$session->start();
+
+	return $session;
+});
+
+```
