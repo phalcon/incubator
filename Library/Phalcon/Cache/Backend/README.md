@@ -16,8 +16,8 @@ $di->set('cache', function() {
 	$connection = new \Phalcon\Db\Adapter\Pdo\Mysql(array(
 	    "host" => "localhost",
 	    "username" => "root",
-	    "password" => "hea101",
-	    "dbname" => "test"
+	    "password" => "secret",
+	    "dbname" => "cache_db"
 	));
 
 	//Create a Data frontend and set a default lifetime to 1 hour

@@ -1,6 +1,6 @@
 
 Phalcon\Mvc\Model\Behavior
-=======================
+==========================
 
 Disclaimer
 ----------
@@ -30,7 +30,8 @@ The simple way, following the naming convention:
 
 ```php
 
-class Robots extends \Phalcon\Mvc\Model\Behavior\ActAs {
+class Robots extends \Phalcon\Mvc\Model\Behavior\ActAs
+{
 
 	protected $_actAs = array('timestampable');
 
@@ -47,7 +48,8 @@ Example with using options:
 
 ```php
 
-class Robots extends \Phalcon\Mvc\Model\Behavior\ActAs {
+class Robots extends \Phalcon\Mvc\Model\Behavior\ActAs
+{
 
 	protected $_actAs = array(
 		'timestampable' => array(
