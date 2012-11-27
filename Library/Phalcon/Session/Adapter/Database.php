@@ -85,6 +85,12 @@ class Database extends Adapter implements AdapterInterface
 		}
 	}
 
+	/**
+	 * Writes the data to the table
+	 *
+	 * @param string $sessionId
+	 * @param string $data
+	 */
 	public function write($sessionId, $data)
 	{
 		$options = $this->getOptions();
@@ -96,12 +102,21 @@ class Database extends Adapter implements AdapterInterface
 		}
 	}
 
-	public function destroy()
+	/**
+	 * Destroyes the session
+	 *
+	 * @param string $sessionId
+	 */
+	public function destroy($sessionId)
 	{
 		$options = $this->getOptions();
 		$options['db']->execute("DELETE FROM ".$options['table']." WHERE session_id = '".$sessionId."'");
 	}
 
+	/**
+	 * Performs garbage-collection on the session table
+	 *
+	 */
 	public function gc()
 	{
 

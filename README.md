@@ -28,3 +28,7 @@ $loader->registerNamespaces(array(
 $loader->register();
 
 ```
+
+Contributions Index
+-------------------
+[Phalcon\Session\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - Database adapter for sessions
