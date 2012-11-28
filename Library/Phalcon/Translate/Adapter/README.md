@@ -55,6 +55,6 @@ $translate = new Phalcon\Translate\Adapter\Gettext(array(
 
 ```php
 echo $translate->_('Hello'); //Bonjour
-echo $translate->_('My name is %name%', array('name' => 'Peter')); //Je m'appelle %name%
+echo $translate->_('My name is %name%', array('name' => 'Peter')); //Je m'appelle Peter
 ```
 
