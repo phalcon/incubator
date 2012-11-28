@@ -13,10 +13,8 @@ You need to manually load the Mustache library before use its engine adapter. Ei
 an autoload function or including the relevant file first can achieve this.
 
 ```php
-
 require "path/to/Mustache/Autoloader.php";
 Mustache_Autoloader::register();
-
 ```
 
 Register the adapter in the view component:

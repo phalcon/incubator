@@ -66,3 +66,24 @@ $di->set('session', function() {
 });
 
 ```
+
+Redis
+-----
+
+This adapter uses a [Redis](http://redis.io) backend to store session data:
+
+```php
+
+$di->set('session', function() {
+
+	$session = new Phalcon\Session\Adapter\Redis(array(
+		'path' => "tcp://127.0.0.1:6379?weight=1"
+	));
+
+	$session->start();
+
+	return $session;
+});
+
+```
+

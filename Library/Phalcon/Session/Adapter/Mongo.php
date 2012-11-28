@@ -21,7 +21,8 @@
 namespace Phalcon\Session\Adapter;
 
 use \Phalcon\Session\Adapter,
-	\Phalcon\Session\AdapterInterface;
+	\Phalcon\Session\AdapterInterface,
+	\Phalcon\Session\Exception;
 
 /**
  * Phalcon\Session\Adapter\Mongo

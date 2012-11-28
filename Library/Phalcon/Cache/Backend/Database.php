@@ -11,11 +11,12 @@ class Database extends Backend implements BackendInterface
 {
 
 	/**
-	 * Phalcon\Cache\Backend\Constructor
+	 * Phalcon\Cache\Backend\Database constructor
 	 *
-	 * @param Phalcon\Backend\
+	 * @param Phalcon\Cache\FrontendInterface $frontend
+	 * @param array $options
 	 */
-	public function __construct($frontend, $options=null)
+	public function __construct($frontend, $options=array())
 	{
 		if (!isset($options['db'])) {
 			throw new Exception("Parameter 'db' is required");
