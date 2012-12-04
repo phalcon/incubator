@@ -1,4 +1,5 @@
 <?php
+
 /**
  * HandlerSocket session handler
  *
@@ -57,10 +58,13 @@ class HandlerSocket extends Adapter implements AdapterInterface
         'cookie_path' => '/',
         'cookie_domain' => '',
         'lifetime' => 3600,
-        'server' => array('host' => self::DEFAULT_HOST,
+        'server' => array(
+            'host' => self::DEFAULT_HOST,
             'port' => self::DEFAULT_PORT,
             'dbname' => self::DEFAULT_DBNAME,
-            'dbtable' => self::DEFAULT_DBTABLE));
+            'dbtable' => self::DEFAULT_DBTABLE
+        )
+    );
 
     /**
      * HandlerSocket object
@@ -170,8 +174,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
                     'dbtable' => self::DEFAULT_DBTABLE);
         }
 
-        if (!extension_loaded('handlersocket'))
-        {
+        if (!extension_loaded('handlersocket')) {
             throw new Exception(
                 'The handlersocket extension must be loaded for using session !');
         }

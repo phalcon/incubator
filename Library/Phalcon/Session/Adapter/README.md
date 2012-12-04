@@ -87,3 +87,36 @@ $di->set('session', function() {
 
 ```
 
+HandlerSocket
+-------------
+
+This adapter uses the MySQL's plugin HandlerSocket. HandlerSocket is a NoSQL plugin for MySQL. It works as a daemon inside the
+mysqld process, accept tcp connections, and execute requests from clients. HandlerSocket does not support SQL queries.
+Instead, it supports simple CRUD operations on tables.
+
+```sql
+CREATE TABLE `php_session` (
+ 	`id`       varchar(32) NOT NULL DEFAULT '',
+ 	`modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+ 	`data`     text,
+ 	PRIMARY KEY (`id`),
+ 	KEY `modified` (`modified`)
+ ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8;
+ ```
+
+ ```php
+
+$di->set('session', function() {
+
+	$session = new Phalcon\Session\Adapter\HandlerSocket(array(
+		'path' => "tcp://127.0.0.1:6379?weight=1"
+	));
+
+	$session->start();
+
+	return $session;
+});
+
+```
+
+The extension handlersocket (http://code.google.com/p/php-handlersocket/) is required to use this adapter.
