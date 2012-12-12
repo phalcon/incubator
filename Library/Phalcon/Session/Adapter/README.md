@@ -1,4 +1,3 @@
-
 Phalcon\Session\Adapter
 =======================
 
@@ -109,7 +108,15 @@ CREATE TABLE `php_session` (
 $di->set('session', function() {
 
 	$session = new Phalcon\Session\Adapter\HandlerSocket(array(
-		'path' => "tcp://127.0.0.1:6379?weight=1"
+	        'cookie_path' => '/',
+	        'cookie_domain' => '',
+	        'lifetime' => 3600,
+	        'server' => array(
+				'host' => 'localhost',
+				'port' => 9999,
+				'dbname' => 'session',
+				'dbtable' => 'php_session'
+			)
 	));
 
 	$session->start();
