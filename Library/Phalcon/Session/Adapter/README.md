@@ -69,7 +69,8 @@ $di->set('session', function() {
 Redis
 -----
 
-This adapter uses a [Redis](http://redis.io) backend to store session data:
+This adapter uses a [Redis](http://redis.io) backend to store session data.
+You would need a [phpredis](https://github.com/nicolasff/phpredis) extension installed to use it:
 
 ```php
 
