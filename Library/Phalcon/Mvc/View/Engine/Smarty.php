@@ -23,9 +23,9 @@ class Smarty extends Engine implements EngineInterface
      * @param \Phalcon\Mvc\ViewInterface $view
      * @param \Phalcon\DiInterface $di
      */
-    public function __construct($view,  $di)
+    public function __construct($view,  $di=null)
     {
-        $this->_smarty = new Smarty();
+        $this->_smarty = new \Smarty();
         $this->_smarty->template_dir = '.';
         $this->_smarty->compile_dir = SMARTY_DIR . 'templates_c';
         $this->_smarty->config_dir = SMARTY_DIR . 'configs';
@@ -41,7 +41,7 @@ class Smarty extends Engine implements EngineInterface
      * @param string $path
      * @param array $params
      */
-    public function render($path, $params)
+    public function render($path, $params, $mustClean=null)
     {
         if (!isset($params['content'])) {
             $params['content'] = $this->_view->getContent();
