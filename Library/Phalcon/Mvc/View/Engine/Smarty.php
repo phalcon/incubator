@@ -51,5 +51,16 @@ class Smarty extends Engine implements EngineInterface
         }
         $this->_view->setContent($this->_smarty->fetch($path));
     }
+    
+	/**
+	 * Set Smarty's options
+	 *
+	 * @param array $options
+	 */
+	public function setOptions(array $options) {
+		foreach ($options as $k => $v) {
+			 $this->_smarty->$k = $v;
+		}
+	}
 
 }
