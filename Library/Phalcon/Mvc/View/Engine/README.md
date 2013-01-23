@@ -27,7 +27,7 @@ $di->set('view', function() {
 
     $view->setViewsDir('../app/views/');
 
-    $this->view->registerEngines(
+    $view->registerEngines(
 		array(".mhtml" => 'Phalcon\Mvc\View\Engine\Mustache')
 	);
 
@@ -55,7 +55,7 @@ $di->set('view', function() {
 
     $view->setViewsDir('../app/views/');
 
-    $this->view->registerEngines(
+    $view->registerEngines(
 		array(".twig" => 'Phalcon\Mvc\View\Engine\Twig')
 	);
 
@@ -84,7 +84,7 @@ $di->set('view', function() {
 
     $view->setViewsDir('../app/views/');
 
-    $this->view->registerEngines(
+    $view->registerEngines(
 		array(".tpl" => 'Phalcon\Mvc\View\Engine\Smarty')
 	);
 
