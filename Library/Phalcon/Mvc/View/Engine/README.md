@@ -91,3 +91,38 @@ $di->set('view', function() {
     return $view;
 });
 ```
+
+Smarty can be configured to alter its default behavior, the following example explain how to do that:
+
+```php
+$di->set('view', function() use ($config) {
+
+	$view = new \Phalcon\Mvc\View();
+	$view->setViewsDir('../app/views/');
+	
+	$view->registerEngines(
+		array('.html' => function($view, $di) {
+		
+				$smarty = new \Phalcon\Mvc\View\Engine\Smarty($view, $di);
+
+				$smarty->setOptions(array(
+					'template_dir'		=> $view->getViewsDir(),
+					'compile_dir'		=> '../app/viewscompiled',
+					'error_reporting'	=> error_reporting() ^ E_NOTICE,
+					'escape_html'		=> true,
+					'_file_perms'		=> 0666,
+					'_dir_perms'		=> 0777,
+					'force_compile'		=> false,
+					'compile_check'		=> true,
+					'caching'			=> false,
+					'debugging'			=> true,
+				));
+
+				return $smarty;
+			}
+		)
+	);
+
+	return $view;
+});
+```
