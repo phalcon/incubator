@@ -25,7 +25,7 @@ class Twig extends Engine implements EngineInterface
     {
         $loader = new Twig_Loader_Filesystem($view->getViewsDir());
         $this->_twig = new Twig_Environment($loader);
-        $this->_registryFunctions()
+        $this->_registryFunctions();
         parent::__construct($view, $di);
     }
 
@@ -109,8 +109,9 @@ class Twig extends Engine implements EngineInterface
      *
      * @param string $path
      * @param array $params
+     * @param boolean $mustClean
      */
-    public function render($path, $params)
+    public function render($path, $params, $mustClean=false)
     {
         $view = $this->_view;
         if (!isset($params['content'])) {
@@ -122,7 +123,13 @@ class Twig extends Engine implements EngineInterface
         }
 
         $relativePath = str_replace($view->getViewsDir(), '', $path);
-        $this->_view->setContent($this->_twig->render($relativePath, $params));
+
+        $content = $this->_twig->render($relativePath, $params);
+        if ($mustClean) {
+            $this->_view->setContent($content);
+        } else {
+            echo $content;
+        }
     }
 
 }

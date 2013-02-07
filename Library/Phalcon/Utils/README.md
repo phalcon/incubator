@@ -1,15 +1,15 @@
 
 Phalcon\Utils
-=========================
+=============
 
 Utility functions:
 
 Slug
--------
+----
 Creates a slug for the passed string taking into account international characters.
 
-Examples:
--------
+Examples
+--------
 ```
 use \Phalcon\Utils\Slug as PhSlug;
 
@@ -22,6 +22,6 @@ returns: perche-l-erba-e-verde
 
 The extension [iconv](http://php.net/manual/en/book.iconv.php) must be installed in PHP.
 
-Credits:
+Credits
 -------
 Matteo Spinelli (http://cubiq.org) [php-clean-url-generator](http://cubiq.org/the-perfect-php-clean-url-generator)
