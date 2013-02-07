@@ -25,7 +25,7 @@ class Twig extends Engine implements EngineInterface
     {
         $loader = new Twig_Loader_Filesystem($view->getViewsDir());
         $this->_twig = new Twig_Environment($loader);
-        $this->_registryFunctions();
+        $this->_registryFunctions($view);
         parent::__construct($view, $di);
     }
 
