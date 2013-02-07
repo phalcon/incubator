@@ -36,6 +36,10 @@ class Twig extends Engine implements EngineInterface
      */
     private function _registryFunctions($view)
     {
+        $options = array(
+            'is_safe' => array('html')
+        );
+
         $functions = array(
              new \Twig_SimpleFunction('content', function() use ($view) {
                 return $view->getContent();
@@ -96,7 +100,10 @@ class Twig extends Engine implements EngineInterface
             }),
             new \Twig_SimpleFunction('friendlyTitle', function($text, $separator=null, $lowercase=null) {
                 return \Phalcon\Tag::friendlyTitle($text, $separator, $lowercase);
-            })
+            }),
+            new \Twig_SimpleFunction('getDocType', function() {
+                return \Phalcon\Tag::getDocType();
+            }, $options)
         );
 
         foreach ($functions as $function) {
