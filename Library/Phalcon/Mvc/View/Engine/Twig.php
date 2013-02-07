@@ -34,73 +34,77 @@ class Twig extends Engine implements EngineInterface
      *
      * @param \Phalcon\Mvc\ViewInterface $view
      */
-    private function _registryFunctions($view)
+    private function registryFunction($view)
     {
+
         $options = array(
             'is_safe' => array('html')
         );
 
         $functions = array(
-             new \Twig_SimpleFunction('content', function() use ($view) {
+            new \Twig_SimpleFunction('content', function() use ($view) {
                 return $view->getContent();
-            }),
+            }, $options),
+            new \Twig_SimpleFunction('partial', function($partialPath) use ($view) {
+                return $view->partial($partialPath);
+            }, $options),
             new \Twig_SimpleFunction('linkTo', function($parameters, $text = null) {
                 return \Phalcon\Tag::linkTo($parameters, $text);
-            }),
+            }, $options),
             new \Twig_SimpleFunction('textField', function($parameters) {
                 return \Phalcon\Tag::textField($parameters);
-            }),
+            }, $options),
             new \Twig_SimpleFunction('passwordField', function($parameters) {
                 return \Phalcon\Tag::passwordField($parameters);
-            }),
+            }, $options),
             new \Twig_SimpleFunction('hiddenField', function($parameters) {
                 return \Phalcon\Tag::hiddenField($parameters);
-            }),
+            }, $options),
             new \Twig_SimpleFunction('fileField', function($parameters) {
                 return \Phalcon\Tag::fileField($parameters);
-            }),
+            }, $options),
             new \Twig_SimpleFunction('checkField', function($parameters) {
                 return \Phalcon\Tag::checkField($parameters);
-            }),
+            }, $options),
             new \Twig_SimpleFunction('radioField', function($parameters) {
                 return \Phalcon\Tag::radioField($parameters);
-            }),
+            }, $options),
             new \Twig_SimpleFunction('submitButton', function($parameters) {
                 return \Phalcon\Tag::submitButton($parameters);
-            }),
-            new \Twig_SimpleFunction('selectStatic', function($parameters, $data=null) {
+            }, $options),
+            new \Twig_SimpleFunction('selectStatic', function($parameters, $data = array()) {
                 return \Phalcon\Tag::selectStatic($parameters, $data);
-            }),
-            new \Twig_SimpleFunction('select', function($parameters, $data=null) {
+            }, $options),
+            new \Twig_SimpleFunction('select', function($parameters, $data = array()) {
                 return \Phalcon\Tag::select($parameters, $data);
-            }),
+            }, $options),
             new \Twig_SimpleFunction('textArea', function($parameters) {
                 return \Phalcon\Tag::textArea($parameters);
-            }),
-            new \Twig_SimpleFunction('form', function($parameters=null) {
+            }, $options),
+            new \Twig_SimpleFunction('form', function($parameters = array()) {
                 return \Phalcon\Tag::form($parameters);
-            }),
+            }, $options),
             new \Twig_SimpleFunction('endForm', function() {
                 return \Phalcon\Tag::endForm();
-            }),
+            }, $options),
             new \Twig_SimpleFunction('getTitle', function() {
                 return \Phalcon\Tag::getTitle();
-            }),
+            }, $options),
             new \Twig_SimpleFunction('getTitle', function() {
                 return \Phalcon\Tag::getTitle();
-            }),
-            new \Twig_SimpleFunction('stylesheetLink', function($parameters=null, $local=null) {
+            }, $options),
+            new \Twig_SimpleFunction('stylesheetLink', function($parameters = null, $local = true) {
                 return \Phalcon\Tag::stylesheetLink($parameters, $local);
-            }),
-            new \Twig_SimpleFunction('javascriptInclude', function($parameters=null, $local=null) {
+            }, $options),
+            new \Twig_SimpleFunction('javascriptInclude', function($parameters = null, $local = true) {
                 return \Phalcon\Tag::javascriptInclude($parameters, $local);
-            }),
+            }, $options),
             new \Twig_SimpleFunction('image', function($parameters) {
                 return \Phalcon\Tag::image($parameters);
-            }),
-            new \Twig_SimpleFunction('friendlyTitle', function($text, $separator=null, $lowercase=null) {
+            }, $options),
+            new \Twig_SimpleFunction('friendlyTitle', function($text, $separator = null, $lowercase = true) {
                 return \Phalcon\Tag::friendlyTitle($text, $separator, $lowercase);
-            }),
+            }, $options),
             new \Twig_SimpleFunction('getDocType', function() {
                 return \Phalcon\Tag::getDocType();
             }, $options)
