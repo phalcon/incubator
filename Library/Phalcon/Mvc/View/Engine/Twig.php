@@ -21,11 +21,11 @@ class Twig extends Engine implements EngineInterface
      * @param \Phalcon\Mvc\ViewInterface $view
      * @param \Phalcon\DiInterface $di
      */
-    public function __construct($view,  $di)
+    public function __construct($view,  $di = null)
     {
-        $loader = new Twig_Loader_Filesystem($view->getViewsDir());
-        $this->_twig = new Twig_Environment($loader);
-        $this->_registryFunctions($view);
+        $loader = new \Twig_Loader_Filesystem($view->getViewsDir());
+        $this->_twig = new \Twig_Environment($loader);
+        $this->registryFunctions($view);
         parent::__construct($view, $di);
     }
 
@@ -34,7 +34,7 @@ class Twig extends Engine implements EngineInterface
      *
      * @param \Phalcon\Mvc\ViewInterface $view
      */
-    private function registryFunction($view)
+    private function registryFunctions($view)
     {
 
         $options = array(
@@ -143,4 +143,8 @@ class Twig extends Engine implements EngineInterface
         }
     }
 
+    public function getTwig()
+    {
+        return $this->_twig;
+    }
 }
