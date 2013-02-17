@@ -19,11 +19,11 @@ class Database extends Backend implements BackendInterface
 	public function __construct($frontend, $options=array())
 	{
 		if (!isset($options['db'])) {
-			throw new Exception("Parameter 'db' is required");
+			throw new \Phalcon\Cache\Exception("Parameter 'db' is required");
 		}
 
 		if (!isset($options['table'])) {
-			throw new Exception("Parameter 'table' is required");
+			throw new \Phalcon\Cache\Exception("Parameter 'table' is required");
 		}
 
 		parent::__construct($frontend, $options);
@@ -53,7 +53,7 @@ class Database extends Backend implements BackendInterface
 		}
 
 		//Remove the cache if expired
-		if ($cache['lifetime'] < (time()-$lifetime)) {
+		if ($cache['lifetime'] < (time() - $lifetime)) {
 			$options['db']->execute("DELETE FROM ".$options['table']." WHERE key_name = ?", array($keyName));
 			return null;
 		}
@@ -81,7 +81,7 @@ class Database extends Backend implements BackendInterface
 		}
 
 		if (!$lastKey) {
-			throw new Exception('The cache must be started first');
+			throw new \Phalcon\Cache\Exception('The cache must be started first');
 		}
 
 		$options = $this->getOptions();
@@ -137,13 +137,13 @@ class Database extends Backend implements BackendInterface
 
 		$options = $this->getOptions();
 
-		$sql = "SELECT COUNT(*) AS rowcount FROM ".$options['table']." WHERE key_name = ?";
+		$sql = "SELECT COUNT(*) AS rowcount FROM " . $options['table'] . " WHERE key_name = ?";
 		$row = $options['db']->fetchOne($sql, Db::FETCH_ASSOC, array($keyName));
 		if (!$row['rowcount']) {
 			return false;
 		}
 
-		return $options['db']->execute("DELETE FROM ".$options['table']." WHERE key_name = ?", array($keyName));
+		return $options['db']->execute("DELETE FROM " . $options['table'] . " WHERE key_name = ?", array($keyName));
 	}
 
 	/**
@@ -157,10 +157,10 @@ class Database extends Backend implements BackendInterface
 		$options = $this->getOptions();
 
 		if ($prefix!=null) {
-			$sql = "SELECT key_name FROM ".$options['table']." WHERE key_name LIKE ? ORDER BY lifetime";
+			$sql = "SELECT key_name FROM " . $options['table'] . " WHERE key_name LIKE ? ORDER BY lifetime";
 			$caches = $options['db']->query($sql, array($prefix));
 		} else {
-			$sql = "SELECT key_name FROM ".$options['table']." ORDER BY lifetime";
+			$sql = "SELECT key_name FROM " . $options['table'] . " ORDER BY lifetime";
 			$caches = $options['db']->query($sql);
 		}
 
