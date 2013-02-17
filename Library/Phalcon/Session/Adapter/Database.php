@@ -40,11 +40,11 @@ class Database extends Adapter implements AdapterInterface
 	public function __construct($options=null)
 	{
 
-		if(!isset($options['db'])){
+		if (!isset($options['db'])) {
 			throw new Exception("The parameter 'db' is required");
 		}
 
-		if(!isset($options['table'])){
+		if (!isset($options['table'])) {
 			throw new Exception("The parameter 'table' is required");
 		}
 

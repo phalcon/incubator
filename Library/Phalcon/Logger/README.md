@@ -1,4 +1,34 @@
+Phalcon\Logger\Adapter
+======================
 
+Usage examples of the adapters available here:
+
+Database
+--------
+Adapter to store logs in a database table:
+
+```php
+
+$di->set('logger', function() {
+
+	$connection = new \Phalcon\Db\Adapter\Pdo\Mysql(array(
+		"host" => "localhost",
+		"username" => "root",
+		"password" => "secret",
+		"dbname" => "audit"
+	));
+
+	$logger = new Phalcon\Logger\Adapter\Database('errors', array(
+		'db' => $connection,
+		'table' => 'logs'
+	));
+
+	return $logger;
+});
+
+```
+
+The following table is used to store the logs:
 
 ```sql
 CREATE TABLE `logs` (
@@ -10,3 +40,4 @@ CREATE TABLE `logs` (
   PRIMARY KEY (`id`)
 )
 ```
+
