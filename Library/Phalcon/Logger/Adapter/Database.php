@@ -2,6 +2,8 @@
 
 namespace Phalcon\Logger\Adapter;
 
+use \Phalcon\Logger\Exception;
+
 /**
  * Phalcon\Logger\Adapter\Database
  *
@@ -28,11 +30,11 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
 	public function __construct($name, $options=array()){
 
 		if (!isset($options['db'])) {
-			throw new \Phalcon\Logger\Exception("Parameter 'db' is required");
+			throw new Exception("Parameter 'db' is required");
 		}
 
 		if (!isset($options['table'])) {
-			throw new \Phalcon\Logger\Exception("Parameter 'table' is required");
+			throw new Exception("Parameter 'table' is required");
 		}
 
 		$this->_name = $name;

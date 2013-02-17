@@ -19,11 +19,11 @@ class Database extends Backend implements BackendInterface
 	public function __construct($frontend, $options=array())
 	{
 		if (!isset($options['db'])) {
-			throw new \Phalcon\Cache\Exception("Parameter 'db' is required");
+			throw new Exception("Parameter 'db' is required");
 		}
 
 		if (!isset($options['table'])) {
-			throw new \Phalcon\Cache\Exception("Parameter 'table' is required");
+			throw new Exception("Parameter 'table' is required");
 		}
 
 		parent::__construct($frontend, $options);
@@ -81,7 +81,7 @@ class Database extends Backend implements BackendInterface
 		}
 
 		if (!$lastKey) {
-			throw new \Phalcon\Cache\Exception('The cache must be started first');
+			throw new Exception('The cache must be started first');
 		}
 
 		$options = $this->getOptions();

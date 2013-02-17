@@ -1,5 +1,5 @@
 Phalcon\Db\Adapter
-=================
+==================
 
 Usage examples of the adapters available here:
 
