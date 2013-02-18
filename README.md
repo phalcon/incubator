@@ -11,6 +11,40 @@ extend the framework more.
 
 The code in this repository is written in PHP.
 
+## Installation
+
+### Installing via Composer
+
+Install composer in a common location or in your project:
+
+```bash
+curl -s http://getcomposer.org/installer | php
+```
+
+Create the composer.json file as follows:
+
+```json
+{
+    "require": {
+        "phalcon/incubator": "1.*"
+    }
+}
+```
+
+Run the composer installer:
+
+```bash
+php composer.phar install
+```
+
+### Installing via Composer
+
+Just clone the repository in a common location or inside your project:
+
+```
+git clone https://github.com/phalcon/incubator.git
+```
+
 ## Autoloading from the Incubator
 
 Add or register the following namespace strategy to your Phalcon\Loader in order
