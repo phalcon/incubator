@@ -37,7 +37,7 @@ Run the composer installer:
 php composer.phar install
 ```
 
-### Installing via Composer
+### Installing via Github
 
 Just clone the repository in a common location or inside your project:
 
@@ -59,7 +59,6 @@ $loader->registerNamespaces(array(
 ));
 
 $loader->register();
-
 ```
 
 ## Contributions Index
