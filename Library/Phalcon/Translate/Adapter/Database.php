@@ -27,8 +27,10 @@ use Phalcon\Translate\Adapter,
 class Database extends Adapter implements AdapterInterface
 {
 
+	protected $_options;
+
 	/**
-	 * Phalcon\Translate\Adapter\Gettext constructor
+	 * Phalcon\Translate\Adapter\Database constructor
 	 *
 	 * @param array $options
 	 */
@@ -42,6 +44,8 @@ class Database extends Adapter implements AdapterInterface
 		if (!isset($options['table'])) {
 			throw new Exception("Parameter 'table' is required");
 		}
+
+		$this->_options = $options;
 	}
 
 	/**
@@ -56,22 +60,22 @@ class Database extends Adapter implements AdapterInterface
 
 		$options = $this->_options;
 
-		$translation = $options['db']->fetchOne("SELECT trans FROM " . $options['table'] . " WHERE key_name = ?", null, array($index));
+		$translation = $options['db']->fetchOne("SELECT value FROM " . $options['table'] . " WHERE key_name = ?", null, array($index));
 		if (!$translation) {
-			return $translation;
+			return $index;
 		}
 
 		if ($placeholders == null) {
-			return $translation['trans'];
+			return $translation['value'];
 		}
 
 		if (is_array($placeholders)) {
 			foreach ($placeholders as $key => $value) {
-				$translation['trans'] = str_replace('%' . $key . '%', $value, $translation['trans']);
+				$translation['value'] = str_replace('%' . $key . '%', $value, $translation['value']);
 			}
 		}
 
-		return $translation['trans'];
+		return $translation['value'];
 	}
 
 	/**

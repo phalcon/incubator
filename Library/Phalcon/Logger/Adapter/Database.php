@@ -27,7 +27,8 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
 	 * @param string $name
 	 * @param array $options
 	 */
-	public function __construct($name, $options=array()){
+	public function __construct($name, $options=array())
+	{
 
 		if (!isset($options['db'])) {
 			throw new Exception("Parameter 'db' is required");
@@ -46,7 +47,8 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
 	 *
 	 * @return Phalcon\Logger\Formatter\Line
 	 */
-	public function getFormatter(){
+	public function getFormatter()
+	{
 
 	}
 
@@ -57,7 +59,8 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
 	 * @param int $type
 	 * @param int $time
 	 */
-	public function logInternal($message, $type, $time){
+	public function logInternal($message, $type, $time)
+	{
 		return $this->_options['db']->execute("INSERT INTO " . $this->_options['table'] . " VALUES (null, ?, ?, ?, ?)", array(
 			$this->_name,
 			$type,
@@ -71,7 +74,8 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
  	 *
  	 * @return boolean
  	 */
-	public function close(){
+	public function close()
+	{
 		$this->_options['db']->close();
 	}
 
