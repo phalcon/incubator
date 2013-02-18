@@ -80,7 +80,7 @@ class Database extends Adapter implements AdapterInterface
 	public function read($sessionId)
 	{
 		$options = $this->getOptions();
-		$sessionData = $options['db']->fetchOne("SELECT * FROM ".$options['table']." WHERE session_id = '".$sessionId."'");
+		$sessionData = $options['db']->fetchOne("SELECT * FROM " . $options['table'] . " WHERE session_id = '" . $sessionId . "'");
 		if ($sessionData) {
 			return $sessionData['data'];
 		}
@@ -95,11 +95,11 @@ class Database extends Adapter implements AdapterInterface
 	public function write($sessionId, $data)
 	{
 		$options = $this->getOptions();
-		$exists = $options['db']->fetchOne("SELECT COUNT(*) FROM ".$options['table']." WHERE session_id = '".$sessionId."'");
+		$exists = $options['db']->fetchOne("SELECT COUNT(*) FROM " . $options['table'] . " WHERE session_id = '" . $sessionId . "'");
 		if ($exists[0]) {
-			$options['db']->execute("UPDATE ".$options['table']." SET data = '".$data."', modified_at = ".time()." WHERE session_id = '".$sessionId."'");
+			$options['db']->execute("UPDATE " . $options['table'] . " SET data = '" . $data . "', modified_at = " . time() . " WHERE session_id = '" . $sessionId . "'");
 		} else {
-			$options['db']->execute("INSERT INTO ".$options['table']." VALUES ('".$sessionId."', '".$data."', ".time().", 0)");
+			$options['db']->execute("INSERT INTO " . $options['table'] . " VALUES ('" . $sessionId . "', '" . $data . "', " . time() . ", 0)");
 		}
 	}
 
@@ -110,7 +110,7 @@ class Database extends Adapter implements AdapterInterface
 	public function destroy()
 	{
 		$options = $this->getOptions();
-		$options['db']->execute("DELETE FROM ".$options['table']." WHERE session_id = '".session_id()."'");
+		$options['db']->execute("DELETE FROM " . $options['table'] . " WHERE session_id = '".session_id()."'");
 	}
 
 	/**

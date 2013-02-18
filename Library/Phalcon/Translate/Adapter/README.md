@@ -58,3 +58,34 @@ echo $translate->_('Hello'); //Bonjour
 echo $translate->_('My name is %name%', array('name' => 'Peter')); //Je m'appelle Peter
 ```
 
+Database
+--------
+This adapter uses a table to store the translation messages:
+
+```php
+$connection = new \Phalcon\Db\Adapter\Pdo\Mysql(array(
+    "host" => "localhost",
+    "username" => "root",
+    "password" => "secret",
+    "dbname" => "test"
+));
+
+$translate = new Phalcon\Translate\Adapter\Database(array(
+    'db' => $connection,
+    'table' => 'translations'
+));
+```
+
+The following table is required to store the translations:
+
+```php
+CREATE TABLE `translations` (
+  `key_name` varchar(32) NOT NULL,
+  `value` text,
+  PRIMARY KEY (`key_name`)
+)
+```
+
+```php
+echo $translate->_('Hello');
+```
