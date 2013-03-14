@@ -53,10 +53,13 @@ namespace Phalcon\Mvc\Model\Validator
             $field = $this->getOption('field');
             $fieldConfirmation = $this->getOption('field_confirmation');
 
+            $fieldValue = $record->readAttribute($field);
+            $fieldConfirmationValue = $record->readAttribute($fieldConfirmation);
+
             $message = $this->getOption('message') ?: 'Both fields should contain equal values';
 
-            if ($record->$fieldConfirmation) {
-                if ($record->$field !== $record->$fieldConfirmation) {
+            if ($fieldConfirmationValue) {
+                if ($fieldValue !== $fieldConfirmationValue) {
                     $this->appendMessage($message, $field, 'ConfirmationOf');
                     $this->appendMessage($message, $fieldConfirmation, 'ConfirmationOf');
 
