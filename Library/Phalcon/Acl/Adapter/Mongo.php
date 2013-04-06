@@ -28,17 +28,17 @@ use Phalcon\Acl,
 	Phalcon\Acl\Exception;
 
 /**
- * Phalcon\Acl\Adapter\Database
+ * Phalcon\Acl\Adapter\Mongo
  *
- * Manages ACL lists in memory
+ * Manages ACL lists using Mongo Collections
  */
-class Database extends Adapter implements AdapterInterface
+class Mongo extends Adapter implements AdapterInterface
 {
 
 	protected $_options;
 
 	/**
-	 * Phalcon\Acl\Adapter\Database
+	 * Phalcon\Acl\Adapter\Mongo
 	 *
 	 * @param array $options
 	 */
@@ -73,6 +73,17 @@ class Database extends Adapter implements AdapterInterface
 	}
 
 	/**
+	 * Returns a mongo collection
+	 *
+	 * @param string $name
+	 * @return \MongoCollection
+	 */
+	protected function _getCollection($name)
+	{
+		return $this->_options['db']->selectCollection($this->_options[$name]);
+	}
+
+	/**
 	 * Adds a role to the ACL list. Second parameter lets to inherit access data from other existing role
 	 *
 	 * Example:
@@ -90,10 +101,22 @@ class Database extends Adapter implements AdapterInterface
 			$role = new Role($role);
 		}
 
-		$exists = $this->_options['db']->fetchOne('SELECT COUNT(*) FROM ' . $this->_options['roles'] . " WHERE name = ?", null, array($role->getName()));
-		if (!$exists[0]) {
-			$this->_options['db']->execute('INSERT INTO ' . $this->_options['roles'] . " VALUES (?, ?)", array($role->getName(), $role->getDescription()));
-			$this->_options['db']->execute('INSERT INTO ' . $this->_options['accessList'] . " VALUES (?, ?, ?, ?)", array($role->getName(), '*', '*', $this->_defaultAccess));
+		$roles = $this->_getCollection('roles');
+
+		$exists = $roles->count(array('name' => $role->getName()));
+		if (!$exists) {
+
+			$roles->insert(array(
+				'name' => $role->getName(),
+				'description' => $role->getDescription()
+			));
+
+			$this->_getCollection('accessList')->insert(array(
+				'roles_name' => $role->getName(),
+				'resources_name' => '*',
+				'access_name' => '*',
+				'allowed' => $this->_defaultAccess
+			));
 		}
 
 		if ($accessInherits) {
@@ -132,8 +155,8 @@ class Database extends Adapter implements AdapterInterface
 	 */
 	public function isRole($roleName)
 	{
-		$exists = $this->_options['db']->fetchOne('SELECT COUNT(*) FROM ' . $this->_options['roles'] . " WHERE name = ?", null, array($roleName));
-		return (bool) $exists[0];
+		$exists = $this->_getCollection('roles')->count(array('name' => $roleName));
+		return $exists > 0;
 	}
 
 	/**
@@ -144,8 +167,8 @@ class Database extends Adapter implements AdapterInterface
 	 */
 	public function isResource($resourceName)
 	{
-		$exists = $this->_options['db']->fetchOne('SELECT COUNT(*) FROM ' . $this->_options['resources'] . " WHERE name = ?", null, array($resourceName));
-		return (bool) $exists[0];
+		$exists = $this->_getCollection('resources')->count(array('name' => $resourceName));
+		return $exists > 0;
 	}
 
 	/**
@@ -175,9 +198,14 @@ class Database extends Adapter implements AdapterInterface
 			$resource = new Resource($resource);
 		}
 
-		$exists = $this->_options['db']->fetchOne('SELECT COUNT(*) FROM ' . $this->_options['resources'] . " WHERE name = ?", null, array($resource->getName()));
-		if (!$exists[0]) {
-			$this->_options['db']->execute('INSERT INTO ' . $this->_options['resources'] . " VALUES (?, ?)", array($resource->getName(), $resource->getDescription()));
+		$resources = $this->_getCollection('resources');
+
+		$exists = $resources->count(array('name' => $resource->getName()));
+		if (!$exists) {
+			$resources->insert(array(
+				'name' => $resource->getName(),
+				'description' => $resource->getDescription()
+			));
 		}
 
 		if ($accessList) {
@@ -200,20 +228,34 @@ class Database extends Adapter implements AdapterInterface
 			throw new Exception("Resource '" . $resourceName . "' does not exist in ACL");
 		}
 
-		$sql = 'SELECT COUNT(*) FROM ' . $this->_options['resourcesAccesses'] . " WHERE resources_name = ? AND access_name = ?";
+		$resourcesAccesses = $this->_getCollection('resourcesAccesses');
+
 		if (is_array($accessList)) {
 			foreach ($accessList as $accessName) {
-				$exists = $this->_options['db']->fetchOne($sql, null, array($resourceName, $accessName));
-				if (!$exists[0]) {
-					$this->_options['db']->execute('INSERT INTO ' . $this->_options['resourcesAccesses'] . " VALUES (?, ?)", array($resourceName, $accessName));
+				$exists = $resourcesAccesses->count(array(
+					'resources_name' => $resourceName,
+					'access_name' => $accessName
+				));
+				if (!$exists) {
+					$resourcesAccesses->insert(array(
+						'resources_name' => $resourceName,
+						'access_name' => $accessName
+					));
 				}
 			}
 		} else {
-			$exists = $this->_options['db']->fetchOne($sql, null, array($resourceName, $accessList));
-			if (!$exists[0]) {
-				$this->_options['db']->execute('INSERT INTO ' . $this->_options['resourcesAccesses'] . " VALUES (?, ?)", array($resourceName, $accessList));
+			$exists = $resourcesAccesses->count(array(
+				'resources_name' => $resourceName,
+				'access_name' => $accessList
+			));
+			if (!$exists) {
+				$resourcesAccesses->insert(array(
+					'resources_name' => $resourceName,
+					'access_name' => $accessList
+				));
 			}
 		}
+
 		return true;
 	}
 
@@ -225,8 +267,7 @@ class Database extends Adapter implements AdapterInterface
 	public function getResources()
 	{
 		$resources = array();
-		$sql = 'SELECT * FROM resources';
-		foreach ($this->_options['db']->fetchAll($sql, \Phalcon\Db::FETCH_ASSOC) as $row) {
+		foreach ($this->_getCollection('resources')->find() as $row) {
 			$resources[] = new Resource($row['name'], $row['description']);
 		}
 		return $resources;
@@ -240,8 +281,7 @@ class Database extends Adapter implements AdapterInterface
 	public function getRoles()
 	{
 		$roles = array();
-		$sql = 'SELECT * FROM roles';
-		foreach ($this->_options['db']->fetchAll($sql, \Phalcon\Db::FETCH_ASSOC) as $row) {
+		foreach ($this->_getCollection('roles')->find() as $row) {
 			$roles[] = new Role($row['name'], $row['description']);
 		}
 		return $roles;
@@ -273,35 +313,48 @@ class Database extends Adapter implements AdapterInterface
 		/**
 		 * Check if the access is valid in the resource
 		 */
-		$sql = 'SELECT COUNT(*) FROM ' . $this->_options['resourcesAccesses'] . " WHERE resources_name = ? AND access_name = ?";
-		$exists = $this->_options['db']->fetchOne($sql, null, array($resourceName, $accessName));
-		if (!$exists[0]) {
+		$exists = $this->_getCollection('resourcesAccesses')->count(array(
+			'resources_name' => $resourceName,
+			'access_name' => $accessName
+		));
+		if (!$exists) {
 			throw new Exception("Access '" . $accessName . "' does not exist in resource '" . $resourceName . "' in ACL");
 		}
 
-		/**
-		 * Update the access in access_list
-		 */
-		$sql = 'SELECT COUNT(*) FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
-		$exists = $this->_options['db']->fetchOne($sql, null, array($roleName, $resourceName, $accessName));
-		if (!$exists[0]) {
-			$sql = 'INSERT INTO ' . $this->_options['accessList'] . ' VALUES (?, ?, ?, ?)';
-			$params = array($roleName, $resourceName, $accessName, $action);
-		} else {
-			$sql = 'UPDATE ' . $this->_options['accessList'] . ' SET allowed = ? WHERE roles_name = ? AND resources_name = ? AND access_name = ?';
-			$params = array($action, $roleName, $resourceName, $accessName);
-		}
+		$accessList = $this->_getCollection('accessList');
 
-		$this->_options['db']->execute($sql, $params);
+		$access = $accessList->findOne(array(
+			'roles_name' => $roleName,
+			'resources_name' => $resourceName,
+			'access_name' => $accessName
+		));
+		if (!$access) {
+			$accessList->insert(array(
+				'roles_name' => $roleName,
+				'resources_name' => $resourceName,
+				'access_name' => $accessName,
+				'allowed' => $action
+			));
+		} else {
+			$access['allowed'] = $action;
+			$accessList->save($access);
+		}
 
 		/**
 		 * Update the access '*' in access_list
 		 */
-		$sql = 'SELECT COUNT(*) FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
-		$exists = $this->_options['db']->fetchOne($sql, null, array($roleName, $resourceName, '*'));
-		if (!$exists[0]) {
-			$sql = 'INSERT INTO ' . $this->_options['accessList'] . ' VALUES (?, ?, ?, ?)';
-			$this->_options['db']->execute($sql, array($roleName, $resourceName, '*', $this->_defaultAccess));
+		$exists = $accessList->count(array(
+			'roles_name' => $roleName,
+			'resources_name' => $resourceName,
+			'access_name' => '*'
+		));
+		if (!$exists) {
+			$accessList->insert(array(
+				'roles_name' => $roleName,
+				'resources_name' => $resourceName,
+				'access_name' => '*',
+				'allowed' => $this->_defaultAccess
+			));
 		}
 
 		return true;
@@ -410,57 +463,63 @@ class Database extends Adapter implements AdapterInterface
 	public function isAllowed($role, $resource, $access)
 	{
 
-		/**
-		 * Check if there is a specific rule for that resource/access
-		 */
-		$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
-		$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($role, $resource, $access));
-		if (is_array($allowed)) {
-			return (int) $allowed[0];
+		$accessList = $this->_getCollection('accessList');
+
+
+		$access = $accessList->findOne(array(
+			'roles_name' => $role,
+			'resources_name' => $resource,
+			'access_name' => $access
+		));
+		if (is_array($access)) {
+			return (int) $access['allowed'];
 		}
 
 		/**
 		 * Check if there is an common rule for that resource
 		 */
-		$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
-		$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($role, $resource, '*'));
-		if (is_array($allowed)) {
-			return (int) $allowed[0];
+		$access = $accessList->findOne(array(
+			'roles_name' => $role,
+			'resources_name' => $resource,
+			'access_name' => '*'
+		));
+		if (is_array($access)) {
+			return (int) $access['allowed'];
 		}
 
-		$sql = 'SELECT roles_inherit FROM roles_inherits WHERE roles_name = ?';
-		$inheritedRoles = $this->_options['db']->fetchAll($sql, \Phalcon\Db::FETCH_NUM, array($role));
+		/*$sql = 'SELECT roles_inherit FROM roles_inherits WHERE roles_name = ?';
+		$inheritedRoles = $this->_options['db']->fetchAll($sql, \Phalcon\Db::FETCH_NUM, array($role));*/
 
 		/**
 		 * Check inherited roles for a specific rule
 		 */
-		foreach ($inheritedRoles as $row) {
+		/*foreach ($inheritedRoles as $row) {
 			$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
 			$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($row[0], $resource, $access));
 			if (is_array($allowed)) {
 				return (int) $allowed[0];
 			}
-		}
+		}*/
 
 		/**
 		 * Check inherited roles for a specific rule
 		 */
-		foreach ($inheritedRoles as $row) {
+		/*foreach ($inheritedRoles as $row) {
 			$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
 			$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($row[0], $resource, '*'));
 			if (is_array($allowed)) {
 				return (int) $allowed[0];
 			}
-		}
+		}*/
 
 		/**
 		 * Check if there is a common rule for that access
 		 */
-		$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
+		/*$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
 		$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($role, '*', $access));
 		if (is_array($allowed)) {
 			return (int) $allowed[0];
-		}
+		}*/
 
 		/**
 		 * Return the default access action
