@@ -97,7 +97,7 @@ class Database extends Adapter implements AdapterInterface
 		}
 
 		if ($accessInherits) {
-			return $this->addInherit($roleName, $accessInherits);
+			return $this->addInherit($role->getName(), $accessInherits);
 		}
 
 		return true;
@@ -111,7 +111,17 @@ class Database extends Adapter implements AdapterInterface
 	 */
 	public function addInherit($roleName, $roleToInherit)
 	{
-		throw new Exception("Role '".$roleToInherit."' does not exist in the role list");
+		$sql = 'SELECT COUNT(*) FROM ' . $this->_options['roles'] . " WHERE name = ?";
+		$exists = $this->_options['db']->fetchOne($sql, null, array($roleToInherit));
+		if (!$exists[0]) {
+			throw new Exception("Role '" . $roleToInherit . "' does not exist in the role list");
+		}
+
+		$sql = 'SELECT COUNT(*) FROM ' . $this->_options['rolesInherits'] . " WHERE roles_name = ? AND roles_inherit = ?";
+		$exists = $this->_options['db']->fetchOne($sql, null, array($roleName, $roleToInherit));
+		if (!$exists[0]) {
+			$this->_options['db']->execute('INSERT INTO ' . $this->_options['rolesInherits'] . " VALUES (?, ?)", array($roleName, $roleToInherit));
+		}
 	}
 
 	/**
@@ -214,7 +224,12 @@ class Database extends Adapter implements AdapterInterface
 	 */
 	public function getResources()
 	{
-
+		$resources = array();
+		$sql = 'SELECT * FROM resources';
+		foreach ($this->_options['db']->fetchAll($sql, \Phalcon\Db::FETCH_ASSOC) as $row) {
+			$resources[] = new Resource($row['name'], $row['description']);
+		}
+		return $resources;
 	}
 
 	/**
@@ -224,7 +239,12 @@ class Database extends Adapter implements AdapterInterface
 	 */
 	public function getRoles()
 	{
-
+		$roles = array();
+		$sql = 'SELECT * FROM roles';
+		foreach ($this->_options['db']->fetchAll($sql, \Phalcon\Db::FETCH_ASSOC) as $row) {
+			$roles[] = new Role($row['name'], $row['description']);
+		}
+		return $roles;
 	}
 
 	/**
@@ -393,7 +413,7 @@ class Database extends Adapter implements AdapterInterface
 	{
 
 		/**
-		 * Check if there is an specific rule for that resource/access
+		 * Check if there is a specific rule for that resource/access
 		 */
 		$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
 		$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($role, $resource, $access));
@@ -408,6 +428,31 @@ class Database extends Adapter implements AdapterInterface
 		$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($role, $resource, '*'));
 		if (is_array($allowed)) {
 			return (int) $allowed[0];
+		}
+
+		$sql = 'SELECT roles_inherit FROM roles_inherits WHERE roles_name = ?';
+		$inheritedRoles = $this->_options['db']->fetchAll($sql, \Phalcon\Db::FETCH_NUM, array($role));
+
+		/**
+		 * Check inherited roles for a specific rule
+		 */
+		foreach ($inheritedRoles as $row) {
+			$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
+			$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($row[0], $resource, $access));
+			if (is_array($allowed)) {
+				return (int) $allowed[0];
+			}
+		}
+
+		/**
+		 * Check inherited roles for a specific rule
+		 */
+		foreach ($inheritedRoles as $row) {
+			$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
+			$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($row[0], $resource, '*'));
+			if (is_array($allowed)) {
+				return (int) $allowed[0];
+			}
 		}
 
 		/**
