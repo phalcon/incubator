@@ -40,7 +40,7 @@ class Mongo extends Adapter implements AdapterInterface
 	public function __construct($options=null)
 	{
 
-		if(!isset($options['collection'])){
+		if (!isset($options['collection'])) {
 			throw new Exception("The parameter 'collection' is required");
 		}
 
@@ -78,7 +78,7 @@ class Mongo extends Adapter implements AdapterInterface
 		$options = $this->getOptions();
 
 		$sessionData = $options['collection']->findOne(array('session_id' => $sessionId));
-		if(is_array($sessionData)){
+		if (is_array($sessionData)) {
 			return $sessionData['data'];
 		}
 
@@ -96,7 +96,7 @@ class Mongo extends Adapter implements AdapterInterface
 		$options = $this->getOptions();
 
 		$sessionData = $options['collection']->findOne(array('session_id' => $sessionId));
-		if(is_array($sessionData)){
+		if (is_array($sessionData)) {
 			$sessionData['data'] = $data;
 		} else {
 			$sessionData = array('session_id' => $sessionId, 'data' => $data);
@@ -114,7 +114,7 @@ class Mongo extends Adapter implements AdapterInterface
 	{
 		$options = $this->getOptions();
 		$sessionData = $options['collection']->findOne(array('session_id' => session_id()));
-		if(is_array($sessionData)){
+		if (is_array($sessionData)) {
 			$options['collection']->remove($sessionData);
 		}
 	}
