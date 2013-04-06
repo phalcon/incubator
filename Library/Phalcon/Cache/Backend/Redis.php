@@ -6,6 +6,11 @@ use Phalcon\Cache\Backend,
 	Phalcon\Cache\BackendInterface,
 	Phalcon\Cache\Exception;
 
+/**
+ * Phalcon\Cache\Backend\Redis
+ *
+ * This backend uses redis as cache backend
+ */
 class Redis extends Backend implements BackendInterface
 {
 
