@@ -63,6 +63,9 @@ $loader->register();
 
 ## Contributions Index
 
+### Acl
+* [Phalcon\Acl\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Acl/Adapter) - ACL lists stored in a database
+
 ### Cache
 * [Phalcon\Cache\Backend\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Database backend for caching data (phalcon)
 * [Phalcon\Cache\Backend\Redis](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Redis backend for caching data (kenjikobe)

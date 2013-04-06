@@ -6,58 +6,51 @@ Usage examples of the adapters available here:
 
 Database
 --------
-This adapter uses a database backend to store the cached content:
+This adapter uses a database to store the ACL list:
 
 ```php
 
-$di->set('cache', function() {
+$connection = new \Phalcon\Db\Adapter\Pdo\Sqlite(array(
+    "dbname" => "sample.db"
+));
 
-	// Create a connection
-	$connection = new \Phalcon\Db\Adapter\Pdo\Mysql(array(
-	    "host" => "localhost",
-	    "username" => "root",
-	    "password" => "secret",
-	    "dbname" => "cache_db"
-	));
-
-	//Create a Data frontend and set a default lifetime to 1 hour
-	$frontend = new Phalcon\Cache\Frontend\Data(array(
-	    'lifetime' => 3600
-	));
-
-	//Create the cache passing the connection
-	$cache = new Phalcon\Cache\Backend\Database($frontend, array(
-		'db' => $connection,
-		'table' => 'cache_data'
-	));
-
-	return $cache;
-});
+$acl = new Phalcon\Acl\Adapter\Database(array(
+	'db' => $connection,
+	'roles' => 'roles',
+	'resources' => 'resources',
+	'resourcesAccesses' => 'resources_accesses',
+	'accessList' => 'access_list',
+));
 
 ```
 
 This adapter uses the following table to store the data:
 
 ```sql
- CREATE TABLE `cache_data` (
-  `key_name` varchar(40) NOT NULL,
-  `data` text,
-  `lifetime` int(15) unsigned NOT NULL,
-  PRIMARY KEY (`key_name`),
-  KEY `lifetime` (`lifetime`)
-)
+CREATE TABLE roles (name varchar(32) not null, description text, primary key(name));
+CREATE TABLE access_list (roles_name varchar(32) not null, resources_name varchar(32) not null, access_name varchar(32) not null, allowed int(3) not null, primary key(roles_name, resources_name, access_name));
+CREATE TABLE resources (name varchar(32) not null, description text, primary key(name));
+CREATE TABLE resources_accesses (resources_name varchar(32) not null, access_name varchar(32) not null, primary key(resources_name, access_name));
 ```
 
 Using the cache adapter:
 
 ```php
 
-$time = $this->cache->get('le-time');
-if ($time === null) {
-    $time = date('r');
-    $this->cache->save('le-time', $time);
-}
+$acl->setDefaultAction(Phalcon\Acl::DENY);
 
-echo $time;
+//You can add roles/resources/accesses to list or insert them directly in the tables
+
+//Add roles
+$acl->addRole(new Phalcon\Acl\Role('Admins'));
+
+//Create the resource with its accesses
+$acl->addResource('Products', array('insert', 'update', 'delete'));
+
+//Allow Admins to insert products
+$acl->allow('Admin', 'Products', 'insert');
+
+//Do Admins are allowed to insert Products?
+var_dump($d->isAllowed('Admins', 'Products', 'update'));
 
 ```
