@@ -71,6 +71,9 @@ $loader->register();
 * [Phalcon\Cache\Backend\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Database backend for caching data (phalcon)
 * [Phalcon\Cache\Backend\Redis](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Redis backend for caching data (kenjikobe)
 
+### Config
+* [Phalcon\Config\Adapter\Yaml](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Config/Adapter) - YAML adapter (freekzy)
+
 ### Database
 * [Phalcon\Db\Adapter\Cacheable\Mysql](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Db) - MySQL adapter that agressively caches all the queries executed (phalcon)
 
