@@ -44,3 +44,39 @@ echo $config->database->username;
 echo $config->database->password;
 
 ```
+
+Json
+----
+Reads Json markup files and converts it to Phalcon\Config objects. For the following configuration file:
+
+```
+
+{
+    "database": {
+        "adapter":  "Mysql",
+        "host":     "localhost",
+        "username": "scott",
+        "password": "dbpassword",
+        "dbname":   "test_db"
+    },
+
+    "phalcon": {
+        "controllersDir":   "../app/controllers/",
+        "modelsDir":        "../app/models/",
+        "viewsDir":         "../app/views/"
+    }
+}
+
+```
+
+You can read it as follows:
+
+```php
+
+$config = new Phalcon\Config\Adapter\Json('path/config.json');
+
+echo $config->phalcon->controllersDir;
+echo $config->database->username;
+echo $config->database->password;
+
+```
