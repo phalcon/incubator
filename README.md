@@ -72,6 +72,7 @@ $loader->register();
 * [Phalcon\Cache\Backend\Redis](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Redis backend for caching data (kenjikobe)
 
 ### Config
+* [Phalcon\Config\Adapter\Json](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Config/Adapter) - Json adapter (ofpiyush)
 * [Phalcon\Config\Adapter\Yaml](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Config/Adapter) - YAML adapter (freekzy)
 
 ### Database
