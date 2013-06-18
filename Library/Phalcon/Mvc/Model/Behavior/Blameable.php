@@ -98,7 +98,7 @@ class Blameable extends Behavior implements BehaviorInterface
 
 			$auditDetail->field_name = $field;
 			$auditDetail->old_value = null;
-			$auditDetail->new_value = $model->$field;
+			$auditDetail->new_value = $model->readAttribute($field);
 
 			$details[] = $auditDetail;
 		}
@@ -133,7 +133,7 @@ class Blameable extends Behavior implements BehaviorInterface
 
 				$auditDetail->field_name = $field;
 				$auditDetail->old_value = $originalData[$field];
-				$auditDetail->new_value = $model->$field;
+				$auditDetail->new_value = $model->readAttribute($field);
 
 				$details[] = $auditDetail;
 			}
