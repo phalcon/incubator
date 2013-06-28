@@ -1,4 +1,3 @@
-
 Phalcon\Cache\Backend
 =====================
 
@@ -64,7 +63,7 @@ echo $time;
 
 Redis
 -----
-This adapter uses a [Redis](http://redis.io) backend to store the cached content:
+This adapter uses a [Redis](http://redis.io) backend to store the cached content and [phpredis](https://github.com/nicolasff/phpredis) extension:
 
 ```php
 
@@ -80,7 +79,7 @@ $di->set('cache', function() {
 	));
 
 	//Create the cache passing the connection
-	$cache = new Phalcon\Cache\Backend\Database($frontend, array(
+	$cache = new Phalcon\Cache\Backend\Redis($frontend, array(
 		'redis' => $redis
 	));
 
