@@ -48,7 +48,7 @@ class Slug
         $oldLocale = setlocale(LC_ALL, 0);
 
         // Set the locale to UTF8
-        setlocale(LC_ALL, 'en_US.UTF8');
+        setlocale(LC_ALL, 'en_US.UTF-8');
 
         if( !empty($replace) )
         {
