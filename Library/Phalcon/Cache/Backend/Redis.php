@@ -32,12 +32,13 @@ use Phalcon\Cache\Backend,
 class Redis extends Backend implements BackendInterface
 {
 
-	/**
-	 * Phalcon\Cache\Backend\Redis constructor
-	 *
-	 * @param Phalcon\Cache\FrontendInterface $frontend
-	 * @param array $options
-	 */
+    /**
+     * Phalcon\Cache\Backend\Redis constructor
+     *
+     * @param \Phalcon\Cache\FrontendInterface $frontend
+     * @param array $options
+     * @throws \Phalcon\Cache\Exception
+     */
 	public function __construct($frontend, $options=null)
 	{
 		if (!isset($options['redis'])) {
@@ -47,12 +48,14 @@ class Redis extends Backend implements BackendInterface
 		parent::__construct($frontend, $options);
 	}
 
-	/**
-	 * Get a cached content from the
-	 *
-	 * @param string $keyName
-	 * @param int $lifetime
-	 */
+    /**
+     * Get cached content from the Redis backend
+     *
+     * @param string $keyName
+     * @param null $lifetime
+     * @param int $lifetime
+     * @return mixed|null
+     */
 	public function get($keyName, $lifetime=null)
 	{
 		$options = $this->getOptions();
@@ -69,14 +72,15 @@ class Redis extends Backend implements BackendInterface
 		return $frontend->afterRetrieve($value);
 	}
 
-	/**
-	 * Stores cached content into the APC backend and stops the frontend
-	 *
-	 * @param string $keyName
-	 * @param string $content
-	 * @param long $lifetime
-	 * @param boolean $stopBuffer
-	 */
+    /**
+     * Stores cached content into the Redis backend and stops the frontend
+     *
+     * @param string $keyName
+     * @param string $content
+     * @param int $lifetime
+     * @param boolean $stopBuffer
+     * @throws \Phalcon\Cache\Exception
+     */
 	public function save($keyName=null, $content=null, $lifetime=null, $stopBuffer=true)
 	{
 
@@ -144,7 +148,7 @@ class Redis extends Backend implements BackendInterface
 	}
 
 	/**
-	 * Checks if cache exists.
+	 * Checks if a value exists in the cache by checking its key.
 	 *
 	 * @param string $keyName
 	 * @param string $lifetime
