@@ -11,6 +11,7 @@
  * @link      http://www.phalconphp.com
  * @author    Andres Gutierrez <andres@phalconphp.com>
  * @author    Nikolaos Dimopoulos <nikos@phalconphp.com>
+ * @author    Stephen Hoogendijk <hoogendijk09@gmail.com>
  *
  * The contents of this file are subject to the New BSD License that is
  * bundled with this package in the file docs/LICENSE.txt
@@ -56,10 +57,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
     {
         $this->checkExtension('phalcon');
 
-        if(is_null($config)){
-            // Set the config up
-            $this->config = Config::init();
-        } else {
+        if(!is_null($config)){
             $this->config = $config;
         }
 
