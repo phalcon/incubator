@@ -1,4 +1,5 @@
 .DS_Store
 .idea/*
+*.iml
 *.sublime-project
 *.sublime-workspace
