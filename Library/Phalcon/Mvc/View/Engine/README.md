@@ -62,6 +62,31 @@ $di->set('view', function() {
     return $view;
 });
 ```
+The engine implements "assets" tag in Twig templates:
+
+```django
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project name</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    {% assets addCss('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css', false) %}
+    {% assets addCss('css/style.css') %}
+    {% block extraStyles %}{% endblock %}
+    {{ assetsOutputCss() }}
+</head>
+<body>
+    <div class="container_12">
+        {% block content %}{% endblock %}
+    </div>
+
+    {% assets addJs('js/jquery.js') %}
+    {% block extraScripts %}{% endblock %}
+    {{ assetsOutputJs() }}
+</body>
+</html>
+```
 
 Smarty
 ------
@@ -99,10 +124,10 @@ $di->set('view', function() use ($config) {
 
 	$view = new \Phalcon\Mvc\View();
 	$view->setViewsDir('../app/views/');
-	
+
 	$view->registerEngines(
 		array('.html' => function($view, $di) {
-		
+
 				$smarty = new \Phalcon\Mvc\View\Engine\Smarty($view, $di);
 
 				$smarty->setOptions(array(
