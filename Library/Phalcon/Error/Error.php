@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -15,6 +14,7 @@
   +------------------------------------------------------------------------+
   | Authors: Andres Gutierrez <andres@phalconphp.com>                      |
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
+  |          Nikita Vershinin <endeveit@gmail.com>                         |
   +------------------------------------------------------------------------+
 */
 
@@ -22,44 +22,46 @@ namespace Phalcon\Error;
 
 class Error
 {
-	/**
-	 * @var array
-	 */
-	protected $_attributes;
 
-	/**
-	 * Class constructor sets the attributes.
-	 *
-	 * @param array $options
-	 */
-	public function __construct(array $options = [])
-	{
-		$defaults = [
-			'type' => -1,
-			'message' => 'No error message',
-			'file' => '',
-			'line' => '',
-			'exception' => null,
-			'isException' => false,
-			'isError' => false,
-		];
+    /**
+     * @var array
+     */
+    protected $_attributes;
 
-		$options = array_merge($defaults, $options);
+    /**
+     * Class constructor sets the attributes.
+     *
+     * @param array $options
+     */
+    public function __construct(array $options = array())
+    {
+        $defaults = array(
+            'type'        => -1,
+            'message'     => 'No error message',
+            'file'        => '',
+            'line'        => '',
+            'exception'   => null,
+            'isException' => false,
+            'isError'     => false,
+        );
 
-		foreach ($options as $option => $value) {
-			$this->_attributes[$option] = $value;
-		}
-	}
+        $options = array_merge($defaults, $options);
 
-	/**
-	 * Magic method to retrieve the attributes.
-	 *
-	 * @param $method
-	 * @param $args
-	 * @return null
-	 */
-	public function __call($method, $args)
-	{
-		return isset($this->_attributes[$method]) ? $this->_attributes[$method] : null;
-	}
+        foreach ($options as $option => $value) {
+            $this->_attributes[$option] = $value;
+        }
+    }
+
+    /**
+     * Magic method to retrieve the attributes.
+     *
+     * @param string $method
+     * @param array $args
+     * @return mixed
+     */
+    public function __call($method, $args)
+    {
+        return isset($this->_attributes[$method]) ? $this->_attributes[$method] : null;
+    }
+
 }
