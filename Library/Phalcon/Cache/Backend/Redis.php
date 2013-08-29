@@ -107,6 +107,8 @@ class Redis extends Backend implements BackendInterface
 		}
 
 		$options['redis']->setex($lastKey, $lifetime, $frontend->beforeStore($content));
+		
+		$isBuffering = $frontend->isBuffering();
 
 		//Stop the buffer, this only applies for Phalcon\Cache\Frontend\Output
 		if ($stopBuffer) {
@@ -114,7 +116,7 @@ class Redis extends Backend implements BackendInterface
 		}
 
 		//Print the buffer, this only applies for Phalcon\Cache\Frontend\Output
-		if ($frontend->isBuffering()) {
+		if ($isBuffering) {
 			echo $content;
 		}
 
