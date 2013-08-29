@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -15,86 +14,97 @@
   +------------------------------------------------------------------------+
   | Authors: Andres Gutierrez <andres@phalconphp.com>                      |
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
+  |          Nikita Vershinin <endeveit@gmail.com>                         |
   +------------------------------------------------------------------------+
 */
 
 namespace Phalcon\Error;
 
+use Phalcon\Config;
+use Phalcon\DI\FactoryDefault;
 use Phalcon\Error\Handler as ErrorHandler;
+use Phalcon\Loader;
+use Phalcon\Mvc\Dispatcher;
+use Phalcon\Mvc\View;
 
 class Application extends \Phalcon\Mvc\Application
 {
-	const ENV_PRODUCTION = 'production';
-	const ENV_STAGING = 'staging';
-	const ENV_TEST = 'test';
-	const ENV_DEVELOPMENT = 'development';
+    const ENV_PRODUCTION = 'production';
+    const ENV_STAGING = 'staging';
+    const ENV_TEST = 'test';
+    const ENV_DEVELOPMENT = 'development';
 
-	/**
-	 * Class constructor registers autoloading and error
-	 * handler.
-	 *
-	 * @return \Phalcon\Error\Application
-	 */
-	public function __construct()
-	{
-		$this->_registerAutoloaders();
-		ErrorHandler::register();
-	}
+    /**
+     * Class constructor registers autoloading and error
+     * handler.
+     *
+     * @return \Phalcon\Error\Application
+     */
+    public function __construct()
+    {
+        $this->registerAutoloaders();
 
-	/**
-	 * Registers the services and dispatches the application.
-	 *
-	 * @return \Phalcon\Http\Response
-	 */
-	public function main()
-	{
-		$this->_registerServices();
-		return $this->handle()->send();
-	}
+        ErrorHandler::register();
+    }
 
-	/**
-	 * Registers the services in di container.
-	 *
-	 * @return void
-	 */
-	private function _registerServices()
-	{
-		$di = new \Phalcon\DI\FactoryDefault();
+    /**
+     * Registers the services and dispatches the application.
+     *
+     * @return \Phalcon\Http\Response
+     */
+    public function main()
+    {
+        $this->registerServices();
 
-		$di->set('config', function() {
-			ob_start();
-			$config = include APPLICATION_ENV . '.php';
-			ob_end_clean();
-			return new Phalcon\Config($config);
-		});
+        return $this->handle()->send();
+    }
 
-		$di->set('dispatcher', function(){
-			$dispatcher = new \Phalcon\Mvc\Dispatcher();
-			$dispatcher->setDefaultNamespace('Application\Controllers\\');
-			return $dispatcher;
-		});
+    /**
+     * Registers autoloading.
+     *
+     * @return void
+     */
+    private function registerAutoloaders()
+    {
+        $loader = new Loader();
+        $loader->registerNamespaces(array(
+            'Phalcon\Error' => '.',
+        ));
+        $loader->register();
+    }
 
-		$di->set('view', function() {
-			$view = new \Phalcon\Mvc\View();
-			$view->setViewsDir(ROOT_PATH . '/application/views/');
-			return $view;
-		});
+    /**
+     * Registers the services in di container.
+     *
+     * @return void
+     */
+    private function registerServices()
+    {
+        $di = new FactoryDefault();
 
-		$this->setDI($di);
-	}
+        $di->set('config', function() {
+            ob_start();
+            $config = include APPLICATION_ENV . '.php';
+            ob_end_clean();
 
-	/**
-	 * Registers autoloading.
-	 *
-	 * @return void
-	 */
-	private function _registerAutoloaders()
-	{
-		$loader = new \Phalcon\Loader();
-		$loader->registerNamespaces([
-			'Phalcon\Error' => '.',
-		]);
-		$loader->register();
-	}
+            return new Config($config);
+        });
+
+        $di->set('dispatcher', function() {
+            $dispatcher = new Dispatcher();
+            $dispatcher->setDefaultNamespace('Application\Controllers\\');
+
+            return $dispatcher;
+        });
+
+        $di->set('view', function() {
+            $view = new View();
+            $view->setViewsDir(ROOT_PATH . '/application/views/');
+
+            return $view;
+        });
+
+        $this->setDI($di);
+    }
 
 }
