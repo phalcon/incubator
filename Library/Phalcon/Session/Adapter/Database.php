@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -15,14 +14,15 @@
   +------------------------------------------------------------------------+
   | Authors: Andres Gutierrez <andres@phalconphp.com>                      |
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
+  |          Nikita Vershinin <endeveit@gmail.com>                         |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Session\Adapter;
 
-use \Phalcon\Session\Adapter,
-	\Phalcon\Session\AdapterInterface,
-	\Phalcon\Session\Exception;
+use Phalcon\Db;
+use Phalcon\Session\Adapter;
+use Phalcon\Session\AdapterInterface;
+use Phalcon\Session\Exception;
 
 /**
  * Phalcon\Session\Adapter\Database
@@ -32,94 +32,177 @@ use \Phalcon\Session\Adapter,
 class Database extends Adapter implements AdapterInterface
 {
 
-	/**
-	 * Phalcon\Session\Adapter\Database constructor
-	 *
-	 * @param array $options
-	 */
-	public function __construct($options=null)
-	{
+    /**
+     * Flag to check if session is destroyed.
+     *
+     * @var boolean
+     */
+    protected $isDestroyed = false;
 
-		if (!isset($options['db'])) {
-			throw new Exception("The parameter 'db' is required");
-		}
+    /**
+     * {@inheritdoc}
+     *
+     * @param  array                      $options
+     * @throws \Phalcon\Session\Exception
+     */
+    public function __construct($options = null)
+    {
+        if (!isset($options['db'])) {
+            throw new Exception("The parameter 'db' is required");
+        }
 
-		if (!isset($options['table'])) {
-			throw new Exception("The parameter 'table' is required");
-		}
+        if (!isset($options['table'])) {
+            throw new Exception("The parameter 'table' is required");
+        }
 
-		session_set_save_handler(
-			array($this, 'open'),
-			array($this, 'close'),
-			array($this, 'read'),
-			array($this, 'write'),
-			array($this, 'destroy'),
-			array($this, 'gc')
-		);
+        parent::__construct($options);
 
-		parent::__construct($options);
-	}
+        session_set_save_handler(
+            array($this, 'open'),
+            array($this, 'close'),
+            array($this, 'read'),
+            array($this, 'write'),
+            array($this, 'destroy'),
+            array($this, 'gc')
+        );
+    }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return boolean
+     */
+    public function open()
+    {
+        return true;
+    }
 
-	public function open()
-	{
-		return true;
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @return boolean
+     */
+    public function close()
+    {
+        return false;
+    }
 
-	public function close()
-	{
-		return false;
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @param  string $sessionId
+     * @return string
+     */
+    public function read($sessionId)
+    {
+        $options = $this->getOptions();
+        $row     = $options['db']->fetchOne(
+            sprintf(
+                'SELECT %s FROM %s WHERE %s = ?',
+                $options['db']->escapeIdentifier('data'),
+                $options['db']->escapeIdentifier($options['table']),
+                $options['db']->escapeIdentifier('session_id')
+            ),
+            Db::FETCH_NUM,
+            array($sessionId)
+        );
 
-	/**
-	 * Reads the data from the table
-	 *
-	 * @param string $sessionId
-	 * @return string
-	 */
-	public function read($sessionId)
-	{
-		$options = $this->getOptions();
-		$sessionData = $options['db']->fetchOne("SELECT * FROM " . $options['table'] . " WHERE session_id = '" . $sessionId . "'");
-		if ($sessionData) {
-			return $sessionData['data'];
-		}
-	}
+        if (!empty($row)) {
+            return $row[0];
+        }
 
-	/**
-	 * Writes the data to the table
-	 *
-	 * @param string $sessionId
-	 * @param string $data
-	 */
-	public function write($sessionId, $data)
-	{
-		$options = $this->getOptions();
-		$exists = $options['db']->fetchOne("SELECT COUNT(*) FROM " . $options['table'] . " WHERE session_id = '" . $sessionId . "'");
-		if ($exists[0]) {
-			$options['db']->execute("UPDATE " . $options['table'] . " SET data = '" . $data . "', modified_at = " . time() . " WHERE session_id = '" . $sessionId . "'");
-		} else {
-			$options['db']->execute("INSERT INTO " . $options['table'] . " VALUES ('" . $sessionId . "', '" . $data . "', " . time() . ", 0)");
-		}
-	}
+        return '';
+    }
 
-	/**
-	 * Destroyes the session
-	 *
-	 */
-	public function destroy()
-	{
-		$options = $this->getOptions();
-		$options['db']->execute("DELETE FROM " . $options['table'] . " WHERE session_id = '".session_id()."'");
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @param  string  $sessionId
+     * @param  string  $data
+     * @return boolean
+     */
+    public function write($sessionId, $data)
+    {
+        if ($this->isDestroyed || empty($data)) {
+            return false;
+        }
 
-	/**
-	 * Performs garbage-collection on the session table
-	 *
-	 */
-	public function gc()
-	{
+        $options = $this->getOptions();
+        $row     = $options['db']->fetchOne(
+            sprintf(
+                'SELECT COUNT(*) FROM %s WHERE %s = ?',
+                $options['db']->escapeIdentifier($options['table']),
+                $options['db']->escapeIdentifier('session_id')
+            ),
+            Db::FETCH_NUM,
+            array($sessionId)
+        );
 
-	}
+        if (!empty($row) && intval($row[0]) > 0) {
+            return $options['db']->execute(
+                sprintf(
+                    'UPDATE %s SET %s = ?, %s = ? WHERE %s = ?',
+                    $options['db']->escapeIdentifier($options['table']),
+                    $options['db']->escapeIdentifier('data'),
+                    $options['db']->escapeIdentifier('modified_at'),
+                    $options['db']->escapeIdentifier('session_id')
+                ),
+                array($data, time(), $sessionId)
+            );
+        } else {
+            return $options['db']->execute(
+                sprintf('INSERT INTO %s VALUES (?, ?, ?, 0)', $options['db']->escapeIdentifier($options['table'])),
+                array($sessionId, $data, time())
+            );
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return boolean
+     */
+    public function destroy()
+    {
+        if (!$this->isStarted() || $this->isDestroyed) {
+            return true;
+        }
+
+        $this->isDestroyed = true;
+        $options           = $this->getOptions();
+        $result            = $options['db']->execute(
+            sprintf(
+                'DELETE FROM %s WHERE %s = ?',
+                $options['db']->escapeIdentifier($options['table']),
+                $options['db']->escapeIdentifier('session_id')
+            ),
+            array($this->getId())
+        );
+
+        session_regenerate_id();
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param  integer $maxlifetime
+     * @return boolean
+     */
+    public function gc($maxlifetime)
+    {
+        $options = $this->getOptions();
+
+        return $options['db']->execute(
+            sprintf(
+                'DELETE FROM %s WHERE %s + %d < ?',
+                $options['db']->escapeIdentifier($options['table']),
+                $options['db']->escapeIdentifier('modified_at'),
+                $maxlifetime
+            ),
+            array(time())
+        );
+    }
 
 }
