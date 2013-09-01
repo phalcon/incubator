@@ -17,7 +17,7 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Phalcon\Client\Http;
+namespace Phalcon\Http\Client;
 
 class Header implements \Countable
 {

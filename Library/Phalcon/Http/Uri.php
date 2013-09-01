@@ -17,7 +17,7 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Phalcon\Client\Http;
+namespace Phalcon\Http;
 
 class Uri
 {

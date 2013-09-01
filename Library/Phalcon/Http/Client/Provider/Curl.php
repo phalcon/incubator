@@ -17,12 +17,12 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Phalcon\Client\Http\Provider;
+namespace Phalcon\Http\Client\Provider;
 
-use Phalcon\Client\Http\Request;
-use Phalcon\Client\Http\Response;
-use Phalcon\Client\Http\Provider\Exception as ProviderException;
-use Phalcon\Client\Http\Exception as HttpException;
+use Phalcon\Http\Client\Request;
+use Phalcon\Http\Client\Response;
+use Phalcon\Http\Client\Provider\Exception as ProviderException;
+use Phalcon\Http\Client\Exception as HttpException;
 
 class Curl extends Request
 {
