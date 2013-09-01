@@ -224,4 +224,3 @@ class Curl extends Request
         return $this->send();
     }
 }
-
