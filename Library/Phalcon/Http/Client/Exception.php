@@ -17,9 +17,9 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Phalcon\Client\Http\Provider;
+namespace Phalcon\Http\Client;
 
-class Exception extends \Phalcon\Client\Http\Exception
+class Exception extends \Exception
 {
 
 }

@@ -17,9 +17,9 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Phalcon\Client\Http;
+namespace Phalcon\Http\Client;
 
-use Phalcon\Client\Http\Header;
+use Phalcon\Http\Client\Header;
 
 class Response
 {

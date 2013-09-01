@@ -17,52 +17,9 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Phalcon\Client\Http;
+namespace Phalcon\Http\Client\Provider;
 
-use Phalcon\Client\Http\Provider\Curl;
-use Phalcon\Client\Http\Provider\Stream;
-use Phalcon\Client\Http\Provider\Exception as ProviderException;
-use Phalcon\Client\Http\Uri;
-use Phalcon\Client\Http\Header;
-
-abstract class Request
+class Exception extends \Phalcon\Http\Client\Exception
 {
-    protected $baseUri;
-    public $header = null;
 
-    const VERSION = '0.0.1';
-
-    function __construct()
-    {
-        $this->baseUri = new Uri();
-        $this->header = new Header();
-    }
-
-    static function getProvider()
-    {
-        if (Curl::isAvailable()) {
-            return new Curl();
-        }
-
-        if (Stream::isAvailable()) {
-            return new Stream();
-        }
-
-        throw new ProviderException('There isn\'t any available provider');
-    }
-
-    public function setBaseUri($baseUri)
-    {
-        $this->baseUri = new Uri($baseUri);
-    }
-
-    public function getBaseUri()
-    {
-        return $this->baseUri->toString();
-    }
-
-    public function resolveUri($uri)
-    {
-        return $this->baseUri->resolve($uri);
-    }
 }
