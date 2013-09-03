@@ -3,3 +3,4 @@
 *.iml
 *.sublime-project
 *.sublime-workspace
+/nbproject/
