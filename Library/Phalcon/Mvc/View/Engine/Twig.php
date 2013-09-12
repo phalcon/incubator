@@ -145,7 +145,11 @@ class Twig extends Engine implements EngineInterface
             echo $content;
         }
     }
-
+    
+    /**
+     * 
+     * @return Twig\Environment
+     */
     public function getTwig()
     {
         return $this->_twig;
