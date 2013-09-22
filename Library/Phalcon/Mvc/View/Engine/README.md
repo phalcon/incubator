@@ -62,6 +62,30 @@ $di->set('view', function() {
     return $view;
 });
 ```
+
+or
+
+```php
+//Setting up the view component
+$di->set('view', function() {
+
+    $view = new \Phalcon\Mvc\View();
+
+    $view->setViewsDir('../app/views/');
+
+    $view->registerEngines(
+        array(
+            '.twig' => function($view, $di) {
+                //Setting up Twig Environment Options
+                $option = array('cache' => '../cache/');
+                $twig = new \Phalcon\Mvc\View\Engine\Twig($view, $di, $options);
+                return $twig
+            });
+
+    return $view;
+});
+```
+
 The engine implements "assets" tag in Twig templates:
 
 ```django
