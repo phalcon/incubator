@@ -23,10 +23,10 @@ class Mustache extends Engine implements EngineInterface
      * @param \Phalcon\Mvc\ViewInterface $view
      * @param \Phalcon\DiInterface $di
      */
-    public function __construct($view,  $di)
+    public function __construct($view, $dependencyInjector = null)
     {
         $this->_mustache = new \Mustache_Engine();
-        parent::__construct($view, $di);
+        parent::__construct($view, $dependencyInjector);
     }
 
     /**
