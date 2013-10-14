@@ -1,4 +1,3 @@
-
 # Phalcon\Http
 
 Uri utility
@@ -10,7 +9,7 @@ The utility to parse URI strings. Resolve absolute, relative URN and querystring
 ### Examples
 
 ```php
-use Phalcon\Client\Http\Uri;
+use Phalcon\Http\Uri;
 
 $uri1 = new Uri('http://phalconphp.com/foo/bar/baz?var1=a&var2=1');
 
