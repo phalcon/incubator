@@ -1,4 +1,3 @@
-
 # Phalcon\Http\Client
 
 Http Request and Response
@@ -10,7 +9,7 @@ Request class to make request to URI
 ### Examples
 
 ```php
-use Phalcon\Client\Http\Request;
+use Phalcon\Http\Client\Request;
 
 $provider  = Request::getProvider(); // get available provider Curl or Stream
 
