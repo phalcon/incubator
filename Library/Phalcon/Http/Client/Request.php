@@ -22,7 +22,7 @@ namespace Phalcon\Http\Client;
 use Phalcon\Http\Client\Provider\Curl;
 use Phalcon\Http\Client\Provider\Stream;
 use Phalcon\Http\Client\Provider\Exception as ProviderException;
-use Phalcon\Http\Client\Uri;
+use Phalcon\Http\Uri;
 use Phalcon\Http\Client\Header;
 
 abstract class Request
