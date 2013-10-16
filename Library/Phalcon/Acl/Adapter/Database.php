@@ -225,7 +225,7 @@ class Database extends Adapter implements AdapterInterface
 	public function getResources()
 	{
 		$resources = array();
-		$sql = 'SELECT * FROM resources';
+		$sql = 'SELECT * FROM ' . $this->_options['resources'];
 		foreach ($this->_options['db']->fetchAll($sql, \Phalcon\Db::FETCH_ASSOC) as $row) {
 			$resources[] = new Resource($row['name'], $row['description']);
 		}
@@ -240,7 +240,7 @@ class Database extends Adapter implements AdapterInterface
 	public function getRoles()
 	{
 		$roles = array();
-		$sql = 'SELECT * FROM roles';
+		$sql = 'SELECT * FROM ' . $this->_options['roles'];
 		foreach ($this->_options['db']->fetchAll($sql, \Phalcon\Db::FETCH_ASSOC) as $row) {
 			$roles[] = new Role($row['name'], $row['description']);
 		}
