@@ -22,6 +22,8 @@
  */
 
 namespace Phalcon\Test;
+
+use Phalcon\DI\FactoryDefault;
 use Phalcon\Config;
 use Phalcon\DI;
 use Phalcon\DiInterface;
@@ -67,7 +69,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
             DI::reset();
 
             // Instantiate a new DI container
-            $di = new DI();
+            $di = new FactoryDefault();
 
             // Set the URL
             $di->set(
