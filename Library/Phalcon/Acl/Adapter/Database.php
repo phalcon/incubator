@@ -428,7 +428,7 @@ class Database extends Adapter implements AdapterInterface
 			return (int) $allowed[0];
 		}
 
-		$sql = 'SELECT roles_inherit FROM roles_inherits WHERE roles_name = ?';
+		$sql = 'SELECT roles_inherit FROM ' . $this->_options['rolesInherits'] . ' WHERE roles_name = ?';
 		$inheritedRoles = $this->_options['db']->fetchAll($sql, \Phalcon\Db::FETCH_NUM, array($role));
 
 		/**
