@@ -25,8 +25,8 @@ use Phalcon;
  * @category    Phalcon
  * @package     Phalcon_Session_Adapter_Memcache
  */
-class Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\AdapterInterface{
-
+class Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\AdapterInterface
+{
     /**
      * Default option for memcache port
      *
@@ -64,28 +64,29 @@ class Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\Adapte
 
     /**
      * Constructor
-     * @param null | array $options
+     *
+     * @param  null|array                $options
      * @throws Phalcon\Session\Exception
      */
-    public function __construct($options = null){
-
-        if(is_array($options)){
-            if(!isset($options["host"])){
+    public function __construct($options = null)
+    {
+        if (is_array($options)) {
+            if (!isset($options["host"])) {
                 throw new Phalcon\Session\Exception("No session host given in options");
             }
-            if(!isset($options["port"])){
+            if (!isset($options["port"])) {
                 $options["port"]  = self::DEFAULT_OPTION_PORT;
             }
-            if(!isset($options["lifetime"])){
+            if (!isset($options["lifetime"])) {
                 $options["lifetime"] = self::DEFAULT_OPTION_LIFETIME;
             }
-            if(!isset($options["persistent"])){
+            if (!isset($options["persistent"])) {
                 $options["persistent"] = self::DEFAULT_OPTION_PERSISTENT;
             }
-            if(!isset($options["prefix"])){
+            if (!isset($options["prefix"])) {
                 $options["prefix"] = self::DEFAULT_OPTION_PREFIX;
             }
-        }else{
+        } else {
             throw new Phalcon\Session\Exception("No configuration given");
         }
 
@@ -106,7 +107,8 @@ class Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\Adapte
      *
      * @return bool
      */
-    public function open(){
+    public function open()
+    {
         return true;
     }
 
@@ -115,18 +117,23 @@ class Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\Adapte
      *
      * @return bool
      */
-    public function close(){
+    public function close()
+    {
         return true;
     }
 
     /**
      * Reads data from session object
      *
-     * @param string $sessionId
+     * @param  string $sessionId
      * @return mixed
      */
-    public function read($sessionId){
-        return $this->_getMemcacheInstance()->get($this->_getSessionId($sessionId), $this->getOption('lifetime'));
+    public function read($sessionId)
+    {
+        return $this->_getMemcacheInstance()->get(
+            $this->_getSessionId($sessionId),
+            $this->getOption('lifetime')
+        );
     }
 
     /**
@@ -135,8 +142,13 @@ class Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\Adapte
      * @param string $sessionId
      * @param string $data
      */
-    public function write($sessionId, $data){
-        $this->_getMemcacheInstance()->save($this->_getSessionId($sessionId), $data, $this->getOption('lifetime'));
+    public function write($sessionId, $data)
+    {
+        $this->_getMemcacheInstance()->save(
+            $this->_getSessionId($sessionId),
+            $data,
+            $this->getOption('lifetime')
+        );
     }
 
     /**
@@ -144,25 +156,30 @@ class Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\Adapte
      *
      * @return bool
      */
-    public function destroy(){
-        return $this->_getMemcacheInstance()->delete($this->getId());
+    public function destroy()
+    {
+        return $this->_getMemcacheInstance()->delete($this->_getSessionId($this->getId()));
     }
 
     /**
      * Garbage collector
      */
-    public function gc(){}
+    public function gc()
+    {
+    }
 
     /**
      * Returns option value by key
      *
-     * @param string $key
+     * @param  string $key
      * @return null
      */
-    public function getOption($key){
-       if(isset($this->_options[$key])){
+    public function getOption($key)
+    {
+       if (isset($this->_options[$key])) {
            return $this->_options[$key];
        }
+
        return null;
     }
 
@@ -171,17 +188,19 @@ class Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\Adapte
      *
      * @return Phalcon\Cache\Backend\Memcache
      */
-    private function _getMemcacheInstance(){
-        if($this->_memcacheInstance === null){
+    private function _getMemcacheInstance()
+    {
+        if ($this->_memcacheInstance === null) {
             $this->_memcacheInstance = new Phalcon\Cache\Backend\Memcache(
                 new Phalcon\Cache\Frontend\Data(array("lifetime" => $this->getOption("lifetime"))),
                 array(
-                    'host' => $this->getOption('host'),
-                    'port' => $this->getOption('port'),
+                    'host'       => $this->getOption('host'),
+                    'port'       => $this->getOption('port'),
                     'persistent' => $this->getOption('persistent')
                 )
             );
         }
+
         return $this->_memcacheInstance;
     }
 
@@ -191,8 +210,11 @@ class Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\Adapte
      * @param $sessionId
      * @return string
      */
-    private function _getSessionId($sessionId){
-        return ((strlen($this->getOption('prefix')) > 0) ? $this->getOption('prefix').'_'.$sessionId : $sessionId);
+    private function _getSessionId($sessionId)
+    {
+        return (strlen($this->getOption('prefix')) > 0)
+            ? $this->getOption('prefix') . '_' . $sessionId
+            : $sessionId;
     }
 
 }
