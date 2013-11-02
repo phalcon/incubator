@@ -7,7 +7,7 @@
  *
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@phalconphp.com so we can send you a copy immediately. 
+ * to license@phalconphp.com so we can send you a copy immediately.
  *
  * @category    Phalcon
  * @package     Phalcon_Session_Adapter_Memcache
@@ -145,7 +145,7 @@ class Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\Adapte
      * @return bool
      */
     public function destroy(){
-        return true;
+        return $this->_getMemcacheInstance()->delete($this->getId());
     }
 
     /**
