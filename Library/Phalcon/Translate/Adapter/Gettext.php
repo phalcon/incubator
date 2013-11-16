@@ -70,7 +70,7 @@ class Gettext extends Adapter implements AdapterInterface
 			return gettext($index);
 		}
 
-		$translation = gettext($index);;
+		$translation = gettext($index);
 		if (is_array($placeholders)) {
 			foreach ($placeholders as $key => $value) {
 				$translation = str_replace('%' . $key . '%', $value, $translation);
