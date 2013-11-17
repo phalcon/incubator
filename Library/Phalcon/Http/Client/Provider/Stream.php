@@ -102,7 +102,7 @@ class Stream extends Request
     private function initPostFields($params)
     {
         if (!empty($params) && is_array($params)) {
-            $this->setHeader('Content-Type', 'application/x-www-form-urlencoded');
+            $this->header->set('Content-Type', 'application/x-www-form-urlencoded');
             $this->setOption('content', http_build_query($params));
         }
     }
