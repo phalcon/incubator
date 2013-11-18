@@ -55,3 +55,14 @@ $logger->warning('Warn Message');
 $logger->error('Error Message');
 ```
 
+Firelogger
+----------
+Adapter to send messages to the [Firelogger](http://firelogger.binaryage.com/) console inside the [Firebug](https://getfirebug.com/) in your browser.
+
+```php
+$logger = new Phalcon\Logger\Adapter\Firelogger('debug');
+$logger->log('Plain Message');
+$logger->info('Info Message');
+// etc
+```
+
