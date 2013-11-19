@@ -18,29 +18,29 @@ use \Phalcon\Logger\Exception as LoggerException,
  */
 class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\AdapterInterface {
 
-	/**
-	 * path.
-	 *
-	 * Path to the directory where log files will be saved. No trailing slash.
-	 */
-	protected $_path;
+    /**
+     * path.
+     *
+     * Path to the directory where log files will be saved. No trailing slash.
+     */
+    protected $_path;
 
-	/**
-	 * Adapter options
-	 */
-	protected $_options;
+    /**
+     * Adapter options
+     */
+    protected $_options;
 
 
-	/**
-	 * Phalcon\Logger\Adapter\File\Multiple constructor
-	 *
-	 * @param string $path      Directory path for saving the log files.
-	 * @param array $options    The following options are available:
-	 *              `           extension   (string) Extension for all log files.
-	 *              `           prefix      (string) Name prefix for all log files
-	 */
-	public function __construct($path, $options = array())
-	{
+    /**
+     * Phalcon\Logger\Adapter\File\Multiple constructor
+     *
+     * @param string $path      Directory path for saving the log files.
+     * @param array $options    The following options are available:
+     *              `           extension   (string) Extension for all log files.
+     *              `           prefix      (string) Name prefix for all log files
+     */
+    public function __construct($path, $options = array())
+    {
         $path = rtrim($path, ' ' . \DIRECTORY_SEPARATOR);
         if (!file_exists($path) || !is_dir($path)) {
             throw new LoggerException('Directory ' . $path . ' does not exist!');
@@ -48,24 +48,24 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
         if (!is_writable($path)) {
             throw new LoggerException('Directory ' . $path . ' is not writable!');
         }
-		$this->_path = $path;
+        $this->_path = $path;
 
         $defaults = array(
             'extension' => 'log',
             'prefix' => '',
         );
-		$this->_options = array_merge($defaults, $options);
-	}
+        $this->_options = array_merge($defaults, $options);
+    }
 
-	/**
-	 * Writes the log to the file itself
-	 *
-	 * @param string $message
-	 * @param int $type
-	 * @param int $time
-	 */
-	public function logInternal($message, $type, $time)
-	{
+    /**
+     * Writes the log to the file itself
+     *
+     * @param string $message
+     * @param int $type
+     * @param int $time
+     */
+    public function logInternal($message, $type, $time)
+    {
         $filename = $this->_path . \DIRECTORY_SEPARATOR . $this->_options['prefix'] . $this->getTypeString($type) . '.' . $this->_options['extension'];
         $log = $this->getFormatter()->format($message, $type, $time);
         $result = file_put_contents($filename, $log, \FILE_APPEND);
@@ -73,7 +73,7 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
             throw new LoggerException('Failed to write log into ' . $filename);
         }
         return;
-	}
+    }
 
     /**
      * begin 
@@ -120,32 +120,32 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
      * @access private
      * @return string E.g. "error", "warning", etc.
      */
-	private function getTypeString($type)
-	{
-		switch ($type) {
-		    case Logger::EMERGENCE:
-		    case Logger::CRITICAL:
+    private function getTypeString($type)
+    {
+        switch ($type) {
+            case Logger::EMERGENCE:
+            case Logger::CRITICAL:
                 // emergence, critical
-				return 'critical';
-		    case Logger::ALERT:
-			case Logger::ERROR:
+                return 'critical';
+            case Logger::ALERT:
+            case Logger::ERROR:
                 // error, alert
-				return 'error';
-			case Logger::WARNING:
+                return 'error';
+            case Logger::WARNING:
                 // warning
-				return 'warning';
-			case Logger::NOTICE:
-			case Logger::INFO:
+                return 'warning';
+            case Logger::NOTICE:
+            case Logger::INFO:
                 // info, notice
-				return 'info';
-			case Logger::DEBUG:
-			case Logger::CUSTOM:
-			case Logger::SPECIAL:
+                return 'info';
+            case Logger::DEBUG:
+            case Logger::CUSTOM:
+            case Logger::SPECIAL:
             default:
                 // debug, log, custom, special
-				return 'debug';
-		}
-	}
+                return 'debug';
+        }
+    }
     
 
 }
