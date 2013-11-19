@@ -2,6 +2,9 @@
 
 namespace Phalcon\Logger\Formatter;
 
+use \Phalcon\Logger\Exception,
+    \Phalcon\Logger as Logger;
+
 /**
  * Phalcon\Logger\Formatter\Firelogger
  *
@@ -98,24 +101,28 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
      */
 	public function getTypeString($type)
 	{
+        
 		switch ($type) {
-			case 0:
-                // emergence
+		    case Logger::EMERGENCE:
+		    case Logger::CRITICAL:
+                // emergence, critical
 				return 'critical';
-			case 2:
-			case 3:
+		    case Logger::ALERT:
+			case Logger::ERROR:
                 // error, alert
 				return 'error';
-			case 4:
+			case Logger::WARNING:
                 // warning
 				return 'warning';
-			case 5:
-			case 6:
+			case Logger::NOTICE:
+			case Logger::INFO:
                 // info, notice
 				return 'info';
-			case 7:
+			case Logger::DEBUG:
+			case Logger::CUSTOM:
+			case Logger::SPECIAL:
             default:
-                // debug, log
+                // debug, log, custom, special
 				return 'debug';
 		}
 	}
