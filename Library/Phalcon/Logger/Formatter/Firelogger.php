@@ -99,33 +99,33 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
      * @access public
      * @return string
      */
-	public function getTypeString($type)
-	{
+    public function getTypeString($type)
+    {
         
-		switch ($type) {
-		    case Logger::EMERGENCE:
-		    case Logger::CRITICAL:
+        switch ($type) {
+            case Logger::EMERGENCE:
+            case Logger::CRITICAL:
                 // emergence, critical
-				return 'critical';
-		    case Logger::ALERT:
-			case Logger::ERROR:
+                return 'critical';
+            case Logger::ALERT:
+            case Logger::ERROR:
                 // error, alert
-				return 'error';
-			case Logger::WARNING:
+                return 'error';
+            case Logger::WARNING:
                 // warning
-				return 'warning';
-			case Logger::NOTICE:
-			case Logger::INFO:
+                return 'warning';
+            case Logger::NOTICE:
+            case Logger::INFO:
                 // info, notice
-				return 'info';
-			case Logger::DEBUG:
-			case Logger::CUSTOM:
-			case Logger::SPECIAL:
+                return 'info';
+            case Logger::DEBUG:
+            case Logger::CUSTOM:
+            case Logger::SPECIAL:
             default:
                 // debug, log, custom, special
-				return 'debug';
-		}
-	}
+                return 'debug';
+        }
+    }
 
     /**
      * pickle 
@@ -245,17 +245,17 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
     
     
 
-	/**
-	 * Applies a format to a message before sent it to the internal log
-	 *
-	 * @param str|int|float|array|null|Exception $message
-	 * @param int $type
-	 * @param int $timestamp
-	 * @param array $trace      Optional. This is the output from debug_backtrace().
-	 * @param int $order        Optional. How many logs are stored in the stack already.
-	 * @return mixed
-	 */
-	public function format($message, $type, $timestamp, $trace = NULL, $order = 0) {
+    /**
+     * Applies a format to a message before sent it to the internal log
+     *
+     * @param str|int|float|array|null|Exception $message
+     * @param int $type
+     * @param int $timestamp
+     * @param array $trace      Optional. This is the output from debug_backtrace().
+     * @param int $order        Optional. How many logs are stored in the stack already.
+     * @return mixed
+     */
+    public function format($message, $type, $timestamp, $trace = NULL, $order = 0) {
 
         $level = $this->getTypeString($type);
 
@@ -316,6 +316,6 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
         }
 
         return $this->pickle($item);
-	}
+    }
 
 }
