@@ -89,3 +89,19 @@ CREATE TABLE `translations` (
 ```php
 echo $translate->_('Hello');
 ```
+
+CSV
+--------
+This adapter uses CSV as translation frontend.
+
+```php
+$translate = new Phalcon\Translate\Adapter\Csv([
+    'file' => 'fr_FR.csv', // required
+    'delimiter' => ',', // optional, default - ;
+    'length' => '4096', // optional, default - 0
+    'enclosure' => '^', // optional, default - "
+]);
+
+echo $translate->_('Hello');
+echo $translate->_('My name is %name%', array('name' => 'John Doe')); //Je m'appelle John Doe
+```
