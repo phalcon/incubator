@@ -5,7 +5,6 @@
     "keywords": ["framework", "phalcon"],
     "homepage": "http://phalconphp.com",
     "license": "BSD-3",
-    "version": "1.2.4",
     "authors": [
         {
             "name": "Phalcon Team",
