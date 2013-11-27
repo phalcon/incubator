@@ -5,6 +5,7 @@
     "keywords": ["framework", "phalcon"],
     "homepage": "http://phalconphp.com",
     "license": "BSD-3",
+    "version": "1.2.4",
     "authors": [
         {
             "name": "Phalcon Team",
@@ -12,7 +13,8 @@
         }
     ],
     "require": {
-        "php": ">=5.3.6"
+        "php": ">=5.3.6",
+        "ext-phalcon": "1.2.4"
     },
     "autoload": {
         "psr-0" : {
