@@ -69,14 +69,14 @@ class Mysql extends \Phalcon\Db\Adapter\Pdo\Mysql
 	 * @param array $bindTypes
 	 * @return \Phalcon\Db\Result\Serializable
 	 */
-	public function query($sqlStatement, $bindParams=null, $bindTypes=null)
+	public function query($sqlStatement, $bindParams = null, $bindTypes = null)
 	{
 
 		/**
 		 * The key is the full sql statement + its parameters
 		 */
 		if (is_array($bindParams)) {
-			$key = \Phalcon\Kernel::preComputeHashKey($sqlStatement.'//'.join('|', $bindParams));
+			$key = \Phalcon\Kernel::preComputeHashKey($sqlStatement . '//' . join('|', $bindParams));
 		} else {
 			$key = \Phalcon\Kernel::preComputeHashKey($sqlStatement);
 		}
@@ -101,10 +101,12 @@ class Mysql extends \Phalcon\Db\Adapter\Pdo\Mysql
 		if (is_object($data)) {
 			$result = new Serializable($data);
 			$this->_cache->save($key, $result);
+
 			return $result;
 		}
 
 		$this->_cache->save($key, $data);
+
 		return false;
 	}
 
@@ -116,9 +118,10 @@ class Mysql extends \Phalcon\Db\Adapter\Pdo\Mysql
 	 * @param array $bindTypes
 	 * @return boolean
 	 */
-	public function execute($sqlStatement, $bindParams=null, $bindTypes=null)
+	public function execute($sqlStatement, $bindParams = null, $bindTypes = null)
 	{
 		$this->_connect();
+
 		return parent::execute($sqlStatement, $bindParams, $bindTypes);
 	}
 
@@ -129,9 +132,10 @@ class Mysql extends \Phalcon\Db\Adapter\Pdo\Mysql
 	 * @param string $schemaName
 	 * @return boolean
 	 */
-	public function tableExists($tableName, $schemaName=null)
+	public function tableExists($tableName, $schemaName = null)
 	{
 		$this->_connect();
+
 		return parent::tableExists($tableName, $schemaName);
 	}
 

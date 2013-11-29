@@ -27,178 +27,179 @@ use \Phalcon\Escaper as PhEscaper;
 
 abstract class FunctionalTestCase extends ModelTestCase
 {
-    protected $application;
+	protected $application;
 
-    /**
-     * Sets the test up by loading the DI container and other stuff
-     *
-     * @return void
-     */
-    protected function setUp()
-    {
-        parent::setUp();
+	/**
+	 * Sets the test up by loading the DI container and other stuff
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
 
-        // Set the dispatcher
-        $this->di->setShared(
-            'dispatcher',
-            function () {
-                $dispatcher = new PhDispatcher();
-                $dispatcher->setControllerName('test');
-                $dispatcher->setActionName('empty');
-                $dispatcher->setParams(array());
-                return $dispatcher;
-            }
-        );
+		// Set the dispatcher
+		$this->di->setShared(
+			'dispatcher',
+			function () {
+				$dispatcher = new PhDispatcher();
+				$dispatcher->setControllerName('test');
+				$dispatcher->setActionName('empty');
+				$dispatcher->setParams(array());
 
-        $this->di->set(
-            'escaper',
-            function () {
-                return new PhEscaper();
-            }
-        );
+				return $dispatcher;
+			}
+		);
 
-        if ($this->di instanceof DiInterface) {
-            $this->application = new PhApplication($this->di);
-        }
+		$this->di->set(
+			'escaper',
+			function () {
+				return new PhEscaper();
+			}
+		);
 
-    }
+		if ($this->di instanceof DiInterface) {
+			$this->application = new PhApplication($this->di);
+		}
 
-    /**
-     * Ensures that each test has it's own DI and all globals are purged
-     *
-     * @return void
-     */
-    protected function tearDown()
-    {
-        $this->di->reset();
-        $this->application = null;
+	}
 
-        $_SESSION = array();
-        $_GET     = array();
-        $_POST    = array();
-        $_COOKIE  = array();
-    }
+	/**
+	 * Ensures that each test has it's own DI and all globals are purged
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+		$this->di->reset();
+		$this->application = null;
 
-    /**
-     * Dispatches a given url and sets the response object accordingly
-     *
-     * @param string $url The request url
-     *
-     * @return void
-     */
-    protected function dispatch($url)
-    {
-        $this->di->setShared('response', $this->application->handle($url));
-    }
+		$_SESSION = array();
+		$_GET = array();
+		$_POST = array();
+		$_COOKIE = array();
+	}
 
-    /**
-     * Assert that the last dispatched controller matches the given controller class name
-     *
-     * @param string $expected The expected controller name
-     *
-     * @return void
-     */
-    public function assertController($expected)
-    {
-        $actual = $this->di->getShared('dispatcher')->getControllerName();
-        if ($actual != $expected) {
-            throw new \PHPUnit_Framework_ExpectationFailedException(
-                sprintf(
-                    'Failed asserting Controller name "%s", actual Controller name is "%s"',
-                    $expected,
-                    $actual
-                )
-            );
-        }
-        $this->assertEquals($expected, $actual);
-    }
+	/**
+	 * Dispatches a given url and sets the response object accordingly
+	 *
+	 * @param string $url The request url
+	 *
+	 * @return void
+	 */
+	protected function dispatch($url)
+	{
+		$this->di->setShared('response', $this->application->handle($url));
+	}
 
-    /**
-     * Assert that the last dispatched action matches the given action name
-     *
-     * @param string $expected The expected action name
-     *
-     * @return void
-     */
-    public function assertAction($expected)
-    {
-        $actual = $this->di->getShared('dispatcher')->getActionName();
-        if ($actual != $expected) {
-            throw new \PHPUnit_Framework_ExpectationFailedException(
-                sprintf(
-                    'Failed asserting Action name "%s", actual Action name is "%s"',
-                    $expected,
-                    $actual
-                )
-            );
-        }
-        $this->assertEquals($expected, $actual);
-    }
+	/**
+	 * Assert that the last dispatched controller matches the given controller class name
+	 *
+	 * @param string $expected The expected controller name
+	 *
+	 * @return void
+	 */
+	public function assertController($expected)
+	{
+		$actual = $this->di->getShared('dispatcher')->getControllerName();
+		if ($actual != $expected) {
+			throw new \PHPUnit_Framework_ExpectationFailedException(
+				sprintf(
+					'Failed asserting Controller name "%s", actual Controller name is "%s"',
+					$expected,
+					$actual
+				)
+			);
+		}
+		$this->assertEquals($expected, $actual);
+	}
 
-    /**
-     * Assert that the response headers contains the given array
-     * <code>
-     * $expected = array('Content-Type' => 'application/json')
-     * </code>
-     *
-     * @param string $expected The expected headers
-     *
-     * @return void
-     */
-    public function assertHeader(array $expected)
-    {
-        foreach ($expected as $expectedField => $expectedValue) {
-            $actualValue = $this->di->getShared('response')->getHeaders()->get($expectedField);
-            if ($actualValue != $expectedValue) {
-                throw new \PHPUnit_Framework_ExpectationFailedException(
-                    sprintf(
-                        'Failed asserting "%s" has a value of "%s", actual "%s" header value is "%s"',
-                        $expectedField,
-                        $expectedValue,
-                        $expectedField,
-                        $actualValue
-                    )
-                );
-            }
-            $this->assertEquals($expectedValue, $actualValue);
-        }
-    }
+	/**
+	 * Assert that the last dispatched action matches the given action name
+	 *
+	 * @param string $expected The expected action name
+	 *
+	 * @return void
+	 */
+	public function assertAction($expected)
+	{
+		$actual = $this->di->getShared('dispatcher')->getActionName();
+		if ($actual != $expected) {
+			throw new \PHPUnit_Framework_ExpectationFailedException(
+				sprintf(
+					'Failed asserting Action name "%s", actual Action name is "%s"',
+					$expected,
+					$actual
+				)
+			);
+		}
+		$this->assertEquals($expected, $actual);
+	}
 
-    /**
-     * Asserts that the response code matches the given one
-     *
-     * @param string $expected the expected response code
-     *
-     * @return void
-     */
-    public function assertResponseCode($expected)
-    {
-        $actualValue = $this->di->getShared('response')->getHeaders()->get('Status');
-        if (empty($actualValue) || stristr($actualValue, $expected)) {
-            throw new \PHPUnit_Framework_ExpectationFailedException(
-                sprintf(
-                    'Failed asserting response code "%s", actual response code is "%s"',
-                    $expected,
-                    $actualValue
-                )
-            );
-        }
-        $this->assertContains($expected, $actualValue);
-    }
+	/**
+	 * Assert that the response headers contains the given array
+	 * <code>
+	 * $expected = array('Content-Type' => 'application/json')
+	 * </code>
+	 *
+	 * @param string $expected The expected headers
+	 *
+	 * @return void
+	 */
+	public function assertHeader(array $expected)
+	{
+		foreach ($expected as $expectedField => $expectedValue) {
+			$actualValue = $this->di->getShared('response')->getHeaders()->get($expectedField);
+			if ($actualValue != $expectedValue) {
+				throw new \PHPUnit_Framework_ExpectationFailedException(
+					sprintf(
+						'Failed asserting "%s" has a value of "%s", actual "%s" header value is "%s"',
+						$expectedField,
+						$expectedValue,
+						$expectedField,
+						$actualValue
+					)
+				);
+			}
+			$this->assertEquals($expectedValue, $actualValue);
+		}
+	}
 
-    /**
-     * Asserts that the dispatched url resulted in a redirection
-     *
-     * @return void
-     */
-    public function assertRedirection()
-    {
-        $actual = $this->di->getShared('dispatcher')->wasForwarded();
-        if (!$actual) {
-            throw new \PHPUnit_Framework_ExpectationFailedException(
-                'Failed asserting response caused a redirect'
-            );
-        }
-        $this->assertTrue($actual);
-    }
+	/**
+	 * Asserts that the response code matches the given one
+	 *
+	 * @param string $expected the expected response code
+	 *
+	 * @return void
+	 */
+	public function assertResponseCode($expected)
+	{
+		$actualValue = $this->di->getShared('response')->getHeaders()->get('Status');
+		if (empty($actualValue) || stristr($actualValue, $expected)) {
+			throw new \PHPUnit_Framework_ExpectationFailedException(
+				sprintf(
+					'Failed asserting response code "%s", actual response code is "%s"',
+					$expected,
+					$actualValue
+				)
+			);
+		}
+		$this->assertContains($expected, $actualValue);
+	}
+
+	/**
+	 * Asserts that the dispatched url resulted in a redirection
+	 *
+	 * @return void
+	 */
+	public function assertRedirection()
+	{
+		$actual = $this->di->getShared('dispatcher')->wasForwarded();
+		if (!$actual) {
+			throw new \PHPUnit_Framework_ExpectationFailedException(
+				'Failed asserting response caused a redirect'
+			);
+		}
+		$this->assertTrue($actual);
+	}
 }

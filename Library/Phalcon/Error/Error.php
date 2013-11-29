@@ -23,45 +23,45 @@ namespace Phalcon\Error;
 class Error
 {
 
-    /**
-     * @var array
-     */
-    protected $_attributes;
+	/**
+	 * @var array
+	 */
+	protected $_attributes;
 
-    /**
-     * Class constructor sets the attributes.
-     *
-     * @param array $options
-     */
-    public function __construct(array $options = array())
-    {
-        $defaults = array(
-            'type'        => -1,
-            'message'     => 'No error message',
-            'file'        => '',
-            'line'        => '',
-            'exception'   => null,
-            'isException' => false,
-            'isError'     => false,
-        );
+	/**
+	 * Class constructor sets the attributes.
+	 *
+	 * @param array $options
+	 */
+	public function __construct(array $options = array())
+	{
+		$defaults = array(
+			'type'        => -1,
+			'message'     => 'No error message',
+			'file'        => '',
+			'line'        => '',
+			'exception'   => null,
+			'isException' => false,
+			'isError'     => false,
+		);
 
-        $options = array_merge($defaults, $options);
+		$options = array_merge($defaults, $options);
 
-        foreach ($options as $option => $value) {
-            $this->_attributes[$option] = $value;
-        }
-    }
+		foreach ($options as $option => $value) {
+			$this->_attributes[$option] = $value;
+		}
+	}
 
-    /**
-     * Magic method to retrieve the attributes.
-     *
-     * @param string $method
-     * @param array $args
-     * @return mixed
-     */
-    public function __call($method, $args)
-    {
-        return isset($this->_attributes[$method]) ? $this->_attributes[$method] : null;
-    }
+	/**
+	 * Magic method to retrieve the attributes.
+	 *
+	 * @param string $method
+	 * @param array $args
+	 * @return mixed
+	 */
+	public function __call($method, $args)
+	{
+		return isset($this->_attributes[$method]) ? $this->_attributes[$method] : null;
+	}
 
 }

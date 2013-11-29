@@ -61,6 +61,7 @@ class Serializable
 		if (isset($this->_data[$this->_position])) {
 			return $this->_data[$this->_position++];
 		}
+
 		return false;
 	}
 
