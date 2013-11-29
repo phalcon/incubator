@@ -26,22 +26,22 @@ use Phalcon\Paginator\Pager\Range;
 class Jumping extends Range
 {
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return array
-     */
-    public function getRange()
-    {
-        $page      = $this->pager->getCurrentPage();
-        $startPage = $page - ($page - 1) % $this->chunkLength;
-        $endPage   = ($startPage + $this->chunkLength) - 1;
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return array
+	 */
+	public function getRange()
+	{
+		$page = $this->pager->getCurrentPage();
+		$startPage = $page - ($page - 1) % $this->chunkLength;
+		$endPage = ($startPage + $this->chunkLength) - 1;
 
-        if ($endPage > $this->pager->getLastPage()) {
-            $endPage = $this->pager->getLastPage();
-        }
+		if ($endPage > $this->pager->getLastPage()) {
+			$endPage = $this->pager->getLastPage();
+		}
 
-        return range($startPage, $endPage);
-    }
+		return range($startPage, $endPage);
+	}
 
 }

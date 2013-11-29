@@ -23,7 +23,7 @@ class Yaml extends Config implements \ArrayAccess
 		if (!extension_loaded('yaml'))
 			throw new Exception('Yaml extension not loaded');
 
-		if (false === $result =@yaml_parse_file($filePath, 0, $ndocs, $callbacks))
+		if (false === $result = @yaml_parse_file($filePath, 0, $ndocs, $callbacks))
 			throw new Exception('Configuration file ' . $filePath . ' can\'t be loaded');
 
 		parent::__construct($result);

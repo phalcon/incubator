@@ -9,7 +9,8 @@ use \Phalcon\Logger\Exception;
  *
  * Adapter to store logs in a database table
  */
-class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\AdapterInterface {
+class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\AdapterInterface
+{
 
 	/**
 	 * Name
@@ -27,7 +28,7 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
 	 * @param string $name
 	 * @param array $options
 	 */
-	public function __construct($name, $options=array())
+	public function __construct($name, $options = array())
 	{
 
 		if (!isset($options['db'])) {
@@ -62,18 +63,18 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
 	public function logInternal($message, $type, $time)
 	{
 		return $this->_options['db']->execute("INSERT INTO " . $this->_options['table'] . " VALUES (null, ?, ?, ?, ?)", array(
-			$this->_name,
-			$type,
-			$message,
-			$time
-		));
+				$this->_name,
+				$type,
+				$message,
+				$time
+			));
 	}
 
 	/**
- 	 * Closes the logger
- 	 *
- 	 * @return boolean
- 	 */
+	 * Closes the logger
+	 *
+	 * @return boolean
+	 */
 	public function close()
 	{
 		$this->_options['db']->close();

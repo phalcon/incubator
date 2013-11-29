@@ -22,83 +22,83 @@ namespace Phalcon\Mvc\View\Engine\Twig;
 class CoreExtension extends \Twig_Extension
 {
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return 'phalcon-core-extension';
-    }
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return string
+	 */
+	public function getName()
+	{
+		return 'phalcon-core-extension';
+	}
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return array
-     */
-    public function getFunctions()
-    {
-        $options = array(
-            'needs_environment' => true,
-            'pre_escape'        => 'html',
-            'is_safe'           => array('html'),
-        );
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return array
+	 */
+	public function getFunctions()
+	{
+		$options = array(
+			'needs_environment' => true,
+			'pre_escape'        => 'html',
+			'is_safe'           => array('html'),
+		);
 
-        return array(
-            'assetsOutputCss' => new \Twig_Function_Method($this, 'functionAssetsOutputCss', $options),
-            'assetsOutputJs'  => new \Twig_Function_Method($this, 'functionAssetsOutputJs', $options),
-        );
-    }
+		return array(
+			'assetsOutputCss' => new \Twig_Function_Method($this, 'functionAssetsOutputCss', $options),
+			'assetsOutputJs'  => new \Twig_Function_Method($this, 'functionAssetsOutputJs', $options),
+		);
+	}
 
-    /**
-     * Returns string with CSS.
-     *
-     * @param  \Phalcon\Mvc\View\Engine\Twig\Environment $env
-     * @return string
-     */
-    public function functionAssetsOutputCss(Environment $env)
-    {
-        return $this->getAssetsOutput($env, 'outputCss');
-    }
+	/**
+	 * Returns string with CSS.
+	 *
+	 * @param  \Phalcon\Mvc\View\Engine\Twig\Environment $env
+	 * @return string
+	 */
+	public function functionAssetsOutputCss(Environment $env)
+	{
+		return $this->getAssetsOutput($env, 'outputCss');
+	}
 
-    /**
-     * Returns string with JS.
-     *
-     * @param  \Phalcon\Mvc\View\Engine\Twig\Environment $env
-     * @return string
-     */
-    public function functionAssetsOutputJs(Environment $env)
-    {
-        return $this->getAssetsOutput($env, 'outputJs');
-    }
+	/**
+	 * Returns string with JS.
+	 *
+	 * @param  \Phalcon\Mvc\View\Engine\Twig\Environment $env
+	 * @return string
+	 */
+	public function functionAssetsOutputJs(Environment $env)
+	{
+		return $this->getAssetsOutput($env, 'outputJs');
+	}
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return array
-     */
-    public function getTokenParsers()
-    {
-        return array(
-            new TokenParsers\Assets(),
-        );
-    }
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return array
+	 */
+	public function getTokenParsers()
+	{
+		return array(
+			new TokenParsers\Assets(),
+		);
+	}
 
-    /**
-     * Proxy method that handles return of assets instead of instant output.
-     *
-     * @param  \Phalcon\Mvc\View\Engine\Twig\Environment $env
-     * @param  string                                    $method
-     * @return string
-     */
-    protected function getAssetsOutput(Environment $env, $method)
-    {
-        $env->getDi()->get('assets')->useImplicitOutput(false);
-        $result = $env->getDi()->get('assets')->$method();
-        $env->getDi()->get('assets')->useImplicitOutput(true);
+	/**
+	 * Proxy method that handles return of assets instead of instant output.
+	 *
+	 * @param  \Phalcon\Mvc\View\Engine\Twig\Environment $env
+	 * @param  string $method
+	 * @return string
+	 */
+	protected function getAssetsOutput(Environment $env, $method)
+	{
+		$env->getDi()->get('assets')->useImplicitOutput(false);
+		$result = $env->getDi()->get('assets')->$method();
+		$env->getDi()->get('assets')->useImplicitOutput(true);
 
-        return $result;
-    }
+		return $result;
+	}
 
 }

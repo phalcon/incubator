@@ -26,49 +26,49 @@ use Phalcon\Mvc\Model\Exception;
 class Redis extends Base
 {
 
-    /**
-     * Redis backend instance.
-     *
-     * @var \Phalcon\Cache\Backend\Redis
-     */
-    protected $redis = null;
+	/**
+	 * Redis backend instance.
+	 *
+	 * @var \Phalcon\Cache\Backend\Redis
+	 */
+	protected $redis = null;
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param  null|array                   $options
-     * @throws \Phalcon\Mvc\Model\Exception
-     */
-    public function __construct($options = null)
-    {
-        if (is_array($options)) {
-            if (!isset($options['redis'])) {
-                throw new Exception('Parameter "redis" is required');
-            }
-        } else {
-            throw new Exception('No configuration given');
-        }
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @param  null|array $options
+	 * @throws \Phalcon\Mvc\Model\Exception
+	 */
+	public function __construct($options = null)
+	{
+		if (is_array($options)) {
+			if (!isset($options['redis'])) {
+				throw new Exception('Parameter "redis" is required');
+			}
+		} else {
+			throw new Exception('No configuration given');
+		}
 
-        parent::__construct($options);
-    }
+		parent::__construct($options);
+	}
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return \Phalcon\Cache\Backend\Redis
-     */
-    protected function getCacheBackend()
-    {
-        if (null === $this->redis) {
-            $this->redis = new CacheBackend(
-                new CacheFrontend(array('lifetime' => $this->options['lifetime'])),
-                array(
-                    'redis' => $this->options['redis'],
-                )
-            );
-        }
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return \Phalcon\Cache\Backend\Redis
+	 */
+	protected function getCacheBackend()
+	{
+		if (null === $this->redis) {
+			$this->redis = new CacheBackend(
+				new CacheFrontend(array('lifetime' => $this->options['lifetime'])),
+				array(
+					'redis' => $this->options['redis'],
+				)
+			);
+		}
 
-        return $this->redis;
-    }
+		return $this->redis;
+	}
 
 }

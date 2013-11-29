@@ -37,7 +37,7 @@ class Mongo extends Adapter implements AdapterInterface
 	 *
 	 * @param array $options
 	 */
-	public function __construct($options=null)
+	public function __construct($options = null)
 	{
 
 		if (!isset($options['collection'])) {

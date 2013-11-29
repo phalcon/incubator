@@ -83,7 +83,7 @@ class Database extends Adapter implements AdapterInterface
 	 * @param  array $accessInherits
 	 * @return boolean
 	 */
-	public function addRole($role, $accessInherits=null)
+	public function addRole($role, $accessInherits = null)
 	{
 
 		if (!is_object($role)) {
@@ -133,7 +133,8 @@ class Database extends Adapter implements AdapterInterface
 	public function isRole($roleName)
 	{
 		$exists = $this->_options['db']->fetchOne('SELECT COUNT(*) FROM ' . $this->_options['roles'] . " WHERE name = ?", null, array($roleName));
-		return (bool) $exists[0];
+
+		return (bool)$exists[0];
 	}
 
 	/**
@@ -145,7 +146,8 @@ class Database extends Adapter implements AdapterInterface
 	public function isResource($resourceName)
 	{
 		$exists = $this->_options['db']->fetchOne('SELECT COUNT(*) FROM ' . $this->_options['resources'] . " WHERE name = ?", null, array($resourceName));
-		return (bool) $exists[0];
+
+		return (bool)$exists[0];
 	}
 
 	/**
@@ -168,7 +170,7 @@ class Database extends Adapter implements AdapterInterface
 	 * @param   Phalcon\Acl\Resource $resource
 	 * @return  boolean
 	 */
-	public function addResource($resource, $accessList=null)
+	public function addResource($resource, $accessList = null)
 	{
 
 		if (!is_object($resource)) {
@@ -214,6 +216,7 @@ class Database extends Adapter implements AdapterInterface
 				$this->_options['db']->execute('INSERT INTO ' . $this->_options['resourcesAccesses'] . " VALUES (?, ?)", array($resourceName, $accessList));
 			}
 		}
+
 		return true;
 	}
 
@@ -229,6 +232,7 @@ class Database extends Adapter implements AdapterInterface
 		foreach ($this->_options['db']->fetchAll($sql, \Phalcon\Db::FETCH_ASSOC) as $row) {
 			$resources[] = new Resource($row['name'], $row['description']);
 		}
+
 		return $resources;
 	}
 
@@ -244,6 +248,7 @@ class Database extends Adapter implements AdapterInterface
 		foreach ($this->_options['db']->fetchAll($sql, \Phalcon\Db::FETCH_ASSOC) as $row) {
 			$roles[] = new Role($row['name'], $row['description']);
 		}
+
 		return $roles;
 	}
 
@@ -320,7 +325,7 @@ class Database extends Adapter implements AdapterInterface
 	{
 
 		if (!$this->isRole($roleName)) {
-			throw new Exception('Role "' . $roleName. '" does not exist in the list');
+			throw new Exception('Role "' . $roleName . '" does not exist in the list');
 		}
 
 		if (is_array($access)) {
@@ -416,7 +421,7 @@ class Database extends Adapter implements AdapterInterface
 		$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
 		$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($role, $resource, $access));
 		if (is_array($allowed)) {
-			return (int) $allowed[0];
+			return (int)$allowed[0];
 		}
 
 		/**
@@ -425,7 +430,7 @@ class Database extends Adapter implements AdapterInterface
 		$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
 		$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($role, $resource, '*'));
 		if (is_array($allowed)) {
-			return (int) $allowed[0];
+			return (int)$allowed[0];
 		}
 
 		$sql = 'SELECT roles_inherit FROM ' . $this->_options['rolesInherits'] . ' WHERE roles_name = ?';
@@ -438,7 +443,7 @@ class Database extends Adapter implements AdapterInterface
 			$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
 			$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($row[0], $resource, $access));
 			if (is_array($allowed)) {
-				return (int) $allowed[0];
+				return (int)$allowed[0];
 			}
 		}
 
@@ -449,7 +454,7 @@ class Database extends Adapter implements AdapterInterface
 			$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
 			$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($row[0], $resource, '*'));
 			if (is_array($allowed)) {
-				return (int) $allowed[0];
+				return (int)$allowed[0];
 			}
 		}
 
@@ -459,12 +464,13 @@ class Database extends Adapter implements AdapterInterface
 		$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
 		$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($role, '*', $access));
 		if (is_array($allowed)) {
-			return (int) $allowed[0];
+			return (int)$allowed[0];
 		}
 
 		/**
 		 * Return the default access action
 		 */
+
 		return $this->_defaultAccess;
 	}
 
