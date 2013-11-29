@@ -45,7 +45,8 @@ class Firephp extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Forma
 	 * @param int $type
 	 * @param int $timestamp
 	 */
-	public function format($message, $type, $timestamp){
+	public function format($message, $type, $timestamp)
+	{
 
 		$file = null;
 		$line = null;

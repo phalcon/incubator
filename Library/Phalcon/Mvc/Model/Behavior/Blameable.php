@@ -16,7 +16,7 @@ class Blameable extends Behavior implements BehaviorInterface
 	 *
 	 * @param array $options
 	 */
-	public function __construct($options=null)
+	public function __construct($options = null)
 	{
 		$this->_options = $options;
 	}

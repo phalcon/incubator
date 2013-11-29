@@ -94,7 +94,7 @@ class Mongo extends Adapter implements AdapterInterface
 	 * @param  array $accessInherits
 	 * @return boolean
 	 */
-	public function addRole($role, $accessInherits=null)
+	public function addRole($role, $accessInherits = null)
 	{
 
 		if (!is_object($role)) {
@@ -107,15 +107,15 @@ class Mongo extends Adapter implements AdapterInterface
 		if (!$exists) {
 
 			$roles->insert(array(
-				'name' => $role->getName(),
+				'name'        => $role->getName(),
 				'description' => $role->getDescription()
 			));
 
 			$this->_getCollection('accessList')->insert(array(
-				'roles_name' => $role->getName(),
+				'roles_name'     => $role->getName(),
 				'resources_name' => '*',
-				'access_name' => '*',
-				'allowed' => $this->_defaultAccess
+				'access_name'    => '*',
+				'allowed'        => $this->_defaultAccess
 			));
 		}
 
@@ -156,6 +156,7 @@ class Mongo extends Adapter implements AdapterInterface
 	public function isRole($roleName)
 	{
 		$exists = $this->_getCollection('roles')->count(array('name' => $roleName));
+
 		return $exists > 0;
 	}
 
@@ -168,6 +169,7 @@ class Mongo extends Adapter implements AdapterInterface
 	public function isResource($resourceName)
 	{
 		$exists = $this->_getCollection('resources')->count(array('name' => $resourceName));
+
 		return $exists > 0;
 	}
 
@@ -191,7 +193,7 @@ class Mongo extends Adapter implements AdapterInterface
 	 * @param   Phalcon\Acl\Resource $resource
 	 * @return  boolean
 	 */
-	public function addResource($resource, $accessList=null)
+	public function addResource($resource, $accessList = null)
 	{
 
 		if (!is_object($resource)) {
@@ -203,7 +205,7 @@ class Mongo extends Adapter implements AdapterInterface
 		$exists = $resources->count(array('name' => $resource->getName()));
 		if (!$exists) {
 			$resources->insert(array(
-				'name' => $resource->getName(),
+				'name'        => $resource->getName(),
 				'description' => $resource->getDescription()
 			));
 		}
@@ -234,24 +236,24 @@ class Mongo extends Adapter implements AdapterInterface
 			foreach ($accessList as $accessName) {
 				$exists = $resourcesAccesses->count(array(
 					'resources_name' => $resourceName,
-					'access_name' => $accessName
+					'access_name'    => $accessName
 				));
 				if (!$exists) {
 					$resourcesAccesses->insert(array(
 						'resources_name' => $resourceName,
-						'access_name' => $accessName
+						'access_name'    => $accessName
 					));
 				}
 			}
 		} else {
 			$exists = $resourcesAccesses->count(array(
 				'resources_name' => $resourceName,
-				'access_name' => $accessList
+				'access_name'    => $accessList
 			));
 			if (!$exists) {
 				$resourcesAccesses->insert(array(
 					'resources_name' => $resourceName,
-					'access_name' => $accessList
+					'access_name'    => $accessList
 				));
 			}
 		}
@@ -270,6 +272,7 @@ class Mongo extends Adapter implements AdapterInterface
 		foreach ($this->_getCollection('resources')->find() as $row) {
 			$resources[] = new Resource($row['name'], $row['description']);
 		}
+
 		return $resources;
 	}
 
@@ -284,6 +287,7 @@ class Mongo extends Adapter implements AdapterInterface
 		foreach ($this->_getCollection('roles')->find() as $row) {
 			$roles[] = new Role($row['name'], $row['description']);
 		}
+
 		return $roles;
 	}
 
@@ -315,7 +319,7 @@ class Mongo extends Adapter implements AdapterInterface
 		 */
 		$exists = $this->_getCollection('resourcesAccesses')->count(array(
 			'resources_name' => $resourceName,
-			'access_name' => $accessName
+			'access_name'    => $accessName
 		));
 		if (!$exists) {
 			throw new Exception("Access '" . $accessName . "' does not exist in resource '" . $resourceName . "' in ACL");
@@ -324,16 +328,16 @@ class Mongo extends Adapter implements AdapterInterface
 		$accessList = $this->_getCollection('accessList');
 
 		$access = $accessList->findOne(array(
-			'roles_name' => $roleName,
+			'roles_name'     => $roleName,
 			'resources_name' => $resourceName,
-			'access_name' => $accessName
+			'access_name'    => $accessName
 		));
 		if (!$access) {
 			$accessList->insert(array(
-				'roles_name' => $roleName,
+				'roles_name'     => $roleName,
 				'resources_name' => $resourceName,
-				'access_name' => $accessName,
-				'allowed' => $action
+				'access_name'    => $accessName,
+				'allowed'        => $action
 			));
 		} else {
 			$access['allowed'] = $action;
@@ -344,16 +348,16 @@ class Mongo extends Adapter implements AdapterInterface
 		 * Update the access '*' in access_list
 		 */
 		$exists = $accessList->count(array(
-			'roles_name' => $roleName,
+			'roles_name'     => $roleName,
 			'resources_name' => $resourceName,
-			'access_name' => '*'
+			'access_name'    => '*'
 		));
 		if (!$exists) {
 			$accessList->insert(array(
-				'roles_name' => $roleName,
+				'roles_name'     => $roleName,
 				'resources_name' => $resourceName,
-				'access_name' => '*',
-				'allowed' => $this->_defaultAccess
+				'access_name'    => '*',
+				'allowed'        => $this->_defaultAccess
 			));
 		}
 
@@ -373,7 +377,7 @@ class Mongo extends Adapter implements AdapterInterface
 	{
 
 		if (!$this->isRole($roleName)) {
-			throw new Exception('Role "' . $roleName. '" does not exist in the list');
+			throw new Exception('Role "' . $roleName . '" does not exist in the list');
 		}
 
 		if (is_array($access)) {
@@ -467,24 +471,24 @@ class Mongo extends Adapter implements AdapterInterface
 
 
 		$access = $accessList->findOne(array(
-			'roles_name' => $role,
+			'roles_name'     => $role,
 			'resources_name' => $resource,
-			'access_name' => $access
+			'access_name'    => $access
 		));
 		if (is_array($access)) {
-			return (int) $access['allowed'];
+			return (int)$access['allowed'];
 		}
 
 		/**
 		 * Check if there is an common rule for that resource
 		 */
 		$access = $accessList->findOne(array(
-			'roles_name' => $role,
+			'roles_name'     => $role,
 			'resources_name' => $resource,
-			'access_name' => '*'
+			'access_name'    => '*'
 		));
 		if (is_array($access)) {
-			return (int) $access['allowed'];
+			return (int)$access['allowed'];
 		}
 
 		/*$sql = 'SELECT roles_inherit FROM roles_inherits WHERE roles_name = ?';
@@ -493,6 +497,7 @@ class Mongo extends Adapter implements AdapterInterface
 		/**
 		 * Check inherited roles for a specific rule
 		 */
+
 		/*foreach ($inheritedRoles as $row) {
 			$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
 			$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($row[0], $resource, $access));
@@ -504,6 +509,7 @@ class Mongo extends Adapter implements AdapterInterface
 		/**
 		 * Check inherited roles for a specific rule
 		 */
+
 		/*foreach ($inheritedRoles as $row) {
 			$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
 			$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($row[0], $resource, '*'));
@@ -515,6 +521,7 @@ class Mongo extends Adapter implements AdapterInterface
 		/**
 		 * Check if there is a common rule for that access
 		 */
+
 		/*$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
 		$allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($role, '*', $access));
 		if (is_array($allowed)) {
@@ -524,6 +531,7 @@ class Mongo extends Adapter implements AdapterInterface
 		/**
 		 * Return the default access action
 		 */
+
 		return $this->_defaultAccess;
 	}
 

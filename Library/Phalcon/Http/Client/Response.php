@@ -23,11 +23,11 @@ use Phalcon\Http\Client\Header;
 
 class Response
 {
-    public $body = '';
-    public $header = null;
+	public $body = '';
+	public $header = null;
 
-    function __construct()
-    {
-        $this->header = new Header();
-    }
+	function __construct()
+	{
+		$this->header = new Header();
+	}
 }

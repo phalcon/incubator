@@ -10,7 +10,8 @@ use Phalcon\Logger\Exception,
  *
  * Adapter to send logs to Firebug using Firephp
  */
-class Firephp extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\AdapterInterface {
+class Firephp extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\AdapterInterface
+{
 
 	/**
 	 * Name
@@ -38,7 +39,7 @@ class Firephp extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapter
 	 * @param string $name
 	 * @param array $options
 	 */
-	public function __construct($name, $options=array())
+	public function __construct($name, $options = array())
 	{
 		$this->_name = $name;
 		$this->_options = $options;
@@ -54,6 +55,7 @@ class Firephp extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapter
 		if (!$this->_formatter) {
 			$this->_formatter = new FirephpFormatter();
 		}
+
 		return $this->_formatter;
 	}
 
@@ -69,22 +71,22 @@ class Firephp extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapter
 
 		if (!$this->_initialized) {
 			header('X-Wf-Protocol-1: http://meta.wildfirehq.org/Protocol/JsonStream/0.2');
-        	header('X-Wf-1-Plugin-1: http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.3');
-        	header('X-Wf-1-Structure-1: http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1');
-        	$this->_initialized = true;
+			header('X-Wf-1-Plugin-1: http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.3');
+			header('X-Wf-1-Structure-1: http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1');
+			$this->_initialized = true;
 		}
 
-        $log = $this->getFormatter()->format($message, $type, $time);
+		$log = $this->getFormatter()->format($message, $type, $time);
 
-        header('X-Wf-1-1-1-' . $this->_index .': ' . $log);
-        $this->_index++;
+		header('X-Wf-1-1-1-' . $this->_index . ': ' . $log);
+		$this->_index++;
 	}
 
 	/**
- 	 * Closes the logger
- 	 *
- 	 * @return boolean
- 	 */
+	 * Closes the logger
+	 *
+	 * @return boolean
+	 */
 	public function close()
 	{
 	}
