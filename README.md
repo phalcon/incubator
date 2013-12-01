@@ -26,7 +26,7 @@ Create the composer.json file as follows:
 ```json
 {
     "require": {
-        "phalcon/incubator": "dev-master"
+        "phalcon/incubator": "v1.2.4"
     }
 }
 ```
