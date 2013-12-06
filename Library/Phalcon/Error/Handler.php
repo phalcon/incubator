@@ -163,9 +163,9 @@ class Handler
                 return 'E_CORE_ERROR';
             case E_CORE_WARNING:
                 return 'E_CORE_WARNING';
-            case E_CORE_ERROR:
+            case E_COMPILE_ERROR:
                 return 'E_COMPILE_ERROR';
-            case E_CORE_WARNING:
+            case E_COMPILE_WARNING:
                 return 'E_COMPILE_WARNING';
             case E_USER_ERROR:
                 return 'E_USER_ERROR';
