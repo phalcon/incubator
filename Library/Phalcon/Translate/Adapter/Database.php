@@ -44,6 +44,10 @@ class Database extends Adapter implements AdapterInterface
 		if (!isset($options['table'])) {
 			throw new Exception("Parameter 'table' is required");
 		}
+		
+                if (!isset($options['language'])) {
+                    throw new Exception("Parameter 'language' is required");
+                }
 
 		$this->_options = $options;
 	}
@@ -60,7 +64,7 @@ class Database extends Adapter implements AdapterInterface
 
 		$options = $this->_options;
 
-		$translation = $options['db']->fetchOne("SELECT value FROM " . $options['table'] . " WHERE key_name = ?", null, array($index));
+		$translation = $options['db']->fetchOne("SELECT value FROM " . $options['table'] . " WHERE language = '" . $options['language'] . "' AND key_name = ?", null, array($index));
 		if (!$translation) {
 			return $index;
 		}
