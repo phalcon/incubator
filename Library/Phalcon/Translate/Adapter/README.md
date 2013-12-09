@@ -1,4 +1,3 @@
-
 Phalcon\Translate\Adapter
 =========================
 
@@ -60,34 +59,89 @@ echo $translate->_('My name is %name%', array('name' => 'Peter')); //Je m'appell
 
 Database
 --------
-This adapter uses a table to store the translation messages:
+You can use your database to store the translations, too.
 
+Let's suppose that you're using [DI](http://docs.phalconphp.com/en/latest/api/Phalcon_DI.html) (in `/public/index.php`) to load your database:
 ```php
-$connection = new \Phalcon\Db\Adapter\Pdo\Mysql(array(
-    "host" => "localhost",
-    "username" => "root",
-    "password" => "secret",
-    "dbname" => "test"
-));
+// ...
 
-$translate = new Phalcon\Translate\Adapter\Database(array(
-    'db' => $connection,
-    'table' => 'translations'
-));
+$di->set('db', function() use ($configurations) {
+	return new \Phalcon\Db\Adapter\Pdo\Mysql([
+		'host' => 'localhost',
+		'username' => 'root',
+		'password' => 123456,
+		'dbname' => 'application'
+	]);
+});
+
+// ...
 ```
 
-The following table is required to store the translations:
-
+Then, you should get the translation through your `controller`. Put this on it:
 ```php
+<?php
+
+class IndexController extends \Phalcon\Mvc\Controller
+{
+	protected function _getTranslation()
+	{
+		return new Phalcon\Translate\Adapter\Database([
+		    'db' => $this->di->get('db'), // We're getting the previous setted DI for database
+		    'table' => 'translations', // The table that is storing the translations
+		    'language' => $this->request->getBestLanguage() // Now we're getting the best language for the user
+		]);
+	}
+	
+	// ...
+}
+```
+
+To store the translations, the following table is required:
+```sql
 CREATE TABLE `translations` (
-  `key_name` varchar(32) NOT NULL,
-  `value` text,
-  PRIMARY KEY (`key_name`)
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `language` CHAR(5) NOT NULL COLLATE 'utf8_bin',
+    `key_name` VARCHAR(48) NOT NULL COLLATE 'utf8_bin',
+    `value` TEXT NOT NULL COLLATE 'utf8_bin',
+    PRIMARY KEY (`id`)
 )
 ```
 
+The columns are self-described, but pay attention to `language` — it's a column that stores the language that the user is using, that can be `en`, `en-us` or `en-US`. Now it's your responsibility to decide which pattern you want to use.
+
+To display for your users the translated words you need to start setting up a variable to store the expressions/translations from your database. Follow the example:
 ```php
-echo $translate->_('Hello');
+<?php
+
+class IndexController extends \Phalcon\Mvc\Controller
+{
+	protected function _getTranslation()
+	{
+		// ...
+	}
+	
+	public function indexAction()
+	{
+		$this->view->setVar('expression', $this->_getTranslation());
+	}
+}
+```
+
+Then, just output the phrase/sentence/word in your view:
+```html+php
+<html>
+	<head>
+		<!-- ... -->
+	</head>
+	<body>
+		<h1><?php echo $expression->_("IndexPage_Hello_World"); ?></h1>
+	</body>
+</html>
+```
+
+Or, if you wish you can use [Volt](http://docs.phalconphp.com/en/latest/reference/volt.html):
+```html+php
+<h1>{{ expression._("IndexPage_Hello_World") }}</h1>
 ```
 
 CSV
