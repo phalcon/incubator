@@ -77,7 +77,7 @@ $di->set('db', function() use ($configurations) {
 // ...
 ```
 
-Then, you should to get the translation through your `controller`. Put this on it:
+Then, you should get the translation through your `controller`. Put this on it:
 ```php
 <?php
 
@@ -109,7 +109,7 @@ CREATE TABLE `translations` (
 
 The columns are self-described, but pay attention to `language` — it's a column that stores the language that the user is using, that can be `en`, `en-us` or `en-US`. Now it's your responsibility to decide which pattern you want to use.
 
-To display to your users the translated words you need to start setting up a variable to store the expressions/translations from your database. Follow the example:
+To display for your users the translated words you need to start setting up a variable to store the expressions/translations from your database. Follow the example:
 ```php
 <?php
 
