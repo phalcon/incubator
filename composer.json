@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.3.6",
-        "ext-phalcon": "1.2.4"
+        "ext-phalcon": "1.3.0"
     },
     "autoload": {
         "psr-0" : {
