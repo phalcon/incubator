@@ -61,11 +61,11 @@ Database
 --------
 You can use your database to store the translations, too.
 
-Let's suppose that you're using [DI](http://docs.phalconphp.com/en/latest/api/Phalcon_DI.html) (in `/public/index.php`) to load your database:
+First of all, you need to up your database. To do this, use [DI](http://docs.phalconphp.com/en/latest/api/Phalcon_DI.html) (in `/public/index.php`). Take a look:
 ```php
 // ...
 
-$di->set('db', function() use ($configurations) {
+$di->set('db', function() {
 	return new \Phalcon\Db\Adapter\Pdo\Mysql([
 		'host' => 'localhost',
 		'username' => 'root',
@@ -86,7 +86,7 @@ class IndexController extends \Phalcon\Mvc\Controller
 	protected function _getTranslation()
 	{
 		return new Phalcon\Translate\Adapter\Database([
-		    'db' => $this->di->get('db'), // We're getting the previous setted DI for database
+		    'db' => $this->di->get('db'), // Here we're getting the database from DI
 		    'table' => 'translations', // The table that is storing the translations
 		    'language' => $this->request->getBestLanguage() // Now we're getting the best language for the user
 		]);
@@ -96,11 +96,11 @@ class IndexController extends \Phalcon\Mvc\Controller
 }
 ```
 
-To store the translations, the following table is required:
+To store the translations, the following table is recommended:
 ```sql
 CREATE TABLE `translations` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `language` CHAR(5) NOT NULL COLLATE 'utf8_bin',
+    `language` VARCHAR(5) NOT NULL COLLATE 'utf8_bin',
     `key_name` VARCHAR(48) NOT NULL COLLATE 'utf8_bin',
     `value` TEXT NOT NULL COLLATE 'utf8_bin',
     PRIMARY KEY (`id`)
@@ -109,7 +109,7 @@ CREATE TABLE `translations` (
 
 The columns are self-described, but pay attention to `language` — it's a column that stores the language that the user is using, that can be `en`, `en-us` or `en-US`. Now it's your responsibility to decide which pattern you want to use.
 
-To display for your users the translated words you need to start setting up a variable to store the expressions/translations from your database. Follow the example:
+To display for your users the translated words you need to set up a variable to store the expressions/translations from your database. *This step happens in your controller.* Follow the example:
 ```php
 <?php
 
