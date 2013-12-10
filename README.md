@@ -1,118 +1,94 @@
-# Phalcon Incubator
+Phalcon\Utils\Text
+=============
+This *static* class is responsible to help you to deal with words, texts, sentences and phrases.
 
-Phalcon PHP is a web framework delivered as a C extension providing high
-performance and lower resource consumption.
+Slugify
+---
+Creates a slug for the passed string taking into account international characters.
 
-This is a repository to publish/share/experimient with new adapters, prototypes
-or functionality that potentially can be incorporated to the C-framework.
+### Requeriments
+The extension [iconv](http://php.net/manual/en/book.iconv.php) must be installed in PHP.
 
-Also we welcome submissions from the community of snippets that could
-extend the framework more.
+### Examples
+```php
+use \Phalcon\Utils\Text as Text;
 
-The code in this repository is written in PHP.
+// Output: messd-up-text-just-to-stress-test-our-little-clean-url-function
+echo Text::slugify
+        ("Mess'd up --text-- just (to) stress /test/ ?our! `little` \\clean\\ url fun.ction!?-->");
 
-## Installation
-
-### Installing via Composer
-
-Install composer in a common location or in your project:
-
-```bash
-curl -s http://getcomposer.org/installer | php
+// The following expression will echo: perche-l-erba-e-verde
+echo Text::slugify("Perché l'erba è verde?", "'");
 ```
 
-Create the composer.json file as follows:
+Pluralize
+---
+Returns a pluralized word (or not) based on an array.
 
-```json
-{
-    "require": {
-        "phalcon/incubator": "v1.2.4"
-    }
-}
+### Examples
+```php
+use \Phalcon\Utils\Text as Text;
+
+// A simple array with three values.
+$consoles = ['Xbox One', 'Playstation 4', 'WiiU'];
+
+// Output: "There is/are 3 consoles available."
+echo 'There is/are ' . count($consoles) . ' ' . Text::pluralize($consoles, 'console') . ' available.';
 ```
-
-Run the composer installer:
-
-```bash
-php composer.phar install
-```
-
-### Installing via Github
-
-Just clone the repository in a common location or inside your project:
-
-```
-git clone https://github.com/phalcon/incubator.git
-```
-
-## Autoloading from the Incubator
-
-Add or register the following namespace strategy to your Phalcon\Loader in order
-to load classes from the incubator repository:
 
 ```php
+// Another simple array with one value.
+$todaysPosts = ['Nelson Mandela dies at 95'];
 
-$loader = new Phalcon\Loader();
-
-$loader->registerNamespaces(array(
-	'Phalcon' => '/path/to/incubator/Library/Phalcon/'
-));
-
-$loader->register();
+// Output: "Found 1 post today."
+echo 'Found ' . count($postsForToday) . ' ' . Text::pluralize($todaysPosts, 'post') . ' today.';
 ```
 
-## Contributions Index
+Integrating with Volt
+---
+To integrate with [Volt Template Engine](http://docs.phalconphp.com/en/latest/reference/volt.html) you just need to add the function that you want to use in your DI.
 
-### Acl
-* [Phalcon\Acl\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Acl/Adapter) - ACL lists stored in database tables
-* [Phalcon\Acl\Adapter\Mongo](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Acl/Adapter) - ACL lists stored in Mongo collections
+To do this, go to your Volt's DI (probably in `/public/index.php`), and just add a function to the engine. See:
 
-### Cache
-* [Phalcon\Cache\Backend\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Database backend for caching data (phalcon)
-* [Phalcon\Cache\Backend\Redis](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Redis backend for caching data (kenjikobe)
+```php
+// This file is "/public/index.php", where I manage all DIs.
 
-### Config
-* [Phalcon\Config\Adapter\Json](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Config/Adapter) - Json adapter (ofpiyush)
-* [Phalcon\Config\Adapter\Yaml](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Config/Adapter) - YAML adapter (freekzy)
+// ...
+    $di->set('voltService', function($view, $di) {
+        $volt = new Volt($view, $di);
+        
+        // your implementation goes here...
+        
+        $compiler = $volt->getCompiler();
+        
+        $compiler->addFunction('pluralize', function($resolvedArgs, $exprArga) {
+            return 'Phalcon\Utils\Text::pluralize(' . $resolvedArgs . ')';
+        });
+        
+        // more of yours' implementation...
+        
+        return $volt;
+    });
+// ...
+```
 
-### Database
-* [Phalcon\Db\Adapter\Cacheable\Mysql](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Db) - MySQL adapter that agressively caches all the queries executed (phalcon)
+Then, in your view:
 
-### Logger
-* [Phalcon\Logger\Adapter\Firephp](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to log messages in Firebug (phalcon)
-* [Phalcon\Logger\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to store logs in a database table (phalcon)
+```html+php
+<html>
+    <head><!-- Your application's head here --></head>
+    <body>
+        There is/are 
+        {{ consolesQuantity }} {{ pluralize(['Xbox One', 'Playstation 4'], 'console') }}  
+        available.
+    </body>
+</html>
+```
 
-### Template Engines
-* [Phalcon\Mvc\View\Engine\Mustache](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/View/Engine) - Adapter for Mustache (phalcon)
-* [Phalcon\Mvc\View\Engine\Twig](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/View/Engine) - Adapter for Twig (phalcon)
-* [Phalcon\Mvc\View\Engine\Smarty](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/View/Engine) - Adapter for Smarty (phalcon)
+To learn more about Volt's functions, [just read the documentation](http://docs.phalconphp.com/en/latest/reference/volt.html#functions).
 
-### ORM Validators
-* [Phalcon\Mvc\Model\Validator\ConfirmationOf](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model) - Allows to validate if a field has a confirmation field with the same value (suxxes)
-
-### Error Handling
-* [Phalcon\Error](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Error) - Error handler used to centralize the error handling and displaying clean error pages (theDisco)
-* [Phalcon\Utils\PrettyExceptions](https://github.com/phalcon/pretty-exceptions) - Pretty Exceptions is an utility to show exceptions/errors/warnings/notices using a nicely visualization. (phalcon/kenjikobe)
-
-### Queue
-* [Phalcon\Queue\Beanstalk\Extended](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Queue/Beanstalk) - Extended class to access the beanstalk queue service (endeveit)
-
-### Test
-* [Phalcon\Test\FunctionalTestCase](https://github.com/silverbadge/incubator/tree/master/Library/Phalcon/Test) - Mvc app test case wrapper (thecodeassassin)
-* [Phalcon\Test\ModelTestCase](https://github.com/silverbadge/incubator/tree/master/Library/Phalcon/Test) - Model test case wrapper (thecodeassassin)
-* [Phalcon\Test\UnitTestCase](https://github.com/silverbadge/incubator/tree/master/Library/Phalcon/Test) - Generic test case wrapper (thecodeassassin)
-
-### Translate
-* [Phalcon\Translate\Adapter\Gettext](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Translate/Adapter) - Translation adapter for Gettext (phalcon)
-* [Phalcon\Translate\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Translate/Adapter) - Translation adapter using relational databases (phalcon)
-* [Phalcon\Translate\Adapter\Csv](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Translate/Adapter) - Translation adapter using CSV (phalcon)
-
-### Session
-* [Phalcon\Session\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - Database adapter for storing sessions (phalcon)
-* [Phalcon\Session\Adapter\Memcache](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - Memcache adapter for storing sessions (meets-ecommerce)
-* [Phalcon\Session\Adapter\Mongo](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - MongoDb adapter for storing sessions (phalcon)
-* [Phalcon\Session\Adapter\Redis](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - Redis adapter for storing sessions (phalcon)
-* [Phalcon\Session\Adapter\HandlerSocket](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - HandlerSocket adapter for storing sessions (Xrymz)
-
-### Utils
-* [Phalcon\Utils\Slug](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Utils) - Creates a slug for the passed string taking into account international characters. (niden)
+***
+Credits
+----
+* Matteo Spinelli (http://cubiq.org) [php-clean-url-generator](http://cubiq.org/the-perfect-php-clean-url-generator)
+* Guilherme Oderdenge ([email](mailto:guilhermeoderdenge@gmail.com), [twitter](http://twitter.com/chiefgui) & [site](http://vincae.com))
