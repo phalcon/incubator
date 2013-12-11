@@ -115,4 +115,4 @@ $loader->register();
 * [Phalcon\Session\Adapter\HandlerSocket](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - HandlerSocket adapter for storing sessions (Xrymz)
 
 ### Utils
-* [Phalcon\Utils\Slug](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Utils) - Creates a slug for the passed string taking into account international characters. (niden)
+* [Phalcon\Utils\Text](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Text) - A mechanism that facilitates dealing with words, texts, sentences and phrases. You can slugify or pluralize something with this, for example.
