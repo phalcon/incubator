@@ -4,7 +4,7 @@
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2012 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2013 Phalcon Team (http://www.phalconphp.com)       |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
   | with this package in the file docs/LICENSE.txt.                        |
@@ -18,12 +18,12 @@
   +------------------------------------------------------------------------+
   | Authors: Andres Gutierrez <andres@phalconphp.com>                      |
   |          Nikolaos Dimopoulos <nikos@niden.net>                         |
-  +------------------------------------------------------------------------+
-*/
+  +
+ */
 
 namespace Phalcon\Utils;
 
-class Slug
+class Text
 {
     /**
      * Creates a slug to be used for pretty URLs
@@ -36,7 +36,7 @@ class Slug
      *
      * @return mixed
      */
-    public static function generate($string, $replace = array(), $delimiter = '-')
+    public static function slugify($string, $replace = array(), $delimiter = '-')
     {
 
         if (!extension_loaded('iconv'))
@@ -63,5 +63,18 @@ class Slug
         setlocale(LC_ALL, $oldLocale);
 
         return $clean;
+    }  
+  
+    /**
+     * Pluralize a word automatically.
+     * 
+     * @param   array   $matrix
+     * @param   string  $word
+     * 
+     * @return  string
+     */
+    public static function pluralize(array $matrix, $word)
+    {
+        if (count($matrix) != 1) return $word . 's'; else return $word;
     }
 }
