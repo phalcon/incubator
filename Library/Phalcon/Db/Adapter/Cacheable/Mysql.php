@@ -24,7 +24,6 @@ use Phalcon\Db\Result\Serializable;
 
 /**
  * Phalcon\Adapter\Cacheable\Mysql
- *
  * Every query executed via this adapter is automatically cached
  */
 class Mysql extends \Phalcon\Db\Adapter\Pdo\Mysql
@@ -65,18 +64,18 @@ class Mysql extends \Phalcon\Db\Adapter\Pdo\Mysql
 	 * The queries executed are stored in the cache
 	 *
 	 * @param string $sqlStatement
-	 * @param array $bindParams
-	 * @param array $bindTypes
+	 * @param array  $bindParams
+	 * @param array  $bindTypes
 	 * @return \Phalcon\Db\Result\Serializable
 	 */
-	public function query($sqlStatement, $bindParams=null, $bindTypes=null)
+	public function query($sqlStatement, $bindParams = null, $bindTypes = null)
 	{
 
 		/**
 		 * The key is the full sql statement + its parameters
 		 */
 		if (is_array($bindParams)) {
-			$key = \Phalcon\Kernel::preComputeHashKey($sqlStatement.'//'.join('|', $bindParams));
+			$key = \Phalcon\Kernel::preComputeHashKey($sqlStatement . '//' . join('|', $bindParams));
 		} else {
 			$key = \Phalcon\Kernel::preComputeHashKey($sqlStatement);
 		}
@@ -112,11 +111,11 @@ class Mysql extends \Phalcon\Db\Adapter\Pdo\Mysql
 	 * Executes the SQL statement without caching
 	 *
 	 * @param string $sqlStatement
-	 * @param array $bindParams
-	 * @param array $bindTypes
+	 * @param array  $bindParams
+	 * @param array  $bindTypes
 	 * @return boolean
 	 */
-	public function execute($sqlStatement, $bindParams=null, $bindTypes=null)
+	public function execute($sqlStatement, $bindParams = null, $bindTypes = null)
 	{
 		$this->_connect();
 		return parent::execute($sqlStatement, $bindParams, $bindTypes);
@@ -129,7 +128,7 @@ class Mysql extends \Phalcon\Db\Adapter\Pdo\Mysql
 	 * @param string $schemaName
 	 * @return boolean
 	 */
-	public function tableExists($tableName, $schemaName=null)
+	public function tableExists($tableName, $schemaName = null)
 	{
 		$this->_connect();
 		return parent::tableExists($tableName, $schemaName);

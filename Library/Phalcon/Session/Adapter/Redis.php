@@ -19,13 +19,12 @@
 
 namespace Phalcon\Session\Adapter;
 
-use \Phalcon\Session\Adapter,
-	\Phalcon\Session\AdapterInterface,
-	\Phalcon\Session\Exception;
+use Phalcon\Session\Adapter;
+use Phalcon\Session\AdapterInterface;
+use Phalcon\Session\Exception;
 
 /**
  * Phalcon\Session\Adapter\Redis
- *
  * Database adapter for Phalcon\Session
  */
 class Redis extends Adapter implements AdapterInterface
@@ -36,27 +35,27 @@ class Redis extends Adapter implements AdapterInterface
 	 *
 	 * @param array $options
 	 */
-	public function __construct($options=null)
+	public function __construct($options = null)
 	{
 
-		if(!isset($options['path'])){
+		if (!isset($options['path'])) {
 			throw new Exception("The parameter 'save_path' is required");
 		}
 
 		ini_set('session.save_handler', 'redis');
 		ini_set('session.save_path', $options['path']);
-		
-        if (isset($options['name'])) {
-            ini_set('session.name', $options['name']);
-        }
 
-        if (isset($options['lifetime'])) {
-            ini_set('session.gc_maxlifetime', $options['lifetime']);
-        }
+		if (isset($options['name'])) {
+			ini_set('session.name', $options['name']);
+		}
 
-        if (isset($options['cookie_lifetime'])) {
-            ini_set('session.cookie_lifetime', $options['cookie_lifetime']);
-        }
+		if (isset($options['lifetime'])) {
+			ini_set('session.gc_maxlifetime', $options['lifetime']);
+		}
+
+		if (isset($options['cookie_lifetime'])) {
+			ini_set('session.cookie_lifetime', $options['cookie_lifetime']);
+		}
 
 		parent::__construct($options);
 	}

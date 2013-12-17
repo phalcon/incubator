@@ -20,13 +20,12 @@
 
 namespace Phalcon\Session\Adapter;
 
-use \Phalcon\Session\Adapter,
-	\Phalcon\Session\AdapterInterface,
-	\Phalcon\Session\Exception;
+use Phalcon\Session\Adapter;
+use Phalcon\Session\AdapterInterface;
+use Phalcon\Session\Exception;
 
 /**
  * Phalcon\Session\Adapter\Mongo
- *
  * Mongo adapter for Phalcon\Session
  */
 class Mongo extends Adapter implements AdapterInterface
@@ -37,7 +36,7 @@ class Mongo extends Adapter implements AdapterInterface
 	 *
 	 * @param array $options
 	 */
-	public function __construct($options=null)
+	public function __construct($options = null)
 	{
 
 		if (!isset($options['collection'])) {
@@ -108,7 +107,7 @@ class Mongo extends Adapter implements AdapterInterface
 
 	/**
 	 * Destroyes the session
-	 *
+
 	 */
 	public function destroy()
 	{
@@ -121,7 +120,7 @@ class Mongo extends Adapter implements AdapterInterface
 
 	/**
 	 * Performs garbage-collection on the session table
-	 *
+
 	 */
 	public function gc()
 	{
