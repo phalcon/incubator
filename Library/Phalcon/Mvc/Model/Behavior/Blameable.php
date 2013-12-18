@@ -2,9 +2,9 @@
 
 namespace Phalcon\Mvc\Model\Behavior;
 
-use Phalcon\Mvc\ModelInterface,
-	Phalcon\Mvc\Model\Behavior,
-	Phalcon\Mvc\Model\BehaviorInterface;
+use Phalcon\Mvc\Model\Behavior;
+use Phalcon\Mvc\Model\BehaviorInterface;
+use Phalcon\Mvc\ModelInterface;
 
 /**
  * Phalcon\Mvc\Model\Behavior\Blameable
@@ -16,7 +16,7 @@ class Blameable extends Behavior implements BehaviorInterface
 	 *
 	 * @param array $options
 	 */
-	public function __construct($options=null)
+	public function __construct($options = null)
 	{
 		$this->_options = $options;
 	}
@@ -24,7 +24,7 @@ class Blameable extends Behavior implements BehaviorInterface
 	/**
 	 * Receive notifications from the Models Manager
 	 *
-	 * @param string $eventType
+	 * @param string                     $eventType
 	 * @param Phalcon\Mvc\ModelInterface $model
 	 */
 	public function notify($eventType, $model)
@@ -44,7 +44,7 @@ class Blameable extends Behavior implements BehaviorInterface
 	/**
 	 * Creates an Audit isntance based on the current enviroment
 	 *
-	 * @param string $type
+	 * @param string                     $type
 	 * @param Phalcon\Mvc\ModelInterface $model
 	 * @return Audit
 	 */

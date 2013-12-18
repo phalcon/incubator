@@ -29,82 +29,82 @@ use Phalcon\Mvc\View;
 
 class Application extends \Phalcon\Mvc\Application
 {
-    const ENV_PRODUCTION = 'production';
-    const ENV_STAGING = 'staging';
-    const ENV_TEST = 'test';
-    const ENV_DEVELOPMENT = 'development';
+	const ENV_PRODUCTION = 'production';
+	const ENV_STAGING = 'staging';
+	const ENV_TEST = 'test';
+	const ENV_DEVELOPMENT = 'development';
 
-    /**
-     * Class constructor registers autoloading and error
-     * handler.
-     *
-     * @return \Phalcon\Error\Application
-     */
-    public function __construct()
-    {
-        $this->registerAutoloaders();
+	/**
+	 * Class constructor registers autoloading and error
+	 * handler.
+	 *
+	 * @return \Phalcon\Error\Application
+	 */
+	public function __construct()
+	{
+		$this->registerAutoloaders();
 
-        ErrorHandler::register();
-    }
+		ErrorHandler::register();
+	}
 
-    /**
-     * Registers the services and dispatches the application.
-     *
-     * @return \Phalcon\Http\Response
-     */
-    public function main()
-    {
-        $this->registerServices();
+	/**
+	 * Registers the services and dispatches the application.
+	 *
+	 * @return \Phalcon\Http\Response
+	 */
+	public function main()
+	{
+		$this->registerServices();
 
-        return $this->handle()->send();
-    }
+		return $this->handle()->send();
+	}
 
-    /**
-     * Registers autoloading.
-     *
-     * @return void
-     */
-    private function registerAutoloaders()
-    {
-        $loader = new Loader();
-        $loader->registerNamespaces(array(
-            'Phalcon\Error' => '.',
-        ));
-        $loader->register();
-    }
+	/**
+	 * Registers autoloading.
+	 *
+	 * @return void
+	 */
+	private function registerAutoloaders()
+	{
+		$loader = new Loader();
+		$loader->registerNamespaces(array(
+			'Phalcon\Error' => '.',
+		));
+		$loader->register();
+	}
 
-    /**
-     * Registers the services in di container.
-     *
-     * @return void
-     */
-    private function registerServices()
-    {
-        $di = new FactoryDefault();
+	/**
+	 * Registers the services in di container.
+	 *
+	 * @return void
+	 */
+	private function registerServices()
+	{
+		$di = new FactoryDefault();
 
-        $di->set('config', function() {
-            ob_start();
-            $config = include APPLICATION_ENV . '.php';
-            ob_end_clean();
+		$di->set('config', function () {
+			ob_start();
+			$config = include APPLICATION_ENV . '.php';
+			ob_end_clean();
 
-            return new Config($config);
-        });
+			return new Config($config);
+		});
 
-        $di->set('dispatcher', function() {
-            $dispatcher = new Dispatcher();
-            $dispatcher->setDefaultNamespace('Application\Controllers\\');
+		$di->set('dispatcher', function () {
+			$dispatcher = new Dispatcher();
+			$dispatcher->setDefaultNamespace('Application\Controllers\\');
 
-            return $dispatcher;
-        });
+			return $dispatcher;
+		});
 
-        $di->set('view', function() {
-            $view = new View();
-            $view->setViewsDir(ROOT_PATH . '/application/views/');
+		$di->set('view', function () {
+			$view = new View();
+			$view->setViewsDir(ROOT_PATH . '/application/views/');
 
-            return $view;
-        });
+			return $view;
+		});
 
-        $this->setDI($di);
-    }
+		$this->setDI($di);
+	}
 
 }

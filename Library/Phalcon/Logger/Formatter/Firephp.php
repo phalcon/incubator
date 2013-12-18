@@ -4,7 +4,6 @@ namespace Phalcon\Logger\Formatter;
 
 /**
  * Phalcon\Logger\Formatter\Firephp
- *
  * Formats messages to be sent to Firephp
  */
 class Firephp extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\FormatterInterface
@@ -42,10 +41,11 @@ class Firephp extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Forma
 	 * Applies a format to a message before sent it to the internal log
 	 *
 	 * @param string $message
-	 * @param int $type
-	 * @param int $timestamp
+	 * @param int    $type
+	 * @param int    $timestamp
 	 */
-	public function format($message, $type, $timestamp){
+	public function format($message, $type, $timestamp)
+	{
 
 		$file = null;
 		$line = null;
