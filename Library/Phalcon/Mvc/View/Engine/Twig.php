@@ -110,7 +110,13 @@ class Twig extends Engine implements EngineInterface
 			}, $options),
 			new \Twig_SimpleFunction('getDocType', function () {
 				return \Phalcon\Tag::getDocType();
-			}, $options)
+			}, $options),
+            new \Twig_SimpleFunction('getSecurityToken', function() {
+                return $this->security->getToken();
+            }, $options),
+            new \Twig_SimpleFunction('getSecurityTokenKey', function() {
+                return $this->security->getTokenKey();
+            }, $options)
 		);
 
 		foreach ($functions as $function) {
