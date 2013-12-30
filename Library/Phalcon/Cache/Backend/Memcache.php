@@ -8,14 +8,14 @@ use Phalcon\Cache\BackendInterface;
 use Phalcon\Cache\Exception;
 
 /**
- * Class Memcached
+ * Class Memcache
  *
- * @package Phalcon\Cache\Backend\Memcache
+ * @package Phalcon\Cache\Backend
  * @author  Tobias Plaputta, Affinitas GmbH
  *          Released under the MIT license. http://nischenspringer.de/license
 
  */
-class Memcached extends Backend implements BackendInterface
+class Memcache extends Backend implements BackendInterface
 {
 	const DEFAULT_HOST = '127.0.0.1';
 	const DEFAULT_PORT = 11211;
@@ -29,7 +29,7 @@ class Memcached extends Backend implements BackendInterface
 	protected $_memcache;
 
 	/**
-	 * Phalcon\Cache\Backend\Memcache\Memcached constructor
+	 * Phalcon\Cache\Backend\Memcache constructor
 	 *
 	 * @param \Phalcon\Cache\FrontendInterface $frontend
 	 * @param array                            $options
