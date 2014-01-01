@@ -204,6 +204,8 @@ abstract class FunctionalTestCase extends ModelTestCase
             if ($actualLocation !== $location) {
                 throw new \PHPUnit_Framework_ExpectationFailedException(sprintf('Failed asserting response redirects to "%s". It redirects to "%s".', $location, $actualLocation));
             }
+            
+            $this->assertEquals($location, $actualLocation);
         }
         
         /**
