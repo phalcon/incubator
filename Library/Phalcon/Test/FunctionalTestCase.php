@@ -203,4 +203,13 @@ abstract class FunctionalTestCase extends ModelTestCase
         {
             return $this->di->getShared('response')->getContent();
         }
+        
+        /**
+         * Assert response content contains $string
+         * @param string $string
+         */
+        public function assertResponseContentContains($string)
+        {
+            $this->assertContains($string, $this->getContent());
+        }
 }
