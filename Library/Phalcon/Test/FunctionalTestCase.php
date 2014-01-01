@@ -20,6 +20,7 @@ namespace Phalcon\Test;
 
 use Phalcon\Escaper as PhEscaper;
 use Phalcon\Mvc\Dispatcher as PhDispatcher;
+use Phalcon\Mvc\Application as PhApplication;
 
 abstract class FunctionalTestCase extends ModelTestCase
 {
@@ -54,7 +55,7 @@ abstract class FunctionalTestCase extends ModelTestCase
 			}
 		);
 
-		if ($this->di instanceof DiInterface) {
+		if ($this->di instanceof \Phalcon\DiInterface) {
 			$this->application = new PhApplication($this->di);
 		}
 
