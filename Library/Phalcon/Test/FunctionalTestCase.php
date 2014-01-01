@@ -194,4 +194,13 @@ abstract class FunctionalTestCase extends ModelTestCase
 		}
 		$this->assertTrue($actual);
 	}
+        
+        /**
+         * Convenience method to retireve response content 
+         * @return string
+         */
+        public function getContent()
+        {
+            return $this->di->getShared('response')->getContent();
+        }
 }
