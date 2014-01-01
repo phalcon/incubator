@@ -195,6 +195,17 @@ abstract class FunctionalTestCase extends ModelTestCase
 		$this->assertTrue($actual);
 	}
         
+        public function assertRedirectTo($location)
+        {
+            $actualLocation = $this->di->getShared('response')->getHeaders()->get('Location');
+            if (!$actualLocation) {
+                throw new \PHPUnit_Framework_ExpectationFailedException('Failed asserting response caused a redirect');
+            }
+            if ($actualLocation !== $location) {
+                throw new \PHPUnit_Framework_ExpectationFailedException(sprintf('Failed asserting response redirects to "%s". It redirects to "%s".', $location, $actualLocation));
+            }
+        }
+        
         /**
          * Convenience method to retireve response content 
          * @return string
