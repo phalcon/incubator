@@ -180,21 +180,28 @@ abstract class FunctionalTestCase extends ModelTestCase
 	}
 
 	/**
-	 * Asserts that the dispatched url resulted in a redirection
+	 * Asserts that the dispatch is forwarded
 	 *
 	 * @return void
 	 */
-	public function assertRedirection()
+	public function assertDispatchIsForwarded()
 	{
-		$actual = $this->di->getShared('dispatcher')->wasForwarded();
-		if (!$actual) {
-			throw new \PHPUnit_Framework_ExpectationFailedException(
-				'Failed asserting response caused a redirect'
-			);
-		}
-		$this->assertTrue($actual);
+            /* @var $dispatcher \Phalcon\Mvc\Dispatcher */
+            $dispatcher = $this->di->getShared('dispatcher');
+            $actual = $dispatcher->wasForwarded();
+            if (!$actual) {
+                throw new \PHPUnit_Framework_ExpectationFailedException(
+                        'Failed asserting dispatch was forwarded'
+                );
+            }  
+            $this->assertTrue($actual);
 	}
         
+        /**
+         * Assert location redirect
+         * @param type $location
+         * @throws \PHPUnit_Framework_ExpectationFailedException
+         */
         public function assertRedirectTo($location)
         {
             $actualLocation = $this->di->getShared('response')->getHeaders()->get('Location');
