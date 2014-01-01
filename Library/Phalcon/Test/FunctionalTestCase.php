@@ -27,12 +27,13 @@ abstract class FunctionalTestCase extends ModelTestCase
 
 	/**
 	 * Sets the test up by loading the DI container and other stuff
-	 *
+	 * @param \Phalcon\DiInterface $di
+         * @param \Phalcon\Config $config
 	 * @return void
 	 */
-	protected function setUp()
+	protected function setUp(\Phalcon\DiInterface $di = null, \Phalcon\Config $config = null)
 	{
-		parent::setUp();
+		parent::setUp($di, $config);
 
 		// Set the dispatcher
 		$this->di->setShared(
