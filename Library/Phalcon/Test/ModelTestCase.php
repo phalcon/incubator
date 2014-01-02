@@ -41,10 +41,12 @@ abstract class ModelTestCase extends UnitTestCase
 	 *
 	 * @author Nikos Dimopoulos <nikos@phalconphp.com>
 	 * @since  2012-09-20
+         * @param \Phalcon\DiInterface $di
+         * @param \Phalcon\Config $config
 	 */
-	protected function setUp()
+	protected function setUp(\Phalcon\DiInterface $di = null, \Phalcon\Config $config = null)
 	{
-		parent::setUp();
+		parent::setUp($di, $config);
 
 		// Set Models manager
 		$this->di->set(
@@ -79,7 +81,7 @@ abstract class ModelTestCase extends UnitTestCase
 
 		if ($this->di->has('db')) {
 			$db = $this->di->get('db');
-			$class = '\Phalcon\Db\Adapter\Pdo\\' . ucfirst($dbType);
+			$class = 'Phalcon\Db\Adapter\Pdo\\' . ucfirst($dbType);
 			if (get_class($db) == $class) {
 				return $db;
 			}
@@ -90,7 +92,7 @@ abstract class ModelTestCase extends UnitTestCase
 			'db',
 			function () use ($dbType, $config) {
 				$params = $config['db'][$dbType];
-				$class = '\Phalcon\Db\Adapter\Pdo\\' . ucfirst($dbType);
+				$class = 'Phalcon\Db\Adapter\Pdo\\' . ucfirst($dbType);
 
 				$conn = new $class($params);
 				return $conn;
