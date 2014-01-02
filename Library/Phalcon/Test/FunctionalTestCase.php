@@ -199,7 +199,8 @@ abstract class FunctionalTestCase extends ModelTestCase
         
         /**
          * Assert location redirect
-         * @param type $location
+         * 
+         * @param string $location
          * @throws \PHPUnit_Framework_ExpectationFailedException
          */
         public function assertRedirectTo($location)
@@ -216,7 +217,8 @@ abstract class FunctionalTestCase extends ModelTestCase
         }
         
         /**
-         * Convenience method to retireve response content 
+         * Convenience method to retrieve response content 
+         * 
          * @return string
          */
         public function getContent()
@@ -225,10 +227,11 @@ abstract class FunctionalTestCase extends ModelTestCase
         }
         
         /**
-         * Assert response content contains $string
+         * Assert response content contains string
+         * 
          * @param string $string
          */
-        public function assertResponseContentContains($string)
+        public function assertContentContains($string)
         {
             $this->assertContains($string, $this->getContent());
         }
