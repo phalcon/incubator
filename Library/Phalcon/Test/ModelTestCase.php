@@ -81,7 +81,7 @@ abstract class ModelTestCase extends UnitTestCase
 
 		if ($this->di->has('db')) {
 			$db = $this->di->get('db');
-			$class = '\Phalcon\Db\Adapter\Pdo\\' . ucfirst($dbType);
+			$class = 'Phalcon\Db\Adapter\Pdo\\' . ucfirst($dbType);
 			if (get_class($db) == $class) {
 				return $db;
 			}
@@ -92,7 +92,7 @@ abstract class ModelTestCase extends UnitTestCase
 			'db',
 			function () use ($dbType, $config) {
 				$params = $config['db'][$dbType];
-				$class = '\Phalcon\Db\Adapter\Pdo\\' . ucfirst($dbType);
+				$class = 'Phalcon\Db\Adapter\Pdo\\' . ucfirst($dbType);
 
 				$conn = new $class($params);
 				return $conn;
