@@ -231,7 +231,7 @@ abstract class FunctionalTestCase extends ModelTestCase
          * 
          * @param string $string
          */
-        public function assertContentContains($string)
+        public function assertResponseContentContains($string)
         {
             $this->assertContains($string, $this->getContent());
         }
