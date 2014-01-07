@@ -166,17 +166,23 @@ abstract class FunctionalTestCase extends ModelTestCase
 	 */
 	public function assertResponseCode($expected)
 	{
-		$actualValue = $this->di->getShared('response')->getHeaders()->get('Status');
-		if (empty($actualValue) || stristr($actualValue, $expected)) {
-			throw new \PHPUnit_Framework_ExpectationFailedException(
-				sprintf(
-					'Failed asserting response code "%s", actual response code is "%s"',
-					$expected,
-					$actualValue
-				)
-			);
-		}
-		$this->assertContains($expected, $actualValue);
+            // convert to string if int
+            if (is_integer($expected)) {
+                $expected = (string) $expected;
+            }
+            
+            $actualValue = $this->di->getShared('response')->getHeaders()->get('Status');
+
+            if (empty($actualValue) || stristr($actualValue, $expected) === false) {
+                    throw new \PHPUnit_Framework_ExpectationFailedException(
+                            sprintf(
+                                    'Failed asserting response code is "%s", actual response status is "%s"',
+                                    $expected,
+                                    $actualValue
+                            )
+                    );
+            }
+            $this->assertContains($expected, $actualValue);
 	}
 
 	/**
