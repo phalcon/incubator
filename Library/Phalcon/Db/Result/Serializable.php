@@ -22,7 +22,6 @@ namespace Phalcon\Db\Result;
 
 /**
  * Phalcon\Adapter\Result\Serializable
- *
  * Fetches all the data in a result providing a serializable resultset
  */
 class Serializable
@@ -34,7 +33,7 @@ class Serializable
 
 	/**
 	 * The resultset is completely fetched
-	 *
+
 	 */
 	public function __construct($result)
 	{

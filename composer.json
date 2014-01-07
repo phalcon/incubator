@@ -16,9 +16,9 @@
         "ext-phalcon": "1.2.4"
     },
     "autoload": {
-        "psr-0" : {
-            "Phalcon" : "Library/"
+        "psr-0": {
+            "Phalcon": "Library/"
         }
     }
-    
+
 }
