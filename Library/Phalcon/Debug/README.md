@@ -8,7 +8,7 @@ Dump
 --------
 This utility class is meant to be used for dumping variables, heavily inspired by [Zend Framework's \Zend\Debug\Debug class](http://framework.zend.com/apidoc/2.1/classes/Zend.Debug.Debug.html).
 Outputs var using var_dump or xdebug_var_dump and, if outputted, flushes Phalcons default output buffer.
-Also, writes name of file and line where it was called.
+Also, writes name of file and line from which it was called.
 
 Basic usage:
 
