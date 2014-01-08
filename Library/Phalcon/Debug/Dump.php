@@ -25,7 +25,17 @@ class Dump
      * 
      * @var bool
      */
-    protected static $flushBuffer = true;
+    protected $flushBuffer = true;
+    
+    /**
+     * Constructs Dump object.
+     * 
+     * @param bool $flushBuffer if set to false, ob_flush will not be called after echo
+     */
+    public function __construct($flushBuffer = true)
+    {
+        $this->flushBuffer = $flushBuffer;
+    }
 
     /**
      * Get the current value of the debug output environment.
@@ -39,6 +49,16 @@ class Dump
             static::$sapi = PHP_SAPI;
         }
         return static::$sapi;
+    }
+    
+    /**
+     * Sets sapi value
+     * 
+     * @param string $sapi
+     */
+    public static function setSapi($sapi)
+    {
+        static::$sapi = $sapi;
     }
 
     /**
@@ -73,15 +93,15 @@ class Dump
      * @param  bool   $outputDump    Overrides self::$output flag
      * @return string
      */
-    public static function dump($var, $outputDump = null)
+    public function dump($var, $outputDump = null)
     {
         // add file and line on which Dump was called
         $backtrace = debug_backtrace();
         $label = 'Dump - File: ' . $backtrace[0]['file'] . ', Line: ' . $backtrace[0]['line'];
-  
+
         // var_dump the variable into a buffer and keep the output
         ob_start();
-        if (function_exists('xdebug_var_dump')) {
+        if ($this->xdebugDumpExists()) {
             xdebug_var_dump($var);
         } else {
             var_dump($var);
@@ -111,10 +131,20 @@ class Dump
         }
         if ($echo) {
             echo $output;
-            if (static::$flushBuffer) {
+            if ($this->flushBuffer) {
             ob_flush();
             }
         }
         return $output;
+    }
+    
+    /**
+     * Checks if xdebug_var_dump function is available
+     * 
+     * @return bool
+     */
+    protected function xdebugDumpExists()
+    {
+        return function_exists('xdebug_var_dump');
     }
 }
