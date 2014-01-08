@@ -7,7 +7,7 @@ Debug help
 Dump
 --------
 This utility class is meant to be used for dumping variables, heavily inspired by [Zend Framework's \Zend\Debug\Debug class](http://framework.zend.com/apidoc/2.1/classes/Zend.Debug.Debug.html).
-Outputs var using var_dump or xdebug_var_dump and, if outputted, flushes Phalcons default output buffer.
+Outputs var using var_dump() or xdebug_var_dump() and, if outputted, flushes Phalcons default output buffer.
 Also, writes name of file and line from which it was called.
 
 Basic usage:
@@ -28,5 +28,34 @@ if (ENVIRONMENT === 'production') {
 
 // will return dump instead of echoing it
 \Phalcon\Debug\Dump::dump($varToDump);
+
+```
+
+If, for any reason, there is need to override \Phalcon\Debug\Dump::$output value,
+behavior can be overriden by setting second argument of \Phalcon\Debug\Dump::dump() method to true or false
+
+```php
+
+\Phalcon\Debug\Dump::setOutput(false);
+
+// will return dump instead of echoing it
+\Phalcon\Debug\Dump::dump($varToDump);
+
+// this will echo dump
+\Phalcon\Debug\Dump::dump($varToDump, true);
+
+```
+
+and
+
+```php
+
+\Phalcon\Debug\Dump::setOutput(true);
+
+// this will echo dump
+\Phalcon\Debug\Dump::dump($varToDump);
+
+// will return dump instead of echoing it
+\Phalcon\Debug\Dump::dump($varToDump, false);
 
 ```

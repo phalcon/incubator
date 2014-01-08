@@ -63,10 +63,10 @@ class Dump
      * and runs htmlentities() before output.
      *
      * @param  mixed  $var   The variable to dump.
-     * @param  bool   $suppressOutput    If set to true will override value set in self::$output
+     * @param  bool   $outputDump    Overrides self::$output flag
      * @return string
      */
-    public static function dump($var, $suppressOutput = false)
+    public static function dump($var, $outputDump = null)
     {
         // add file and line on which Dump was called
         $backtrace = debug_backtrace();
@@ -98,7 +98,12 @@ class Dump
                     . '</pre>';
         }
 
-        if (static::$output && !$suppressOutput) {
+        $echo = self::$output;
+        if(is_bool($outputDump))
+        {
+            $echo = $outputDump;
+        }
+        if ($echo) {
             echo $output;
             ob_flush();
         }
