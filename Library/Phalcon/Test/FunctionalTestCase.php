@@ -166,32 +166,79 @@ abstract class FunctionalTestCase extends ModelTestCase
 	 */
 	public function assertResponseCode($expected)
 	{
-		$actualValue = $this->di->getShared('response')->getHeaders()->get('Status');
-		if (empty($actualValue) || stristr($actualValue, $expected)) {
-			throw new \PHPUnit_Framework_ExpectationFailedException(
-				sprintf(
-					'Failed asserting response code "%s", actual response code is "%s"',
-					$expected,
-					$actualValue
-				)
-			);
-		}
-		$this->assertContains($expected, $actualValue);
+            // convert to string if int
+            if (is_integer($expected)) {
+                $expected = (string) $expected;
+            }
+            
+            $actualValue = $this->di->getShared('response')->getHeaders()->get('Status');
+
+            if (empty($actualValue) || stristr($actualValue, $expected) === false) {
+                    throw new \PHPUnit_Framework_ExpectationFailedException(
+                            sprintf(
+                                    'Failed asserting response code is "%s", actual response status is "%s"',
+                                    $expected,
+                                    $actualValue
+                            )
+                    );
+            }
+            $this->assertContains($expected, $actualValue);
 	}
 
 	/**
-	 * Asserts that the dispatched url resulted in a redirection
+	 * Asserts that the dispatch is forwarded
 	 *
 	 * @return void
 	 */
-	public function assertRedirection()
+	public function assertDispatchIsForwarded()
 	{
-		$actual = $this->di->getShared('dispatcher')->wasForwarded();
-		if (!$actual) {
-			throw new \PHPUnit_Framework_ExpectationFailedException(
-				'Failed asserting response caused a redirect'
-			);
-		}
-		$this->assertTrue($actual);
+            /* @var $dispatcher \Phalcon\Mvc\Dispatcher */
+            $dispatcher = $this->di->getShared('dispatcher');
+            $actual = $dispatcher->wasForwarded();
+            if (!$actual) {
+                throw new \PHPUnit_Framework_ExpectationFailedException(
+                        'Failed asserting dispatch was forwarded'
+                );
+            }  
+            $this->assertTrue($actual);
 	}
+        
+        /**
+         * Assert location redirect
+         * 
+         * @param string $location
+         * @throws \PHPUnit_Framework_ExpectationFailedException
+         */
+        public function assertRedirectTo($location)
+        {
+            $actualLocation = $this->di->getShared('response')->getHeaders()->get('Location');
+            if (!$actualLocation) {
+                throw new \PHPUnit_Framework_ExpectationFailedException('Failed asserting response caused a redirect');
+            }
+            if ($actualLocation !== $location) {
+                throw new \PHPUnit_Framework_ExpectationFailedException(sprintf('Failed asserting response redirects to "%s". It redirects to "%s".', $location, $actualLocation));
+            }
+            
+            $this->assertEquals($location, $actualLocation);
+        }
+        
+        /**
+         * Convenience method to retrieve response content 
+         * 
+         * @return string
+         */
+        public function getContent()
+        {
+            return $this->di->getShared('response')->getContent();
+        }
+        
+        /**
+         * Assert response content contains string
+         * 
+         * @param string $string
+         */
+        public function assertResponseContentContains($string)
+        {
+            $this->assertContains($string, $this->getContent());
+        }
 }

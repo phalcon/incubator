@@ -38,8 +38,9 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
 	protected $config = array();
 
 	/**
-	 * @var
-	 */
+         *
+         * @var \Phalcon\DiInterface 
+         */
 	protected $di;
 
 	/**
@@ -136,4 +137,13 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
 			unlink($file);
 		}
 	}
+        
+        /**
+         * 
+         * @return \Phalcon\DiInterface
+         */
+        protected function getDI()
+        {
+            return $this->di;
+        }
 }
