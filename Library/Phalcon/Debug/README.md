@@ -14,11 +14,11 @@ Basic usage:
 
 ```php
 
-\Phalcon\Debug\Dump::dump($varToDump);
+(new \Phalcon\Debug\Dump())->dump($varToDump);
 
 ```
 
-Can be set to return output instead of echoing it using \Phalcon\Debug\Dump::setDebug() method
+Can be set to return output instead of echoing it using \Phalcon\Debug\Dump::setOutput() method
 
 ```php
 
@@ -27,22 +27,22 @@ if (ENVIRONMENT === 'production') {
 }
 
 // will return dump instead of echoing it
-\Phalcon\Debug\Dump::dump($varToDump);
+(new \Phalcon\Debug\Dump())->dump($varToDump);
 
 ```
 
 If, for any reason, there is need to override \Phalcon\Debug\Dump::$output value,
-behavior can be overriden by setting second argument of \Phalcon\Debug\Dump::dump() method to true or false
+behavior can be overriden by setting second argument of \Phalcon\Debug\Dump::dump method to true or false
 
 ```php
 
 \Phalcon\Debug\Dump::setOutput(false);
 
 // will return dump instead of echoing it
-\Phalcon\Debug\Dump::dump($varToDump);
+(new \Phalcon\Debug\Dump())->dump($varToDump);
 
 // this will echo dump
-\Phalcon\Debug\Dump::dump($varToDump, true);
+(new \Phalcon\Debug\Dump())->dump($varToDump, true);
 
 ```
 
@@ -56,6 +56,29 @@ and
 \Phalcon\Debug\Dump::dump($varToDump);
 
 // will return dump instead of echoing it
-\Phalcon\Debug\Dump::dump($varToDump, false);
+(new \Phalcon\Debug\Dump())->dump($varToDump, false);
+
+```
+
+Convenient way of setting dump application wide (instead of making instance every time its called) can be using Phalcons DI:
+
+```php
+
+$this->getDI()->setShared('dump', function() {
+    return new \Phalcon\Debug\Dump();
+});
+
+// ... later in application ...
+$this->getDI()->getShared('dump')->dump($varToDump); // echoes dump
+
+```
+
+If calling ob_flush() every time after var is dumped is not wanted behaviour it can be changed by setting false in object constructor:
+(WARNING: if dump is echoed anywhere in Phalcon application, except in view, and ob_flush() is not called, it will not be seen due to Phalcons output buffering)
+
+```php
+
+// ob_flush() will not be called
+(new \Phalcon\Debug\Dump(false))->dump($varToDump);
 
 ```
