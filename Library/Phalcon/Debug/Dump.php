@@ -19,6 +19,13 @@ class Dump
      * @var bool
      */
     protected static $output = true;
+    
+    /**
+     * Controls whether output buffer should be flushed after echoing dump
+     * 
+     * @var bool
+     */
+    protected static $flushBuffer = true;
 
     /**
      * Get the current value of the debug output environment.
@@ -85,7 +92,7 @@ class Dump
         // neaten the newlines and indents
         $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
         if (static::getSapi() == 'cli') {
-            $label = $label . '<br />' . PHP_EOL;
+            $label = $label . PHP_EOL;
             $output = PHP_EOL . $label
                     . PHP_EOL . $output
                     . PHP_EOL;
@@ -99,13 +106,14 @@ class Dump
         }
 
         $echo = self::$output;
-        if(is_bool($outputDump))
-        {
+        if (is_bool($outputDump)) {
             $echo = $outputDump;
         }
         if ($echo) {
             echo $output;
+            if (static::$flushBuffer) {
             ob_flush();
+            }
         }
         return $output;
     }
