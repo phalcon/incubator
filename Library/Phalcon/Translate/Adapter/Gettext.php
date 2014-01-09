@@ -81,6 +81,50 @@ class Gettext extends Adapter implements AdapterInterface
 	}
 
 	/**
+	 * Returns the translation related to the given key and context (msgctxt).
+	 *
+	 * @param    string $msgid
+	 * @param    string $msgctxt        Optional. If ommitted or NULL, this method behaves as query().
+	 * @param    array  $placeholders   Optional.
+	 * @param    string $category       Optional. Specify the locale category. Defaults to LC_MESSAGES
+	 * @return    string
+	 */
+    public function cquery($msgid, $msgctxt = null, $placeholders = null, $category = LC_MESSAGES)
+    {
+        $domain = textdomain(NULL);
+
+        if ($msgctxt === null) {
+            return $this->query($msgid, $placeholders);
+        }
+        $contextString = "{$msgctxt}\004{$msgid}";
+        $translation = dcgettext($domain, $contextString, $category);
+        if ($translation == $contextString)  {
+            $translation = $msgid;
+        }
+		if (is_array($placeholders)) {
+			foreach ($placeholders as $key => $value) {
+				$translation = str_replace('%' . $key . '%', $value, $translation);
+			}
+		}
+        return $translation;
+    }
+
+	/**
+	 * Returns the translation related to the given key and context (msgctxt).
+	 * This is an alias to cquery().
+	 *
+	 * @param    string $msgid
+	 * @param    string $msgctxt        Optional.
+	 * @param    array  $placeholders   Optional.
+	 * @param    string $category       Optional. Specify the locale category. Defaults to LC_MESSAGES
+	 * @return    string
+	 */
+    public function __($msgid, $msgctxt = null, $placeholders = null, $category = LC_MESSAGES)
+    {
+        return $this->cquery($msgid, $msgctxt, $placeholders, $category);
+    }
+
+	/**
 	 * Check whether is defined a translation key in gettext
 	 *
 	 * @param    string $index
