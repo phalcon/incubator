@@ -52,12 +52,12 @@ $translate = new Phalcon\Translate\Adapter\Gettext(array(
 ));
 ```
 
-### Advanced use
-
 ```php
 echo $translate->_('Hello'); //Bonjour
 echo $translate->_('My name is %name%', array('name' => 'Peter')); //Je m'appelle Peter
 ```
+
+### Advanced use
 
 Use the __() (alias to cquery()) method if you have multiple translations of a string in different contexts:
 
