@@ -20,14 +20,13 @@
 
 namespace Phalcon\Cache\Backend;
 
-use Phalcon\Db,
-	Phalcon\Cache\Backend,
-	Phalcon\Cache\BackendInterface,
-	Phalcon\Cache\Exception;
+use Phalcon\Cache\Backend;
+use Phalcon\Cache\BackendInterface;
+use Phalcon\Cache\Exception;
+use Phalcon\Db;
 
 /**
  * Phalcon\Cache\Backend\Database
- *
  * This backend uses a database as cache backend
  */
 class Database extends Backend implements BackendInterface
@@ -37,9 +36,9 @@ class Database extends Backend implements BackendInterface
 	 * Phalcon\Cache\Backend\Database constructor
 	 *
 	 * @param Phalcon\Cache\FrontendInterface $frontend
-	 * @param array $options
+	 * @param array                           $options
 	 */
-	public function __construct($frontend, $options=array())
+	public function __construct($frontend, $options = array())
 	{
 		if (!isset($options['db'])) {
 			throw new Exception("Parameter 'db' is required");
@@ -56,14 +55,14 @@ class Database extends Backend implements BackendInterface
 	 * Get a cached content from the
 	 *
 	 * @param string $keyName
-	 * @param int $lifetime
+	 * @param int    $lifetime
 	 */
-	public function get($keyName, $lifetime=null)
+	public function get($keyName, $lifetime = null)
 	{
 
 		$options = $this->getOptions();
 
-		$sql = "SELECT data, lifetime FROM ".$options['table']." WHERE key_name = ?";
+		$sql = "SELECT data, lifetime FROM " . $options['table'] . " WHERE key_name = ?";
 		$cache = $options['db']->fetchOne($sql, Db::FETCH_ASSOC, array($keyName));
 		if (!$cache) {
 			return null;
@@ -71,13 +70,13 @@ class Database extends Backend implements BackendInterface
 
 		$frontend = $this->getFrontend();
 
-		if ($lifetime===null) {
+		if ($lifetime === null) {
 			$lifetime = $frontend->getLifetime();
 		}
 
 		//Remove the cache if expired
 		if ($cache['lifetime'] < (time() - $lifetime)) {
-			$options['db']->execute("DELETE FROM ".$options['table']." WHERE key_name = ?", array($keyName));
+			$options['db']->execute("DELETE FROM " . $options['table'] . " WHERE key_name = ?", array($keyName));
 			return null;
 		}
 
@@ -89,15 +88,15 @@ class Database extends Backend implements BackendInterface
 	/**
 	 * Stores cached content into the APC backend and stops the frontend
 	 *
-	 * @param string $keyName
-	 * @param string $content
-	 * @param long $lifetime
+	 * @param string  $keyName
+	 * @param string  $content
+	 * @param long    $lifetime
 	 * @param boolean $stopBuffer
 	 */
-	public function save($keyName=null, $content=null, $lifetime=null, $stopBuffer=true)
+	public function save($keyName = null, $content = null, $lifetime = null, $stopBuffer = true)
 	{
 
-		if ($keyName===null) {
+		if ($keyName === null) {
 			$lastKey = $this->_lastKey;
 		} else {
 			$lastKey = $keyName;
@@ -110,30 +109,30 @@ class Database extends Backend implements BackendInterface
 		$options = $this->getOptions();
 		$frontend = $this->getFrontend();
 
-		if ($content===null) {
+		if ($content === null) {
 			$content = $frontend->getContent();
 		}
 
 		//Get the lifetime from the frontend
-		if ($lifetime===null) {
+		if ($lifetime === null) {
 			$lifetime = $frontend->getLifetime();
 		}
 
 		//Check if the cache already exist
-		$sql = "SELECT data, lifetime FROM ".$options['table']." WHERE key_name = ?";
+		$sql = "SELECT data, lifetime FROM " . $options['table'] . " WHERE key_name = ?";
 		$cache = $options['db']->fetchOne($sql, Db::FETCH_ASSOC, array($keyName));
 		if (!$cache) {
-			$options['db']->execute("INSERT INTO ".$options['table']." VALUES (?, ?, ?)", array(
-				$keyName,
-				$frontend->beforeStore($content),
-				time()
-			));
+			$options['db']->execute("INSERT INTO " . $options['table'] . " VALUES (?, ?, ?)", array(
+					$keyName,
+					$frontend->beforeStore($content),
+					time()
+				));
 		} else {
-			$options['db']->execute("UPDATE ".$options['table']." SET data = ?, lifetime = ? WHERE key_name = ?", array(
-				$frontend->beforeStore($content),
-				time(),
-				$keyName
-			));
+			$options['db']->execute("UPDATE " . $options['table'] . " SET data = ?, lifetime = ? WHERE key_name = ?", array(
+					$frontend->beforeStore($content),
+					time(),
+					$keyName
+				));
 		}
 
 		//Stop the buffer, this only applies for Phalcon\Cache\Frontend\Output
@@ -156,7 +155,8 @@ class Database extends Backend implements BackendInterface
 	 * @param string $keyName
 	 * @return boolean
 	 */
-	public function delete($keyName){
+	public function delete($keyName)
+	{
 
 		$options = $this->getOptions();
 
@@ -175,11 +175,12 @@ class Database extends Backend implements BackendInterface
 	 * @param string $prefix
 	 * @return array
 	 */
-	public function queryKeys($prefix=null){
+	public function queryKeys($prefix = null)
+	{
 
 		$options = $this->getOptions();
 
-		if ($prefix!=null) {
+		if ($prefix != null) {
 			$sql = "SELECT key_name FROM " . $options['table'] . " WHERE key_name LIKE ? ORDER BY lifetime";
 			$caches = $options['db']->query($sql, array($prefix));
 		} else {
@@ -204,23 +205,24 @@ class Database extends Backend implements BackendInterface
 	 * @param string $lifetime
 	 * @return boolean
 	 */
-	public function exists($keyName=null, $lifetime=null){
+	public function exists($keyName = null, $lifetime = null)
+	{
 
 		$options = $this->getOptions();
 
-		$sql = "SELECT lifetime FROM ".$options['table']." WHERE key_name = ?";
+		$sql = "SELECT lifetime FROM " . $options['table'] . " WHERE key_name = ?";
 		$cache = $options['db']->fetchOne($sql, Db::FETCH_ASSOC, array($keyName));
 		if (!$cache) {
 			return false;
 		}
 
-		if ($lifetime===null) {
+		if ($lifetime === null) {
 			$lifetime = $this->getFrontend()->getLifetime();
 		}
 
 		//Remove the cache if expired
-		if ($cache['lifetime'] < (time()-$lifetime)) {
-			$options['db']->execute("DELETE FROM ".$options['table']." WHERE key_name = ?", array($keyName));
+		if ($cache['lifetime'] < (time() - $lifetime)) {
+			$options['db']->execute("DELETE FROM " . $options['table'] . " WHERE key_name = ?", array($keyName));
 			return false;
 		}
 

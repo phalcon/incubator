@@ -20,16 +20,15 @@
 
 namespace Phalcon\Acl\Adapter;
 
-use Phalcon\Acl,
-	Phalcon\Acl\Adapter,
-	Phalcon\Acl\AdapterInterface,
-	Phalcon\Acl\Role,
-	Phalcon\Acl\Resource,
-	Phalcon\Acl\Exception;
+use Phalcon\Acl\Adapter;
+use Phalcon\Acl\AdapterInterface;
+use Phalcon\Acl\Exception;
+use Phalcon\Acl\Resource;
+use Phalcon\Acl;
+use Phalcon\Acl\Role;
 
 /**
  * Phalcon\Acl\Adapter\Database
- *
  * Manages ACL lists in memory
  */
 class Database extends Adapter implements AdapterInterface
@@ -74,16 +73,15 @@ class Database extends Adapter implements AdapterInterface
 
 	/**
 	 * Adds a role to the ACL list. Second parameter lets to inherit access data from other existing role
-	 *
 	 * Example:
 	 * <code>$acl->addRole(new Phalcon\Acl\Role('administrator'), 'consultor');</code>
 	 * <code>$acl->addRole('administrator', 'consultor');</code>
 	 *
 	 * @param  string $role
-	 * @param  array $accessInherits
+	 * @param  array  $accessInherits
 	 * @return boolean
 	 */
-	public function addRole($role, $accessInherits=null)
+	public function addRole($role, $accessInherits = null)
 	{
 
 		if (!is_object($role)) {
@@ -150,16 +148,13 @@ class Database extends Adapter implements AdapterInterface
 
 	/**
 	 * Adds a resource to the ACL list
-	 *
 	 * Access names can be a particular action, by example
 	 * search, update, delete, etc or a list of them
-	 *
 	 * Example:
 	 * <code>
 	 * //Add a resource to the the list allowing access to an action
 	 * $acl->addResource(new Phalcon\Acl\Resource('customers'), 'search');
 	 * $acl->addResource('customers', 'search');
-	 *
 	 * //Add a resource  with an access list
 	 * $acl->addResource(new Phalcon\Acl\Resource('customers'), array('create', 'search'));
 	 * $acl->addResource('customers', array('create', 'search'));
@@ -168,7 +163,7 @@ class Database extends Adapter implements AdapterInterface
 	 * @param   Phalcon\Acl\Resource $resource
 	 * @return  boolean
 	 */
-	public function addResource($resource, $accessList=null)
+	public function addResource($resource, $accessList = null)
 	{
 
 		if (!is_object($resource)) {
@@ -191,7 +186,7 @@ class Database extends Adapter implements AdapterInterface
 	 * Adds access to resources
 	 *
 	 * @param string $resourceName
-	 * @param mixed $accessList
+	 * @param mixed  $accessList
 	 */
 	public function addResourceAccess($resourceName, $accessList)
 	{
@@ -251,7 +246,7 @@ class Database extends Adapter implements AdapterInterface
 	 * Removes an access from a resource
 	 *
 	 * @param string $resourceName
-	 * @param mixed $accessList
+	 * @param mixed  $accessList
 	 */
 	public function dropResourceAccess($resourceName, $accessList)
 	{
@@ -264,7 +259,7 @@ class Database extends Adapter implements AdapterInterface
 	 * @param string $roleName
 	 * @param string $resourceName
 	 * @param string $access
-	 * @param int $access
+	 * @param int    $access
 	 * @return boolean
 	 */
 	protected function _insertOrUpdateAccess($roleName, $resourceName, $accessName, $action)
@@ -313,14 +308,14 @@ class Database extends Adapter implements AdapterInterface
 	 * @param string $roleName
 	 * @param string $resourceName
 	 * @param string $access
-	 * @param int $access
+	 * @param int    $access
 	 * @return boolean
 	 */
 	protected function _allowOrDeny($roleName, $resourceName, $access, $action)
 	{
 
 		if (!$this->isRole($roleName)) {
-			throw new Exception('Role "' . $roleName. '" does not exist in the list');
+			throw new Exception('Role "' . $roleName . '" does not exist in the list');
 		}
 
 		if (is_array($access)) {
@@ -334,27 +329,22 @@ class Database extends Adapter implements AdapterInterface
 
 	/**
 	 * Allow access to a role on a resource
-	 *
 	 * You can use '*' as wildcard
-	 *
 	 * Ej:
 	 * <code>
 	 * //Allow access to guests to search on customers
 	 * $acl->allow('guests', 'customers', 'search');
-	 *
 	 * //Allow access to guests to search or create on customers
 	 * $acl->allow('guests', 'customers', array('search', 'create'));
-	 *
 	 * //Allow access to any role to browse on products
 	 * $acl->allow('*', 'products', 'browse');
-	 *
 	 * //Allow access to any role to browse on any resource
 	 * $acl->allow('*', '*', 'browse');
 	 * </code>
 	 *
 	 * @param string $roleName
 	 * @param string $resourceName
-	 * @param mixed $access
+	 * @param mixed  $access
 	 */
 	public function allow($roleName, $resourceName, $access)
 	{
@@ -363,27 +353,22 @@ class Database extends Adapter implements AdapterInterface
 
 	/**
 	 * Deny access to a role on a resource
-	 *
 	 * You can use '*' as wildcard
-	 *
 	 * Ej:
 	 * <code>
 	 * //Deny access to guests to search on customers
 	 * $acl->deny('guests', 'customers', 'search');
-	 *
 	 * //Deny access to guests to search or create on customers
 	 * $acl->deny('guests', 'customers', array('search', 'create'));
-	 *
 	 * //Deny access to any role to browse on products
 	 * $acl->deny('*', 'products', 'browse');
-	 *
 	 * //Deny access to any role to browse on any resource
 	 * $acl->deny('*', '*', 'browse');
 	 * </code>
 	 *
 	 * @param string $roleName
 	 * @param string $resourceName
-	 * @param mixed $access
+	 * @param mixed  $access
 	 * @return boolean
 	 */
 	public function deny($roleName, $resourceName, $access)
@@ -393,18 +378,16 @@ class Database extends Adapter implements AdapterInterface
 
 	/**
 	 * Check whether a role is allowed to access an action from a resource
-	 *
 	 * <code>
 	 * //Does Andres have access to the customers resource to create?
 	 * $acl->isAllowed('Andres', 'Products', 'create');
-	 *
 	 * //Do guests have access to any resource to edit?
 	 * $acl->isAllowed('guests', '*', 'edit');
 	 * </code>
 	 *
 	 * @param  string $role
 	 * @param  string $resource
-	 * @param  mixed $accessList
+	 * @param  mixed  $accessList
 	 * @return boolean
 	 */
 	public function isAllowed($role, $resource, $access)

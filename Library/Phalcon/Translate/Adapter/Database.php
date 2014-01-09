@@ -45,22 +45,26 @@ class Database extends Adapter implements AdapterInterface
 			throw new Exception("Parameter 'table' is required");
 		}
 
+		if (!isset($options['language'])) {
+			throw new Exception("Parameter 'language' is required");
+		}
+
 		$this->_options = $options;
 	}
 
 	/**
 	 * Returns the translation related to the given key
 	 *
-	 * @param	string $index
-	 * @param	array $placeholders
-	 * @return	string
+	 * @param    string $index
+	 * @param    array  $placeholders
+	 * @return    string
 	 */
-	public function query($index, $placeholders=null)
+	public function query($index, $placeholders = null)
 	{
 
 		$options = $this->_options;
 
-		$translation = $options['db']->fetchOne("SELECT value FROM " . $options['table'] . " WHERE key_name = ?", null, array($index));
+		$translation = $options['db']->fetchOne("SELECT value FROM " . $options['table'] . " WHERE language = '" . $options['language'] . "' AND key_name = ?", null, array($index));
 		if (!$translation) {
 			return $index;
 		}
@@ -81,12 +85,14 @@ class Database extends Adapter implements AdapterInterface
 	/**
 	 * Check whether is defined a translation key in the database
 	 *
-	 * @param 	string $index
-	 * @return	bool
+	 * @param    string $index
+	 * @return    bool
 	 */
 	public function exists($index)
 	{
-		$exists = $options['db']->fetchOne("SELECT COUNT(*) FROM " . $options['table'] . " WHERE key_name = ?0", null, array($index));
+		$options = $this->_options;
+
+		$exists = $options['db']->fetchOne("SELECT COUNT(*) FROM " . $options['table'] . " WHERE key_name = ?", null, array($index));
 		return $exists[0] > 0;
 	}
 

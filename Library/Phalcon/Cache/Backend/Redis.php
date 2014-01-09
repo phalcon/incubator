@@ -20,26 +20,25 @@
 
 namespace Phalcon\Cache\Backend;
 
-use Phalcon\Cache\Backend,
-	Phalcon\Cache\BackendInterface,
-	Phalcon\Cache\Exception;
+use Phalcon\Cache\Backend;
+use Phalcon\Cache\BackendInterface;
+use Phalcon\Cache\Exception;
 
 /**
  * Phalcon\Cache\Backend\Redis
- *
  * This backend uses redis as cache backend
  */
 class Redis extends Backend implements BackendInterface
 {
 
-    /**
-     * Phalcon\Cache\Backend\Redis constructor
-     *
-     * @param \Phalcon\Cache\FrontendInterface $frontend
-     * @param array $options
-     * @throws \Phalcon\Cache\Exception
-     */
-	public function __construct($frontend, $options=null)
+	/**
+	 * Phalcon\Cache\Backend\Redis constructor
+	 *
+	 * @param \Phalcon\Cache\FrontendInterface $frontend
+	 * @param array                            $options
+	 * @throws \Phalcon\Cache\Exception
+	 */
+	public function __construct($frontend, $options = null)
 	{
 		if (!isset($options['redis'])) {
 			throw new Exception("Parameter 'redis' is required");
@@ -48,20 +47,20 @@ class Redis extends Backend implements BackendInterface
 		parent::__construct($frontend, $options);
 	}
 
-    /**
-     * Get cached content from the Redis backend
-     *
-     * @param string $keyName
-     * @param null $lifetime
-     * @param int $lifetime
-     * @return mixed|null
-     */
-	public function get($keyName, $lifetime=null)
+	/**
+	 * Get cached content from the Redis backend
+	 *
+	 * @param string $keyName
+	 * @param null   $lifetime
+	 * @param int    $lifetime
+	 * @return mixed|null
+	 */
+	public function get($keyName, $lifetime = null)
 	{
 		$options = $this->getOptions();
 
 		$value = $options['redis']->get($keyName);
-		if ($value===false) {
+		if ($value === false) {
 			return null;
 		}
 
@@ -72,19 +71,19 @@ class Redis extends Backend implements BackendInterface
 		return $frontend->afterRetrieve($value);
 	}
 
-    /**
-     * Stores cached content into the Redis backend and stops the frontend
-     *
-     * @param string $keyName
-     * @param string $content
-     * @param int $lifetime
-     * @param boolean $stopBuffer
-     * @throws \Phalcon\Cache\Exception
-     */
-	public function save($keyName=null, $content=null, $lifetime=null, $stopBuffer=true)
+	/**
+	 * Stores cached content into the Redis backend and stops the frontend
+	 *
+	 * @param string  $keyName
+	 * @param string  $content
+	 * @param int     $lifetime
+	 * @param boolean $stopBuffer
+	 * @throws \Phalcon\Cache\Exception
+	 */
+	public function save($keyName = null, $content = null, $lifetime = null, $stopBuffer = true)
 	{
 
-		if ($keyName===null) {
+		if ($keyName === null) {
 			$lastKey = $this->_lastKey;
 		} else {
 			$lastKey = $keyName;
@@ -97,17 +96,17 @@ class Redis extends Backend implements BackendInterface
 		$options = $this->getOptions();
 		$frontend = $this->getFrontend();
 
-		if ($content===null) {
+		if ($content === null) {
 			$content = $frontend->getContent();
 		}
 
 		//Get the lifetime from the frontend
-		if ($lifetime===null) {
+		if ($lifetime === null) {
 			$lifetime = $frontend->getLifetime();
 		}
 
 		$options['redis']->setex($lastKey, $lifetime, $frontend->beforeStore($content));
-		
+
 		$isBuffering = $frontend->isBuffering();
 
 		//Stop the buffer, this only applies for Phalcon\Cache\Frontend\Output
@@ -129,7 +128,8 @@ class Redis extends Backend implements BackendInterface
 	 * @param string $keyName
 	 * @return boolean
 	 */
-	public function delete($keyName){
+	public function delete($keyName)
+	{
 		$options = $this->getOptions();
 		return $options['redis']->delete($keyName) > 0;
 	}
@@ -140,7 +140,8 @@ class Redis extends Backend implements BackendInterface
 	 * @param string $prefix
 	 * @return array
 	 */
-	public function queryKeys($prefix=null){
+	public function queryKeys($prefix = null)
+	{
 		$options = $this->getOptions();
 		if ($prefix === null) {
 			return $options['redis']->getKeys('*');
@@ -156,7 +157,8 @@ class Redis extends Backend implements BackendInterface
 	 * @param string $lifetime
 	 * @return boolean
 	 */
-	public function exists($keyName=null, $lifetime=null){
+	public function exists($keyName = null, $lifetime = null)
+	{
 		$options = $this->getOptions();
 		return $options['redis']->exists($keyName);
 	}
