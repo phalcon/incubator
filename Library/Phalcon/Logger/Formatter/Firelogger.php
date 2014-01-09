@@ -250,7 +250,7 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
      * @param int $order        Optional. How many logs are stored in the stack already.
      * @return mixed
      */
-    public function format($message, $type, $timestamp, $trace = NULL, $order = 0) {
+    public function format($message, $type, $timestamp, $trace = NULL, $order = 0)
 	{
 
 		$level = $this->getTypeString($type);
