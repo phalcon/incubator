@@ -78,6 +78,9 @@ $loader->register();
 ### Database
 * [Phalcon\Db\Adapter\Cacheable\Mysql](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Db) - MySQL adapter that agressively caches all the queries executed (phalcon)
 
+### Debug
+* [Phalcon\Debug\Dump](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Debug) - Variable dumper (digitronac)
+
 ### Logger
 * [Phalcon\Logger\Adapter\Firephp](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to log messages in Firebug (phalcon)
 * [Phalcon\Logger\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to store logs in a database table (phalcon)
