@@ -251,6 +251,30 @@ class Extended extends Base
 	}
 
 	/**
+     	* Returns the number of tube watched by current session.
+     	* Example return array: array('WATCHED' => 1)
+     	* Added on 10-Jan-2014 20:04 IST by Tapan Kumar Thapa @ tapan.thapa@yahoo.com
+     	*
+     	* @param  string $tube
+     	* @return null|array
+     	*/
+    	public function ignoreTube($tube)
+    	{
+        $result = null;
+        $lines  = $this->getResponseLinesText('ignore ' . $this->getTubeName($tube));
+
+        if (null !== $lines) {            
+                list($name, $value) = explode(' ', $lines);
+                if (null !== $value) {
+                    $result[$name] = intval($value);
+                }
+            
+        }
+
+        return $result;
+    	}
+
+	/**
 	 * Returns the result of command that wait the list in response from beanstalkd.
 	 *
 	 * @param  string $cmd
@@ -283,6 +307,36 @@ class Extended extends Base
 
 		return $result;
 	}
+
+	/**
+     	* Returns the result of command that wait the list in response from beanstalkd.
+    	* Added on 10-Jan-2014 20:04 IST by Tapan Kumar Thapa @ tapan.thapa@yahoo.com
+     	*
+     	* @param  string $cmd
+     	* @return text|null
+     	* @throws \RuntimeException
+     	*/
+    	protected function getResponseLinesText($cmd)
+    	{
+        $result  = null;
+        $nbBytes = $this->write($cmd);
+
+        if ($nbBytes && ($nbBytes > 0)) {
+            $response = $this->read($nbBytes);
+            $matches  = [];
+
+            if (!preg_match('#^WATCHING (\d+).*?#', $response, $matches)) {
+                throw new \RuntimeException(sprintf(
+                    'Unhandled response: %s',
+                    $response
+                ));
+            }
+
+            $result = $response;
+        }
+
+        return $result;
+    	}
 
 	/**
 	 * Runs the worker in separate process.
