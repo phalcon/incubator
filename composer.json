@@ -16,8 +16,7 @@
         "ext-phalcon": "1.2.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.28",
-	"sneakybobito/phalcon-stubs": "1.2.3"
+        "phpunit/phpunit": "3.7.28"
     },
     "autoload": {
         "psr-0": {
