@@ -116,6 +116,22 @@ abstract class ModelTestCase extends UnitTestCase
 
 		return $success;
 	}
+        
+        /**
+         * Disables FOREIGN_KEY_CHECKS and truncates database table
+         * 
+         * @param string $table table name
+         * @return bool result of truncate operation
+         */
+        public function truncateTable($table)
+        {
+            /* @var $db \Phalcon\Db\Adapter\Pdo\Mysql */
+            $db = $this->getDI()->get('db');
+            $db->query("SET FOREIGN_KEY_CHECKS = 0");
+            $success = $db->query("TRUNCATE TABLE `$table`");
+            $db->query("SET FOREIGN_KEY_CHECKS = 1");
+            return $success;
+        }
 
 	/**
 	 * Populates a table with default data

@@ -57,6 +57,67 @@ echo $translate->_('Hello'); //Bonjour
 echo $translate->_('My name is %name%', array('name' => 'Peter')); //Je m'appelle Peter
 ```
 
+### Advanced use
+
+Use the __() (alias to cquery()) method if you have multiple translations of a string in different contexts:
+
+```gettext
+msgid "Hello"
+msgstr "Bonjour"
+
+msgctxt "informal"
+msgid "Hello"
+msgstr "Salut"
+
+msgctxt "evening"
+msgid "Hello"
+msgstr "Bonsoir"
+
+msgid "Hello %name%"
+msgstr "Salut %name%"
+```
+
+```php
+echo $translate->_('Hello');                  //Bonjour
+echo $translate->__('Hello');                 //Bonjour
+echo $translate->__('Hello', 'informal');     //Salut
+echo $translate->__('Hello', 'evening');      //Bonsoir
+echo $translate->cquery('Hello', 'evening');  //Bonsoir
+// placeholders are supported as well
+echo $translate->__('Hello %name%', NULL, array('name' => 'Bob'));   //Salut Bob
+```
+
+Multiple translations domains are supported by the dquery() method. Let's say you have two files with translations:
+
+```gettext
+# frontend.po
+msgid "Hello"
+msgstr "Hello, visitor"
+```
+Additionally, you have a file named *backend.po*:
+
+```gettext
+# backend.po
+msgid "Hello"
+msgstr "Hello, admin"
+
+msgctxt "evening"
+msgid "Hello"
+msgstr "Bonsoir, admin"
+
+msgid "Hello %name%"
+msgstr "Salut %name%"
+```
+
+```php
+echo $translate->dquery('frontend', 'Hello');             //Hello, visitor
+echo $translate->dquery('backend', 'Hello');              //Hello, admin
+// contexts supported
+echo $translate->dquery('backend', 'Hello', 'evening');   //Bonsoir, admin
+// placeholders are supported as well
+echo $translate->dquery('backend', 'Hello %name%', NULL, array('name' => 'Bob'));   //Salut Bob
+```
+
 Database
 --------
 You can use your database to store the translations, too.
