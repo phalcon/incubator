@@ -2,8 +2,8 @@
 
 namespace Phalcon\Logger\Adapter\File;
 
-use \Phalcon\Logger\Exception as LoggerException,
-    \Phalcon\Logger as Logger;
+use \Phalcon\Logger\Exception as LoggerException;
+use \Phalcon\Logger as Logger;
 
 /**
  * Phalcon\Logger\Adapter\File\Multiple

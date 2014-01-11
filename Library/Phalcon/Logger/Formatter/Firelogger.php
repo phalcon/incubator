@@ -2,8 +2,8 @@
 
 namespace Phalcon\Logger\Formatter;
 
-use \Phalcon\Logger\Exception,
-    \Phalcon\Logger as Logger;
+use \Phalcon\Logger\Exception;
+use \Phalcon\Logger as Logger;
 
 /**
  * Phalcon\Logger\Formatter\Firelogger
