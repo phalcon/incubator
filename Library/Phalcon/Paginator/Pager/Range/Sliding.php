@@ -23,37 +23,37 @@ use Phalcon\Paginator\Pager\Range;
 class Sliding extends Range
 {
 
-	/**
-	 * {@inheritdoc}
-	 * @return array
-	 */
-	public function getRange()
-	{
-		$page = $this->pager->getCurrentPage();
-		$pages = $this->pager->getLastPage();
+    /**
+     * {@inheritdoc}
+     * @return array
+     */
+    public function getRange()
+    {
+        $page = $this->pager->getCurrentPage();
+        $pages = $this->pager->getLastPage();
 
-		$chunk = $this->chunkLength;
+        $chunk = $this->chunkLength;
 
-		if ($chunk > $pages) {
-			$chunk = $pages;
-		}
+        if ($chunk > $pages) {
+            $chunk = $pages;
+        }
 
-		$chunkStart = $page - (floor($chunk / 2));
-		$chunkEnd = $page + (ceil($chunk / 2) - 1);
+        $chunkStart = $page - (floor($chunk / 2));
+        $chunkEnd = $page + (ceil($chunk / 2) - 1);
 
-		if ($chunkStart < 1) {
-			$adjust = 1 - $chunkStart;
-			$chunkStart = 1;
-			$chunkEnd = $chunkEnd + $adjust;
-		}
+        if ($chunkStart < 1) {
+            $adjust = 1 - $chunkStart;
+            $chunkStart = 1;
+            $chunkEnd = $chunkEnd + $adjust;
+        }
 
-		if ($chunkEnd > $pages) {
-			$adjust = $chunkEnd - $pages;
-			$chunkStart = $chunkStart - $adjust;
-			$chunkEnd = $pages;
-		}
+        if ($chunkEnd > $pages) {
+            $adjust = $chunkEnd - $pages;
+            $chunkStart = $chunkStart - $adjust;
+            $chunkEnd = $pages;
+        }
 
-		return range($chunkStart, $chunkEnd);
-	}
+        return range($chunkStart, $chunkEnd);
+    }
 
 }

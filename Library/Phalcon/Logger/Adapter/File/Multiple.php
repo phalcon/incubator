@@ -11,13 +11,13 @@ use \Phalcon\Logger\Exception as LoggerException,
  * Adapter to save logs into multiple log files based on their level.
  *
  * TODO Implement transactions.
- * 
+ *
  * @version 0.1
- * @author Richard Laffers <richard.laffers@movys.sk> 
+ * @author Richard Laffers <richard.laffers@movys.sk>
  * @license The BSD 3-Clause License {@link http://opensource.org/licenses/BSD-3-Clause}
  */
-class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\AdapterInterface {
-
+class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\AdapterInterface
+{
     /**
      * path.
      *
@@ -76,8 +76,8 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
     }
 
     /**
-     * begin 
-     * 
+     * begin
+     *
      * @access public
      * @return void
      */
@@ -87,8 +87,8 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
     }
 
     /**
-     * commit 
-     * 
+     * commit
+     *
      * @access public
      * @return void
      */
@@ -98,8 +98,8 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
     }
 
     /**
-     * rollback 
-     * 
+     * rollback
+     *
      * @access public
      * @return void
      */
@@ -110,13 +110,13 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
 
 
     /**
-     * getTypeString 
+     * getTypeString
      *
      * Translates Phalcon log types into type strings.
      *
      * TODO It would be nice to make a config option to say which error levels go into what files.
-     * 
-     * @param int $type 
+     *
+     * @param int $type
      * @access private
      * @return string E.g. "error", "warning", etc.
      */
@@ -146,6 +146,6 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
                 return 'debug';
         }
     }
-    
+
 
 }

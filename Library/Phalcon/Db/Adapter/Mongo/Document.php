@@ -48,7 +48,7 @@ class Document
             if (is_numeric($key)) {
                 if (DbRef::isRef($value)) {
                     $container[$key] = new DbRef($this->collection, $value);
-                } else if (is_array($value)) {
+                } elseif (is_array($value)) {
                     $container[$key] = $this->extract($iterator->getChildren(), 'stdClass');
                 } else {
                     $container[$key] = $value;
@@ -56,7 +56,7 @@ class Document
             } else {
                 if (DbRef::isRef($value)) {
                     $container->{$key} = new DbRef($this->collection, $value);
-                } else if (is_array($value)) {
+                } elseif (is_array($value)) {
                     $container->{$key} = $this->extract($iterator->getChildren(), 'stdClass');
                 } else {
                     $container->{$key} = $value;

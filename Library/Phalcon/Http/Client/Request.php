@@ -26,42 +26,42 @@ use Phalcon\Http\Uri;
 
 abstract class Request
 {
-	protected $baseUri;
-	public $header = null;
+    protected $baseUri;
+    public $header = null;
 
-	const VERSION = '0.0.1';
+    const VERSION = '0.0.1';
 
-	function __construct()
-	{
-		$this->baseUri = new Uri();
-		$this->header = new Header();
-	}
+    public function __construct()
+    {
+        $this->baseUri = new Uri();
+        $this->header = new Header();
+    }
 
-	static function getProvider()
-	{
-		if (Curl::isAvailable()) {
-			return new Curl();
-		}
+    public static function getProvider()
+    {
+        if (Curl::isAvailable()) {
+            return new Curl();
+        }
 
-		if (Stream::isAvailable()) {
-			return new Stream();
-		}
+        if (Stream::isAvailable()) {
+            return new Stream();
+        }
 
-		throw new ProviderException('There isn\'t any available provider');
-	}
+        throw new ProviderException('There isn\'t any available provider');
+    }
 
-	public function setBaseUri($baseUri)
-	{
-		$this->baseUri = new Uri($baseUri);
-	}
+    public function setBaseUri($baseUri)
+    {
+        $this->baseUri = new Uri($baseUri);
+    }
 
-	public function getBaseUri()
-	{
-		return $this->baseUri->toString();
-	}
+    public function getBaseUri()
+    {
+        return $this->baseUri->toString();
+    }
 
-	public function resolveUri($uri)
-	{
-		return $this->baseUri->resolve($uri);
-	}
+    public function resolveUri($uri)
+    {
+        return $this->baseUri->resolve($uri);
+    }
 }

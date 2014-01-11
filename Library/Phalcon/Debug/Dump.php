@@ -12,24 +12,24 @@ class Dump
      * @var string
      */
     protected static $sapi = null;
-    
+
     /**
      * Controls whether dump should be echoed
-     * 
+     *
      * @var bool
      */
     protected static $output = true;
-    
+
     /**
      * Controls whether output buffer should be flushed after echoing dump
-     * 
+     *
      * @var bool
      */
     protected $flushBuffer = true;
-    
+
     /**
      * Constructs Dump object.
-     * 
+     *
      * @param bool $flushBuffer if set to false, ob_flush will not be called after echo
      */
     public function __construct($flushBuffer = true)
@@ -50,10 +50,10 @@ class Dump
         }
         return static::$sapi;
     }
-    
+
     /**
      * Sets sapi value
-     * 
+     *
      * @param string $sapi
      */
     public static function setSapi($sapi)
@@ -63,17 +63,17 @@ class Dump
 
     /**
      * Sets output flag.
-     * 
+     *
      * @param type $output
      */
     public static function setOutput($flag)
     {
         static::$output = $flag;
     }
-    
+
     /**
      * Gets current value of output flag.
-     *  
+     *
      * @return bool
      */
     public static function getOutput()
@@ -81,8 +81,8 @@ class Dump
         return static::$output;
     }
 
-    
-    
+
+
 
     /**
      * Debug helper function.  This is a wrapper for var_dump|xdebug_var_dump that adds
@@ -106,7 +106,7 @@ class Dump
         } else {
             var_dump($var);
         }
-        
+
         $output = ob_get_clean();
 
         // neaten the newlines and indents
@@ -137,10 +137,10 @@ class Dump
         }
         return $output;
     }
-    
+
     /**
      * Checks if xdebug_var_dump function is available
-     * 
+     *
      * @return bool
      */
     protected function xdebugDumpExists()

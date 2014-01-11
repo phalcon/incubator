@@ -25,33 +25,33 @@ use Phalcon\Mvc\View\Engine\Twig\Nodes\Assets as Node;
 class Assets extends \Twig_TokenParser
 {
 
-	/**
-	 * {@inheritdoc}
-	 * @param  \Twig_Token $token
-	 * @return \Twig_NodeInterface
-	 */
-	public function parse(\Twig_Token $token)
-	{
-		$methodName = $this->parser->getStream()->expect(\Twig_Token::NAME_TYPE)->getValue();
-		$arguments = $this->parser->getExpressionParser()->parseArguments();
+    /**
+     * {@inheritdoc}
+     * @param  \Twig_Token $token
+     * @return \Twig_NodeInterface
+     */
+    public function parse(\Twig_Token $token)
+    {
+        $methodName = $this->parser->getStream()->expect(\Twig_Token::NAME_TYPE)->getValue();
+        $arguments = $this->parser->getExpressionParser()->parseArguments();
 
-		$this->parser->getStream()->expect(\Twig_Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(\Twig_Token::BLOCK_END_TYPE);
 
-		return new Node(
-			array('arguments' => $arguments),
-			array('methodName' => $methodName),
-			$token->getLine(),
-			$this->getTag()
-		);
-	}
+        return new Node(
+            array('arguments' => $arguments),
+            array('methodName' => $methodName),
+            $token->getLine(),
+            $this->getTag()
+        );
+    }
 
-	/**
-	 * {@inheritdoc}
-	 * @return string
-	 */
-	public function getTag()
-	{
-		return 'assets';
-	}
+    /**
+     * {@inheritdoc}
+     * @return string
+     */
+    public function getTag()
+    {
+        return 'assets';
+    }
 
 }

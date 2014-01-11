@@ -30,35 +30,34 @@ use Phalcon\Session\Exception;
 class Redis extends Adapter implements AdapterInterface
 {
 
-	/**
-	 * Phalcon\Session\Adapter\Redis constructor
-	 *
-	 * @param array $options
-	 */
-	public function __construct($options = null)
-	{
+    /**
+     * Phalcon\Session\Adapter\Redis constructor
+     *
+     * @param array $options
+     */
+    public function __construct($options = null)
+    {
 
-		if (!isset($options['path'])) {
-			throw new Exception("The parameter 'save_path' is required");
-		}
+        if (!isset($options['path'])) {
+            throw new Exception("The parameter 'save_path' is required");
+        }
 
-		ini_set('session.save_handler', 'redis');
-		ini_set('session.save_path', $options['path']);
+        ini_set('session.save_handler', 'redis');
+        ini_set('session.save_path', $options['path']);
 
-		if (isset($options['name'])) {
-			ini_set('session.name', $options['name']);
-		}
+        if (isset($options['name'])) {
+            ini_set('session.name', $options['name']);
+        }
 
-		if (isset($options['lifetime'])) {
-			ini_set('session.gc_maxlifetime', $options['lifetime']);
-		}
+        if (isset($options['lifetime'])) {
+            ini_set('session.gc_maxlifetime', $options['lifetime']);
+        }
 
-		if (isset($options['cookie_lifetime'])) {
-			ini_set('session.cookie_lifetime', $options['cookie_lifetime']);
-		}
+        if (isset($options['cookie_lifetime'])) {
+            ini_set('session.cookie_lifetime', $options['cookie_lifetime']);
+        }
 
-		parent::__construct($options);
-	}
+        parent::__construct($options);
+    }
 
 }
-
