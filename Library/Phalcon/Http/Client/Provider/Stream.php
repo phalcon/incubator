@@ -24,7 +24,7 @@ use Phalcon\Http\Client\Header;
 use Phalcon\Http\Client\Provider\Exception as ProviderException;
 use Phalcon\Http\Client\Request;
 use Phalcon\Http\Client\Response;
-use Phalcon\Http\Client\Uri;
+use Phalcon\Http\Uri;
 
 class Stream extends Request
 {

@@ -36,7 +36,7 @@ class Curl extends Request
     public function __construct()
     {
         if (!self::isAvailable()) {
-            throw new ProviderException('CURL extention is not loaded');
+            throw new ProviderException('CURL extension is not loaded');
         }
 
         $this->handle = curl_init();
