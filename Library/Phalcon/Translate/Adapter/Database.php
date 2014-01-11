@@ -44,10 +44,10 @@ class Database extends Adapter implements AdapterInterface
 		if (!isset($options['table'])) {
 			throw new Exception("Parameter 'table' is required");
 		}
-		
-                if (!isset($options['language'])) {
-                    throw new Exception("Parameter 'language' is required");
-                }
+
+		if (!isset($options['language'])) {
+			throw new Exception("Parameter 'language' is required");
+		}
 
 		$this->_options = $options;
 	}
@@ -55,11 +55,11 @@ class Database extends Adapter implements AdapterInterface
 	/**
 	 * Returns the translation related to the given key
 	 *
-	 * @param	string $index
-	 * @param	array $placeholders
-	 * @return	string
+	 * @param    string $index
+	 * @param    array  $placeholders
+	 * @return    string
 	 */
-	public function query($index, $placeholders=null)
+	public function query($index, $placeholders = null)
 	{
 
 		$options = $this->_options;
@@ -85,8 +85,8 @@ class Database extends Adapter implements AdapterInterface
 	/**
 	 * Check whether is defined a translation key in the database
 	 *
-	 * @param 	string $index
-	 * @return	bool
+	 * @param    string $index
+	 * @return    bool
 	 */
 	public function exists($index)
 	{

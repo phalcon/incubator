@@ -2,65 +2,65 @@
 
 namespace Phalcon\Logger\Formatter;
 
+use \Phalcon\Logger\Exception,
+    \Phalcon\Logger as Logger;
+
 /**
  * Phalcon\Logger\Formatter\Firelogger
- *
  * Formats messages to be sent to Firelogger
  *
- * @link http://firelogger.binaryage.com/
+ * @link    http://firelogger.binaryage.com/
  * @version 0.1
- * @author Richard Laffers <rlaffers@gmail.com> 
+ * @author  Richard Laffers <rlaffers@gmail.com>
  * @license The BSD 3-Clause License {@link http://opensource.org/licenses/BSD-3-Clause}
  */
 class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\FormatterInterface
 {
 
     /**
-     * _name 
+     * _name
+     * Holds name of this logger.
      *
-     * Holds name of this logger. 
-     * 
      * @var string
      * @access private
      */
     private $_name;
 
     /**
-     * style 
-     *
+     * style
      * Optional CSS snippet for logger icon in Firelogger console.
-     * 
+     *
      * @var string
      * @access private
      */
     private $style;
 
     /**
-     * encoding 
-     * 
+     * encoding
+     *
      * @var string
      * @access private
      */
     private $encoding = 'UTF-8';
 
     /**
-     * maxPickleDepth 
-     *
+     * maxPickleDepth
      * Maximum recursion for pickle method
-     * 
+     *
      * @var int
      * @access private
      */
     private $maxPickleDepth = 10;
 
     /**
-     * __construct 
-     * 
-     * @param string $name 
+     * __construct
+     *
+     * @param string $name
      * @access public
      * @return void
      */
-    public function __construct($name = 'logger') {
+    public function __construct($name = 'logger')
+    {
         $this->_name = $name;
     }
 
@@ -69,11 +69,11 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
      *
      * @return $this
      */
-    public function setName($name) {
+    public function setName($name)
+    {
         $this->_name = $name;
         return $this;
     }
-    
 
 
     /**
@@ -81,56 +81,59 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
      *
      * @return $this
      */
-    public function setStyle($style) {
+    public function setStyle($style)
+    {
         $this->style = $style;
         return $this;
     }
-    
 
     /**
-     * getTypeString 
-     *
+     * getTypeString
      * Translates Phalcon log types into Firelogger log level strings.
-     * 
-     * @param int $type 
+     *
+     * @param int $type
      * @access public
      * @return string
      */
-	public function getTypeString($type)
-	{
-		switch ($type) {
-			case 0:
-                // emergence
-				return 'critical';
-			case 2:
-			case 3:
+    public function getTypeString($type)
+    {
+        
+        switch ($type) {
+            case Logger::EMERGENCE:
+            case Logger::CRITICAL:
+                // emergence, critical
+                return 'critical';
+            case Logger::ALERT:
+            case Logger::ERROR:
                 // error, alert
-				return 'error';
-			case 4:
+                return 'error';
+            case Logger::WARNING:
                 // warning
-				return 'warning';
-			case 5:
-			case 6:
+                return 'warning';
+            case Logger::NOTICE:
+            case Logger::INFO:
                 // info, notice
-				return 'info';
-			case 7:
+                return 'info';
+            case Logger::DEBUG:
+            case Logger::CUSTOM:
+            case Logger::SPECIAL:
             default:
-                // debug, log
-				return 'debug';
-		}
-	}
+                // debug, log, custom, special
+                return 'debug';
+        }
+    }
 
     /**
-     * pickle 
-     *
+     * pickle
      * Reformats the passed log item. Recursive.
-     * 
-     * @param mixed $var 
-     * @param int $level 
+     *
+     * @param mixed $var
+     * @param int   $level
      * @access private
      * @return mixed
      */
-    private function pickle($var, $level = 0) {
+    private function pickle($var, $level = 0)
+    {
         if (is_bool($var) || is_null($var) || is_int($var) || is_float($var)) {
             return $var;
 
@@ -139,12 +142,12 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
 
         } elseif (is_array($var)) {
             static $marker;
-            if ($marker === NULL) $marker = uniqid("\x00", TRUE); // detects recursions
+            if ($marker === null) $marker = uniqid("\x00", true); // detects recursions
             if (isset($var[$marker])) {
                 return '*RECURSION*';
 
             } elseif ($level < $this->maxPickleDepth || !$this->maxPickleDepth) {
-                $var[$marker] = TRUE;
+                $var[$marker] = true;
                 $res = array();
                 foreach ($var as $k => &$v) {
                     if ($k !== $marker) $res[$this->pickle($k)] = $this->pickle($v, $level + 1);
@@ -161,7 +164,7 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
             $arr['__class##'] = get_class($var);
 
             static $list = array(); // detects recursions
-            if (in_array($var, $list, TRUE)) {
+            if (in_array($var, $list, true)) {
                 return '*RECURSION*';
 
             } elseif ($level < $this->maxPickleDepth || !$this->maxPickleDepth) {
@@ -189,15 +192,15 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
     }
 
     /**
-     * extractTrace 
-     *
+     * extractTrace
      * Extract useful information from exception traces.
-     * 
-     * @param array $trace 
+     *
+     * @param array $trace
      * @access private
      * @return array
      */
-    private function extractTrace($trace) {
+    private function extractTrace($trace)
+    {
         $t = array();
         $f = array();
         foreach ($trace as $frame) {
@@ -206,7 +209,7 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
             $t[] = array(
                 $frame['file'],
                 $frame['line'],
-                $frame['class'].$frame['type'].$frame['function'],
+                $frame['class'] . $frame['type'] . $frame['function'],
                 $frame['object']
             );
             $f[] = $frame['args'];
@@ -215,18 +218,18 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
     }
 
     /**
-     * extractFileLine 
-     *
+     * extractFileLine
      * Extracts useful information from debug_backtrace()
-     * 
-     * @param array $trace  Array returned by debug_backtrace()
+     *
+     * @param array $trace Array returned by debug_backtrace()
      * @access private
      * @return array
      */
-    private function extractFileLine($trace) {
+    private function extractFileLine($trace)
+    {
         while (count($trace) && !array_key_exists('file', $trace[0])) array_shift($trace);
         $thisFile = $trace[0]['file'];
-        while (count($trace) && (array_key_exists('file', $trace[0]) && $trace[0]['file']==$thisFile)) array_shift($trace);
+        while (count($trace) && (array_key_exists('file', $trace[0]) && $trace[0]['file'] == $thisFile)) array_shift($trace);
         while (count($trace) && !array_key_exists('file', $trace[0])) array_shift($trace);
 
         if (count($trace) == 0) return array("?", "0");
@@ -234,21 +237,20 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
         $line = $trace[0]['line'];
         return array($file, $line);
     }
-    
-    
-    
 
-	/**
-	 * Applies a format to a message before sent it to the internal log
-	 *
-	 * @param str|int|float|array|null|Exception $message
-	 * @param int $type
-	 * @param int $timestamp
-	 * @param array $trace      Optional. This is the output from debug_backtrace().
-	 * @param int $order        Optional. How many logs are stored in the stack already.
-	 * @return mixed
-	 */
-	public function format($message, $type, $timestamp, $trace = NULL, $order = 0) {
+
+    /**
+     * Applies a format to a message before sent it to the internal log
+     *
+     * @param str|int|float|array|null|Exception $message
+     * @param int                                $type
+     * @param int                                $timestamp
+     * @param array                              $trace Optional. This is the output from debug_backtrace().
+     * @param int                                $order Optional. How many logs are stored in the stack already.
+     * @return mixed
+     */
+    public function format($message, $type, $timestamp, $trace = NULL, $order = 0)
+    {
 
         $level = $this->getTypeString($type);
 
@@ -261,14 +263,14 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
         }
 
         $item = array(
-            'name' => $this->_name,
-            'args' => array(),
-            'level' => $level,
+            'name'      => $this->_name,
+            'args'      => array(),
+            'level'     => $level,
             'timestamp' => $timestamp,
-            'order' => $order, // PHP is really fast, timestamp has insufficient resolution for log records ordering
-            'time' => gmdate('H:i:s', (int) $timestamp) . '.000',
-            'template' => $message,
-            'message' => $message
+            'order'     => $order, // PHP is really fast, timestamp has insufficient resolution for log records ordering
+            'time'      => gmdate('H:i:s', (int) $timestamp) . '.000',
+            'template'  => $message,
+            'message'   => $message
         );
         if ($this->style) {
             $item['style'] = $this->style;
@@ -309,6 +311,6 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
         }
 
         return $this->pickle($item);
-	}
+    }
 
 }

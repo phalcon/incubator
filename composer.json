@@ -15,10 +15,13 @@
         "php": ">=5.3.6",
         "ext-phalcon": "1.3.0"
     },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.28"
+    },
     "autoload": {
-        "psr-0" : {
-            "Phalcon" : "Library/"
+        "psr-0": {
+            "Phalcon": "Library/"
         }
     }
-    
+
 }

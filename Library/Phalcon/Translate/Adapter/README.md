@@ -1,4 +1,3 @@
-
 Phalcon\Translate\Adapter
 =========================
 
@@ -58,36 +57,152 @@ echo $translate->_('Hello'); //Bonjour
 echo $translate->_('My name is %name%', array('name' => 'Peter')); //Je m'appelle Peter
 ```
 
-Database
---------
-This adapter uses a table to store the translation messages:
+### Advanced use
 
-```php
-$connection = new \Phalcon\Db\Adapter\Pdo\Mysql(array(
-    "host" => "localhost",
-    "username" => "root",
-    "password" => "secret",
-    "dbname" => "test"
-));
+Use the __() (alias to cquery()) method if you have multiple translations of a string in different contexts:
 
-$translate = new Phalcon\Translate\Adapter\Database(array(
-    'db' => $connection,
-    'table' => 'translations'
-));
+```gettext
+msgid "Hello"
+msgstr "Bonjour"
+
+msgctxt "informal"
+msgid "Hello"
+msgstr "Salut"
+
+msgctxt "evening"
+msgid "Hello"
+msgstr "Bonsoir"
+
+msgid "Hello %name%"
+msgstr "Salut %name%"
 ```
 
-The following table is required to store the translations:
+```php
+echo $translate->_('Hello');                  //Bonjour
+echo $translate->__('Hello');                 //Bonjour
+echo $translate->__('Hello', 'informal');     //Salut
+echo $translate->__('Hello', 'evening');      //Bonsoir
+echo $translate->cquery('Hello', 'evening');  //Bonsoir
+// placeholders are supported as well
+echo $translate->__('Hello %name%', NULL, array('name' => 'Bob'));   //Salut Bob
+```
+
+Multiple translations domains are supported by the dquery() method. Let's say you have two files with translations:
+
+```gettext
+# frontend.po
+msgid "Hello"
+msgstr "Hello, visitor"
+```
+Additionally, you have a file named *backend.po*:
+
+```gettext
+# backend.po
+msgid "Hello"
+msgstr "Hello, admin"
+
+msgctxt "evening"
+msgid "Hello"
+msgstr "Bonsoir, admin"
+
+msgid "Hello %name%"
+msgstr "Salut %name%"
+```
 
 ```php
+echo $translate->dquery('frontend', 'Hello');             //Hello, visitor
+echo $translate->dquery('backend', 'Hello');              //Hello, admin
+// contexts supported
+echo $translate->dquery('backend', 'Hello', 'evening');   //Bonsoir, admin
+// placeholders are supported as well
+echo $translate->dquery('backend', 'Hello %name%', NULL, array('name' => 'Bob'));   //Salut Bob
+```
+
+Database
+--------
+You can use your database to store the translations, too.
+
+First of all, you need to up your database. To do this, use [DI](http://docs.phalconphp.com/en/latest/api/Phalcon_DI.html) (in `/public/index.php`). Take a look:
+```php
+// ...
+
+$di->set('db', function() {
+	return new \Phalcon\Db\Adapter\Pdo\Mysql([
+		'host' => 'localhost',
+		'username' => 'root',
+		'password' => 123456,
+		'dbname' => 'application'
+	]);
+});
+
+// ...
+```
+
+Then, you should get the translation through your `controller`. Put this on it:
+```php
+<?php
+
+class IndexController extends \Phalcon\Mvc\Controller
+{
+	protected function _getTranslation()
+	{
+		return new Phalcon\Translate\Adapter\Database([
+		    'db' => $this->di->get('db'), // Here we're getting the database from DI
+		    'table' => 'translations', // The table that is storing the translations
+		    'language' => $this->request->getBestLanguage() // Now we're getting the best language for the user
+		]);
+	}
+	
+	// ...
+}
+```
+
+To store the translations, the following table is recommended:
+```sql
 CREATE TABLE `translations` (
-  `key_name` varchar(32) NOT NULL,
-  `value` text,
-  PRIMARY KEY (`key_name`)
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `language` VARCHAR(5) NOT NULL COLLATE 'utf8_bin',
+    `key_name` VARCHAR(48) NOT NULL COLLATE 'utf8_bin',
+    `value` TEXT NOT NULL COLLATE 'utf8_bin',
+    PRIMARY KEY (`id`)
 )
 ```
 
+The columns are self-described, but pay attention to `language` — it's a column that stores the language that the user is using, that can be `en`, `en-us` or `en-US`. Now it's your responsibility to decide which pattern you want to use.
+
+To display for your users the translated words you need to set up a variable to store the expressions/translations from your database. *This step happens in your controller.* Follow the example:
 ```php
-echo $translate->_('Hello');
+<?php
+
+class IndexController extends \Phalcon\Mvc\Controller
+{
+	protected function _getTranslation()
+	{
+		// ...
+	}
+	
+	public function indexAction()
+	{
+		$this->view->setVar('expression', $this->_getTranslation());
+	}
+}
+```
+
+Then, just output the phrase/sentence/word in your view:
+```html+php
+<html>
+	<head>
+		<!-- ... -->
+	</head>
+	<body>
+		<h1><?php echo $expression->_("IndexPage_Hello_World"); ?></h1>
+	</body>
+</html>
+```
+
+Or, if you wish you can use [Volt](http://docs.phalconphp.com/en/latest/reference/volt.html):
+```html+php
+<h1>{{ expression._("IndexPage_Hello_World") }}</h1>
 ```
 
 CSV

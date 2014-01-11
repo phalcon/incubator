@@ -35,3 +35,18 @@ $di->set('db', function() use ($config) {
 });
 
 ```
+
+Mongo\Client
+------------
+Extends client class of MongoDb native extension to linking through DbRef, Document, Collection, Db.
+
+This will be resolve cursor and related records problem on the ODM.
+
+```php
+$di->set('mongo', function() {
+    $mongo = new \Phalcon\Db\Adapter\Mongo\Client();
+    return $mongo->selectDB('sitemap');
+});
+```
+
+

@@ -1,7 +1,7 @@
-Phalcon\Paginator\Beanstalk
-===========================
+Phalcon\Queue\Beanstalk
+=======================
 
-Extended Phalcon\Paginator\Beanstalk class that supports tubes prefixes, pcntl-workers and tubes stats.
+Extended Phalcon\Queue\Beanstalk class that supports tubes prefixes, pcntl-workers and tubes stats.
 
 Allows to use same banstalkd server to multiple projects.
 

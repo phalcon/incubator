@@ -21,156 +21,156 @@ namespace Phalcon\Http;
 
 class Uri
 {
-    private $parts = array();
+	private $parts = array();
 
-    public function __construct($uri = null)
-    {
-        if (empty($uri)) return;
+	public function __construct($uri = null)
+	{
+		if (empty($uri)) return;
 
-        if (is_string($uri)) {
-            $this->parts = parse_url($uri);
-            if (!empty($this->parts['query'])) {
-                $query = array();
-                parse_str($this->parts['query'], $query);
-                $this->parts['query'] = $query;
-            }
-            return;
-        }
+		if (is_string($uri)) {
+			$this->parts = parse_url($uri);
+			if (!empty($this->parts['query'])) {
+				$query = array();
+				parse_str($this->parts['query'], $query);
+				$this->parts['query'] = $query;
+			}
+			return;
+		}
 
-        if ($uri instanceof self) {
-            $this->parts = $uri->parts;
-            return;
-        }
+		if ($uri instanceof self) {
+			$this->parts = $uri->parts;
+			return;
+		}
 
-        if (is_array($uri)) {
-            $this->parts = $uri;
-            return;
-        }
-        
-    }
+		if (is_array($uri)) {
+			$this->parts = $uri;
+			return;
+		}
 
-    public function __toString()
-    {
-        return $this->build();
-    }
+	}
 
-    public function __unset($name)
-    {
-        unset($this->parts[$name]);
-    }
+	public function __toString()
+	{
+		return $this->build();
+	}
 
-    public function __set($name, $value)
-    {
-        $this->parts[$name] = $value;
-    }
+	public function __unset($name)
+	{
+		unset($this->parts[$name]);
+	}
 
-    public function __get($name)
-    {
-        return $this->parts[$name];
-    }
+	public function __set($name, $value)
+	{
+		$this->parts[$name] = $value;
+	}
 
-    public function __isset($name)
-    {
-        return isset($this->parts[$name]);
-    }
+	public function __get($name)
+	{
+		return $this->parts[$name];
+	}
 
-    public function build()
-    {
-        $uri = '';
-        $parts = $this->parts;
+	public function __isset($name)
+	{
+		return isset($this->parts[$name]);
+	}
 
-        if (!empty($parts['scheme'])) {
-            $uri .= $parts['scheme'] . ':';
-            if (!empty($parts['host'])) {
-                $uri .= '//';
-                if (!empty($parts['user'])) {
-                    $uri .= $parts['user'];
+	public function build()
+	{
+		$uri = '';
+		$parts = $this->parts;
 
-                    if (!empty($parts['pass'])) {
-                        $uri .= ':' . $parts['pass'];
-                    }
+		if (!empty($parts['scheme'])) {
+			$uri .= $parts['scheme'] . ':';
+			if (!empty($parts['host'])) {
+				$uri .= '//';
+				if (!empty($parts['user'])) {
+					$uri .= $parts['user'];
 
-                    $uri .= '@';
-                }
-                $uri .= $parts['host'];
-            }
-        }
+					if (!empty($parts['pass'])) {
+						$uri .= ':' . $parts['pass'];
+					}
 
-        if (!empty($parts['port'])) {
-            $uri .= ':' . $parts['port'];
-        }
+					$uri .= '@';
+				}
+				$uri .= $parts['host'];
+			}
+		}
 
-        if (!empty($parts['path'])) {
-            $uri .= $parts['path'];
-        }
+		if (!empty($parts['port'])) {
+			$uri .= ':' . $parts['port'];
+		}
 
-        if (!empty($parts['query'])) {
-            $uri .= '?' . (is_array($parts['query']) ? http_build_query($parts['query']) : $parts['query']);
-        }
+		if (!empty($parts['path'])) {
+			$uri .= $parts['path'];
+		}
 
-        if (!empty($parts['fragment'])) {
-            $uri .= '#' . $parts['fragment'];
-        }
+		if (!empty($parts['query'])) {
+			$uri .= '?' . (is_array($parts['query']) ? http_build_query($parts['query']) : $parts['query']);
+		}
 
-        return $uri;
-    }
+		if (!empty($parts['fragment'])) {
+			$uri .= '#' . $parts['fragment'];
+		}
 
-    public function resolve($uri)
-    {
-        $newUri = new self($this);
-        $newUri->extend($uri);
+		return $uri;
+	}
 
-        return $newUri;
-    }
+	public function resolve($uri)
+	{
+		$newUri = new self($this);
+		$newUri->extend($uri);
 
-    public function extend($uri)
-    {
-        if (!$uri instanceof self) {
-            $uri = new self($uri);
-        }
+		return $newUri;
+	}
 
-        $this->parts = array_merge(
-            $this->parts, 
-            array_diff_key($uri->parts, array_flip(array('query', 'path')))
-        );
+	public function extend($uri)
+	{
+		if (!$uri instanceof self) {
+			$uri = new self($uri);
+		}
 
-        if (!empty($uri->parts['query'])) {
-            $this->extendQuery($uri->parts['query']);
-        }
+		$this->parts = array_merge(
+			$this->parts,
+			array_diff_key($uri->parts, array_flip(array('query', 'path')))
+		);
 
-        if (!empty($uri->parts['path'])) {
-            $this->extendPath($uri->parts['path']);
-        }
+		if (!empty($uri->parts['query'])) {
+			$this->extendQuery($uri->parts['query']);
+		}
 
-        return $this;
-    }
+		if (!empty($uri->parts['path'])) {
+			$this->extendPath($uri->parts['path']);
+		}
 
-    public function extendQuery($params)
-    {
-        $query = empty($this->parts['query']) ? array() : $this->parts['query'];
-        $params = empty($params) ? array() : $params;
-        $this->parts['query'] = array_merge($query, $params);
+		return $this;
+	}
 
-        return $this;
-    }
+	public function extendQuery($params)
+	{
+		$query = empty($this->parts['query']) ? array() : $this->parts['query'];
+		$params = empty($params) ? array() : $params;
+		$this->parts['query'] = array_merge($query, $params);
 
-    public function extendPath($path)
-    {
-        if (empty($path)) return $this;
+		return $this;
+	}
 
-        if (!strncmp($path, '/', 1)) {
-            $this->parts['path'] = $path;
-            return $this;
-        }
+	public function extendPath($path)
+	{
+		if (empty($path)) return $this;
 
-        if (empty($this->parts['path'])) {
-            $this->parts['path'] = '/' . $path;
-            return $this;
-        }
+		if (!strncmp($path, '/', 1)) {
+			$this->parts['path'] = $path;
+			return $this;
+		}
 
-        $this->parts['path'] = substr($this->parts['path'], 0, 
-            strrpos($this->parts['path'], '/') + 1) . $path;
-        return $this;
-    }
+		if (empty($this->parts['path'])) {
+			$this->parts['path'] = '/' . $path;
+			return $this;
+		}
+
+		$this->parts['path'] = substr($this->parts['path'], 0,
+				strrpos($this->parts['path'], '/') + 1) . $path;
+		return $this;
+	}
 }
 
