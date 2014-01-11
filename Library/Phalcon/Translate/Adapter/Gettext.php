@@ -20,9 +20,9 @@
 
 namespace Phalcon\Translate\Adapter;
 
-use Phalcon\Translate\Adapter,
-    Phalcon\Translate\AdapterInterface,
-    Phalcon\Translate\Exception;
+use Phalcon\Translate\Adapter;
+use Phalcon\Translate\AdapterInterface;
+use Phalcon\Translate\Exception;
 
 class Gettext extends Adapter implements AdapterInterface
 {
