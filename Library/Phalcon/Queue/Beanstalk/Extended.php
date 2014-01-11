@@ -263,12 +263,13 @@ class Extended extends Base
 		$result = null;
 		$lines  = $this->getResponseLinesText('ignore ' . $this->getTubeName($tube));
 
-		if (null !== $lines) {            
+		if (null !== $lines) {
 			list($name, $value) = explode(' ', $lines);
 			if (null !== $value) {
 				$result[$name] = intval($value);
 			}
 		}
+
 		return $result;
 	}
 
@@ -325,11 +326,12 @@ class Extended extends Base
 
 			if (!preg_match('#^WATCHING (\d+).*?#', $response, $matches)) {
 				throw new \RuntimeException(sprintf(
-				'Unhandled response: %s',
-				$response
-			));
+					'Unhandled response: %s',
+					$response
+				));
 			}
-		$result = $response;
+
+			$result = $response;
 		}
 
 		return $result;
