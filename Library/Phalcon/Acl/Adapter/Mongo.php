@@ -34,12 +34,17 @@ use Phalcon\Acl\Role;
 class Mongo extends Adapter implements AdapterInterface
 {
 
+    /**
+     * @var array
+     */
     protected $_options;
 
     /**
      * Phalcon\Acl\Adapter\Mongo
      *
-     * @param array $options
+     * @param $options
+     *
+     * @throws \Phalcon\Acl\Exception
      */
     public function __construct($options)
     {
@@ -129,6 +134,8 @@ class Mongo extends Adapter implements AdapterInterface
      *
      * @param string $roleName
      * @param string $roleToInherit
+     *
+     * @throws \Phalcon\Acl\Exception
      */
     public function addInherit($roleName, $roleToInherit)
     {
@@ -183,8 +190,10 @@ class Mongo extends Adapter implements AdapterInterface
      * $acl->addResource('customers', array('create', 'search'));
      * </code>
      *
-     * @param   Phalcon\Acl\Resource $resource
-     * @return  boolean
+     * @param Acl\ResourceInterface $resource
+     * @param null                  $accessList
+     *
+     * @return bool
      */
     public function addResource($resource, $accessList = null)
     {
@@ -215,6 +224,9 @@ class Mongo extends Adapter implements AdapterInterface
      *
      * @param string $resourceName
      * @param mixed  $accessList
+     *
+     * @return bool
+     * @throws \Phalcon\Acl\Exception
      */
     public function addResourceAccess($resourceName, $accessList)
     {
@@ -257,7 +269,7 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * Returns all resources in the access list
      *
-     * @return Phalcon\Acl\Resource[]
+     * @return \Phalcon\Acl\Resource[]
      */
     public function getResources()
     {
@@ -271,7 +283,7 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * Returns all resources in the access list
      *
-     * @return Phalcon\Acl\Role[]
+     * @return \Phalcon\Acl\Role[]
      */
     public function getRoles()
     {
@@ -294,13 +306,13 @@ class Mongo extends Adapter implements AdapterInterface
     }
 
     /**
-     * Inserts/Updates a permission in the access list
-     *
      * @param string $roleName
      * @param string $resourceName
-     * @param string $access
-     * @param int    $access
-     * @return boolean
+     * @param string $accessName
+     * @param int $action
+     *
+     * @return bool
+     * @throws \Phalcon\Acl\Exception
      */
     protected function _insertOrUpdateAccess($roleName, $resourceName, $accessName, $action)
     {
@@ -361,8 +373,9 @@ class Mongo extends Adapter implements AdapterInterface
      * @param string $roleName
      * @param string $resourceName
      * @param string $access
-     * @param int    $access
-     * @return boolean
+     * @param int $action
+     *
+     * @throws \Phalcon\Acl\Exception
      */
     protected function _allowOrDeny($roleName, $resourceName, $access, $action)
     {
@@ -401,7 +414,7 @@ class Mongo extends Adapter implements AdapterInterface
      */
     public function allow($roleName, $resourceName, $access)
     {
-        return $this->_allowOrDeny($roleName, $resourceName, $access, Acl::ALLOW);
+        $this->_allowOrDeny($roleName, $resourceName, $access, Acl::ALLOW);
     }
 
     /**
@@ -426,7 +439,7 @@ class Mongo extends Adapter implements AdapterInterface
      */
     public function deny($roleName, $resourceName, $access)
     {
-        return $this->_allowOrDeny($roleName, $resourceName, $access, Acl::DENY);
+         $this->_allowOrDeny($roleName, $resourceName, $access, Acl::DENY);
     }
 
     /**
@@ -438,10 +451,11 @@ class Mongo extends Adapter implements AdapterInterface
      * $acl->isAllowed('guests', '*', 'edit');
      * </code>
      *
-     * @param  string $role
-     * @param  string $resource
-     * @param  mixed  $accessList
-     * @return boolean
+     * @param string $role
+     * @param string $resource
+     * @param string $access
+     *
+     * @return bool
      */
     public function isAllowed($role, $resource, $access)
     {
@@ -455,7 +469,7 @@ class Mongo extends Adapter implements AdapterInterface
             'access_name'    => $access
         ));
         if (is_array($access)) {
-            return (int) $access['allowed'];
+            return (bool) $access['allowed'];
         }
 
         /**
@@ -467,7 +481,7 @@ class Mongo extends Adapter implements AdapterInterface
             'access_name'    => '*'
         ));
         if (is_array($access)) {
-            return (int) $access['allowed'];
+            return (bool) $access['allowed'];
         }
 
         /*$sql = 'SELECT roles_inherit FROM roles_inherits WHERE roles_name = ?';
@@ -480,7 +494,7 @@ class Mongo extends Adapter implements AdapterInterface
             $sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
             $allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($row[0], $resource, $access));
             if (is_array($allowed)) {
-                return (int) $allowed[0];
+                return (bool) $allowed[0];
             }
         }*/
 
@@ -491,7 +505,7 @@ class Mongo extends Adapter implements AdapterInterface
             $sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
             $allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($row[0], $resource, '*'));
             if (is_array($allowed)) {
-                return (int) $allowed[0];
+                return (bool) $allowed[0];
             }
         }*/
 
@@ -501,7 +515,7 @@ class Mongo extends Adapter implements AdapterInterface
         /*$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
         $allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($role, '*', $access));
         if (is_array($allowed)) {
-            return (int) $allowed[0];
+            return (bool) $allowed[0];
         }*/
 
         /**
