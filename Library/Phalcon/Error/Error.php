@@ -17,7 +17,6 @@
   |          Nikita Vershinin <endeveit@gmail.com>                         |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Error;
 
 class Error
@@ -26,7 +25,7 @@ class Error
     /**
      * @var array
      */
-    protected $_attributes;
+    protected $attributes;
 
     /**
      * Class constructor sets the attributes.
@@ -48,20 +47,19 @@ class Error
         $options = array_merge($defaults, $options);
 
         foreach ($options as $option => $value) {
-            $this->_attributes[$option] = $value;
+            $this->attributes[$option] = $value;
         }
     }
 
     /**
      * Magic method to retrieve the attributes.
      *
-     * @param string $method
-     * @param array  $args
+     * @param  string $method
+     * @param  array  $args
      * @return mixed
      */
     public function __call($method, $args)
     {
-        return isset($this->_attributes[$method]) ? $this->_attributes[$method] : null;
+        return isset($this->attributes[$method]) ? $this->attributes[$method] : null;
     }
-
 }

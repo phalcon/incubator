@@ -29,6 +29,7 @@ class Environment extends \Twig_Environment
 
     /**
      * {@inheritdoc}
+     *
      * @param \Phalcon\DiInterface  $di
      * @param \Twig_LoaderInterface $loader
      * @param array                 $options
@@ -49,5 +50,4 @@ class Environment extends \Twig_Environment
     {
         return $this->di;
     }
-
 }

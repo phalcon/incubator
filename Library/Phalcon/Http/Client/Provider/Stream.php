@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -16,7 +15,6 @@
   | Author: Tuğrul Topuz <tugrultopuz@gmail.com>                           |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Http\Client\Provider;
 
 use Phalcon\Http\Client\Exception as HttpException;
@@ -33,6 +31,7 @@ class Stream extends Request
     public static function isAvailable()
     {
         $wrappers = stream_get_wrappers();
+
         return in_array('http', $wrappers) && in_array('https', $wrappers);
     }
 

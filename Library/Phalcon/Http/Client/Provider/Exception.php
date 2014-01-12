@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -16,7 +15,6 @@
   | Author: Tuğrul Topuz <tugrultopuz@gmail.com>                           |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Http\Client\Provider;
 
 class Exception extends \Phalcon\Http\Client\Exception

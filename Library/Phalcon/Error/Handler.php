@@ -17,7 +17,6 @@
   |          Nikita Vershinin <endeveit@gmail.com>                         |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Error;
 
 use Phalcon\DI;
@@ -28,7 +27,6 @@ class Handler
     /**
      * Registers it self as error and exception handler.
      *
-     * @static
      * @return void
      */
     public static function register()
@@ -91,7 +89,7 @@ class Handler
     /**
      * Logs the error and dispatches an error controller.
      *
-     * @param  Error $error
+     * @param  \Phalcon\Error\Error $error
      * @return mixed
      */
     public static function handle(Error $error)
@@ -142,7 +140,7 @@ class Handler
     /**
      * Maps error code to a string.
      *
-     * @param $code
+     * @param  integer $code
      * @return string
      */
     public static function getErrorType($code)
@@ -184,5 +182,4 @@ class Handler
 
         return $code;
     }
-
 }

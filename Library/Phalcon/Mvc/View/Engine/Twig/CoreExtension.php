@@ -21,6 +21,7 @@ class CoreExtension extends \Twig_Extension
 
     /**
      * {@inheritdoc}
+     *
      * @return string
      */
     public function getName()
@@ -30,6 +31,7 @@ class CoreExtension extends \Twig_Extension
 
     /**
      * {@inheritdoc}
+     *
      * @return array
      */
     public function getFunctions()
@@ -70,6 +72,7 @@ class CoreExtension extends \Twig_Extension
 
     /**
      * {@inheritdoc}
+     *
      * @return array
      */
     public function getTokenParsers()
@@ -94,5 +97,4 @@ class CoreExtension extends \Twig_Extension
 
         return $result;
     }
-
 }

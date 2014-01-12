@@ -22,19 +22,22 @@ class Bootstrap extends Layout
 
     /**
      * {@inheritdoc}
+     *
      * @var string
      */
     protected $template = '<li><a href="{%url}">{%page}</a></li>';
 
     /**
      * {@inheritdoc}
+     *
      * @var string
      */
     protected $selectedTemplate = '<li class="active"><span>{%page}</span></li>';
 
     /**
      * {@inheritdoc}
-     * @param  array $options
+     *
+     * @param  array  $options
      * @return string
      */
     public function getRendered(array $options = array())
@@ -65,5 +68,4 @@ class Bootstrap extends Layout
 
         return $result;
     }
-
 }

@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -17,7 +16,6 @@
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Acl\Adapter;
 
 use Phalcon\Acl\Adapter;
@@ -37,18 +35,16 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * @var array
      */
-    protected $_options;
+    protected $options;
 
     /**
-     * Phalcon\Acl\Adapter\Mongo
+     * Class constructor.
      *
-     * @param $options
-     *
+     * @param  array                  $options
      * @throws \Phalcon\Acl\Exception
      */
     public function __construct($options)
     {
-
         if (!is_array($options)) {
             throw new Exception("Acl options must be an array");
         }
@@ -73,48 +69,35 @@ class Mongo extends Adapter implements AdapterInterface
             throw new Exception("Parameter 'accessList' is required");
         }
 
-        $this->_options = $options;
+        $this->options = $options;
     }
 
     /**
-     * Returns a mongo collection
-     *
-     * @param string $name
-     * @return \MongoCollection
-     */
-    protected function _getCollection($name)
-    {
-        return $this->_options['db']->selectCollection($this->_options[$name]);
-    }
-
-    /**
-     * Adds a role to the ACL list. Second parameter lets to inherit access data from other existing role
+     * {@inheritdoc}
      * Example:
      * <code>$acl->addRole(new Phalcon\Acl\Role('administrator'), 'consultor');</code>
      * <code>$acl->addRole('administrator', 'consultor');</code>
      *
-     * @param  string $role
-     * @param  array  $accessInherits
+     * @param  string  $role
+     * @param  array   $accessInherits
      * @return boolean
      */
     public function addRole($role, $accessInherits = null)
     {
-
         if (!is_object($role)) {
             $role = new Role($role);
         }
 
-        $roles = $this->_getCollection('roles');
-
+        $roles = $this->getCollection('roles');
         $exists = $roles->count(array('name' => $role->getName()));
-        if (!$exists) {
 
+        if (!$exists) {
             $roles->insert(array(
                 'name'        => $role->getName(),
                 'description' => $role->getDescription()
             ));
 
-            $this->_getCollection('accessList')->insert(array(
+            $this->getCollection('accessList')->insert(array(
                 'roles_name'     => $role->getName(),
                 'resources_name' => '*',
                 'access_name'    => '*',
@@ -130,56 +113,41 @@ class Mongo extends Adapter implements AdapterInterface
     }
 
     /**
-     * Do a role inherit from another existing role
+     * {@inheritdoc}
      *
-     * @param string $roleName
-     * @param string $roleToInherit
-     *
+     * @param  string                 $roleName
+     * @param  string                 $roleToInherit
      * @throws \Phalcon\Acl\Exception
      */
     public function addInherit($roleName, $roleToInherit)
     {
-        $sql = 'SELECT COUNT(*) FROM ' . $this->_options['roles'] . " WHERE name = ?";
-        $exists = $this->_options['db']->fetchOne($sql, null, array($roleToInherit));
-        if (!$exists[0]) {
-            throw new Exception("Role '" . $roleToInherit . "' does not exist in the role list");
-        }
-
-        $sql = 'SELECT COUNT(*) FROM ' . $this->_options['rolesInherits'] . " WHERE roles_name = ? AND roles_inherit = ?";
-        $exists = $this->_options['db']->fetchOne($sql, null, array($roleName, $roleToInherit));
-        if (!$exists[0]) {
-            $this->_options['db']->execute('INSERT INTO ' . $this->_options['rolesInherits'] . " VALUES (?, ?)", array($roleName, $roleToInherit));
-        }
+        // TODO: implement later
     }
 
     /**
-     * Check whether role exist in the roles list
+     * {@inheritdoc}
      *
-     * @param  string $roleName
+     * @param  string  $roleName
      * @return boolean
      */
     public function isRole($roleName)
     {
-        $exists = $this->_getCollection('roles')->count(array('name' => $roleName));
-        return $exists > 0;
+        return $this->getCollection('roles')->count(array('name' => $roleName)) > 0;
     }
 
     /**
-     * Check whether resource exist in the resources list
+     * {@inheritdoc}
      *
-     * @param  string $resourceName
+     * @param  string  $resourceName
      * @return boolean
      */
     public function isResource($resourceName)
     {
-        $exists = $this->_getCollection('resources')->count(array('name' => $resourceName));
-        return $exists > 0;
+        return $this->getCollection('resources')->count(array('name' => $resourceName)) > 0;
     }
 
     /**
-     * Adds a resource to the ACL list
-     * Access names can be a particular action, by example
-     * search, update, delete, etc or a list of them
+     * {@inheritdoc}
      * Example:
      * <code>
      * //Add a resource to the the list allowing access to an action
@@ -190,19 +158,17 @@ class Mongo extends Adapter implements AdapterInterface
      * $acl->addResource('customers', array('create', 'search'));
      * </code>
      *
-     * @param Acl\ResourceInterface $resource
-     * @param null                  $accessList
-     *
-     * @return bool
+     * @param  \Phalcon\Acl\Resource $resource
+     * @param  array|string          $accessList
+     * @return boolean
      */
     public function addResource($resource, $accessList = null)
     {
-
         if (!is_object($resource)) {
             $resource = new Resource($resource);
         }
 
-        $resources = $this->_getCollection('resources');
+        $resources = $this->getCollection('resources');
 
         $exists = $resources->count(array('name' => $resource->getName()));
         if (!$exists) {
@@ -220,22 +186,20 @@ class Mongo extends Adapter implements AdapterInterface
     }
 
     /**
-     * Adds access to resources
+     * {@inheritdoc}
      *
-     * @param string $resourceName
-     * @param mixed  $accessList
-     *
-     * @return bool
+     * @param  string                 $resourceName
+     * @param  array|string           $accessList
+     * @return boolean
      * @throws \Phalcon\Acl\Exception
      */
     public function addResourceAccess($resourceName, $accessList)
     {
-
         if (!$this->isResource($resourceName)) {
             throw new Exception("Resource '" . $resourceName . "' does not exist in ACL");
         }
 
-        $resourcesAccesses = $this->_getCollection('resourcesAccesses');
+        $resourcesAccesses = $this->getCollection('resourcesAccesses');
 
         if (is_array($accessList)) {
             foreach ($accessList as $accessName) {
@@ -267,68 +231,176 @@ class Mongo extends Adapter implements AdapterInterface
     }
 
     /**
-     * Returns all resources in the access list
+     * {@inheritdoc}
      *
      * @return \Phalcon\Acl\Resource[]
      */
     public function getResources()
     {
         $resources = array();
-        foreach ($this->_getCollection('resources')->find() as $row) {
+
+        foreach ($this->getCollection('resources')->find() as $row) {
             $resources[] = new Resource($row['name'], $row['description']);
         }
+
         return $resources;
     }
 
     /**
-     * Returns all resources in the access list
+     * {@inheritdoc}
      *
      * @return \Phalcon\Acl\Role[]
      */
     public function getRoles()
     {
         $roles = array();
-        foreach ($this->_getCollection('roles')->find() as $row) {
+
+        foreach ($this->getCollection('roles')->find() as $row) {
             $roles[] = new Role($row['name'], $row['description']);
         }
+
         return $roles;
     }
 
     /**
-     * Removes an access from a resource
+     * {@inheritdoc}
      *
-     * @param string $resourceName
-     * @param mixed  $accessList
+     * @param string       $resourceName
+     * @param array|string $accessList
      */
     public function dropResourceAccess($resourceName, $accessList)
     {
-
     }
 
     /**
+     * {@inheritdoc}
+     * You can use '*' as wildcard
+     * Example:
+     * <code>
+     * //Allow access to guests to search on customers
+     * $acl->allow('guests', 'customers', 'search');
+     * //Allow access to guests to search or create on customers
+     * $acl->allow('guests', 'customers', array('search', 'create'));
+     * //Allow access to any role to browse on products
+     * $acl->allow('*', 'products', 'browse');
+     * //Allow access to any role to browse on any resource
+     * $acl->allow('*', '*', 'browse');
+     * </code>
+     *
      * @param string $roleName
      * @param string $resourceName
-     * @param string $accessName
-     * @param int $action
+     * @param mixed  $access
+     */
+    public function allow($roleName, $resourceName, $access)
+    {
+        $this->allowOrDeny($roleName, $resourceName, $access, Acl::ALLOW);
+    }
+
+    /**
+     * {@inheritdoc}
+     * You can use '*' as wildcard
+     * Example:
+     * <code>
+     * //Deny access to guests to search on customers
+     * $acl->deny('guests', 'customers', 'search');
+     * //Deny access to guests to search or create on customers
+     * $acl->deny('guests', 'customers', array('search', 'create'));
+     * //Deny access to any role to browse on products
+     * $acl->deny('*', 'products', 'browse');
+     * //Deny access to any role to browse on any resource
+     * $acl->deny('*', '*', 'browse');
+     * </code>
      *
-     * @return bool
+     * @param  string  $roleName
+     * @param  string  $resourceName
+     * @param  mixed   $access
+     * @return boolean
+     */
+    public function deny($roleName, $resourceName, $access)
+    {
+        $this->allowOrDeny($roleName, $resourceName, $access, Acl::DENY);
+    }
+
+    /**
+     * {@inheritdoc}
+     * Example:
+     * <code>
+     * //Does Andres have access to the customers resource to create?
+     * $acl->isAllowed('Andres', 'Products', 'create');
+     * //Do guests have access to any resource to edit?
+     * $acl->isAllowed('guests', '*', 'edit');
+     * </code>
+     *
+     * @param  string  $role
+     * @param  string  $resource
+     * @param  string  $access
+     * @return boolean
+     */
+    public function isAllowed($role, $resource, $access)
+    {
+        $accessList = $this->getCollection('accessList');
+        $access     = $accessList->findOne(array(
+            'roles_name'     => $role,
+            'resources_name' => $resource,
+            'access_name'    => $access
+        ));
+
+        if (is_array($access)) {
+            return (bool) $access['allowed'];
+        }
+
+        /**
+         * Check if there is an common rule for that resource
+         */
+        $access = $accessList->findOne(array(
+            'roles_name'     => $role,
+            'resources_name' => $resource,
+            'access_name'    => '*'
+        ));
+        if (is_array($access)) {
+            return (bool) $access['allowed'];
+        }
+
+        return $this->_defaultAccess;
+    }
+
+    /**
+     * Returns a mongo collection
+     *
+     * @param  string           $name
+     * @return \MongoCollection
+     */
+    protected function getCollection($name)
+    {
+        return $this->options['db']->selectCollection($this->options[$name]);
+    }
+
+    /**
+     * Inserts/Updates a permission in the access list
+     *
+     * @param  string                 $roleName
+     * @param  string                 $resourceName
+     * @param  string                 $accessName
+     * @param  integer                $action
+     * @return boolean
      * @throws \Phalcon\Acl\Exception
      */
-    protected function _insertOrUpdateAccess($roleName, $resourceName, $accessName, $action)
+    protected function insertOrUpdateAccess($roleName, $resourceName, $accessName, $action)
     {
-
         /**
          * Check if the access is valid in the resource
          */
-        $exists = $this->_getCollection('resourcesAccesses')->count(array(
+        $exists = $this->getCollection('resourcesAccesses')->count(array(
             'resources_name' => $resourceName,
             'access_name'    => $accessName
         ));
         if (!$exists) {
-            throw new Exception("Access '" . $accessName . "' does not exist in resource '" . $resourceName . "' in ACL");
+            throw new Exception(
+                "Access '" . $accessName . "' does not exist in resource '" . $resourceName . "' in ACL"
+            );
         }
 
-        $accessList = $this->_getCollection('accessList');
+        $accessList = $this->getCollection('accessList');
 
         $access = $accessList->findOne(array(
             'roles_name'     => $roleName,
@@ -370,14 +442,13 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * Inserts/Updates a permission in the access list
      *
-     * @param string $roleName
-     * @param string $resourceName
-     * @param string $access
-     * @param int $action
-     *
+     * @param  string                 $roleName
+     * @param  string                 $resourceName
+     * @param  string                 $access
+     * @param  integer                $action
      * @throws \Phalcon\Acl\Exception
      */
-    protected function _allowOrDeny($roleName, $resourceName, $access, $action)
+    protected function allowOrDeny($roleName, $resourceName, $access, $action)
     {
 
         if (!$this->isRole($roleName)) {
@@ -386,142 +457,10 @@ class Mongo extends Adapter implements AdapterInterface
 
         if (is_array($access)) {
             foreach ($access as $accessName) {
-                $this->_insertOrUpdateAccess($roleName, $resourceName, $accessName, $action);
+                $this->insertOrUpdateAccess($roleName, $resourceName, $accessName, $action);
             }
         } else {
-            $this->_insertOrUpdateAccess($roleName, $resourceName, $access, $action);
+            $this->insertOrUpdateAccess($roleName, $resourceName, $access, $action);
         }
     }
-
-    /**
-     * Allow access to a role on a resource
-     * You can use '*' as wildcard
-     * Ej:
-     * <code>
-     * //Allow access to guests to search on customers
-     * $acl->allow('guests', 'customers', 'search');
-     * //Allow access to guests to search or create on customers
-     * $acl->allow('guests', 'customers', array('search', 'create'));
-     * //Allow access to any role to browse on products
-     * $acl->allow('*', 'products', 'browse');
-     * //Allow access to any role to browse on any resource
-     * $acl->allow('*', '*', 'browse');
-     * </code>
-     *
-     * @param string $roleName
-     * @param string $resourceName
-     * @param mixed  $access
-     */
-    public function allow($roleName, $resourceName, $access)
-    {
-        $this->_allowOrDeny($roleName, $resourceName, $access, Acl::ALLOW);
-    }
-
-    /**
-     * Deny access to a role on a resource
-     * You can use '*' as wildcard
-     * Ej:
-     * <code>
-     * //Deny access to guests to search on customers
-     * $acl->deny('guests', 'customers', 'search');
-     * //Deny access to guests to search or create on customers
-     * $acl->deny('guests', 'customers', array('search', 'create'));
-     * //Deny access to any role to browse on products
-     * $acl->deny('*', 'products', 'browse');
-     * //Deny access to any role to browse on any resource
-     * $acl->deny('*', '*', 'browse');
-     * </code>
-     *
-     * @param string $roleName
-     * @param string $resourceName
-     * @param mixed  $access
-     * @return boolean
-     */
-    public function deny($roleName, $resourceName, $access)
-    {
-         $this->_allowOrDeny($roleName, $resourceName, $access, Acl::DENY);
-    }
-
-    /**
-     * Check whether a role is allowed to access an action from a resource
-     * <code>
-     * //Does Andres have access to the customers resource to create?
-     * $acl->isAllowed('Andres', 'Products', 'create');
-     * //Do guests have access to any resource to edit?
-     * $acl->isAllowed('guests', '*', 'edit');
-     * </code>
-     *
-     * @param string $role
-     * @param string $resource
-     * @param string $access
-     *
-     * @return bool
-     */
-    public function isAllowed($role, $resource, $access)
-    {
-
-        $accessList = $this->_getCollection('accessList');
-
-
-        $access = $accessList->findOne(array(
-            'roles_name'     => $role,
-            'resources_name' => $resource,
-            'access_name'    => $access
-        ));
-        if (is_array($access)) {
-            return (bool) $access['allowed'];
-        }
-
-        /**
-         * Check if there is an common rule for that resource
-         */
-        $access = $accessList->findOne(array(
-            'roles_name'     => $role,
-            'resources_name' => $resource,
-            'access_name'    => '*'
-        ));
-        if (is_array($access)) {
-            return (bool) $access['allowed'];
-        }
-
-        /*$sql = 'SELECT roles_inherit FROM roles_inherits WHERE roles_name = ?';
-        $inheritedRoles = $this->_options['db']->fetchAll($sql, \Phalcon\Db::FETCH_NUM, array($role));*/
-
-        /**
-         * Check inherited roles for a specific rule
-         */
-        /*foreach ($inheritedRoles as $row) {
-            $sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
-            $allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($row[0], $resource, $access));
-            if (is_array($allowed)) {
-                return (bool) $allowed[0];
-            }
-        }*/
-
-        /**
-         * Check inherited roles for a specific rule
-         */
-        /*foreach ($inheritedRoles as $row) {
-            $sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
-            $allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($row[0], $resource, '*'));
-            if (is_array($allowed)) {
-                return (bool) $allowed[0];
-            }
-        }*/
-
-        /**
-         * Check if there is a common rule for that access
-         */
-        /*$sql = 'SELECT allowed FROM ' . $this->_options['accessList'] . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
-        $allowed = $this->_options['db']->fetchOne($sql, \Phalcon\Db::FETCH_NUM, array($role, '*', $access));
-        if (is_array($allowed)) {
-            return (bool) $allowed[0];
-        }*/
-
-        /**
-         * Return the default access action
-         */
-        return $this->_defaultAccess;
-    }
-
 }

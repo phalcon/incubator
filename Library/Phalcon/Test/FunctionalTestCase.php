@@ -15,7 +15,6 @@
  *                through the world-wide-web, please send an email to license@phalconphp.com
  *                so that we can send you a copy immediately.
  */
-
 namespace Phalcon\Test;
 
 use Phalcon\Escaper as PhEscaper;
@@ -24,12 +23,14 @@ use Phalcon\Mvc\Application as PhApplication;
 
 abstract class FunctionalTestCase extends ModelTestCase
 {
+
     protected $application;
 
     /**
      * Sets the test up by loading the DI container and other stuff
-     * @param \Phalcon\DiInterface $di
-         * @param \Phalcon\Config $config
+     *
+     * @param  \Phalcon\DiInterface $di
+     * @param  \Phalcon\Config      $config
      * @return void
      */
     protected function setUp(\Phalcon\DiInterface $di = null, \Phalcon\Config $config = null)
@@ -44,6 +45,7 @@ abstract class FunctionalTestCase extends ModelTestCase
                 $dispatcher->setControllerName('test');
                 $dispatcher->setActionName('empty');
                 $dispatcher->setParams(array());
+
                 return $dispatcher;
             }
         );
@@ -80,7 +82,7 @@ abstract class FunctionalTestCase extends ModelTestCase
     /**
      * Dispatches a given url and sets the response object accordingly
      *
-     * @param string $url The request url
+     * @param  string $url The request url
      * @return void
      */
     protected function dispatch($url)
@@ -91,8 +93,8 @@ abstract class FunctionalTestCase extends ModelTestCase
     /**
      * Assert that the last dispatched controller matches the given controller class name
      *
-     * @param string $expected The expected controller name
-     * @return void
+     * @param  string                                        $expected The expected controller name
+     * @throws \PHPUnit_Framework_ExpectationFailedException
      */
     public function assertController($expected)
     {
@@ -106,14 +108,15 @@ abstract class FunctionalTestCase extends ModelTestCase
                 )
             );
         }
+
         $this->assertEquals($expected, $actual);
     }
 
     /**
      * Assert that the last dispatched action matches the given action name
      *
-     * @param string $expected The expected action name
-     * @return void
+     * @param  string                                        $expected The expected action name
+     * @throws \PHPUnit_Framework_ExpectationFailedException
      */
     public function assertAction($expected)
     {
@@ -136,8 +139,8 @@ abstract class FunctionalTestCase extends ModelTestCase
      * $expected = array('Content-Type' => 'application/json')
      * </code>
      *
-     * @param string $expected The expected headers
-     * @return void
+     * @param  array                                         $expected The expected headers
+     * @throws \PHPUnit_Framework_ExpectationFailedException
      */
     public function assertHeader(array $expected)
     {
@@ -161,84 +164,91 @@ abstract class FunctionalTestCase extends ModelTestCase
     /**
      * Asserts that the response code matches the given one
      *
-     * @param string $expected the expected response code
-     * @return void
+     * @param  string                                        $expected the expected response code
+     * @throws \PHPUnit_Framework_ExpectationFailedException
      */
     public function assertResponseCode($expected)
     {
-            // convert to string if int
-            if (is_integer($expected)) {
-                $expected = (string) $expected;
-            }
+        // convert to string if int
+        if (is_integer($expected)) {
+            $expected = (string) $expected;
+        }
 
-            $actualValue = $this->di->getShared('response')->getHeaders()->get('Status');
+        $actualValue = $this->di->getShared('response')->getHeaders()->get('Status');
 
-            if (empty($actualValue) || stristr($actualValue, $expected) === false) {
-                    throw new \PHPUnit_Framework_ExpectationFailedException(
-                            sprintf(
-                                    'Failed asserting response code is "%s", actual response status is "%s"',
-                                    $expected,
-                                    $actualValue
-                            )
-                    );
-            }
-            $this->assertContains($expected, $actualValue);
+        if (empty($actualValue) || stristr($actualValue, $expected) === false) {
+            throw new \PHPUnit_Framework_ExpectationFailedException(
+                sprintf(
+                    'Failed asserting response code is "%s", actual response status is "%s"',
+                    $expected,
+                    $actualValue
+                )
+            );
+        }
+
+        $this->assertContains($expected, $actualValue);
     }
 
     /**
      * Asserts that the dispatch is forwarded
      *
-     * @return void
+     * @throws \PHPUnit_Framework_ExpectationFailedException
      */
     public function assertDispatchIsForwarded()
     {
-            /* @var $dispatcher \Phalcon\Mvc\Dispatcher */
-            $dispatcher = $this->di->getShared('dispatcher');
-            $actual = $dispatcher->wasForwarded();
-            if (!$actual) {
-                throw new \PHPUnit_Framework_ExpectationFailedException(
-                        'Failed asserting dispatch was forwarded'
-                );
-            }
-            $this->assertTrue($actual);
+        /* @var $dispatcher \Phalcon\Mvc\Dispatcher */
+        $dispatcher = $this->di->getShared('dispatcher');
+        $actual = $dispatcher->wasForwarded();
+
+        if (!$actual) {
+            throw new \PHPUnit_Framework_ExpectationFailedException('Failed asserting dispatch was forwarded');
+        }
+
+        $this->assertTrue($actual);
     }
 
-        /**
-         * Assert location redirect
-         *
-         * @param string $location
-         * @throws \PHPUnit_Framework_ExpectationFailedException
-         */
-        public function assertRedirectTo($location)
-        {
-            $actualLocation = $this->di->getShared('response')->getHeaders()->get('Location');
-            if (!$actualLocation) {
-                throw new \PHPUnit_Framework_ExpectationFailedException('Failed asserting response caused a redirect');
-            }
-            if ($actualLocation !== $location) {
-                throw new \PHPUnit_Framework_ExpectationFailedException(sprintf('Failed asserting response redirects to "%s". It redirects to "%s".', $location, $actualLocation));
-            }
+    /**
+     * Assert location redirect
+     *
+     * @param  string                                        $location
+     * @throws \PHPUnit_Framework_ExpectationFailedException
+     */
+    public function assertRedirectTo($location)
+    {
+        $actualLocation = $this->di->getShared('response')->getHeaders()->get('Location');
 
-            $this->assertEquals($location, $actualLocation);
+        if (!$actualLocation) {
+            throw new \PHPUnit_Framework_ExpectationFailedException('Failed asserting response caused a redirect');
         }
 
-        /**
-         * Convenience method to retrieve response content
-         *
-         * @return string
-         */
-        public function getContent()
-        {
-            return $this->di->getShared('response')->getContent();
+        if ($actualLocation !== $location) {
+            throw new \PHPUnit_Framework_ExpectationFailedException(sprintf(
+                'Failed asserting response redirects to "%s". It redirects to "%s".',
+                $location,
+                $actualLocation
+            ));
         }
 
-        /**
-         * Assert response content contains string
-         *
-         * @param string $string
-         */
-        public function assertResponseContentContains($string)
-        {
-            $this->assertContains($string, $this->getContent());
-        }
+        $this->assertEquals($location, $actualLocation);
+    }
+
+    /**
+     * Convenience method to retrieve response content
+     *
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->di->getShared('response')->getContent();
+    }
+
+    /**
+     * Assert response content contains string
+     *
+     * @param string $string
+     */
+    public function assertResponseContentContains($string)
+    {
+        $this->assertContains($string, $this->getContent());
+    }
 }

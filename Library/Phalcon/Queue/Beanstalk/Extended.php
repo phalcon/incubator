@@ -70,6 +70,7 @@ class Extended extends Base
 
     /**
      * {@inheritdoc}
+     *
      * @param array $options
      */
     public function __construct($options = null)
@@ -96,8 +97,8 @@ class Extended extends Base
     /**
      * Adds new worker to the pool.
      *
-     * @param  string   $tube
-     * @param  callable $callback
+     * @param  string                    $tube
+     * @param  callable                  $callback
      * @throws \InvalidArgumentException
      */
     public function addWorker($tube, $callback)
@@ -177,8 +178,8 @@ class Extended extends Base
     /**
      * Reserves/locks a ready job from the specified tube.
      *
-     * @param  string  $tube
-     * @param  integer $timeout
+     * @param  string                               $tube
+     * @param  integer                              $timeout
      * @return boolean|\Phalcon\Queue\Beanstalk\Job
      */
     public function reserveFromTube($tube, $timeout = null)
@@ -213,7 +214,7 @@ class Extended extends Base
     /**
      * Returns information about the specified tube if it exists.
      *
-     * @param  string $tube
+     * @param  string     $tube
      * @return null|array
      */
     public function getTubeStats($tube)
@@ -255,7 +256,7 @@ class Extended extends Base
      * Example return array: array('WATCHED' => 1)
      * Added on 10-Jan-2014 20:04 IST by Tapan Kumar Thapa @ tapan.thapa@yahoo.com
      *
-     * @param  string $tube
+     * @param  string     $tube
      * @return null|array
     */
     public function ignoreTube($tube)
@@ -276,7 +277,7 @@ class Extended extends Base
     /**
      * Returns the result of command that wait the list in response from beanstalkd.
      *
-     * @param  string $cmd
+     * @param  string            $cmd
      * @return array|null
      * @throws \RuntimeException
      */
@@ -311,7 +312,7 @@ class Extended extends Base
      * Returns the result of command that wait the list in response from beanstalkd.
      * Added on 10-Jan-2014 20:04 IST by Tapan Kumar Thapa @ tapan.thapa@yahoo.com
      *
-     * @param  string $cmd
+     * @param  string            $cmd
      * @return string|null
      * @throws \RuntimeException
      */
@@ -372,7 +373,9 @@ class Extended extends Base
                     } catch (\Exception $e) {
                         if (null !== $this->logger) {
                             $this->logger->warning(sprintf(
-                                'Exception thrown when trying to delete job: %d — %s', $e->getCode(), $e->getMessage()
+                                'Exception thrown when trying to delete job: %d — %s',
+                                $e->getCode(),
+                                $e->getMessage()
                             ));
                         }
                     }
@@ -383,5 +386,4 @@ class Extended extends Base
 
         return true;
     }
-
 }

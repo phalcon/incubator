@@ -6,12 +6,16 @@ use Phalcon\Translate\AdapterInterface;
 
 class Csv extends Adapter implements AdapterInterface
 {
-    protected $_translate;
 
     /**
-     * Phalcon\Translate\Adapter\Csv constructor
+     * @var array
+     */
+    protected $translate;
+
+    /**
+     * Class constructor.
      *
-     * @param array $options
+     * @param  array      $options
      * @throws \Exception
      */
     public function __construct($options)
@@ -36,16 +40,17 @@ class Csv extends Adapter implements AdapterInterface
                 continue;
             }
 
-            $this->_translate[$data[0]] = $data[1];
+            $this->translate[$data[0]] = $data[1];
         }
+
         @fclose($file);
     }
 
     /**
-     * Returns the translation related to the given key
+     * {@inheritdoc}
      *
-     * @param string $index
-     * @param null   $placeholders
+     * @param  string $index
+     * @param  array  $placeholders
      * @return string
      */
     public function query($index, $placeholders = null)
@@ -54,7 +59,7 @@ class Csv extends Adapter implements AdapterInterface
             return $index;
         }
 
-        $translation = $this->_translate[$index];
+        $translation = $this->translate[$index];
         if (is_array($placeholders)) {
             foreach ($placeholders as $key => $value) {
                 $translation = str_replace('%' . $key . '%', $value, $translation);
@@ -65,13 +70,13 @@ class Csv extends Adapter implements AdapterInterface
     }
 
     /**
-     * Check whether is defined a translation key in the csv
+     * {@inheritdoc}
      *
-     * @param string $index
-     * @return bool
+     * @param  string  $index
+     * @return boolean
      */
     public function exists($index)
     {
-        return isset($this->_translate[$index]);
+        return isset($this->translate[$index]);
     }
 }

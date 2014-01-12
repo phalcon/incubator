@@ -20,6 +20,7 @@ class Assets extends \Twig_Node
 
     /**
      * {@inheritdoc}
+     *
      * @param \Twig_Compiler $compiler
      */
     public function compile(\Twig_Compiler $compiler)
@@ -42,5 +43,4 @@ class Assets extends \Twig_Node
 
         $compiler->write(");\n");
     }
-
 }

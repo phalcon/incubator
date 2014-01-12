@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -17,7 +16,6 @@
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Cache\Backend;
 
 use Phalcon\Cache\Backend;
@@ -32,10 +30,10 @@ class Redis extends Backend implements BackendInterface
 {
 
     /**
-     * Phalcon\Cache\Backend\Redis constructor
+     * Class constructor.
      *
-     * @param \Phalcon\Cache\FrontendInterface $frontend
-     * @param array                            $options
+     * @param  \Phalcon\Cache\FrontendInterface $frontend
+     * @param  array                            $options
      * @throws \Phalcon\Cache\Exception
      */
     public function __construct($frontend, $options = null)
@@ -48,11 +46,10 @@ class Redis extends Backend implements BackendInterface
     }
 
     /**
-     * Get cached content from the Redis backend
+     * {@inheritdoc}
      *
-     * @param string $keyName
-     * @param null   $lifetime
-     * @param int    $lifetime
+     * @param  string     $keyName
+     * @param  integer    $lifetime
      * @return mixed|null
      */
     public function get($keyName, $lifetime = null)
@@ -72,17 +69,16 @@ class Redis extends Backend implements BackendInterface
     }
 
     /**
-     * Stores cached content into the Redis backend and stops the frontend
+     * {@inheritdoc}
      *
-     * @param string  $keyName
-     * @param string  $content
-     * @param int     $lifetime
-     * @param boolean $stopBuffer
+     * @param  string                   $keyName
+     * @param  string                   $content
+     * @param  integer                  $lifetime
+     * @param  boolean                  $stopBuffer
      * @throws \Phalcon\Cache\Exception
      */
     public function save($keyName = null, $content = null, $lifetime = null, $stopBuffer = true)
     {
-
         if ($keyName === null) {
             $lastKey = $this->_lastKey;
         } else {
@@ -123,21 +119,22 @@ class Redis extends Backend implements BackendInterface
     }
 
     /**
-     * Deletes a value from the cache by its key
+     * {@inheritdoc}
      *
-     * @param string $keyName
+     * @param  string  $keyName
      * @return boolean
      */
     public function delete($keyName)
     {
         $options = $this->getOptions();
+
         return $options['redis']->delete($keyName) > 0;
     }
 
     /**
-     * Query the existing cached keys
+     * {@inheritdoc}
      *
-     * @param string $prefix
+     * @param  string $prefix
      * @return array
      */
     public function queryKeys($prefix = null)
@@ -151,16 +148,16 @@ class Redis extends Backend implements BackendInterface
     }
 
     /**
-     * Checks if a value exists in the cache by checking its key.
+     * {@inheritdoc}
      *
-     * @param string $keyName
-     * @param string $lifetime
+     * @param  string  $keyName
+     * @param  string  $lifetime
      * @return boolean
      */
     public function exists($keyName = null, $lifetime = null)
     {
         $options = $this->getOptions();
+
         return $options['redis']->exists($keyName);
     }
-
 }

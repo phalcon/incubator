@@ -42,7 +42,7 @@ abstract class Base extends MetaData implements InjectionAwareInterface, MetaDat
     /**
      * Class constructor.
      *
-     * @param  null|array $options
+     * @param  null|array                   $options
      * @throws \Phalcon\Mvc\Model\Exception
      */
     public function __construct($options = null)
@@ -72,6 +72,7 @@ abstract class Base extends MetaData implements InjectionAwareInterface, MetaDat
 
     /**
      * {@inheritdoc}
+     *
      * @param string $key
      * @param array  $data
      */
@@ -99,5 +100,4 @@ abstract class Base extends MetaData implements InjectionAwareInterface, MetaDat
      * @return \Phalcon\Cache\BackendInterface
      */
     abstract protected function getCacheBackend();
-
 }

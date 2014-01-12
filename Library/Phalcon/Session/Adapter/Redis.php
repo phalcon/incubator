@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -16,7 +15,6 @@
   | Authors: kenjikobe <kenji.minamoto@gmail.com>                          |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Session\Adapter;
 
 use Phalcon\Session\Adapter;
@@ -31,9 +29,10 @@ class Redis extends Adapter implements AdapterInterface
 {
 
     /**
-     * Phalcon\Session\Adapter\Redis constructor
+     * Class constructor.
      *
-     * @param array $options
+     * @param  array                      $options
+     * @throws \Phalcon\Session\Exception
      */
     public function __construct($options = null)
     {
@@ -59,5 +58,4 @@ class Redis extends Adapter implements AdapterInterface
 
         parent::__construct($options);
     }
-
 }

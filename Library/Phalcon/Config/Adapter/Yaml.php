@@ -1,5 +1,4 @@
 <?php
-
 namespace Phalcon\Config\Adapter;
 
 use Phalcon\Config;
@@ -13,19 +12,23 @@ class Yaml extends Config implements \ArrayAccess
 {
 
     /**
-     * Phalcon\Config\Adapter\Yaml
+     * Class constructor.
      *
-     * @param string $filePath
+     * @param  string                    $filePath
+     * @param  array                     $callbacks
+     * @throws \Phalcon\Config\Exception
      */
     public function __construct($filePath, $callbacks = array())
     {
-        if (!extension_loaded('yaml'))
+        if (!extension_loaded('yaml')) {
             throw new Exception('Yaml extension not loaded');
+        }
 
-        if (false === $result = @yaml_parse_file($filePath, 0, $ndocs, $callbacks))
+        $ndocs = 0;
+        if (false === $result = @yaml_parse_file($filePath, 0, $ndocs, $callbacks)) {
             throw new Exception('Configuration file ' . $filePath . ' can\'t be loaded');
+        }
 
         parent::__construct($result);
     }
-
 }

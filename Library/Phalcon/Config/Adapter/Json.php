@@ -1,5 +1,4 @@
 <?php
-
 namespace Phalcon\Config\Adapter;
 
 use Phalcon\Config;
@@ -13,19 +12,21 @@ class Json extends Config implements \ArrayAccess
 {
 
     /**
-     * Phalcon\Config\Adapter\Json
+     * Class constructor.
      *
-     * @param string $filePath
+     * @param  string                    $filePath
+     * @throws \Phalcon\Config\Exception
      */
     public function __construct($filePath)
     {
-        if (!extension_loaded("json"))
+        if (!extension_loaded("json")) {
             throw new Exception('Json extension not loaded');
+        }
 
-        if (false === $result = json_decode(file_get_contents($filePath), true))
+        if (false === $result = json_decode(file_get_contents($filePath), true)) {
             throw new Exception('Configuration file ' . $filePath . ' can\'t be loaded');
+        }
 
         parent::__construct($result);
     }
-
 }

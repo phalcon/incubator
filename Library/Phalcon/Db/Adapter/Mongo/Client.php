@@ -15,7 +15,6 @@
   | Authors: Tuğrul Topuz <tugrultopuz@gmail.com>                          |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Db\Adapter\Mongo;
 
 class Client extends \MongoClient
