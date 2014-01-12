@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -16,7 +15,6 @@
   | Author: Tuğrul Topuz <tugrultopuz@gmail.com>                           |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Http\Client\Provider;
 
 use Phalcon\Http\Client\Exception as HttpException;
@@ -53,6 +51,7 @@ class Curl extends Request
     {
         $request = new self;
         $request->handle = curl_copy_handle($this->handle);
+
         return $request;
     }
 

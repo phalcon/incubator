@@ -15,24 +15,23 @@
   | Authors: Tuğrul Topuz <tugrultopuz@gmail.com>                          |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Db\Adapter\Mongo;
 
 class DbRef extends \MongoDBRef
 {
-    protected $_collection;
-    protected $_ref;
+    protected $collection;
+    protected $ref;
 
     public function __construct($collection, $ref)
     {
-        $this->_collection = $collection;
-        $this->_ref = $ref;
+        $this->collection = $collection;
+        $this->ref = $ref;
     }
 
     public function getRelated()
     {
-        $db = $this->_collection->db;
-        $ref = $this->_ref;
+        $db = $this->collection->db;
+        $ref = $this->ref;
 
         if (empty($ref['$db'])) {
             $collection = $db->selectCollection($ref['$ref']);

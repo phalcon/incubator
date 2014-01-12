@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -17,7 +16,6 @@
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Session\Adapter;
 
 use Phalcon\Session\Adapter;
@@ -32,13 +30,12 @@ class Mongo extends Adapter implements AdapterInterface
 {
 
     /**
-     * Phalcon\Session\Adapter\Mongo constructor
+     * Class constructor.
      *
      * @param array $options
      */
     public function __construct($options = null)
     {
-
         if (!isset($options['collection'])) {
             throw new Exception("The parameter 'collection' is required");
         }
@@ -55,21 +52,30 @@ class Mongo extends Adapter implements AdapterInterface
         parent::__construct($options);
     }
 
-
+    /**
+     * {@inheritdoc}
+     *
+     * @return boolean
+     */
     public function open()
     {
         return true;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return boolean
+     */
     public function close()
     {
         return false;
     }
 
     /**
-     * Reads the data from the table
+     * {@inheritdoc}
      *
-     * @param string $sessionId
+     * @param  string $sessionId
      * @return string
      */
     public function read($sessionId)
@@ -85,7 +91,7 @@ class Mongo extends Adapter implements AdapterInterface
     }
 
     /**
-     * Writes the data to the table
+     * {@inheritdoc}
      *
      * @param string $sessionId
      * @param string $data
@@ -106,8 +112,7 @@ class Mongo extends Adapter implements AdapterInterface
     }
 
     /**
-     * Destroyes the session
-
+     * {@inheritdoc}
      */
     public function destroy()
     {
@@ -119,12 +124,9 @@ class Mongo extends Adapter implements AdapterInterface
     }
 
     /**
-     * Performs garbage-collection on the session table
-
+     * {@inheritdoc}
      */
     public function gc()
     {
-
     }
-
 }

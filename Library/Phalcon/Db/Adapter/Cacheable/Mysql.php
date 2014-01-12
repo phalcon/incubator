@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -17,7 +16,6 @@
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Db\Adapter\Cacheable;
 
 use Phalcon\Db\Result\Serializable;
@@ -30,7 +28,7 @@ class Mysql extends \Phalcon\Db\Adapter\Pdo\Mysql
 {
 
     /**
-     * The constructor avoids the automatic connection
+     * Class constructor avoids the automatic connection.
      *
      * @param array $descriptor
      */
@@ -51,26 +49,15 @@ class Mysql extends \Phalcon\Db\Adapter\Pdo\Mysql
     }
 
     /**
-     * Checks if exist an active connection, if not, makes a connection
-     */
-    protected function _connect()
-    {
-        if (!$this->_pdo) {
-            $this->connect();
-        }
-    }
-
-    /**
      * The queries executed are stored in the cache
      *
-     * @param string $sqlStatement
-     * @param array  $bindParams
-     * @param array  $bindTypes
+     * @param  string                          $sqlStatement
+     * @param  array                           $bindParams
+     * @param  array                           $bindTypes
      * @return \Phalcon\Db\Result\Serializable
      */
     public function query($sqlStatement, $bindParams = null, $bindTypes = null)
     {
-
         /**
          * The key is the full sql statement + its parameters
          */
@@ -90,7 +77,7 @@ class Mysql extends \Phalcon\Db\Adapter\Pdo\Mysql
             }
         }
 
-        $this->_connect();
+        $this->internalConnect();
 
         /**
          * Executes the queries
@@ -100,38 +87,51 @@ class Mysql extends \Phalcon\Db\Adapter\Pdo\Mysql
         if (is_object($data)) {
             $result = new Serializable($data);
             $this->_cache->save($key, $result);
+
             return $result;
         }
 
         $this->_cache->save($key, $data);
+
         return false;
     }
 
     /**
      * Executes the SQL statement without caching
      *
-     * @param string $sqlStatement
-     * @param array  $bindParams
-     * @param array  $bindTypes
+     * @param  string  $sqlStatement
+     * @param  array   $bindParams
+     * @param  array   $bindTypes
      * @return boolean
      */
     public function execute($sqlStatement, $bindParams = null, $bindTypes = null)
     {
-        $this->_connect();
+        $this->internalConnect();
+
         return parent::execute($sqlStatement, $bindParams, $bindTypes);
     }
 
     /**
      * Checks if a table exists
      *
-     * @param string $tableName
-     * @param string $schemaName
+     * @param  string  $tableName
+     * @param  string  $schemaName
      * @return boolean
      */
     public function tableExists($tableName, $schemaName = null)
     {
-        $this->_connect();
+        $this->internalConnect();
+
         return parent::tableExists($tableName, $schemaName);
     }
 
+    /**
+     * Checks if exist an active connection, if not, makes a connection
+     */
+    protected function internalConnect()
+    {
+        if (!$this->_pdo) {
+            $this->connect();
+        }
+    }
 }

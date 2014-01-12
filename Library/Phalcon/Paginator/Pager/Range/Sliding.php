@@ -25,6 +25,7 @@ class Sliding extends Range
 
     /**
      * {@inheritdoc}
+     *
      * @return array
      */
     public function getRange()
@@ -55,5 +56,4 @@ class Sliding extends Range
 
         return range($chunkStart, $chunkEnd);
     }
-
 }

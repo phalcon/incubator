@@ -1,5 +1,4 @@
 <?php
-
 namespace Phalcon\Mvc\Model\Behavior;
 
 use Phalcon\Mvc\Model\Behavior;
@@ -11,8 +10,9 @@ use Phalcon\Mvc\ModelInterface;
  */
 class Blameable extends Behavior implements BehaviorInterface
 {
+
     /**
-     * Phalcon\Mvc\Model\Behavior\Blameable constructor
+     * Class constructor.
      *
      * @param array $options
      */
@@ -22,14 +22,13 @@ class Blameable extends Behavior implements BehaviorInterface
     }
 
     /**
-     * Receive notifications from the Models Manager
+     * {@inheritdoc}
      *
-     * @param string                     $eventType
-     * @param Phalcon\Mvc\ModelInterface $model
+     * @param string                      $eventType
+     * @param \Phalcon\Mvc\ModelInterface $model
      */
     public function notify($eventType, $model)
     {
-
         //Fires 'logAfterUpdate' if the event is 'afterCreate'
         if ($eventType == 'afterCreate') {
             return $this->auditAfterCreate($model);
@@ -44,8 +43,8 @@ class Blameable extends Behavior implements BehaviorInterface
     /**
      * Creates an Audit isntance based on the current enviroment
      *
-     * @param string                     $type
-     * @param Phalcon\Mvc\ModelInterface $model
+     * @param  string                      $type
+     * @param  \Phalcon\Mvc\ModelInterface $model
      * @return Audit
      */
     public function createAudit($type, ModelInterface $model)
@@ -79,23 +78,19 @@ class Blameable extends Behavior implements BehaviorInterface
     /**
      * Audits an DELETE operation
      *
-     * @param Phalcon\Mvc\ModelInterface $model
+     * @param  \Phalcon\Mvc\ModelInterface $model
      * @return boolean
      */
     public function auditAfterCreate(ModelInterface $model)
     {
         //Create a new audit
-        $audit = $this->createAudit('C', $model);
-
+        $audit    = $this->createAudit('C', $model);
         $metaData = $model->getModelsMetaData();
+        $fields   = $metaData->getAttributes($model);
+        $details  = array();
 
-        $fields = $metaData->getAttributes($model);
-
-        $details = array();
         foreach ($fields as $field) {
-
             $auditDetail = new AuditDetail();
-
             $auditDetail->field_name = $field;
             $auditDetail->old_value = null;
             $auditDetail->new_value = $model->readAttribute($field);
@@ -111,15 +106,14 @@ class Blameable extends Behavior implements BehaviorInterface
     /**
      * Audits an UPDATE operation
      *
-     * @param Phalcon\Mvc\ModelInterface $model
+     * @param  \Phalcon\Mvc\ModelInterface $model
      * @return boolean
      */
     public function auditAfterUpdate(ModelInterface $model)
     {
-
         $changedFields = $model->getChangedFields();
-        if (count($changedFields)) {
 
+        if (count($changedFields)) {
             //Create a new audit
             $audit = $this->createAudit('U', $model);
 
@@ -128,9 +122,7 @@ class Blameable extends Behavior implements BehaviorInterface
 
             $details = array();
             foreach ($changedFields as $field) {
-
                 $auditDetail = new AuditDetail();
-
                 $auditDetail->field_name = $field;
                 $auditDetail->old_value = $originalData[$field];
                 $auditDetail->new_value = $model->readAttribute($field);
@@ -145,5 +137,4 @@ class Blameable extends Behavior implements BehaviorInterface
 
         return null;
     }
-
 }

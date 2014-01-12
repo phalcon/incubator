@@ -25,6 +25,7 @@ class Jumping extends Range
 
     /**
      * {@inheritdoc}
+     *
      * @return array
      */
     public function getRange()
@@ -39,5 +40,4 @@ class Jumping extends Range
 
         return range($startPage, $endPage);
     }
-
 }

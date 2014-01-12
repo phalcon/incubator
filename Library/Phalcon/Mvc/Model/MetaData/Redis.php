@@ -9,7 +9,6 @@
  *
  * @author Nikita Vershinin <endeveit@gmail.com>
  */
-
 namespace Phalcon\Mvc\Model\MetaData;
 
 use Phalcon\Cache\Backend\Redis as CacheBackend;
@@ -32,7 +31,8 @@ class Redis extends Base
 
     /**
      * {@inheritdoc}
-     * @param  null|array $options
+     *
+     * @param  null|array                   $options
      * @throws \Phalcon\Mvc\Model\Exception
      */
     public function __construct($options = null)
@@ -50,6 +50,7 @@ class Redis extends Base
 
     /**
      * {@inheritdoc}
+     *
      * @return \Phalcon\Cache\Backend\Redis
      */
     protected function getCacheBackend()
@@ -65,5 +66,4 @@ class Redis extends Base
 
         return $this->redis;
     }
-
 }

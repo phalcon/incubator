@@ -1,5 +1,4 @@
 <?php
-
 namespace Phalcon\Logger\Adapter;
 
 use Phalcon\Logger\Exception;
@@ -14,22 +13,22 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
     /**
      * Name
      */
-    protected $_name;
+    protected $name;
 
     /**
      * Adapter options
      */
-    protected $_options;
+    protected $options;
 
     /**
-     * Phalcon\Logger\Adapter\Database constructor
+     * Class constructor.
      *
-     * @param string $name
-     * @param array  $options
+     * @param  string                    $name
+     * @param  array                     $options
+     * @throws \Phalcon\Logger\Exception
      */
     public function __construct($name, $options = array())
     {
-
         if (!isset($options['db'])) {
             throw new Exception("Parameter 'db' is required");
         }
@@ -38,45 +37,41 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
             throw new Exception("Parameter 'table' is required");
         }
 
-        $this->_name = $name;
-        $this->_options = $options;
+        $this->name = $name;
+        $this->options = $options;
     }
 
     /**
-     * Returns the internal formatter
+     * {@inheritdoc}
      *
-     * @return Phalcon\Logger\Formatter\Line
+     * @return \Phalcon\Logger\Formatter\Line
      */
     public function getFormatter()
     {
-
     }
 
     /**
      * Writes the log to the file itself
      *
-     * @param string $message
-     * @param int    $type
-     * @param int    $time
+     * @param string  $message
+     * @param integer $type
+     * @param integer $time
      */
     public function logInternal($message, $type, $time)
     {
-        return $this->_options['db']->execute("INSERT INTO " . $this->_options['table'] . " VALUES (null, ?, ?, ?, ?)", array(
-                $this->_name,
-                $type,
-                $message,
-                $time
-            ));
+        return $this->options['db']->execute(
+            'INSERT INTO ' . $this->options['table'] . ' VALUES (null, ?, ?, ?, ?)',
+            array($this->name, $type, $message, $time)
+        );
     }
 
     /**
-     * Closes the logger
+     * {@inheritdoc}
      *
      * @return boolean
      */
     public function close()
     {
-        $this->_options['db']->close();
+        $this->options['db']->close();
     }
-
 }

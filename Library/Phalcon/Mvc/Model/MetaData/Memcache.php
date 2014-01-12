@@ -9,7 +9,6 @@
  *
  * @author Nikita Vershinin <endeveit@gmail.com>
  */
-
 namespace Phalcon\Mvc\Model\MetaData;
 
 use Phalcon\Cache\Backend\Memcache as CacheBackend;
@@ -46,7 +45,8 @@ class Memcache extends Base
 
     /**
      * {@inheritdoc}
-     * @param  null|array $options
+     *
+     * @param  null|array                   $options
      * @throws \Phalcon\Mvc\Model\Exception
      */
     public function __construct($options = null)
@@ -89,5 +89,4 @@ class Memcache extends Base
 
         return $this->memcache;
     }
-
 }

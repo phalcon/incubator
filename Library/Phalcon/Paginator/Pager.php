@@ -47,7 +47,7 @@ class Pager implements \IteratorAggregate, \Countable
      * Class constructor.
      *
      * @param \Phalcon\Paginator\AdapterInterface $adapter
-     * @param array                               $options          {
+     * @param array                               $options {
      * @type string                               $rangeType        How to make the range: Jumping or Sliding
      * @type integer                              $rangeChunkLength Range window size
      *                                                              }
@@ -150,6 +150,7 @@ class Pager implements \IteratorAggregate, \Countable
         }
 
         $layout = null;
+
         try {
             $layout = new $this->options['layoutClass']($this, $range, $this->options['urlMask']);
         } catch (\Exception $e) {
@@ -161,6 +162,7 @@ class Pager implements \IteratorAggregate, \Countable
 
     /**
      * {@inheritdoc}
+     *
      * @return \ArrayIterator
      */
     public function getIterator()
@@ -174,11 +176,11 @@ class Pager implements \IteratorAggregate, \Countable
 
     /**
      * {@inheritdoc}
+     *
      * @return integer
      */
     public function count()
     {
         return intval($this->paginateResult->total_items);
     }
-
 }

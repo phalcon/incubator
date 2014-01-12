@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -17,7 +16,6 @@
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Db\Result;
 
 /**
@@ -27,27 +25,27 @@ namespace Phalcon\Db\Result;
 class Serializable
 {
 
-    protected $_data = array();
+    protected $data = array();
 
-    protected $_position = 0;
+    protected $position = 0;
 
     /**
+     * Class constructor.
      * The resultset is completely fetched
-
      */
     public function __construct($result)
     {
-        $this->_data = $result->fetchAll();
+        $this->data = $result->fetchAll();
     }
 
     /**
      * Returns the number of rows in the internal array
      *
-     * @return int
+     * @return integer
      */
     public function numRows()
     {
-        return count($this->_data);
+        return count($this->data);
     }
 
     /**
@@ -57,20 +55,20 @@ class Serializable
      */
     public function fetch()
     {
-        if (isset($this->_data[$this->_position])) {
-            return $this->_data[$this->_position++];
+        if (isset($this->data[$this->position])) {
+            return $this->data[$this->position++];
         }
+
         return false;
     }
 
     /**
      * Changes the fetch mode, this is not implemented yet
      *
-     * @param int $fetchMode
+     * @param integer $fetchMode
      */
     public function setFetchMode($fetchMode)
     {
-
     }
 
     /**
@@ -80,7 +78,7 @@ class Serializable
      */
     public function fetchAll()
     {
-        return $this->_data;
+        return $this->data;
     }
 
     /**
@@ -88,7 +86,6 @@ class Serializable
      */
     public function __wakeup()
     {
-        $this->_position = 0;
+        $this->position = 0;
     }
-
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Phalcon\Mvc\View\Engine;
 
 use Phalcon\Mvc\View\Engine;
@@ -12,24 +11,26 @@ use Phalcon\Mvc\View\EngineInterface;
 class Mustache extends Engine implements EngineInterface
 {
 
-    protected $_mustache;
-
-    protected $_params;
+    /**
+     * @var \Mustache_Engine
+     */
+    protected $mustache;
 
     /**
-     * Phalcon\Mvc\View\Engine\Mustache constructor
+     * Class constructor.
      *
      * @param \Phalcon\Mvc\ViewInterface $view
-     * @param \Phalcon\DiInterface       $di
+     * @param \Phalcon\DiInterface       $dependencyInjector
      */
     public function __construct($view, $dependencyInjector = null)
     {
-        $this->_mustache = new \Mustache_Engine();
+        $this->mustache = new \Mustache_Engine();
+
         parent::__construct($view, $dependencyInjector);
     }
 
     /**
-     * Renders a view
+     * {@inheritdoc}
      *
      * @param string  $path
      * @param array   $params
@@ -41,12 +42,11 @@ class Mustache extends Engine implements EngineInterface
             $params['content'] = $this->_view->getContent();
         }
 
-        $content = $this->_mustache->render(file_get_contents($path), $params);
+        $content = $this->mustache->render(file_get_contents($path), $params);
         if ($mustClean) {
             $this->_view->setContent($content);
         } else {
             echo $content;
         }
     }
-
 }

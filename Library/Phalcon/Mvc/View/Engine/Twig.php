@@ -1,5 +1,4 @@
 <?php
-
 namespace Phalcon\Mvc\View\Engine;
 
 use Phalcon\Mvc\View\Engine;
@@ -12,21 +11,24 @@ use Phalcon\Mvc\View\EngineInterface;
 class Twig extends Engine implements EngineInterface
 {
 
-    protected $_twig;
+    /**
+     * @var \Phalcon\Mvc\View\Engine\Twig\Environment
+     */
+    protected $twig;
 
     /**
-     * Phalcon\Mvc\View\Engine\Twig constructor
+     * {@inheritdoc}
      *
      * @param \Phalcon\Mvc\ViewInterface $view
      * @param \Phalcon\DiInterface       $di
-     * @param array                      $options TwigEnvironmentOptions
+     * @param array                      $options
      */
     public function __construct($view, $di = null, $options = array())
     {
-        $loader = new \Twig_Loader_Filesystem($view->getViewsDir());
-        $this->_twig = new Twig\Environment($di, $loader, $options);
+        $loader     = new \Twig_Loader_Filesystem($view->getViewsDir());
+        $this->twig = new Twig\Environment($di, $loader, $options);
 
-        $this->_twig->addExtension(new Twig\CoreExtension());
+        $this->twig->addExtension(new Twig\CoreExtension());
         $this->registryFunctions($view);
 
         parent::__construct($view, $di);
@@ -37,9 +39,8 @@ class Twig extends Engine implements EngineInterface
      *
      * @param \Phalcon\Mvc\ViewInterface $view
      */
-    private function registryFunctions($view)
+    protected function registryFunctions($view)
     {
-
         $options = array(
             'is_safe' => array('html')
         );
@@ -120,12 +121,12 @@ class Twig extends Engine implements EngineInterface
         );
 
         foreach ($functions as $function) {
-            $this->_twig->addFunction($function);
+            $this->twig->addFunction($function);
         }
     }
 
     /**
-     * Renders a view
+     * {@inheritdoc}
      *
      * @param string  $path
      * @param array   $params
@@ -144,7 +145,7 @@ class Twig extends Engine implements EngineInterface
 
         $relativePath = str_replace($view->getViewsDir(), '', $path);
 
-        $content = $this->_twig->render($relativePath, $params);
+        $content = $this->twig->render($relativePath, $params);
         if ($mustClean) {
             $this->_view->setContent($content);
         } else {
@@ -153,10 +154,12 @@ class Twig extends Engine implements EngineInterface
     }
 
     /**
-     * @return Twig\Environment
+     * Returns Twig environment object.
+     *
+     * @return \Phalcon\Mvc\View\Engine\Twig\Environment
      */
     public function getTwig()
     {
-        return $this->_twig;
+        return $this->twig;
     }
 }

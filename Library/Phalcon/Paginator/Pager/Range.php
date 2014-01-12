@@ -56,5 +56,4 @@ abstract class Range
      * @return array
      */
     abstract public function getRange();
-
 }

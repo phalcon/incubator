@@ -1,5 +1,4 @@
 <?php
-
 /**
  * HandlerSocket session handler
  * Table schema :
@@ -11,7 +10,6 @@
  *   KEY `modified` (`modified`)
  * ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8;
  */
-
 namespace Phalcon\Session\Adapter;
 
 use Phalcon\Session\Adapter;
@@ -49,7 +47,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
      * 'dbname' => (string) : the database name of the mysql handlersocket server
      * 'dbtable' => (string) : the table name of the mysql handlersocket server
      */
-    protected $_options = array(
+    protected $options = array(
         'cookie_path'   => '/',
         'cookie_domain' => '',
         'lifetime'      => 3600,
@@ -63,33 +61,38 @@ class HandlerSocket extends Adapter implements AdapterInterface
 
     /**
      * HandlerSocket object
+     *
+     * @var \HandlerSocket
      */
-    protected $_hs;
+    protected $hs;
 
     /**
      * HandlerSocket index number
+     *
+     * @var integer
      */
-    private $_hsIndex = 1;
+    protected $hsIndex = 1;
 
     /**
      * Stores session data results
+     *
+     * @var array
      */
-    private $_fields = array();
-
+    protected $fields = array();
 
     /**
-     * Constructor
+     * Class constructor.
      *
-     * @param array $options associative array of options
-     * @return void
+     * @param  array                      $options associative array of options
+     * @throws \Phalcon\Session\Exception
      */
     public function __construct($options = array())
     {
-        //initialize the handlersocket database
+        // initialize the handlersocket database
         if (empty($options)) {
-            $this->_init($this->_options);
+            $this->init($this->options);
         } else {
-            $this->_init($options);
+            $this->init($options);
         }
 
         //set object as the save handler
@@ -99,40 +102,12 @@ class HandlerSocket extends Adapter implements AdapterInterface
             array($this, 'read'),
             array($this, 'write'),
             array($this, 'destroy'),
-            array($this, 'gc'));
-
-        /*
-        //set some important session vars
-        ini_set('session.auto_start', 0);
-        ini_set('session.gc_probability', 1);
-        ini_set('session.gc_divisor', 100);
-        ini_set('session.gc_maxlifetime', $this->_options['lifetime']);
-        ini_set('session.referer_check', '');
-        ini_set('session.entropy_file', '/dev/urandom');
-        ini_set('session.entropy_length', 16);
-        ini_set('session.use_cookies', 1);
-        ini_set('session.use_only_cookies', 1);
-        ini_set('session.use_trans_sid', 0);
-        ini_set('session.hash_function', 1);
-        ini_set('session.hash_bits_per_character', 5);
-
-        //disable client/proxy caching
-        session_cache_limiter('nocache');
-
-        //set the cookie parameters
-        session_set_cookie_params($this->_options['lifetime'],
-            $this->_options['cookie_path'],
-            $this->_options['cookie_domain']);
-        //name the session
-        session_name('hs_sess');
-
-        //start it up
-        //session_start();
-        */
+            array($this, 'gc')
+        );
     }
 
     /**
-     * Desstructor
+     * Destructor
      *
      * @return void
      */
@@ -142,57 +117,9 @@ class HandlerSocket extends Adapter implements AdapterInterface
     }
 
     /**
-     * Initialize HandlerSocket.
+     * {@inheritdoc}
      *
-     * @param array $options associative array of options
-     * @return void
-     */
-    private function _init($options)
-    {
-        //update options
-        $this->_options = $options;
-
-        //generate server connection strings
-        if (!isset($this->_options['server'],
-        $this->_options['server']['host'],
-        $this->_options['server']['port'],
-        $this->_options['server']['dbname'],
-        $this->_options['server']['dbtable'])
-        ) {
-            $this->_options['server'] =
-                array('host'    => self::DEFAULT_HOST,
-                      'port'    => self::DEFAULT_PORT,
-                      'dbname'  => self::DEFAULT_DBNAME,
-                      'dbtable' => self::DEFAULT_DBTABLE);
-        }
-
-        if (!extension_loaded('handlersocket')) {
-            throw new Exception(
-                'The handlersocket extension must be loaded for using session !');
-        }
-
-        //load handlersocket server
-        $this->_hs = new \HandlerSocket(
-            $this->_options['server']['host'],
-            $this->_options['server']['port']);
-
-        //open handlersocket index
-        if (!($this->_hs->openIndex(
-            $this->_hsIndex,
-            $this->_options['server']['dbname'],
-            $this->_options['server']['dbtable'],
-            \HandlerSocket::PRIMARY, self::DB_FIELDS))
-        ) {
-            throw new Exception(
-                'The HandlerSocket database specified ' .
-                'in the options does not exist.');
-        }
-    }
-
-    /**
-     * Start the session.
-     *
-     * @param array $options associative array of options
+     * @param  array $options associative array of options
      * @return void
      */
     public function start($options = array())
@@ -204,11 +131,11 @@ class HandlerSocket extends Adapter implements AdapterInterface
     }
 
     /**
-     * Open Session
+     *{@inheritdoc}
      *
-     * @param string $save_path
-     * @param string $name
-     * @return true
+     * @param  string  $save_path
+     * @param  string  $name
+     * @return boolean
      */
     public function open($save_path, $name)
     {
@@ -216,9 +143,9 @@ class HandlerSocket extends Adapter implements AdapterInterface
     }
 
     /**
-     * Close Session
+     * {@inheritdoc}
      *
-     * @return true
+     * @return boolean
      */
     public function close()
     {
@@ -226,20 +153,19 @@ class HandlerSocket extends Adapter implements AdapterInterface
     }
 
     /**
-     * Read session data
+     * {@inheritdoc}
      *
-     * @param string $id
+     * @param  string $id
      * @return string
      */
     public function read($id)
     {
-        $retval = $this->_hs->executeSingle(
-            $this->_hsIndex, '=', array($id), 1, 0);
+        $retval = $this->hs->executeSingle($this->hsIndex, '=', array($id), 1, 0);
 
         if (isset($retval[0], $retval[0][2])) {
-            $this->_fields['id'] = $retval[0][0];
-            $this->_fields['modified'] = $retval[0][1];
-            $this->_fields['data'] = '';
+            $this->fields['id']       = $retval[0][0];
+            $this->fields['modified'] = $retval[0][1];
+            $this->fields['data']     = '';
 
             return $retval[0][2];
         } else {
@@ -248,62 +174,113 @@ class HandlerSocket extends Adapter implements AdapterInterface
     }
 
     /**
-     * Write session data
+     * {@inheritdoc}
      *
-     * @param string $id
-     * @param string $data
-     * @return true
+     * @param  string  $id
+     * @param  string  $data
+     * @return boolean
      */
     public function write($id, $data)
     {
-        if (isset($this->_fields['id']) && $this->_fields['id'] != $id) {
-            $this->_fields = array();
+        if (isset($this->fields['id']) && $this->fields['id'] != $id) {
+            $this->fields = array();
         }
 
-        if (empty($this->_fields)) {
-            $this->_hs->executeInsert(
-                $this->_hsIndex, array($id, date('Y-m-d H:i:s'), $data));
+        if (empty($this->fields)) {
+            $this->hs->executeInsert($this->hsIndex, array($id, date('Y-m-d H:i:s'), $data));
         } else {
-            $this->_hs->executeUpdate(
-                $this->_hsIndex, '=', array($id),
-                array($id, date('Y-m-d H:i:s'), $data), 1, 0);
+            $this->hs->executeUpdate($this->hsIndex, '=', array($id), array($id, date('Y-m-d H:i:s'), $data), 1, 0);
         }
 
         return true;
     }
 
     /**
-     * Destroy session
+     * {@inheritdoc}
      *
-     * @param string $id
-     * @return true
+     * @param  string  $id
+     * @return boolean
      */
     public function destroy($id)
     {
-        $this->_hs->executeDelete($this->_hsIndex, '=', array($id), 1, 0);
+        $this->hs->executeDelete($this->hsIndex, '=', array($id), 1, 0);
 
         return true;
     }
 
     /**
-     * Garbage Collection
+     * {@inheritdoc}
      *
-     * @param int $maxlifetime
-     * @return true
+     * @param  integer $maxlifetime
+     * @return boolean
      */
     public function gc($maxlifetime)
     {
-        $time = date('Y-m-d H:i:s', strtotime("- $maxlifetime seconds"));
+        $time  = date('Y-m-d H:i:s', strtotime("- $maxlifetime seconds"));
+        $index = $this->hsIndex + 1;
 
-        $index = $this->_hsIndex + 1;
-
-        $this->_hs->openIndex(
+        $this->hs->openIndex(
             $index,
-            $this->_options['server']['dbname'],
-            $this->_options['server']['dbtable'],
-            self::DB_GC_INDEX, '');
-        $this->_hs->executeDelete($index, '<', array($time), 1000, 0);
+            $this->options['server']['dbname'],
+            $this->options['server']['dbtable'],
+            self::DB_GC_INDEX,
+            ''
+        );
+
+        $this->hs->executeDelete($index, '<', array($time), 1000, 0);
 
         return true;
+    }
+
+    /**
+     * Initialize HandlerSocket.
+     *
+     * @param  array                      $options associative array of options
+     * @throws \Phalcon\Session\Exception
+     */
+    protected function init($options)
+    {
+        if (empty($options['server'])) {
+            $options['server'] = array();
+        }
+
+        if (empty($options['server']['host'])) {
+            $options['server']['host'] = self::DEFAULT_HOST;
+        }
+
+        if (empty($options['server']['port'])) {
+            $options['server']['port'] = self::DEFAULT_PORT;
+        }
+
+        if (empty($options['server']['dbname'])) {
+            $options['server']['dbname'] = self::DEFAULT_DBNAME;
+        }
+
+        if (empty($options['server']['dbtable'])) {
+            $options['server']['dbtable'] = self::DEFAULT_DBTABLE;
+        }
+
+        //update options
+        $this->options = $options;
+
+        if (!extension_loaded('handlersocket')) {
+            throw new Exception('The handlersocket extension must be loaded for using session!');
+        }
+
+        // load handlersocket server
+        $this->hs = new \HandlerSocket($options['server']['host'], $options['server']['port']);
+
+        // open handlersocket index
+        $result = $this->hs->openIndex(
+            $this->hsIndex,
+            $options['server']['dbname'],
+            $options['server']['dbtable'],
+            \HandlerSocket::PRIMARY,
+            self::DB_FIELDS
+        );
+
+        if (!$result) {
+            throw new Exception('The HandlerSocket database specified in the options does not exist.');
+        }
     }
 }

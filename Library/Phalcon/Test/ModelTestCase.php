@@ -15,34 +15,22 @@
  *                through the world-wide-web, please send an email to license@phalconphp.com
  *                so that we can send you a copy immediately.
  */
-
 namespace Phalcon\Test;
 
-use Phalcon\Cache\Backend\File as PhCacheBack;
-use Phalcon\Cache\Frontend\Data as PhCacheFront;
-use Phalcon\Db\Adapter\Pdo\Mysql as PhMysql;
-use Phalcon\Events\Manager as PhEventsManager;
-use Phalcon\Exception as PhException;
-use Phalcon\Logger\Adapter\File as PhLogger;
-use Phalcon\Mvc\Application as PhApplication;
-use Phalcon\Mvc\Dispatcher as PhDispatcher;
 use Phalcon\Mvc\Model\Manager as PhModelManager;
-use Phalcon\Mvc\Model\Metadata\Files as PhMetadataFiles;
 use Phalcon\Mvc\Model\Metadata\Memory as PhMetadataMemory;
-use Phalcon\Mvc\Url as PhUrl;
-use Phalcon\Mvc\View as PhView;
-use Phalcon\Mvc\View\Engine\Volt as PhVolt;
-use Phalcon\Session\Adapter\Files as PhSession;
 
 abstract class ModelTestCase extends UnitTestCase
 {
+
     /**
      * Sets the test up by loading the DI container and other stuff
      *
      * @author Nikos Dimopoulos <nikos@phalconphp.com>
      * @since  2012-09-20
-         * @param \Phalcon\DiInterface $di
-         * @param \Phalcon\Config $config
+     * @param  \Phalcon\DiInterface $di
+     * @param  \Phalcon\Config      $config
+     * @return void
      */
     protected function setUp(\Phalcon\DiInterface $di = null, \Phalcon\Config $config = null)
     {
@@ -71,9 +59,10 @@ abstract class ModelTestCase extends UnitTestCase
     /**
      * Sets the database adapter in the DI container
      *
-     * @param string $dbType Sets the database type for the test
      * @author Nikos Dimopoulos <nikos@phalconphp.com>
      * @since  2012-09-20
+     * @param  string $dbType Sets the database type for the test
+     * @return void
      */
     protected function setDb($dbType = 'mysql')
     {
@@ -95,6 +84,7 @@ abstract class ModelTestCase extends UnitTestCase
                 $class = 'Phalcon\Db\Adapter\Pdo\\' . ucfirst($dbType);
 
                 $conn = new $class($params);
+
                 return $conn;
             }
         );
@@ -117,21 +107,22 @@ abstract class ModelTestCase extends UnitTestCase
         return $success;
     }
 
-        /**
-         * Disables FOREIGN_KEY_CHECKS and truncates database table
-         *
-         * @param string $table table name
-         * @return bool result of truncate operation
-         */
-        public function truncateTable($table)
-        {
-            /* @var $db \Phalcon\Db\Adapter\Pdo\Mysql */
-            $db = $this->getDI()->get('db');
-            $db->query("SET FOREIGN_KEY_CHECKS = 0");
-            $success = $db->query("TRUNCATE TABLE `$table`");
-            $db->query("SET FOREIGN_KEY_CHECKS = 1");
-            return $success;
-        }
+    /**
+     * Disables FOREIGN_KEY_CHECKS and truncates database table
+     *
+     * @param  string $table table name
+     * @return bool   result of truncate operation
+     */
+    public function truncateTable($table)
+    {
+        /* @var $db \Phalcon\Db\Adapter\Pdo\Mysql */
+        $db = $this->getDI()->get('db');
+        $db->query("SET FOREIGN_KEY_CHECKS = 0");
+        $success = $db->query("TRUNCATE TABLE `$table`");
+        $db->query("SET FOREIGN_KEY_CHECKS = 1");
+
+        return $success;
+    }
 
     /**
      * Populates a table with default data

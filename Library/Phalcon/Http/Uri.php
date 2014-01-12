@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -16,7 +15,6 @@
   | Author: Tuğrul Topuz <tugrultopuz@gmail.com>                           |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Http;
 
 class Uri
@@ -25,7 +23,9 @@ class Uri
 
     public function __construct($uri = null)
     {
-        if (empty($uri)) return;
+        if (empty($uri)) {
+            return;
+        }
 
         if (is_string($uri)) {
             $this->parts = parse_url($uri);
@@ -34,16 +34,19 @@ class Uri
                 parse_str($this->parts['query'], $query);
                 $this->parts['query'] = $query;
             }
+
             return;
         }
 
         if ($uri instanceof self) {
             $this->parts = $uri->parts;
+
             return;
         }
 
         if (is_array($uri)) {
             $this->parts = $uri;
+
             return;
         }
 
@@ -156,20 +159,28 @@ class Uri
 
     public function extendPath($path)
     {
-        if (empty($path)) return $this;
+        if (empty($path)) {
+            return $this;
+        }
 
         if (!strncmp($path, '/', 1)) {
             $this->parts['path'] = $path;
+
             return $this;
         }
 
         if (empty($this->parts['path'])) {
             $this->parts['path'] = '/' . $path;
+
             return $this;
         }
 
-        $this->parts['path'] = substr($this->parts['path'], 0,
-                strrpos($this->parts['path'], '/') + 1) . $path;
+        $this->parts['path'] = substr(
+            $this->parts['path'],
+            0,
+            strrpos($this->parts['path'], '/') + 1
+        ) . $path;
+
         return $this;
     }
 }

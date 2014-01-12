@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -17,7 +16,6 @@
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Translate\Adapter;
 
 use Phalcon\Translate\Adapter;
@@ -27,16 +25,19 @@ use Phalcon\Translate\Exception;
 class Database extends Adapter implements AdapterInterface
 {
 
-    protected $_options;
+    /**
+     * @var array
+     */
+    protected $options;
 
     /**
-     * Phalcon\Translate\Adapter\Database constructor
+     * Class constructor.
      *
-     * @param array $options
+     * @param  array                        $options
+     * @throws \Phalcon\Translate\Exception
      */
     public function __construct($options)
     {
-
         if (!isset($options['db'])) {
             throw new Exception("Parameter 'db' is required");
         }
@@ -49,22 +50,30 @@ class Database extends Adapter implements AdapterInterface
             throw new Exception("Parameter 'language' is required");
         }
 
-        $this->_options = $options;
+        $this->options = $options;
     }
 
     /**
-     * Returns the translation related to the given key
+     * {@inheritdoc}
      *
-     * @param    string $index
-     * @param    array  $placeholders
-     * @return    string
+     * @param  string $index
+     * @param  array  $placeholders
+     * @return string
      */
     public function query($index, $placeholders = null)
     {
+        $options = $this->options;
 
-        $options = $this->_options;
+        $translation = $options['db']->fetchOne(
+            sprintf(
+                "SELECT value FROM %s WHERE language = '%s' AND key_name = ?",
+                $options['table'],
+                $options['language']
+            ),
+            null,
+            array($index)
+        );
 
-        $translation = $options['db']->fetchOne("SELECT value FROM " . $options['table'] . " WHERE language = '" . $options['language'] . "' AND key_name = ?", null, array($index));
         if (!$translation) {
             return $index;
         }
@@ -83,17 +92,21 @@ class Database extends Adapter implements AdapterInterface
     }
 
     /**
-     * Check whether is defined a translation key in the database
+     * {@inheritdoc}
      *
-     * @param    string $index
-     * @return    bool
+     * @param  string  $index
+     * @return boolean
      */
     public function exists($index)
     {
-        $options = $this->_options;
+        $options = $this->options;
 
-        $exists = $options['db']->fetchOne("SELECT COUNT(*) FROM " . $options['table'] . " WHERE key_name = ?0", null, array($index));
+        $exists = $options['db']->fetchOne(
+            "SELECT COUNT(*) FROM " . $options['table'] . " WHERE key_name = ?0",
+            null,
+            array($index)
+        );
+
         return $exists[0] > 0;
     }
-
 }

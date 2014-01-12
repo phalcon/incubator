@@ -16,7 +16,6 @@
  *                through the world-wide-web, please send an email to license@phalconphp.com
  *                so that we can send you a copy immediately.
  */
-
 namespace Phalcon\Test;
 
 use Phalcon\Config;
@@ -32,15 +31,19 @@ use Phalcon\Mvc\Url;
  */
 abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
 {
-    // Holds the configuration variables and other stuff
-    // I can use the DI container but for tests like the Translate
-    // we do not need the overhead
+
+    /**
+     * Holds the configuration variables and other stuff
+     * I can use the DI container but for tests like the Translate
+     * we do not need the overhead
+     *
+     * @var array
+     */
     protected $config = array();
 
     /**
-         *
-         * @var \Phalcon\DiInterface
-         */
+     * @var \Phalcon\DiInterface
+     */
     protected $di;
 
     /**
@@ -48,9 +51,9 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
      *
      * @author Nikos Dimopoulos <nikos@phalconphp.com>
      * @since  2012-09-30
-     * @param \Phalcon\DiInterface $di
-     * @param \Phalcon\Config      $config
-     * @return DI
+     * @param  \Phalcon\DiInterface $di
+     * @param  \Phalcon\Config      $config
+     * @return void
      */
     protected function setUp(DiInterface $di = null, Config $config = null)
     {
@@ -61,7 +64,6 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
         }
 
         if (is_null($di)) {
-
             // Reset the DI container
             DI::reset();
 
@@ -74,6 +76,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
                 function () {
                     $url = new Url();
                     $url->setBaseUri('/');
+
                     return $url;
                 }
             );
@@ -85,6 +88,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
                 }
             );
         }
+
         $this->di = $di;
     }
 
@@ -92,7 +96,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
      * Checks if a particular extension is loaded and if not it marks
      * the tests skipped
      *
-     * @param $extension
+     * @param string $extension
      */
     public function checkExtension($extension)
     {
@@ -106,8 +110,8 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
      *
      * @author Nikos Dimopoulos <nikos@phalconphp.com>
      * @since  2012-09-30
-     * @param string $prefix A prefix for the file
-     * @param string $suffix A suffix for the file
+     * @param  string $prefix A prefix for the file
+     * @param  string $suffix A suffix for the file
      * @return string
      */
     protected function getFileName($prefix = '', $suffix = 'log')
@@ -138,12 +142,11 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
-        /**
-         *
-         * @return \Phalcon\DiInterface
-         */
-        protected function getDI()
-        {
-            return $this->di;
-        }
+    /**
+     * @return \Phalcon\DiInterface
+     */
+    protected function getDI()
+    {
+        return $this->di;
+    }
 }

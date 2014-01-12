@@ -1,8 +1,6 @@
 <?php
-
 namespace Phalcon\Logger\Adapter;
 
-use Phalcon\Logger\Exception;
 use Phalcon\Logger\Formatter\Firelogger as FireloggerFormatter;
 
 /**
@@ -19,75 +17,65 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
 
     /**
      * Name
+     *
+     * @var string
      */
-    protected $_name;
+    protected $name;
 
     /**
      * Adapter options
      * In addition to default options provided by Phalcon\Adapter, you may specify the following:
-     * (string)     password    Holds password which the client should send to turn Firelogger on. Leave empty if no password
-     *                          authentication is needed.
-     * (boolean)    checkVersion Turn client version checks on / off.
-     * (boolean)    traceable   If TRUE, backtraces will be added to all logs.
-     */
-    protected $_options;
-
-    /**
-     * _enabled
+     * (string) password      Holds password which the client should send to turn Firelogger on.
+     *                        Leave empty if no password authentication is needed.
+     * (boolean) checkVersion Turn client version checks on / off.
+     * (boolean) traceable    If TRUE, backtraces will be added to all logs.
      *
-     * @var bool
-     * @access protected
+     * @var array
      */
-    protected $_enabled;
+    protected $options;
 
     /**
-     * _serverVersion
+     * @var boolean
+     */
+    protected $enabled;
+
+    /**
      * Holds current Firelogger server version.
      *
      * @var string
-     * @access protected
      */
-    protected $_serverVersion = '0.1';
+    protected $serverVersion = '0.1';
 
     /**
-     * _clientVersion
      * Holds detected Firelogger client version.
      *
      * @var string
-     * @access protected
      */
-    protected $_clientVersion;
+    protected $clientVersion;
 
     /**
-     * _recommendedClientVersion
      * Recommended Firelogger client version.
      *
-     * @var mixed
-     * @access protected
+     * @var string
      */
-    protected $_recommendedClientVersion = '1.3';
+    protected $recommendedClientVersion = '1.3';
 
     /**
-     * _logs
      * Storage for holding all messages until they are ready to be shipped to client.
      *
      * @var array
-     * @access protected
      */
-    protected $_logs = array();
+    protected $logs = array();
 
     /**
-     * _isTransaction
      * Denotes if there is a transaction started.
      *
-     * @var bool
-     * @access protected
+     * @var boolean
      */
-    protected $_isTransaction = false;
-
+    protected $isTransaction = false;
 
     /**
-     * Phalcon\Logger\Adapter\Firelogger constructor
+     * Class constructor.
      *
      * @param string $name
      * @param array  $options
@@ -99,65 +87,71 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
             'checkVersion' => true,
             'traceable'    => false,
         );
-        $this->_name = $name;
-        $this->_options = array_merge($defaults, $options);
-        $this->_enabled = $this->checkPassword();
+
+        $this->name = $name;
+        $this->options = array_merge($defaults, $options);
+        $this->enabled = $this->checkPassword();
         $this->checkVersion();
+
         register_shutdown_function(array($this, 'commit'));
     }
 
     /**
      * Setter for _name
      *
-     * @return $this
+     * @param  string                             $name
+     * @return \Phalcon\Logger\Adapter\Firelogger
      */
     public function setName($name)
     {
-        $this->_name = $name;
+        $this->name = $name;
+
         return $this;
     }
 
-
     /**
-     * Returns the internal formatter
+     * {@inheritdoc}
      *
-     * @return Phalcon\Logger\Formatter\Line
+     * @return \Phalcon\Logger\Formatter\Line
      */
     public function getFormatter()
     {
         if (!$this->_formatter) {
-            $this->_formatter = new FireloggerFormatter($this->_name);
+            $this->_formatter = new FireloggerFormatter($this->name);
         }
+
         return $this->_formatter;
     }
 
     /**
      * Writes the log to the headers.
      *
-     * @param mixed $message Stuff to log. Can be of any type castable into a string (i.e. anything except for objects without __toString() implementation).
-     * @param int   $type
-     * @param int   $time
+     * @param mixed $message Stuff to log. Can be of any type castable into a string (i.e. anything except for
+     * objects without __toString() implementation).
+     *
+     * @param integer $type
+     * @param integer $time
      */
     public function logInternal($message, $type, $time)
     {
-        if (!$this->_enabled) {
+        if (!$this->enabled) {
             return;
         }
         $trace = null;
-        if ($this->_options['traceable']) {
+        if ($this->options['traceable']) {
             $trace = debug_backtrace();
         }
-        $log = $this->getFormatter()->format($message, $type, $time, $trace, count($this->_logs));
-        $this->_logs[] = $log;
+        $log = $this->getFormatter()->format($message, $type, $time, $trace, count($this->logs));
+        $this->logs[] = $log;
 
         // flush if this is not transaction
-        if (!$this->_isTransaction) {
+        if (!$this->isTransaction) {
             $this->flush();
         }
     }
 
     /**
-     * Closes the logger
+     * {@inheritdoc}
      *
      * @return boolean
      */
@@ -166,32 +160,49 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
     }
 
     /**
-     * begin
-     *
-     * @see    Phalcon\Logger\Adapter::begin()
-     * @access public
-     * @return void
+     * {@inheritdoc}
      */
     public function begin()
     {
         // flush the previous transaction if there is any
         $this->commit();
         // start a new transaction
-        $this->_isTransaction = true;
+        $this->isTransaction = true;
     }
 
     /**
-     * flush
-     *
-     * @return void
-     **/
-    private function flush()
+     * {@inheritdoc}
+     * Encodes all collected messages into HTTP headers. This method is registered as a shutdown handler,
+     * so transactions will get committed even if you forget to commit them yourself.
+     */
+    public function commit()
     {
-        if (headers_sent($file, $line)) {
-            trigger_error("Cannot send FireLogger headers after output has been sent" . ($file ? " (output started at $file:$line)." : "."), \E_USER_WARNING);
+        if (!$this->isTransaction || empty($this->logs)) {
+            $this->isTransaction = false;
+
             return;
         }
-        $logs = $this->_logs;
+
+        $this->flush();
+        $this->isTransaction = false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function flush()
+    {
+        if (headers_sent($file, $line)) {
+            trigger_error(
+                "Cannot send FireLogger headers after output has been sent" .
+                ($file ? " (output started at $file:$line)." : "."),
+                \E_USER_WARNING
+            );
+
+            return;
+        }
+
+        $logs = $this->logs;
 
         // final encoding
         $id = dechex(mt_rand(0, 0xFFFF)) . dechex(mt_rand(0, 0xFFFF)); // mt_rand is not working with 0xFFFFFFFF
@@ -202,83 +213,70 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
             header("FireLogger-$id-$k:$v");
         }
 
-        $this->_logs = array();
+        $this->logs = array();
     }
 
     /**
-     * commit
-     * Encodes all collected messages into HTTP headers. This method is registered as a shutdown handler,
-     * so transactions will get committed even if you forget to commit them yourself.
-     *
-     * @see    Phalcon\Logger\Adapter::commit()
-     * @access public
-     * @return void
-     */
-    public function commit()
-    {
-        if (!$this->_isTransaction || empty($this->_logs)) {
-            $this->_isTransaction = false;
-            return;
-        }
-        $this->flush();
-        $this->_isTransaction = false;
-    }
-
-    /**
-     * checkPassword
      * Checks client provided password to see if we should disable/enable the firelogger.
      * Disables/enables the firelogger appropriately.
      *
-     * @access private
-     * @return bool
+     * @return boolean
      */
-    private function checkPassword()
+    protected function checkPassword()
     {
-        if (!isset($this->_options['password'])) {
-            $this->_enabled = true;
+        if (!isset($this->options['password'])) {
+            $this->enabled = true;
+
             return true;
         }
+
         if (isset($_SERVER['HTTP_X_FIRELOGGERAUTH'])) {
             $clientHash = $_SERVER['HTTP_X_FIRELOGGERAUTH'];
-            $serverHash = md5("#FireLoggerPassword#" . $this->_options['password'] . "#");
+            $serverHash = md5("#FireLoggerPassword#" . $this->options['password'] . "#");
             if ($clientHash !== $serverHash) { // passwords do not match
-                $this->_enabled = false;
-                trigger_error("FireLogger passwords do not match. Have you specified correct password FireLogger extension?");
+                $this->enabled = false;
+
+                trigger_error(
+                    "FireLogger passwords do not match. Have you specified correct password FireLogger extension?"
+                );
             } else {
-                $this->_enabled = true;
+                $this->enabled = true;
             }
         } else {
-            $this->_enabled = false;
+            $this->enabled = false;
         }
-        return $this->_enabled;
+
+        return $this->enabled;
     }
 
-
     /**
-     * checkVersion
      * Checks client version vs recommended version and logs a message if there is a mismatch. Does not
      * disable firelogger even if there is version mismatch.
      *
-     * @return bool
-     **/
+     * @return boolean
+     */
     private function checkVersion()
     {
-        if (!$this->_options['checkVersion']) {
+        if (!$this->options['checkVersion']) {
             return true;
         }
         if (!isset($_SERVER['HTTP_X_FIRELOGGER'])) {
             return false;
         } else {
-            $this->_clientVersion = $_SERVER['HTTP_X_FIRELOGGER'];
-            if ($this->_clientVersion != $this->_recommendedClientVersion) {
-                error_log("FireLogger for PHP (v" . $this->_serverVersion . ") works best with FireLogger extension of version " . $this->_recommendedClientVersion . ". You are currently using extension v" . $this->_clientVersion . ". Please install matching versions from http://firelogger.binaryage.com/ and https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger");
+            $this->clientVersion = $_SERVER['HTTP_X_FIRELOGGER'];
+            if ($this->clientVersion != $this->recommendedClientVersion) {
+                error_log(
+                    'FireLogger for PHP (v' . $this->serverVersion .
+                    ') works best with FireLogger extension of version ' . $this->recommendedClientVersion .
+                    '. You are currently using extension v' . $this->clientVersion .
+                    '. Please install matching versions from http://firelogger.binaryage.com/ and ' .
+                    'https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger'
+                );
+
                 return false;
             }
+
             return true;
         }
-
-
     }
-
-
 }

@@ -7,7 +7,6 @@ namespace Phalcon\Debug;
 class Dump
 {
 
-
     /**
      * @var string
      */
@@ -16,21 +15,21 @@ class Dump
     /**
      * Controls whether dump should be echoed
      *
-     * @var bool
+     * @var boolean
      */
     protected static $output = true;
 
     /**
      * Controls whether output buffer should be flushed after echoing dump
      *
-     * @var bool
+     * @var boolean
      */
     protected $flushBuffer = true;
 
     /**
-     * Constructs Dump object.
+     * Class constructor for dump object.
      *
-     * @param bool $flushBuffer if set to false, ob_flush will not be called after echo
+     * @param boolean $flushBuffer if set to false, ob_flush will not be called after echo
      */
     public function __construct($flushBuffer = true)
     {
@@ -48,6 +47,7 @@ class Dump
         if (static::$sapi === null) {
             static::$sapi = PHP_SAPI;
         }
+
         return static::$sapi;
     }
 
@@ -64,7 +64,7 @@ class Dump
     /**
      * Sets output flag.
      *
-     * @param type $output
+     * @param boolean $flag
      */
     public static function setOutput($flag)
     {
@@ -74,23 +74,20 @@ class Dump
     /**
      * Gets current value of output flag.
      *
-     * @return bool
+     * @return boolean
      */
     public static function getOutput()
     {
         return static::$output;
     }
 
-
-
-
     /**
      * Debug helper function.  This is a wrapper for var_dump|xdebug_var_dump that adds
      * the <pre /> tags, cleans up newlines and indents, adds file name and line number info
      * and runs htmlentities() before output.
      *
-     * @param  mixed  $var   The variable to dump.
-     * @param  bool   $outputDump    Overrides self::$output flag
+     * @param  mixed   $var        The variable to dump.
+     * @param  boolean $outputDump Overrides self::$output flag
      * @return string
      */
     public function dump($var, $outputDump = null)
@@ -129,12 +126,14 @@ class Dump
         if (is_bool($outputDump)) {
             $echo = $outputDump;
         }
+
         if ($echo) {
             echo $output;
             if ($this->flushBuffer) {
-            ob_flush();
+                ob_flush();
             }
         }
+
         return $output;
     }
 

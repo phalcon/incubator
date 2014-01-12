@@ -143,7 +143,7 @@ class Layout
      * Displays the pager on screen based on templates and options defined.
      *
      * @link https://github.com/doctrine/doctrine1/blob/master/lib/Doctrine/Pager/Layout.php#L315
-     * @param  array $options
+     * @param  array  $options
      * @return string
      */
     public function getRendered(array $options = array())
@@ -174,7 +174,7 @@ class Layout
 
     /**
      * @link https://github.com/doctrine/doctrine1/blob/master/lib/Doctrine/Pager/Layout.php#L353
-     * @param  array $options
+     * @param  array  $options
      * @return string
      */
     protected function processPage(array $options = array())
@@ -188,7 +188,7 @@ class Layout
 
     /**
      * @link https://github.com/doctrine/doctrine1/blob/master/lib/Doctrine/Pager/Layout.php#L390
-     * @param  array $options
+     * @param  array  $options
      * @return string
      */
     protected function parseTemplate(array $options = array())
@@ -201,7 +201,7 @@ class Layout
 
     /**
      * @link https://github.com/doctrine/doctrine1/blob/master/lib/Doctrine/Pager/Layout.php#L406
-     * @param  array $options
+     * @param  array  $options
      * @return string
      */
     protected function parseUrlTemplate(array $options = array())
@@ -223,7 +223,7 @@ class Layout
 
     /**
      * @link https://github.com/doctrine/doctrine1/blob/master/lib/Doctrine/Pager/Layout.php#L432
-     * @param  array $options
+     * @param  array  $options
      * @return string
      */
     protected function parseReplacementsTemplate(array $options = array())
@@ -240,7 +240,7 @@ class Layout
 
     /**
      * @link https://github.com/doctrine/doctrine1/blob/master/lib/Doctrine/Pager/Layout.php#L454
-     * @param  array $options
+     * @param  array  $options
      * @return string
      */
     protected function parseUrl(array $options = array())
@@ -271,5 +271,4 @@ class Layout
 
         return strtr($str, $replacements);
     }
-
 }

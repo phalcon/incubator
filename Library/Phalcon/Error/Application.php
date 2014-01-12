@@ -17,7 +17,6 @@
   |          Nikita Vershinin <endeveit@gmail.com>                         |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Error;
 
 use Phalcon\Config;
@@ -106,5 +105,4 @@ class Application extends \Phalcon\Mvc\Application
 
         $this->setDI($di);
     }
-
 }

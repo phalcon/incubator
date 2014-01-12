@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -20,7 +19,6 @@
   |          Nikolaos Dimopoulos <nikos@niden.net>                         |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Utils;
 
 class Slug
@@ -29,9 +27,9 @@ class Slug
      * Creates a slug to be used for pretty URLs
      *
      * @link http://cubiq.org/the-perfect-php-clean-url-generator
-     * @param        $string
-     * @param array  $replace
-     * @param string $delimiter
+     * @param         $string
+     * @param  array  $replace
+     * @param  string $delimiter
      * @return mixed
      */
     public static function generate($string, $replace = array(), $delimiter = '-')
