@@ -3,5 +3,6 @@
 *.iml
 *.sublime-project
 *.sublime-workspace
+composer.lock
 /nbproject/
 /vendor
