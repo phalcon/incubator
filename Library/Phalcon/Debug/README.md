@@ -1,4 +1,3 @@
-
 Phalcon\Debug
 ===================
 
@@ -53,7 +52,7 @@ and
 \Phalcon\Debug\Dump::setOutput(true);
 
 // this will echo dump
-\Phalcon\Debug\Dump::dump($varToDump);
+(new \Phalcon\Debug\Dump())->dump($varToDump);
 
 // will return dump instead of echoing it
 (new \Phalcon\Debug\Dump())->dump($varToDump, false);
@@ -70,6 +69,18 @@ $this->getDI()->setShared('dump', function() {
 
 // ... later in application ...
 $this->getDI()->getShared('dump')->dump($varToDump); // echoes dump
+
+```
+
+... or set \Phalcon\Debug\Dump as a service to be able to easily consume it within controller ...
+
+```php
+
+// services.php
+$di['debug'] = new \Phalcon\Debug\Dump();
+
+// later in controller ...
+$this->debug->dump($varToDump);
 
 ```
 
