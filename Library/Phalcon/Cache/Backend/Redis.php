@@ -160,4 +160,21 @@ class Redis extends Backend implements BackendInterface
 
         return $options['redis']->exists($keyName);
     }
+
+    /**
+     * Check if key exits in hash. If yes return true else return false
+     * Added on 15-Jan-2014 18:49 IST by Tapan Kumar Thapa @ tapan.thapa@yahoo.com
+     *
+     * @param  string  $hashName
+     * @param  string  $keyName
+     * @param  string  $lifetime
+     * @return boolean
+     */
+    public function hexists($hashName, $keyName = null, $lifetime = null)
+    {
+        $options = $this->getOptions();
+
+        return $options['redis']->hExists($hashName, $keyName);
+    }
+
 }
