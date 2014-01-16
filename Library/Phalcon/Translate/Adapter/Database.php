@@ -102,7 +102,7 @@ class Database extends Adapter implements AdapterInterface
         $options = $this->options;
 
         $exists = $options['db']->fetchOne(
-            "SELECT COUNT(*) FROM " . $options['table'] . " WHERE key_name = ?0",
+            "SELECT COUNT(*) FROM " . $options['table'] . " WHERE key_name = ?",
             null,
             array($index)
         );
