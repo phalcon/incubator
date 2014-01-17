@@ -7,6 +7,26 @@ use Phalcon\Validation\Message;
 use Phalcon\Db\Adapter\Pdo as DbConnection;
 use Phalcon\Validation\Exception as ValidationException;
 
+/**
+ * Phalcon\Validation\Validator\Db\Uniqueness
+ *
+ * Validator for checking uniqueness of field in database
+ *
+ * <code>
+ * $uniqueness = new Uniqueness(
+ *     array(
+ *         'table' => 'users',
+ *         'column' => 'login',
+ *         'message' => 'already taken',
+ *     ),
+ *     $di->get('db');
+ * );
+ * </code>
+ *
+ * If second parameter will be null (ommited) than validator will try to get database
+ * connection from default DI instance with \Phalcon\DI::getDefault()->get('db');
+ */
+
 class Uniqueness extends Validator implements ValidatorInterface
 {
     /**
