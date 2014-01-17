@@ -9,7 +9,7 @@ Uniqueness
 ```php
 $connection = new \Phalcon\Db\Adapter\Pdo\Sqlite(array("dbname" => "sample.db"));
 
-$uniqueness = new Uniqueness(
+$uniqueness = new \Phalcon\Validation\Validator\Db\Uniqueness(
     array(
         'table' => 'users',
         'column' => 'login',
