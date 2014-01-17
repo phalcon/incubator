@@ -6,7 +6,7 @@ Usage examples of the adapters available here:
 Msgpack
 -------
 
-This adapter uses a Msgpack frontend to store the cached content and requires msgpack-php extension:
+This adapter uses a Msgpack frontend to store the cached content and requires [msgpack-php](https://github.com/msgpack/msgpack-php) extension:
 
 ```php
 
