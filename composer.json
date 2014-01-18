@@ -13,12 +13,12 @@
     ],
     "require": {
         "php": ">=5.3.6",
-        "ext-phalcon": ">=1.2.4,<1.3",
-        "codeception/codeception": "*"
+        "ext-phalcon": ">=1.2.4,<1.3"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.28",
-        "squizlabs/php_codesniffer": "1.*"
+        "squizlabs/php_codesniffer": "1.*",
+        "codeception/codeception": "*"
     },
     "autoload": {
         "psr-0": {
