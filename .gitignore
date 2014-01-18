@@ -7,3 +7,6 @@ composer.lock
 composer.phar
 /nbproject/
 /vendor
+/codeception/acceptance/WebGuy.php
+/codeception/functional/TestGuy.php
+/codeception/unit/CodeGuy.php
