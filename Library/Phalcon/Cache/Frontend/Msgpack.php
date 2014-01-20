@@ -14,7 +14,7 @@ use Phalcon\Cache\Exception;
 class Msgpack implements FrontendInterface
 {
 
-    protected $_frontendOptions;
+    protected $frontendOptions;
 
     /**
      * Phalcon\Cache\Frontend\Msgpack constructor
@@ -23,7 +23,7 @@ class Msgpack implements FrontendInterface
      */
     public function __construct($frontendOptions = null)
     {
-        $this->_frontendOptions = $frontendOptions;
+        $this->frontendOptions = $frontendOptions;
     }
 
     /**
@@ -33,7 +33,7 @@ class Msgpack implements FrontendInterface
      */
     public function getLifetime()
     {
-        $options = $this->_frontendOptions;
+        $options = $this->frontendOptions;
         if (isset($options['lifetime'])) {
             return $options['lifetime'];
         }
