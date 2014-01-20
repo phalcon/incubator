@@ -2,8 +2,7 @@
 
 namespace Phalcon\Cache\Frontend;
 
-use Phalcon\Cache\FrontendInterface;
-use Phalcon\Cache\Exception;
+use Phalcon\Cache\Frontend\Data;
 
 /**
  * Class Msgpack
@@ -11,73 +10,13 @@ use Phalcon\Cache\Exception;
  *
  * @author Yoshihiro Misawa
  */
-class Msgpack implements FrontendInterface
+class Msgpack extends Data
 {
 
-    protected $frontendOptions;
-
     /**
-     * Phalcon\Cache\Frontend\Msgpack constructor
+     * {@inheritdoc}
      *
-     * @param array $frontendOptions
-     */
-    public function __construct($frontendOptions = null)
-    {
-        $this->frontendOptions = $frontendOptions;
-    }
-
-    /**
-     * Returns the cache lifetime
-     *
-     * @return int
-     */
-    public function getLifetime()
-    {
-        $options = $this->frontendOptions;
-        if (isset($options['lifetime'])) {
-            return $options['lifetime'];
-        }
-        return 1;
-    }
-
-    /**
-     * Check whether if frontend is buffering output
-     *
-     * @return boolean
-     */
-    public function isBuffering()
-    {
-        return false;
-    }
-
-    /**
-     * Starts output frontend. Actually, does nothing
-     */
-    public function start()
-    {
-    }
-
-    /**
-     * Returns output cached content
-     *
-     * @return string
-     */
-    public function getContent()
-    {
-        return null;
-    }
-
-    /**
-     * Stops output frontend
-     */
-    public function stop()
-    {
-    }
-
-    /**
-     * Serializes data before storing them
-     *
-     * @param mixed $data
+     * @param  mixed  $data
      * @return string
      */
     public function beforeStore($data)
@@ -86,9 +25,9 @@ class Msgpack implements FrontendInterface
     }
 
     /**
-     * Unserializes data after retrieval
+     * {@inheritdoc}
      *
-     * @param mixed $data
+     * @param  string $data
      * @return mixed
      */
     public function afterRetrieve($data)
