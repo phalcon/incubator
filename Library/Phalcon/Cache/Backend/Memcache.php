@@ -106,7 +106,7 @@ class Memcache extends Backend implements BackendInterface
     }
 
     /**
-     * S{@inheritdoc}
+     * {@inheritdoc}
      *
      * @param  string                   $keyName
      * @param  string                   $content
