@@ -118,9 +118,9 @@ abstract class ModelTestCase extends UnitTestCase
     {
         /* @var $db \Phalcon\Db\Adapter\Pdo\Mysql */
         $db = $this->getDI()->get('db');
-        $db->query("SET FOREIGN_KEY_CHECKS = 0");
-        $db->query("TRUNCATE TABLE `$table`");
-        $db->query("SET FOREIGN_KEY_CHECKS = 1");
+        $db->execute("SET FOREIGN_KEY_CHECKS = 0");
+        $db->execute("TRUNCATE TABLE `$table`");
+        $db->execute("SET FOREIGN_KEY_CHECKS = 1");
     }
 
     /**
