@@ -63,11 +63,12 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
      * @param string $message
      * @param int $type
      * @param int $time
+     * @param array $context
      */
-    public function logInternal($message, $type, $time)
+    protected function logInternal($message, $type, $time, $context)
     {
         $filename = $this->_path . \DIRECTORY_SEPARATOR . $this->_options['prefix'] . $this->getTypeString($type) . '.' . $this->_options['extension'];
-        $log = $this->getFormatter()->format($message, $type, $time);
+        $log = $this->getFormatter()->format($message, $type, $time, $context);
         $result = file_put_contents($filename, $log, \FILE_APPEND);
         if ($result === FALSE) {
             throw new LoggerException('Failed to write log into ' . $filename);

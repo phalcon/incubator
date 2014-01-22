@@ -49,7 +49,11 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
 	 */
 	public function getFormatter()
 	{
+		if (!is_object($this->_formatter)) {
+			$this->_formatter = new \Phalcon\Logger\Formatter\Line();
+		}
 
+		return $this->_formatter;
 	}
 
 	/**
@@ -58,13 +62,14 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
 	 * @param string $message
 	 * @param int    $type
 	 * @param int    $time
+	 * @param array  $context
 	 */
-	public function logInternal($message, $type, $time)
+	protected function logInternal($message, $type, $time, $context)
 	{
 		return $this->_options['db']->execute("INSERT INTO " . $this->_options['table'] . " VALUES (null, ?, ?, ?, ?)", array(
 				$this->_name,
 				$type,
-				$message,
+				$this->getFormatter()->interpolate($message, $context),
 				$time
 			));
 	}

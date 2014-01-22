@@ -137,8 +137,9 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
 	 * @param mixed $message Stuff to log. Can be of any type castable into a string (i.e. anything except for objects without __toString() implementation).
 	 * @param int   $type
 	 * @param int   $time
+	 * @param array $context
 	 */
-	public function logInternal($message, $type, $time)
+	protected function logInternal($message, $type, $time, $context)
 	{
 		if (!$this->_enabled) {
 			return;
@@ -147,7 +148,7 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
 		if ($this->_options['traceable']) {
 			$trace = debug_backtrace();
 		}
-		$log = $this->getFormatter()->format($message, $type, $time, $trace, count($this->_logs));
+		$log = $this->getFormatter()->format($message, $type, $time, $context, $trace, count($this->_logs));
 		$this->_logs[] = $log;
 
 		// flush if this is not transaction
@@ -188,7 +189,7 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
 	private function flush()
 	{
 		if (headers_sent($file, $line)) {
-			trigger_error("Cannot send FireLogger headers after output has been sent" . ($file ? " (output started at $file:$line)." : "."), \E_USER_WARNING);
+			trigger_error("Cannot send FireLogger headers after output has been sent" . ($file ? " (output started at {$file}:{$line})." : "."), \E_USER_WARNING);
 			return;
 		}
 		$logs = $this->_logs;
