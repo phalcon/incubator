@@ -45,8 +45,8 @@ class DumpTest extends \PHPUnit_Framework_TestCase
         \Phalcon\Debug\Dump::setOutput(false);
         
         ob_start();
-        $dump = new \Phalcon\Debug\Dump($this->flushBuffer);
-        $dump->dump($this->fixtures['htmlString']);
+        $dump   = new \Phalcon\Debug\Dump($this->flushBuffer);
+        $return = $dump->dump($this->fixtures['htmlString']);
         $output = ob_get_clean();
         $this->assertBacktraceNotExists($output);
         // assert no output
