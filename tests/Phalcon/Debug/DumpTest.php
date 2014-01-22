@@ -13,7 +13,8 @@ class DumpTest extends \PHPUnit_Framework_TestCase
     public function testDumpingHtmlStringVarByDefaultShouldEchoNonEscapedDump()
     {
         ob_start();
-        (new \Phalcon\Debug\Dump($this->flushBuffer))->dump($this->fixtures['htmlString']);
+        $dump = new \Phalcon\Debug\Dump($this->flushBuffer);
+        $dump->dump($this->fixtures['htmlString']);
         $output = ob_get_clean();
         $this->assertBacktraceExists($output);
         // assert string was not converted
@@ -28,7 +29,8 @@ class DumpTest extends \PHPUnit_Framework_TestCase
         \Phalcon\Debug\Dump::setSapi('apache');
         
         ob_start();
-        (new \Phalcon\Debug\Dump($this->flushBuffer))->dump($this->fixtures['htmlString']);
+        $dump = new \Phalcon\Debug\Dump($this->flushBuffer);
+        $dump->dump($this->fixtures['htmlString']);
         $output = ob_get_clean();
         $this->assertBacktraceExists($output);
         // assert string was converted
@@ -43,7 +45,8 @@ class DumpTest extends \PHPUnit_Framework_TestCase
         \Phalcon\Debug\Dump::setOutput(false);
         
         ob_start();
-        $return = (new \Phalcon\Debug\Dump($this->flushBuffer))->dump($this->fixtures['htmlString']);
+        $dump = new \Phalcon\Debug\Dump($this->flushBuffer);
+        $dump->dump($this->fixtures['htmlString']);
         $output = ob_get_clean();
         $this->assertBacktraceNotExists($output);
         // assert no output
@@ -59,7 +62,8 @@ class DumpTest extends \PHPUnit_Framework_TestCase
     public function testSecondDumpParamShouldOverrideGlobalOutputSetting()
     {
         ob_start();
-        $return = (new \Phalcon\Debug\Dump($this->flushBuffer))->dump($this->fixtures['htmlString'], false);
+        $dump = new \Phalcon\Debug\Dump($this->flushBuffer);
+        $return = $dump->dump($this->fixtures['htmlString'], false);
         $output = ob_get_clean();
         // no backtrace
         $this->assertBacktraceNotExists($output);
@@ -91,7 +95,8 @@ class DumpTest extends \PHPUnit_Framework_TestCase
     public function testObGetCleanShouldReturnEmptyIfFlushBufferNotSet()
     {
         ob_start();
-        $return =  (new \Phalcon\Debug\Dump())->dump($this->fixtures['htmlString']);
+        $dump   = new \Phalcon\Debug\Dump();
+        $return = $dump->dump($this->fixtures['htmlString']);
         $output = ob_get_clean();
         
         // assert output empty
