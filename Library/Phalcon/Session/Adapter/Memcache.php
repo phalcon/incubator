@@ -177,8 +177,9 @@ class Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\Adapte
      */
     public function getOption($key)
     {
-        if (isset($this->options[$key])) {
-            return $this->options[$key];
+        $options = $this->getOptions();
+        if (isset($options[$key])) {
+            return $options[$key];
         }
 
         return null;
