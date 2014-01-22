@@ -1,0 +1,13 @@
+language: php
+
+before_script:
+  - ./tests/install-php-extension.sh
+  - composer update --dev
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+
+script:
+  - phpunit --configuration tests/phpunit.xml.dist
