@@ -94,9 +94,6 @@ class Twig extends Engine implements EngineInterface
             new \Twig_SimpleFunction('getTitle', function () {
                 return \Phalcon\Tag::getTitle();
             }, $options),
-            new \Twig_SimpleFunction('getTitle', function () {
-                return \Phalcon\Tag::getTitle();
-            }, $options),
             new \Twig_SimpleFunction('stylesheetLink', function ($parameters = null, $local = true) {
                 return \Phalcon\Tag::stylesheetLink($parameters, $local);
             }, $options),
