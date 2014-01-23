@@ -14,19 +14,18 @@
   +------------------------------------------------------------------------+
   | Authors: Andres Gutierrez <andres@phalconphp.com>                      |
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
+  |          Nikita Vershinin <endeveit@gmail.com>                         |
   +------------------------------------------------------------------------+
 */
 namespace Phalcon\Cache\Backend;
 
-use Phalcon\Cache\Backend;
-use Phalcon\Cache\BackendInterface;
 use Phalcon\Cache\Exception;
 
 /**
  * Phalcon\Cache\Backend\Redis
  * This backend uses redis as cache backend
  */
-class Redis extends Backend implements BackendInterface
+class Redis extends Prefixable
 {
 
     /**
@@ -56,7 +55,7 @@ class Redis extends Backend implements BackendInterface
     {
         $options = $this->getOptions();
 
-        $value = $options['redis']->get($keyName);
+        $value = $options['redis']->get($this->getPrefixedIdentifier($keyName));
         if ($value === false) {
             return null;
         }
@@ -89,28 +88,28 @@ class Redis extends Backend implements BackendInterface
             throw new Exception('The cache must be started first');
         }
 
-        $options = $this->getOptions();
+        $options  = $this->getOptions();
         $frontend = $this->getFrontend();
 
         if ($content === null) {
             $content = $frontend->getContent();
         }
 
-        //Get the lifetime from the frontend
+        // Get the lifetime from the frontend
         if ($lifetime === null) {
             $lifetime = $frontend->getLifetime();
         }
 
-        $options['redis']->setex($lastKey, $lifetime, $frontend->beforeStore($content));
+        $options['redis']->setex($this->getPrefixedIdentifier($lastKey), $lifetime, $frontend->beforeStore($content));
 
         $isBuffering = $frontend->isBuffering();
 
-        //Stop the buffer, this only applies for Phalcon\Cache\Frontend\Output
+        // Stop the buffer, this only applies for Phalcon\Cache\Frontend\Output
         if ($stopBuffer) {
             $frontend->stop();
         }
 
-        //Print the buffer, this only applies for Phalcon\Cache\Frontend\Output
+        // Print the buffer, this only applies for Phalcon\Cache\Frontend\Output
         if ($isBuffering) {
             echo $content;
         }
@@ -128,7 +127,7 @@ class Redis extends Backend implements BackendInterface
     {
         $options = $this->getOptions();
 
-        return $options['redis']->delete($keyName) > 0;
+        return $options['redis']->delete($this->getPrefixedIdentifier($keyName)) > 0;
     }
 
     /**
@@ -141,9 +140,9 @@ class Redis extends Backend implements BackendInterface
     {
         $options = $this->getOptions();
         if ($prefix === null) {
-            return $options['redis']->getKeys('*');
+            return $options['redis']->getKeys($this->getPrefixedIdentifier('*'));
         } else {
-            return $options['redis']->getKeys($prefix . '*');
+            return $options['redis']->getKeys($this->getPrefixedIdentifier($prefix) . '*');
         }
     }
 
@@ -158,6 +157,6 @@ class Redis extends Backend implements BackendInterface
     {
         $options = $this->getOptions();
 
-        return $options['redis']->exists($keyName);
+        return $options['redis']->exists($this->getPrefixedIdentifier($keyName));
     }
 }
