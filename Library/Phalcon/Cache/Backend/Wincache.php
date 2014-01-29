@@ -131,14 +131,15 @@ class Wincache extends Backend implements BackendInterface
      * @param string $prefix
      * @return array
      */
-    public function queryKeys($prefix = null){
+    public function queryKeys($prefix = null)
+    {
         $info = wincache_ucache_info();
         $entries = array();
         foreach ($info['ucache_entries'] as $entry) {
             if ($prefix === null) {
                 $entries[] = $entry['key_name'];
             } else {
-                if (substr( $entry['key_name'], 0, strlen($prefix) ) === $prefix) {
+                if (substr($entry['key_name'], 0, strlen($prefix)) === $prefix) {
                     $entries[] = $entry['key_name'];
                 }
             }
