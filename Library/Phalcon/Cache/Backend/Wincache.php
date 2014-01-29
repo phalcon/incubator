@@ -57,7 +57,7 @@ class Wincache extends Backend implements BackendInterface
 		if ($success===false) {
 			return null;
 		}
-
+        
 		$frontend = $this->getFrontend();
 
 		$this->setLastKey($keyName);
