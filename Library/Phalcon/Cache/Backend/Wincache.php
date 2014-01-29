@@ -19,8 +19,8 @@
 
 namespace Phalcon\Cache\Backend;
 
-use Phalcon\Cache\BackendInterface,
-    Phalcon\Cache\Exception;             
+use Phalcon\Cache\BackendInterface;
+use Phalcon\Cache\Exception;
 
 /**
  * Phalcon\Cache\Backend\Wincache
@@ -28,7 +28,7 @@ use Phalcon\Cache\BackendInterface,
  * This backend uses wincache as cache backend
  */
 class Wincache extends Backend implements BackendInterface
-{   
+{
     
     /**
     * Phalcon\Cache\Backend\Wincache constructor
@@ -120,8 +120,9 @@ class Wincache extends Backend implements BackendInterface
      * @param string $keyName
      * @return boolean
      */
-    public function delete($keyName){
-        return wincache_ucache_delete ($keyName) ;
+    public function delete($keyName)
+    {
+        return wincache_ucache_delete($keyName);
     }
 
     /**
@@ -133,11 +134,11 @@ class Wincache extends Backend implements BackendInterface
     public function queryKeys($prefix = null){
         $info = wincache_ucache_info();
         $entries = array();
-        foreach($info['ucache_entries'] as $entry) {
-            if( $prefix === null) {
+        foreach ($info['ucache_entries'] as $entry) {
+            if ($prefix === null) {
                 $entries[] = $entry['key_name'];
             } else {
-                if( substr( $entry['key_name'], 0, strlen($prefix) ) === $prefix) {
+                if (substr( $entry['key_name'], 0, strlen($prefix) ) === $prefix) {
                     $entries[] = $entry['key_name'];
                 }
             }
@@ -152,8 +153,8 @@ class Wincache extends Backend implements BackendInterface
      * @param string $lifetime
      * @return boolean
      */
-    public function exists($keyName = null, $lifetime = null){
+    public function exists($keyName = null, $lifetime = null)
+    {
         return wincache_ucache_exists($keyName);
     }
-
 }
