@@ -35,7 +35,7 @@ class Blameable extends Behavior implements BehaviorInterface
         }
 
         //Fires 'logAfterUpdate' if the event is 'afterUpdate'
-        if ($eventType == 'auditUpdate') {
+        if ($eventType == 'afterUpdate') {
             return $this->auditAfterUpdate($model);
         }
     }
