@@ -20,7 +20,7 @@ use Phalcon\Mvc\Model\Exception;
  * Redis adapter for \Phalcon\Mvc\Model\MetaData
  */
 class Wincache extends Base
-{      
+{
     /**
      * Memcache backend instance.
      *
