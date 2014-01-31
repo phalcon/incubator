@@ -63,7 +63,7 @@ class Handler
                 'isError' => true,
             );
 
-            Handler::handle(new Error($options));
+            static::handle(new Error($options));
         });
 
         set_exception_handler(function (\Exception $e) {
@@ -76,12 +76,12 @@ class Handler
                 'exception'   => $e,
             );
 
-            Handler::handle(new Error($options));
+            static::handle(new Error($options));
         });
 
         register_shutdown_function(function () {
             if (!is_null($options = error_get_last())) {
-                Handler::handle(new Error($options));
+                static::handle(new Error($options));
             }
         });
     }
