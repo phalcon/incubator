@@ -1,4 +1,3 @@
-
 Phalcon\Mvc\Model\Behavior
 ==========================
 
@@ -15,6 +14,7 @@ class Products extends Phalcon\Mvc\Model
 }
 ```
 
+```
 CREATE TABLE audit (
     id integer primary key auto_increment,
     user_name varchar(32) not null,
@@ -31,3 +31,4 @@ CREATE TABLE audit_detail (
     old_value varchar(32),
     new_value varchar(32) not null
 )
+```
