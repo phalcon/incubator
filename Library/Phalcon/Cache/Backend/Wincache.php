@@ -27,7 +27,7 @@ use Phalcon\Cache\Exception;
  *
  * This backend uses wincache as cache backend
  */
-class Wincache extends Backend implements BackendInterface
+class Wincache extends Prefixable
 {
     
     /**
