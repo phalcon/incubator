@@ -25,7 +25,7 @@ class Handler
 {
 
     /**
-     * Registers it self as error and exception handler.
+     * Registers itself as error and exception handler.
      *
      * @return void
      */
@@ -34,20 +34,15 @@ class Handler
         switch (APPLICATION_ENV) {
             case Application::ENV_PRODUCTION:
             case Application::ENV_STAGING:
+            default:
                 ini_set('display_errors', 0);
-                ini_set('display_startup_errors', 0);
                 error_reporting(0);
                 break;
             case Application::ENV_TEST:
             case Application::ENV_DEVELOPMENT:
                 ini_set('display_errors', 1);
-                ini_set('display_startup_errors', 1);
-                error_reporting(~0);
+                error_reporting(-1);
                 break;
-            default:
-                ini_set('display_errors', 0);
-                ini_set('display_startup_errors', 0);
-                error_reporting(0);
         }
 
         set_error_handler(function ($errno, $errstr, $errfile, $errline) {
