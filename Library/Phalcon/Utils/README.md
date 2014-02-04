@@ -61,4 +61,4 @@ echo \Phalcon\Utils\TruncateText($text, $limit, $break, $pad);
 
 Credits
 -------
-http://www.the-art-of-web.com/php/truncate/ (Original PHP code by Chirp Internet: www.chirp.com.au)
+http://www.the-art-of-web.com/php/truncate/ (Original PHP code by Chirp Internet: www.chirp.com.au) 
