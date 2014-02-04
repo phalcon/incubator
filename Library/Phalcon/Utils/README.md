@@ -25,3 +25,19 @@ The extension [iconv](http://php.net/manual/en/book.iconv.php) must be installed
 Credits
 -------
 Matteo Spinelli (http://cubiq.org) [php-clean-url-generator](http://cubiq.org/the-perfect-php-clean-url-generator)
+
+Id2Dir
+----
+Converts integer unique id / primary key to figure out path on filesystem.
+Useful for storing large number of images/profiles/files on filesystem.
+
+Examples
+--------
+```
+$imageId = 123456;
+
+echo \Phalcon\Utils\Id2Dir::id2Dir($imageId); // outputs 000/001/234/56
+
+Credits
+-------
+see http://stackoverflow.com/a/3356859

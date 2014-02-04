@@ -1,14 +1,14 @@
 <?php
-namespace Phalcon\Tag;
+namespace Phalcon\Utils;
 
 /**
  * Class Id2Dir
  *
  * @see http://stackoverflow.com/a/3356859
  *
- * @package Phalcon\Tag
+ * @package Phalcon\Utils
  */
-class Id2Dir extends \Phalcon\Tag
+class Id2Dir
 {
     /**
      * Converts unique integer identifier (id/primary key) to directory location,
