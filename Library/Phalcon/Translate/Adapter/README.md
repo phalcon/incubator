@@ -57,7 +57,7 @@ echo $translate->_('Hello'); //Bonjour
 echo $translate->_('My name is %name%', array('name' => 'Peter')); //Je m'appelle Peter
 ```
 
-### Advanced use
+### Translation contexts
 
 Use the __() (alias to cquery()) method if you have multiple translations of a string in different contexts:
 
@@ -86,6 +86,8 @@ echo $translate->cquery('Hello', 'evening');  //Bonsoir
 // placeholders are supported as well
 echo $translate->__('Hello %name%', NULL, array('name' => 'Bob'));   //Salut Bob
 ```
+
+### Translation domains
 
 Multiple translations domains are supported by the dquery() method. Let's say you have two files with translations:
 
@@ -116,6 +118,46 @@ echo $translate->dquery('backend', 'Hello');              //Hello, admin
 echo $translate->dquery('backend', 'Hello', 'evening');   //Bonsoir, admin
 // placeholders are supported as well
 echo $translate->dquery('backend', 'Hello %name%', NULL, array('name' => 'Bob'));   //Salut Bob
+```
+
+### Multiple plural forms
+
+Some languages require multiple plural forms of nouns depending on the object count. In gettext catalogs, plural forms need to be specified as such:
+
+```gettext
+"Plural-Forms: nplurals=3; plural=n>4 ? 2 : n>1 ? 1 : 0;\n"
+
+msgid "banana"
+msgid_plural "bananas"
+msgstr[0] "banán"
+msgstr[1] "banány"
+msgstr[2] "banánov"
+```
+
+We can then leverage the multi-plural form support offered by the Gettext adapter:
+
+```php
+for ($i = 1; $i < 7; $i++) {
+    echo "I have $i " .  $translate->nquery('banana', 'bananas', $i);
+}
+// 1 banán
+// 2 banány
+// 3 banány
+// 4 banány
+// 5 banánov
+// 6 banánov
+```
+
+Method cnquery() is a plural-form counterpart to cquery().
+
+```php
+(string) public function cnquery($msgid1, $msgid2, $count, $msgctxt = null, $placeholders = null, $category = LC_MESSAGES, $domain = null)
+```
+
+Method dnquery() is a plural-form counterpart to dquery().
+
+```php
+(string) public function dnquery($domain, $msgid1, $msgid2, $count, $msgctxt = null, $placeholders = null, $category = LC_MESSAGES)
 ```
 
 Database
