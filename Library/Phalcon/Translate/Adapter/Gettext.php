@@ -218,9 +218,15 @@ class Gettext extends Adapter implements AdapterInterface
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function cnquery($msgid1, $msgid2, $count, $msgctxt = null, $placeholders = null, $category = LC_MESSAGES,
-        $domain = null)
-    {
+    public function cnquery(
+        $msgid1,
+        $msgid2,
+        $count,
+        $msgctxt = null,
+        $placeholders = null,
+        $category = LC_MESSAGES,
+        $domain = null
+    ) {
         if (!is_int($count) || $count < 0) {
             throw new \InvalidArgumentException("Count must be a nonnegative integer. $count given.");
         }
@@ -265,9 +271,15 @@ class Gettext extends Adapter implements AdapterInterface
      * @param  integer $category     Optional. Specify the locale category. Defaults to LC_MESSAGES
      * @return string
      */
-    public function dnquery($domain, $msgid1, $msgid2, $count, $msgctxt = null, $placeholders = null,
-        $category = LC_MESSAGES)
-    {
+    public function dnquery(
+        $domain, 
+        $msgid1, 
+        $msgid2, 
+        $count, 
+        $msgctxt = null, 
+        $placeholders = null,
+        $category = LC_MESSAGES
+    ) {
         if (!is_int($count) || $count < 0) {
             throw new \InvalidArgumentException("Count must be a nonnegative integer. $count given.");
         }
