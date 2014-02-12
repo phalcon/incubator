@@ -179,6 +179,117 @@ class Gettext extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
+     * @param  string  $msgid1
+     * @param  string  $msgid2
+     * @param  integer $count
+     * @param  array   $placeholders
+     * @param  string  $domain
+     * @return string
+     */
+    public function nquery($msgid1, $msgid2, $count, $placeholders = null, $domain = null)
+    {
+        if (!is_int($count) || $count < 0) {
+            throw new \InvalidArgumentException("Count must be a nonnegative integer. $count given.");
+        }
+        if ($domain === null) {
+            $translation = ngettext($msgid1, $msgid2, $count);
+        } else {
+            $translation = dngettext($domain, $msgid1, $msgid2, $count);
+        }
+
+        if (is_array($placeholders)) {
+            foreach ($placeholders as $key => $value) {
+                $translation = str_replace('%' . $key . '%', $value, $translation);
+            }
+        }
+
+        return $translation;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param  string                    $msgid1
+     * @param  string                    $msgid2
+     * @param  integer                   $count
+     * @param  string                    $msgctxt      Optional. If ommitted or NULL, this method behaves as nquery().
+     * @param  array                     $placeholders Optional.
+     * @param  string                    $category     Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    public function cnquery(
+        $msgid1,
+        $msgid2,
+        $count,
+        $msgctxt = null,
+        $placeholders = null,
+        $category = LC_MESSAGES,
+        $domain = null
+    ) {
+        if (!is_int($count) || $count < 0) {
+            throw new \InvalidArgumentException("Count must be a nonnegative integer. $count given.");
+        }
+        if ($domain !== null && !in_array($domain, $this->domains)) {
+            throw new \InvalidArgumentException($domain . ' is invalid translation domain');
+        }
+        if ($msgctxt === null) {
+            return $this->nquery($msgid1, $msgid2, $count, $placeholders, $domain);
+        }
+
+        if ($domain === null) {
+            $domain = textdomain(null);
+        }
+
+        $contextString1 = "{$msgctxt}\004{$msgid1}";
+        $contextString2 = "{$msgctxt}\004{$msgid2}";
+        $translation   = dcngettext($domain, $contextString1, $contextString2, $count, $category);
+
+        if ($translation == $contextString) {
+            $translation = $msgid;
+        }
+
+        if (is_array($placeholders)) {
+            foreach ($placeholders as $key => $value) {
+                $translation = str_replace('%' . $key . '%', $value, $translation);
+            }
+        }
+
+        return $translation;
+    }
+
+    /**
+     * Returns the translation related to the given key and context (msgctxt) 
+     * from a specific domain with plural form support.
+     *
+     * @param  string  $domain
+     * @param  string  $msgid1
+     * @param  string  $msgid2
+     * @param  integer $count
+     * @param  string  $msgctxt      Optional.
+     * @param  array   $placeholders Optional.
+     * @param  integer $category     Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @return string
+     */
+    public function dnquery(
+        $domain,
+        $msgid1,
+        $msgid2,
+        $count,
+        $msgctxt = null,
+        $placeholders = null,
+        $category = LC_MESSAGES
+    ) {
+        if (!is_int($count) || $count < 0) {
+            throw new \InvalidArgumentException("Count must be a nonnegative integer. $count given.");
+        }
+        return $this->cnquery($msgid1, $msgid2, $count, $msgctxt, $placeholders, $category, $domain);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     *
      * @param  string  $index
      * @return boolean
      */
