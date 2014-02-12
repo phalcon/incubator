@@ -272,11 +272,11 @@ class Gettext extends Adapter implements AdapterInterface
      * @return string
      */
     public function dnquery(
-        $domain, 
-        $msgid1, 
-        $msgid2, 
-        $count, 
-        $msgctxt = null, 
+        $domain,
+        $msgid1,
+        $msgid2,
+        $count,
+        $msgctxt = null,
         $placeholders = null,
         $category = LC_MESSAGES
     ) {
