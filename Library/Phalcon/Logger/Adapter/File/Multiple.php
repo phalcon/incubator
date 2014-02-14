@@ -35,10 +35,10 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
     /**
      * Class constructor.
      *
-     * @param string $path    Directory path for saving the log files.
-     * @param array  $options The following options are available:
-     *              `           extension   (string) Extension for all log files.
-     *              `           prefix      (string) Name prefix for all log files
+     * @param  string                    $path    Directory path for saving the log files.
+     * @param  array                     $options The following options are available:
+     *                                            - extension   (string) Extension for all log files.
+     *                                            - prefix      (string) Name prefix for all log files
      * @throws \Phalcon\Logger\Exception
      */
     public function __construct($path, $options = array())
@@ -80,7 +80,7 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
             '.' .
             $this->options['extension'];
 
-        $log    = $this->getFormatter()->format($message, $type, $time);
+        $log    = $this->getFormatter()->format($message, $type, $time, $context);
         $result = file_put_contents($filename, $log, \FILE_APPEND);
 
         if ($result === false) {

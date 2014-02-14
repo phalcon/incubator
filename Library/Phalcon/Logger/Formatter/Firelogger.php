@@ -120,11 +120,12 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
      * @param  string|integer|float|array|null|\Exception $message
      * @param  integer                                    $type
      * @param  integer                                    $timestamp
+     * @param  array                                      $context
      * @param  array                                      $trace     This is the output from debug_backtrace().
      * @param  integer                                    $order     How many logs are stored in the stack already.
      * @return mixed
      */
-    public function format($message, $type, $timestamp, $trace = null, $order = 0)
+    public function format($message, $type, $timestamp, $context = array(), $trace = null, $order = 0)
     {
         $level = $this->getTypeString($type);
 

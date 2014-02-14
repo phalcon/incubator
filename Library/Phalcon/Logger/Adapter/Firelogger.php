@@ -127,7 +127,7 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
      * Writes the log to the headers.
      *
      * @param mixed $message Stuff to log. Can be of any type castable into a string (i.e. anything except for
-     * objects without __toString() implementation).
+     *                       objects without __toString() implementation).
      *
      * @param integer $type
      * @param integer $time
@@ -142,7 +142,7 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
         if ($this->options['traceable']) {
             $trace = debug_backtrace();
         }
-        $log = $this->getFormatter()->format($message, $type, $time, $trace, count($this->logs));
+        $log = $this->getFormatter()->format($message, $type, $time, $context, $trace, count($this->logs));
         $this->logs[] = $log;
 
         // flush if this is not transaction
