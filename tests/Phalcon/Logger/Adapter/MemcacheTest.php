@@ -19,15 +19,7 @@ class MemcacheTest extends \PHPUnit_Framework_TestCase
 
         $memcache->expects($this->once())
             ->method('save')
-        ->will(
-                $this->returnCallback(
-                    function ($cacheKey, $json) {
-                        $decoded = json_decode($json);
-                        $this->assertEquals('ALERT', $decoded->type);
-                        $this->assertEquals('Some log message', $decoded->message);
-                        $this->assertInternalType('int', $decoded->timestamp);
-                    })
-            );
+        ->will($this->returnCallback(array($this, 'assertPushingLogItemToEmptyLog')));
 
         $formatter = new \Phalcon\Logger\Formatter\Json();
         $logger = new \Phalcon\Logger\Adapter\Memcache($memcache);
@@ -60,22 +52,7 @@ class MemcacheTest extends \PHPUnit_Framework_TestCase
 
         $memcache->expects($this->once())
             ->method('save')
-            ->will(
-                $this->returnCallback(
-                    function ($cacheKey, $log) {
-                        $parts = explode(PHP_EOL, $log);
-
-                        $log1 = json_decode($parts[0]);
-                        $this->assertEquals('ALERT', $log1->type);
-                        $this->assertEquals('Some log message', $log1->message);
-                        $this->assertEquals(417225600, $log1->timestamp);
-
-                        $log2 = json_decode($parts[1]);
-                        $this->assertEquals('CRITICAL', $log2->type);
-                        $this->assertEquals('Some other log message', $log2->message);
-                        $this->assertInternalType('int', $log2->timestamp);
-                    })
-                );
+            ->will($this->returnCallback(array($this, 'assertPushingLogItemToNonEmptyLog')));
 
         $formatter = new \Phalcon\Logger\Formatter\Json();
         $logger = new \Phalcon\Logger\Adapter\Memcache($memcache);
@@ -141,5 +118,28 @@ class MemcacheTest extends \PHPUnit_Framework_TestCase
         $logger = $logger = new \Phalcon\Logger\Adapter\Memcache($memcache);
         $this->assertTrue($logger->getContent());
         $this->assertTrue($logger->reset());
+    }
+
+    public function assertPushingLogItemToEmptyLog($cacheKey, $json)
+    {
+        $decoded = json_decode($json);
+        $this->assertEquals('ALERT', $decoded->type);
+        $this->assertEquals('Some log message', $decoded->message);
+        $this->assertInternalType('int', $decoded->timestamp);
+    }
+
+    public function assertPushingLogItemToNonEmptyLog($cacheKey, $log)
+    {
+        $parts = explode(PHP_EOL, $log);
+
+        $log1 = json_decode($parts[0]);
+        $this->assertEquals('ALERT', $log1->type);
+        $this->assertEquals('Some log message', $log1->message);
+        $this->assertEquals(417225600, $log1->timestamp);
+
+        $log2 = json_decode($parts[1]);
+        $this->assertEquals('CRITICAL', $log2->type);
+        $this->assertEquals('Some other log message', $log2->message);
+        $this->assertInternalType('int', $log2->timestamp);
     }
 } 
