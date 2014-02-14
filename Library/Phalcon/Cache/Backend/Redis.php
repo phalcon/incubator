@@ -139,7 +139,6 @@ class Redis extends Prefixable
     public function queryKeys($prefix = null)
     {
         $options = $this->getOptions();
-        $result  = array();
 
         if ($prefix === null) {
             $result = $options['redis']->getKeys($this->getPrefixedIdentifier('*'));
@@ -170,5 +169,17 @@ class Redis extends Prefixable
         $options = $this->getOptions();
 
         return $options['redis']->exists($this->getPrefixedIdentifier($keyName));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return boolean
+     */
+    public function flush()
+    {
+        $options = $this->getOptions();
+
+        return $options['redis']->flushAll();
     }
 }

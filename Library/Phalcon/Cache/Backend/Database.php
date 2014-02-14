@@ -238,4 +238,17 @@ class Database extends Prefixable
 
         return true;
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return boolean
+     */
+    public function flush()
+    {
+        $options = $this->getOptions();
+        $options['db']->execute('DELETE FROM ' . $options['table']);
+
+        return true;
+    }
 }

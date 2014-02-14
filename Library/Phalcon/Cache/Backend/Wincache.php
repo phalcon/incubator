@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -14,12 +13,11 @@
   | to license@phalconphp.com so we can send you a copy immediately.       |
   +------------------------------------------------------------------------+
   | Authors: Maciej Ka <maciej@balooncloud.com>                            |
+  |          Nikita Vershinin <endeveit@gmail.com>                         |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Cache\Backend;
 
-use Phalcon\Cache\BackendInterface;
 use Phalcon\Cache\Exception;
 
 /**
@@ -29,34 +27,33 @@ use Phalcon\Cache\Exception;
  */
 class Wincache extends Prefixable
 {
-    
+
     /**
-    * Phalcon\Cache\Backend\Wincache constructor
-    *
-    * @param \Phalcon\Cache\FrontendInterface $frontend
-    * @param array $options
-    * @throws \Phalcon\Cache\Exception
-    */
+     * Phalcon\Cache\Backend\Wincache constructor
+     *
+     * @param  \Phalcon\Cache\FrontendInterface $frontend
+     * @param  array                            $options
+     * @throws \Phalcon\Cache\Exception
+     */
     public function __construct($frontend, $options = null)
     {
         parent::__construct($frontend, $options);
     }
 
     /**
-    * Get cached content from the Wincache backend
-    *
-    * @param string $keyName
-    * @param null $lifetime
-    * @param int $lifetime
-    * @return mixed|null
-    */
+     * {@inheritdoc}
+     *
+     * @param  string     $keyName
+     * @param  integer    $lifetime
+     * @return mixed|null
+     */
     public function get($keyName, $lifetime = null)
     {
         $value = wincache_ucache_get($keyName, $success);
         if ($success===false) {
             return null;
         }
-        
+
         $frontend = $this->getFrontend();
 
         $this->setLastKey($keyName);
@@ -65,12 +62,12 @@ class Wincache extends Prefixable
     }
 
     /**
-     * Stores cached content into the Wincache backend and stops the frontend
+     * {@inheritdoc}
      *
-     * @param string $keyName
-     * @param string $content
-     * @param int $lifetime
-     * @param boolean $stopBuffer
+     * @param  string                   $keyName
+     * @param  string                   $content
+     * @param  integer                  $lifetime
+     * @param  boolean                  $stopBuffer
      * @throws \Phalcon\Cache\Exception
      */
     public function save($keyName = null, $content = null, $lifetime = null, $stopBuffer = true)
@@ -115,9 +112,9 @@ class Wincache extends Prefixable
     }
 
     /**
-     * Deletes a value from the cache by its key
+     * {@inheritdoc}
      *
-     * @param string $keyName
+     * @param  string  $keyName
      * @return boolean
      */
     public function delete($keyName)
@@ -126,9 +123,9 @@ class Wincache extends Prefixable
     }
 
     /**
-     * Query the existing cached keys
+     * {@inheritdoc}
      *
-     * @param string $prefix
+     * @param  string $prefix
      * @return array
      */
     public function queryKeys($prefix = null)
@@ -144,18 +141,29 @@ class Wincache extends Prefixable
                 }
             }
         }
+
         return $entries;
     }
 
     /**
-     * Checks if a value exists in the cache by checking its key.
+     * {@inheritdoc}
      *
-     * @param string $keyName
-     * @param string $lifetime
+     * @param  string  $keyName
+     * @param  string  $lifetime
      * @return boolean
      */
     public function exists($keyName = null, $lifetime = null)
     {
         return wincache_ucache_exists($keyName);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return boolean
+     */
+    public function flush()
+    {
+        return wincache_ucache_clear();
     }
 }
