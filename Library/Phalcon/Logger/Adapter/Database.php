@@ -56,8 +56,9 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
      * @param string  $message
      * @param integer $type
      * @param integer $time
+     * @param array   $context
      */
-    public function logInternal($message, $type, $time)
+    public function logInternal($message, $type, $time, $context = array())
     {
         return $this->options['db']->execute(
             'INSERT INTO ' . $this->options['table'] . ' VALUES (null, ?, ?, ?, ?)',

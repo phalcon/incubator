@@ -131,8 +131,9 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
      *
      * @param integer $type
      * @param integer $time
+     * @param array   $context
      */
-    public function logInternal($message, $type, $time)
+    public function logInternal($message, $type, $time, $context = array())
     {
         if (!$this->enabled) {
             return;
