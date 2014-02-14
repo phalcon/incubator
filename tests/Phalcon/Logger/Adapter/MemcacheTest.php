@@ -115,4 +115,31 @@ class MemcacheTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(60, $logger->getTtl());
         $this->assertEquals('other.cache.key', $logger->getCacheKey());
     }
+
+    /**
+     * Tests that trivial methods reset and getContent will not raise any errors.
+     */
+    public function testGettingAndResettingLogFromFormatterShouldNotRaiseErrors()
+    {
+        $memcache = $this->getMockBuilder('Phalcon\Cache\Backend\Memcache')
+            ->disableOriginalConstructor()
+            ->setMethods(array('get', 'delete'))
+            ->getMock();
+
+        $memcache->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue(true));
+
+        $memcache->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue(true));
+
+        $memcache->expects($this->once())
+            ->method('delete')
+            ->will($this->returnValue(true));
+
+        $logger = $logger = new \Phalcon\Logger\Adapter\Memcache($memcache);
+        $this->assertTrue($logger->getContent());
+        $this->assertTrue($logger->reset());
+    }
 } 

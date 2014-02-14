@@ -1,6 +1,13 @@
 <?php
 namespace Phalcon\Logger\Adapter;
 
+/**
+ * Class Memcache
+ *
+ * Stores log messages in memcache backend.
+ *
+ * @package Phalcon\Logger\Adapter
+ */
 class Memcache extends \Phalcon\Logger\Adapter
 {
     /**
@@ -61,6 +68,26 @@ class Memcache extends \Phalcon\Logger\Adapter
         $allItems = $previousItems . PHP_EOL . $item;
 
         return $this->memcache->save($this->cacheKey, $allItems, $this->ttl);
+    }
+
+    /**
+     * Returns log contents.
+     *
+     * @return mixed
+     */
+    public function getContent()
+    {
+        return $this->memcache->get($this->cacheKey);
+    }
+
+    /**
+     * Reset log.
+     *
+     * @return bool
+     */
+    public function reset()
+    {
+        return $this->memcache->delete($this->cacheKey);
     }
 
 
