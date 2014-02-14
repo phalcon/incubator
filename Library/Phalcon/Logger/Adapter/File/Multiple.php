@@ -71,7 +71,7 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
      * @param  array                     $context
      * @throws \Phalcon\Logger\Exception
      */
-    public function logInternal($message, $type, $time, $context)
+    public function logInternal($message, $type, $time, $context = array())
     {
         $filename = $this->path .
             \DIRECTORY_SEPARATOR .
