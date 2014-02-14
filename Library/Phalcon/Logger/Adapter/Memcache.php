@@ -45,10 +45,10 @@ class Memcache extends \Phalcon\Logger\Adapter
     /**
      * Logs to memcache backend instance.
      *
-     * @param       $message   message
-     * @param       $type      log priority
-     * @param       $timestamp timestamp
-     * @param array $context   context
+     * @param string $message   message
+     * @param int    $type      log priority
+     * @param int    $timestamp timestamp
+     * @param array  $context   context
      *
      * @throws \Phalcon\Logger\Exception if Json (currently only supported) backend is not set
      *
