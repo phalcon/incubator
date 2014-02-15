@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -16,7 +15,6 @@
   | Author: Tuğrul Topuz <tugrultopuz@gmail.com>                           |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Http\Client\Provider;
 
 use Phalcon\Http\Client\Exception as HttpException;
@@ -24,176 +22,177 @@ use Phalcon\Http\Client\Header;
 use Phalcon\Http\Client\Provider\Exception as ProviderException;
 use Phalcon\Http\Client\Request;
 use Phalcon\Http\Client\Response;
-use Phalcon\Http\Client\Uri;
+use Phalcon\Http\Uri;
 
 class Stream extends Request
 {
-	private $context = null;
+    private $context = null;
 
-	public static function isAvailable()
-	{
-		$wrappers = stream_get_wrappers();
-		return in_array('http', $wrappers) && in_array('https', $wrappers);
-	}
+    public static function isAvailable()
+    {
+        $wrappers = stream_get_wrappers();
 
-	function __construct()
-	{
-		if (!self::isAvailable()) {
-			throw new ProviderException('HTTP or HTTPS stream wrappers not registered');
-		}
+        return in_array('http', $wrappers) && in_array('https', $wrappers);
+    }
 
-		$this->context = stream_context_create();
-		$this->initOptions();
-		parent::__construct();
-	}
+    public function __construct()
+    {
+        if (!self::isAvailable()) {
+            throw new ProviderException('HTTP or HTTPS stream wrappers not registered');
+        }
 
-	function __destruct()
-	{
-		$this->context = null;
-	}
+        $this->context = stream_context_create();
+        $this->initOptions();
+        parent::__construct();
+    }
 
-	private function initOptions()
-	{
-		$this->setOptions(array(
-			'user_agent'      => 'Phalcon HTTP/' . self::VERSION . ' (Stream)',
-			'follow_location' => 1,
-			'max_redirects'   => 20,
-			'timeout'         => 30
-		));
-	}
+    public function __destruct()
+    {
+        $this->context = null;
+    }
 
-	public function setOption($option, $value)
-	{
-		return stream_context_set_option($this->context, 'http', $option, $value);
-	}
+    private function initOptions()
+    {
+        $this->setOptions(array(
+            'user_agent'      => 'Phalcon HTTP/' . self::VERSION . ' (Stream)',
+            'follow_location' => 1,
+            'max_redirects'   => 20,
+            'timeout'         => 30
+        ));
+    }
 
-	public function setOptions($options)
-	{
-		return stream_context_set_option($this->context, array('http' => $options));
-	}
+    public function setOption($option, $value)
+    {
+        return stream_context_set_option($this->context, 'http', $option, $value);
+    }
 
-	public function setTimeout($timeout)
-	{
-		$this->setOption('timeout', $timeout);
-	}
+    public function setOptions($options)
+    {
+        return stream_context_set_option($this->context, array('http' => $options));
+    }
 
-	private function errorHandler($errno, $errstr)
-	{
-		throw new HttpException($errstr, $errno);
-	}
+    public function setTimeout($timeout)
+    {
+        $this->setOption('timeout', $timeout);
+    }
 
-	private function send($uri)
-	{
-		if (count($this->header) > 0) {
-			$this->setOption('header', $this->header->build(Header::BUILD_FIELDS));
-		}
+    private function errorHandler($errno, $errstr)
+    {
+        throw new HttpException($errstr, $errno);
+    }
 
-		set_error_handler(array($this, 'errorHandler'));
-		$content = file_get_contents($uri->build(), false, $this->context);
-		restore_error_handler();
+    private function send($uri)
+    {
+        if (count($this->header) > 0) {
+            $this->setOption('header', $this->header->build(Header::BUILD_FIELDS));
+        }
 
-		$response = new Response();
-		$response->header->parse($http_response_header);
-		$response->body = $content;
+        set_error_handler(array($this, 'errorHandler'));
+        $content = file_get_contents($uri->build(), false, $this->context);
+        restore_error_handler();
 
-		return $response;
-	}
+        $response = new Response();
+        $response->header->parse($http_response_header);
+        $response->body = $content;
 
-	private function initPostFields($params)
-	{
-		if (!empty($params) && is_array($params)) {
-			$this->header->set('Content-Type', 'application/x-www-form-urlencoded');
-			$this->setOption('content', http_build_query($params));
-		}
-	}
+        return $response;
+    }
 
-	public function setProxy($host, $port = 8080, $user = null, $pass = null)
-	{
-		$uri = new Uri(array(
-			'scheme' => 'tcp',
-			'host'   => $host,
-			'port'   => $port
-		));
+    private function initPostFields($params)
+    {
+        if (!empty($params) && is_array($params)) {
+            $this->header->set('Content-Type', 'application/x-www-form-urlencoded');
+            $this->setOption('content', http_build_query($params));
+        }
+    }
 
-		if (!empty($user)) {
-			$uri->user = $user;
-			if (!empty($pass)) {
-				$uri->pass = $pass;
-			}
-		}
+    public function setProxy($host, $port = 8080, $user = null, $pass = null)
+    {
+        $uri = new Uri(array(
+            'scheme' => 'tcp',
+            'host'   => $host,
+            'port'   => $port
+        ));
 
-		$this->setOption('proxy', $uri->build());
-	}
+        if (!empty($user)) {
+            $uri->user = $user;
+            if (!empty($pass)) {
+                $uri->pass = $pass;
+            }
+        }
 
-	public function get($uri, $params = array())
-	{
-		$uri = $this->resolveUri($uri);
+        $this->setOption('proxy', $uri->build());
+    }
 
-		if (!empty($params)) {
-			$uri->extendQuery($params);
-		}
+    public function get($uri, $params = array())
+    {
+        $uri = $this->resolveUri($uri);
 
-		$this->setOptions(array(
-			'method'  => 'GET',
-			'content' => ''
-		));
+        if (!empty($params)) {
+            $uri->extendQuery($params);
+        }
 
-		$this->header->remove('Content-Type');
+        $this->setOptions(array(
+            'method'  => 'GET',
+            'content' => ''
+        ));
 
-		return $this->send($uri);
-	}
+        $this->header->remove('Content-Type');
 
-	public function head($uri, $params = array())
-	{
-		$uri = $this->resolveUri($uri);
+        return $this->send($uri);
+    }
 
-		if (!empty($params)) {
-			$uri->extendQuery($params);
-		}
+    public function head($uri, $params = array())
+    {
+        $uri = $this->resolveUri($uri);
 
-		$this->setOptions(array(
-			'method'  => 'HEAD',
-			'content' => ''
-		));
+        if (!empty($params)) {
+            $uri->extendQuery($params);
+        }
 
-		$this->header->remove('Content-Type');
+        $this->setOptions(array(
+            'method'  => 'HEAD',
+            'content' => ''
+        ));
 
-		return $this->send($uri);
-	}
+        $this->header->remove('Content-Type');
 
-	public function delete($uri, $params = array())
-	{
-		$uri = $this->resolveUri($uri);
+        return $this->send($uri);
+    }
 
-		if (!empty($params)) {
-			$uri->extendQuery($params);
-		}
+    public function delete($uri, $params = array())
+    {
+        $uri = $this->resolveUri($uri);
 
-		$this->setOptions(array(
-			'method'  => 'DELETE',
-			'content' => ''
-		));
+        if (!empty($params)) {
+            $uri->extendQuery($params);
+        }
 
-		$this->header->remove('Content-Type');
+        $this->setOptions(array(
+            'method'  => 'DELETE',
+            'content' => ''
+        ));
 
-		return $this->send($uri);
-	}
+        $this->header->remove('Content-Type');
 
-	public function post($uri, $params = array())
-	{
-		$this->setOption('method', 'POST');
+        return $this->send($uri);
+    }
 
-		$this->initPostFields($params);
+    public function post($uri, $params = array())
+    {
+        $this->setOption('method', 'POST');
 
-		return $this->send($this->resolveUri($uri));
-	}
+        $this->initPostFields($params);
 
-	public function put($uri, $params = array())
-	{
-		$this->setOption('method', 'PUT');
+        return $this->send($this->resolveUri($uri));
+    }
 
-		$this->initPostFields($params);
+    public function put($uri, $params = array())
+    {
+        $this->setOption('method', 'PUT');
 
-		return $this->send($this->resolveUri($uri));
-	}
+        $this->initPostFields($params);
+
+        return $this->send($this->resolveUri($uri));
+    }
 }

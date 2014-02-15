@@ -1,13 +1,10 @@
 # Phalcon Incubator
 
-Phalcon PHP is a web framework delivered as a C extension providing high
-performance and lower resource consumption.
+Phalcon is a web framework delivered as a C extension providing high performance and lower resource consumption.
 
-This is a repository to publish/share/experimient with new adapters, prototypes
-or functionality that potentially can be incorporated to the C-framework.
+This is a repository to publish/share/experimient with new adapters, prototypes or functionality that potentially can be incorporated to the C-framework.
 
-Also we welcome submissions from the community of snippets that could
-extend the framework more.
+Also we welcome submissions from the community of snippets that could extend the framework more.
 
 The code in this repository is written in PHP.
 
@@ -26,7 +23,7 @@ Create the composer.json file as follows:
 ```json
 {
     "require": {
-        "phalcon/incubator": "v1.2.4"
+        "phalcon/incubator": "v1.2.5"
     }
 }
 ```
@@ -70,6 +67,7 @@ $loader->register();
 ### Cache
 * [Phalcon\Cache\Backend\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Database backend for caching data (phalcon)
 * [Phalcon\Cache\Backend\Redis](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Redis backend for caching data (kenjikobe)
+* [Phalcon\Cache\Backend\Wincache](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Wincache backend for caching data (nazwa)
 
 ### Config
 * [Phalcon\Config\Adapter\Json](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Config/Adapter) - Json adapter (ofpiyush)
@@ -120,3 +118,11 @@ $loader->register();
 
 ### Utils
 * [Phalcon\Utils\Slug](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Utils) - Creates a slug for the passed string taking into account international characters. (niden)
+
+
+Current Build Status
+--------------------
+Incubator is built under Travis CI service. Every commit pushed to this repository will queue a build into the continuous integration service and will run all PHPUnit tests to ensure that everything is going well and the project is stable. The current build status is:
+
+[![Build Status](https://secure.travis-ci.org/phalcon/incubator.png?branch=master)](http://travis-ci.org/phalcon/incubator)
+

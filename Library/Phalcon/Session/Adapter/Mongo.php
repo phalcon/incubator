@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -17,7 +16,6 @@
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Session\Adapter;
 
 use Phalcon\Session\Adapter;
@@ -31,100 +29,104 @@ use Phalcon\Session\Exception;
 class Mongo extends Adapter implements AdapterInterface
 {
 
-	/**
-	 * Phalcon\Session\Adapter\Mongo constructor
-	 *
-	 * @param array $options
-	 */
-	public function __construct($options = null)
-	{
+    /**
+     * Class constructor.
+     *
+     * @param array $options
+     */
+    public function __construct($options = null)
+    {
+        if (!isset($options['collection'])) {
+            throw new Exception("The parameter 'collection' is required");
+        }
 
-		if (!isset($options['collection'])) {
-			throw new Exception("The parameter 'collection' is required");
-		}
+        session_set_save_handler(
+            array($this, 'open'),
+            array($this, 'close'),
+            array($this, 'read'),
+            array($this, 'write'),
+            array($this, 'destroy'),
+            array($this, 'gc')
+        );
 
-		session_set_save_handler(
-			array($this, 'open'),
-			array($this, 'close'),
-			array($this, 'read'),
-			array($this, 'write'),
-			array($this, 'destroy'),
-			array($this, 'gc')
-		);
+        parent::__construct($options);
+    }
 
-		parent::__construct($options);
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @return boolean
+     */
+    public function open()
+    {
+        return true;
+    }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return boolean
+     */
+    public function close()
+    {
+        return false;
+    }
 
-	public function open()
-	{
-		return true;
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @param  string $sessionId
+     * @return string
+     */
+    public function read($sessionId)
+    {
+        $options = $this->getOptions();
 
-	public function close()
-	{
-		return false;
-	}
+        $sessionData = $options['collection']->findOne(array('session_id' => $sessionId));
+        if (is_array($sessionData)) {
+            return $sessionData['data'];
+        }
 
-	/**
-	 * Reads the data from the table
-	 *
-	 * @param string $sessionId
-	 * @return string
-	 */
-	public function read($sessionId)
-	{
-		$options = $this->getOptions();
+        return null;
+    }
 
-		$sessionData = $options['collection']->findOne(array('session_id' => $sessionId));
-		if (is_array($sessionData)) {
-			return $sessionData['data'];
-		}
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $sessionId
+     * @param string $data
+     */
+    public function write($sessionId, $data)
+    {
+        $options = $this->getOptions();
 
-		return null;
-	}
+        $sessionData = $options['collection']->findOne(array('session_id' => $sessionId));
+        if (is_array($sessionData)) {
+            $sessionData['data'] = $data;
+        } else {
+            $sessionData = array('session_id' => $sessionId, 'data' => $data);
+        }
 
-	/**
-	 * Writes the data to the table
-	 *
-	 * @param string $sessionId
-	 * @param string $data
-	 */
-	public function write($sessionId, $data)
-	{
-		$options = $this->getOptions();
+        $options['collection']->save($sessionData);
 
-		$sessionData = $options['collection']->findOne(array('session_id' => $sessionId));
-		if (is_array($sessionData)) {
-			$sessionData['data'] = $data;
-		} else {
-			$sessionData = array('session_id' => $sessionId, 'data' => $data);
-		}
+    }
 
-		$options['collection']->save($sessionData);
+    /**
+     * {@inheritdoc}
+     */
+    public function destroy()
+    {
+        $options = $this->getOptions();
+        $sessionData = $options['collection']->findOne(array('session_id' => session_id()));
+        if (is_array($sessionData)) {
+            $options['collection']->remove($sessionData);
+        }
+    }
 
-	}
-
-	/**
-	 * Destroyes the session
-
-	 */
-	public function destroy()
-	{
-		$options = $this->getOptions();
-		$sessionData = $options['collection']->findOne(array('session_id' => session_id()));
-		if (is_array($sessionData)) {
-			$options['collection']->remove($sessionData);
-		}
-	}
-
-	/**
-	 * Performs garbage-collection on the session table
-
-	 */
-	public function gc()
-	{
-
-	}
-
+    /**
+     * {@inheritdoc}
+     */
+    public function gc()
+    {
+    }
 }

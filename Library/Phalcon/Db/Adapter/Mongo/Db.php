@@ -15,7 +15,6 @@
   | Authors: Tuğrul Topuz <tugrultopuz@gmail.com>                          |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Db\Adapter\Mongo;
 
 class Db extends \MongoDB
@@ -43,6 +42,7 @@ class Db extends \MongoDB
     public function createCollection($name, $options = array())
     {
         parent::createCollection($name, $options);
+
         return $this->selectCollection($name);
     }
 }

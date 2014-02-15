@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -17,7 +16,6 @@
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Db\Result;
 
 /**
@@ -27,68 +25,67 @@ namespace Phalcon\Db\Result;
 class Serializable
 {
 
-	protected $_data = array();
+    protected $data = array();
 
-	protected $_position = 0;
+    protected $position = 0;
 
-	/**
-	 * The resultset is completely fetched
+    /**
+     * Class constructor.
+     * The resultset is completely fetched
+     */
+    public function __construct($result)
+    {
+        $this->data = $result->fetchAll();
+    }
 
-	 */
-	public function __construct($result)
-	{
-		$this->_data = $result->fetchAll();
-	}
+    /**
+     * Returns the number of rows in the internal array
+     *
+     * @return integer
+     */
+    public function numRows()
+    {
+        return count($this->data);
+    }
 
-	/**
-	 * Returns the number of rows in the internal array
-	 *
-	 * @return int
-	 */
-	public function numRows()
-	{
-		return count($this->_data);
-	}
+    /**
+     * Fetches a row in the resultset
+     *
+     * @return array|boolean
+     */
+    public function fetch()
+    {
+        if (isset($this->data[$this->position])) {
+            return $this->data[$this->position++];
+        }
 
-	/**
-	 * Fetches a row in the resultset
-	 *
-	 * @return array|boolean
-	 */
-	public function fetch()
-	{
-		if (isset($this->_data[$this->_position])) {
-			return $this->_data[$this->_position++];
-		}
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * Changes the fetch mode, this is not implemented yet
-	 *
-	 * @param int $fetchMode
-	 */
-	public function setFetchMode($fetchMode)
-	{
+    /**
+     * Changes the fetch mode, this is not implemented yet
+     *
+     * @param integer $fetchMode
+     */
+    public function setFetchMode($fetchMode)
+    {
+    }
 
-	}
+    /**
+     * Returns the full data in the resultset
+     *
+     * @return array
+     */
+    public function fetchAll()
+    {
+        return $this->data;
+    }
 
-	/**
-	 * Returns the full data in the resultset
-	 *
-	 * @return array
-	 */
-	public function fetchAll()
-	{
-		return $this->_data;
-	}
-
-	/**
-	 * Resets the internal pointer
-	 */
-	public function __wakeup()
-	{
-		$this->_position = 0;
-	}
-
+    /**
+     * Resets the internal pointer
+     */
+    public function __wakeup()
+    {
+        $this->position = 0;
+    }
 }

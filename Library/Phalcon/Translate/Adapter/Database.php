@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -17,83 +16,97 @@
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Translate\Adapter;
 
-use Phalcon\Translate\Adapter,
-	Phalcon\Translate\AdapterInterface,
-	Phalcon\Translate\Exception;
+use Phalcon\Translate\Adapter;
+use Phalcon\Translate\AdapterInterface;
+use Phalcon\Translate\Exception;
 
 class Database extends Adapter implements AdapterInterface
 {
 
-	protected $_options;
+    /**
+     * @var array
+     */
+    protected $options;
 
-	/**
-	 * Phalcon\Translate\Adapter\Database constructor
-	 *
-	 * @param array $options
-	 */
-	public function __construct($options)
-	{
+    /**
+     * Class constructor.
+     *
+     * @param  array                        $options
+     * @throws \Phalcon\Translate\Exception
+     */
+    public function __construct($options)
+    {
+        if (!isset($options['db'])) {
+            throw new Exception("Parameter 'db' is required");
+        }
 
-		if (!isset($options['db'])) {
-			throw new Exception("Parameter 'db' is required");
-		}
+        if (!isset($options['table'])) {
+            throw new Exception("Parameter 'table' is required");
+        }
 
-		if (!isset($options['table'])) {
-			throw new Exception("Parameter 'table' is required");
-		}
+        if (!isset($options['language'])) {
+            throw new Exception("Parameter 'language' is required");
+        }
 
-		if (!isset($options['language'])) {
-			throw new Exception("Parameter 'language' is required");
-		}
+        $this->options = $options;
+    }
 
-		$this->_options = $options;
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @param  string $index
+     * @param  array  $placeholders
+     * @return string
+     */
+    public function query($index, $placeholders = null)
+    {
+        $options = $this->options;
 
-	/**
-	 * Returns the translation related to the given key
-	 *
-	 * @param    string $index
-	 * @param    array  $placeholders
-	 * @return    string
-	 */
-	public function query($index, $placeholders = null)
-	{
+        $translation = $options['db']->fetchOne(
+            sprintf(
+                "SELECT value FROM %s WHERE language = '%s' AND key_name = ?",
+                $options['table'],
+                $options['language']
+            ),
+            null,
+            array($index)
+        );
 
-		$options = $this->_options;
+        if (!$translation) {
+            return $index;
+        }
 
-		$translation = $options['db']->fetchOne("SELECT value FROM " . $options['table'] . " WHERE language = '" . $options['language'] . "' AND key_name = ?", null, array($index));
-		if (!$translation) {
-			return $index;
-		}
+        if ($placeholders == null) {
+            return $translation['value'];
+        }
 
-		if ($placeholders == null) {
-			return $translation['value'];
-		}
+        if (is_array($placeholders)) {
+            foreach ($placeholders as $key => $value) {
+                $translation['value'] = str_replace('%' . $key . '%', $value, $translation['value']);
+            }
+        }
 
-		if (is_array($placeholders)) {
-			foreach ($placeholders as $key => $value) {
-				$translation['value'] = str_replace('%' . $key . '%', $value, $translation['value']);
-			}
-		}
+        return $translation['value'];
+    }
 
-		return $translation['value'];
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @param  string  $index
+     * @return boolean
+     */
+    public function exists($index)
+    {
+        $options = $this->options;
 
-	/**
-	 * Check whether is defined a translation key in the database
-	 *
-	 * @param    string $index
-	 * @return    bool
-	 */
-	public function exists($index)
-	{
-		$options = $this->_options;
+        $exists = $options['db']->fetchOne(
+            "SELECT COUNT(*) FROM " . $options['table'] . " WHERE key_name = ?0",
+            null,
+            array($index)
+        );
 
-		$exists = $options['db']->fetchOne("SELECT COUNT(*) FROM " . $options['table'] . " WHERE key_name = ?0", null, array($index));
-		return $exists[0] > 0;
-	}
-
+        return $exists[0] > 0;
+    }
 }

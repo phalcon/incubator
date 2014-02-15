@@ -22,82 +22,82 @@ use Phalcon\Mvc\Model\MetaDataInterface;
 abstract class Base extends MetaData implements InjectionAwareInterface, MetaDataInterface
 {
 
-	/**
-	 * Default options for cache backend.
-	 *
-	 * @var array
-	 */
-	protected static $defaults = array(
-		'lifetime' => 8600,
-		'prefix'   => '',
-	);
+    /**
+     * Default options for cache backend.
+     *
+     * @var array
+     */
+    protected static $defaults = array(
+        'lifetime' => 8600,
+        'prefix'   => '',
+    );
 
-	/**
-	 * Backend's options.
-	 *
-	 * @var array
-	 */
-	protected $options = null;
+    /**
+     * Backend's options.
+     *
+     * @var array
+     */
+    protected $options = null;
 
-	/**
-	 * Class constructor.
-	 *
-	 * @param  null|array $options
-	 * @throws \Phalcon\Mvc\Model\Exception
-	 */
-	public function __construct($options = null)
-	{
-		if (is_array($options)) {
-			if (!isset($options['lifetime'])) {
-				$options['lifetime'] = self::$defaults['lifetime'];
-			}
+    /**
+     * Class constructor.
+     *
+     * @param  null|array                   $options
+     * @throws \Phalcon\Mvc\Model\Exception
+     */
+    public function __construct($options = null)
+    {
+        if (is_array($options)) {
+            if (!isset($options['lifetime'])) {
+                $options['lifetime'] = self::$defaults['lifetime'];
+            }
 
-			if (!isset($options['prefix'])) {
-				$options['prefix'] = self::$defaults['prefix'];
-			}
-		}
+            if (!isset($options['prefix'])) {
+                $options['prefix'] = self::$defaults['prefix'];
+            }
+        }
 
-		$this->options = $options;
-	}
+        $this->options = $options;
+    }
 
-	/**
-	 * {@inheritdoc}
-	 * @param  string $key
-	 * @return array
-	 */
-	public function read($key)
-	{
-		return $this->getCacheBackend()->get($this->getId($key), $this->options['lifetime']);
-	}
+    /**
+     * {@inheritdoc}
+     * @param  string $key
+     * @return array
+     */
+    public function read($key)
+    {
+        return $this->getCacheBackend()->get($this->getId($key), $this->options['lifetime']);
+    }
 
-	/**
-	 * {@inheritdoc}
-	 * @param string $key
-	 * @param array  $data
-	 */
-	public function write($key, $data)
-	{
-		$this->getCacheBackend()->save($this->getId($key), $data, $this->options['lifetime']);
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $key
+     * @param array  $data
+     */
+    public function write($key, $data)
+    {
+        $this->getCacheBackend()->save($this->getId($key), $data, $this->options['lifetime']);
+    }
 
-	/**
-	 * Returns the sessionId with prefix
-	 *
-	 * @param  string $id
-	 * @return string
-	 */
-	protected function getId($id)
-	{
-		return (!empty($this->options['prefix']) > 0)
-			? $this->options['prefix'] . '_' . $id
-			: $id;
-	}
+    /**
+     * Returns the sessionId with prefix
+     *
+     * @param  string $id
+     * @return string
+     */
+    protected function getId($id)
+    {
+        return (!empty($this->options['prefix']) > 0)
+            ? $this->options['prefix'] . '_' . $id
+            : $id;
+    }
 
-	/**
-	 * Returns cache backend instance.
-	 *
-	 * @return \Phalcon\Cache\BackendInterface
-	 */
-	abstract protected function getCacheBackend();
-
+    /**
+     * Returns cache backend instance.
+     *
+     * @return \Phalcon\Cache\BackendInterface
+     */
+    abstract protected function getCacheBackend();
 }

@@ -6,72 +6,77 @@ use Phalcon\Translate\AdapterInterface;
 
 class Csv extends Adapter implements AdapterInterface
 {
-	protected $_translate;
 
-	/**
-	 * Phalcon\Translate\Adapter\Csv constructor
-	 *
-	 * @param array $options
-	 * @throws \Exception
-	 */
-	public function __construct($options)
-	{
-		if (!isset($options['file'])) {
-			throw new \Exception('Parameter "file" is required.');
-		}
+    /**
+     * @var array
+     */
+    protected $translate;
 
-		$default = [
-			'delimiter' => ';',
-			'length'    => 0,
-			'enclosure' => '"',
-		];
+    /**
+     * Class constructor.
+     *
+     * @param  array      $options
+     * @throws \Exception
+     */
+    public function __construct($options)
+    {
+        if (!isset($options['file'])) {
+            throw new \Exception('Parameter "file" is required.');
+        }
 
-		$options = array_merge($default, $options);
-		if (false === ($file = @fopen($options['file'], 'rb'))) {
-			throw new \Exception('Error opening translation file "' . $options['file'] . '".');
-		}
+        $default = [
+            'delimiter' => ';',
+            'length'    => 0,
+            'enclosure' => '"',
+        ];
 
-		while (false !== ($data = fgetcsv($file, $options['length'], $options['delimiter'], $options['enclosure']))) {
-			if (substr($data[0], 0, 1) === '#' || !isset($data[1])) {
-				continue;
-			}
+        $options = array_merge($default, $options);
+        if (false === ($file = @fopen($options['file'], 'rb'))) {
+            throw new \Exception('Error opening translation file "' . $options['file'] . '".');
+        }
 
-			$this->_translate[$data[0]] = $data[1];
-		}
-		@fclose($file);
-	}
+        while (false !== ($data = fgetcsv($file, $options['length'], $options['delimiter'], $options['enclosure']))) {
+            if (substr($data[0], 0, 1) === '#' || !isset($data[1])) {
+                continue;
+            }
 
-	/**
-	 * Returns the translation related to the given key
-	 *
-	 * @param string $index
-	 * @param null   $placeholders
-	 * @return string
-	 */
-	public function query($index, $placeholders = null)
-	{
-		if (!$this->exists($index)) {
-			return $index;
-		}
+            $this->translate[$data[0]] = $data[1];
+        }
 
-		$translation = $this->_translate[$index];
-		if (is_array($placeholders)) {
-			foreach ($placeholders as $key => $value) {
-				$translation = str_replace('%' . $key . '%', $value, $translation);
-			}
-		}
+        @fclose($file);
+    }
 
-		return $translation;
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @param  string $index
+     * @param  array  $placeholders
+     * @return string
+     */
+    public function query($index, $placeholders = null)
+    {
+        if (!$this->exists($index)) {
+            return $index;
+        }
 
-	/**
-	 * Check whether is defined a translation key in the csv
-	 *
-	 * @param string $index
-	 * @return bool
-	 */
-	public function exists($index)
-	{
-		return isset($this->_translate[$index]);
-	}
-} 
+        $translation = $this->translate[$index];
+        if (is_array($placeholders)) {
+            foreach ($placeholders as $key => $value) {
+                $translation = str_replace('%' . $key . '%', $value, $translation);
+            }
+        }
+
+        return $translation;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param  string  $index
+     * @return boolean
+     */
+    public function exists($index)
+    {
+        return isset($this->translate[$index]);
+    }
+}

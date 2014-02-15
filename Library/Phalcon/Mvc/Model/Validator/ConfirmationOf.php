@@ -1,7 +1,5 @@
 <?php
-
 namespace Phalcon\Mvc\Model\Validator;
-
 
 /**
  * Phalcon\Mvc\Model\Validator\ConfirmationOf
@@ -12,31 +10,33 @@ namespace Phalcon\Mvc\Model\Validator;
 class ConfirmationOf extends \Phalcon\Mvc\Model\Validator
 {
 
-	/**
-	 * Executes the validator
-	 *
-	 * @param \Phalcon\Mvc\ModelInterface $record
-	 * @return boolean
-	 */
-	public function validate($record)
-	{
-		$field = $this->getOption('field');
-		$fieldConfirmation = $this->getOption('field_confirmation');
+    /**
+     * {@inheritdoc}
+     *
+     * @param  \Phalcon\Mvc\ModelInterface $record
+     * @return boolean
+     */
+    public function validate($record)
+    {
+        $field = $this->getOption('field');
+        $fieldConfirmation = $this->getOption('field_confirmation');
 
-		$fieldValue = $record->readAttribute($field);
-		$fieldConfirmationValue = $record->readAttribute($fieldConfirmation);
+        $fieldValue = $record->readAttribute($field);
+        $fieldConfirmationValue = $record->readAttribute($fieldConfirmation);
 
-		$message = $this->getOption('message') ? $this->getOption('message') : 'Both fields should contain equal values';
+        $message = $this->getOption('message')
+            ? $this->getOption('message')
+            : 'Both fields should contain equal values';
 
-		if ($fieldConfirmationValue) {
-			if ($fieldValue !== $fieldConfirmationValue) {
-				$this->appendMessage($message, $field, 'ConfirmationOf');
-				$this->appendMessage($message, $fieldConfirmation, 'ConfirmationOf');
-				return false;
-			}
-		}
+        if ($fieldConfirmationValue) {
+            if ($fieldValue !== $fieldConfirmationValue) {
+                $this->appendMessage($message, $field, 'ConfirmationOf');
+                $this->appendMessage($message, $fieldConfirmation, 'ConfirmationOf');
 
-		return true;
-	}
+                return false;
+            }
+        }
 
+        return true;
+    }
 }

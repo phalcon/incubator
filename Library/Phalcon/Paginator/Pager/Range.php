@@ -20,41 +20,40 @@ use Phalcon\Paginator\Pager;
 abstract class Range
 {
 
-	/**
-	 * Pager object.
-	 *
-	 * @var \Phalcon\Paginator\Pager
-	 */
-	protected $pager = null;
+    /**
+     * Pager object.
+     *
+     * @var \Phalcon\Paginator\Pager
+     */
+    protected $pager = null;
 
-	/**
-	 * Window size.
-	 *
-	 * @var integer
-	 */
-	protected $chunkLength = 0;
+    /**
+     * Window size.
+     *
+     * @var integer
+     */
+    protected $chunkLength = 0;
 
-	/**
-	 * Class constructor.
-	 *
-	 * @param \Phalcon\Paginator\Pager $pager
-	 * @param integer                  $chunkLength
-	 */
-	public function __construct(Pager $pager, $chunkLength)
-	{
-		$this->pager = $pager;
-		$this->chunkLength = abs(intval($chunkLength));
+    /**
+     * Class constructor.
+     *
+     * @param \Phalcon\Paginator\Pager $pager
+     * @param integer                  $chunkLength
+     */
+    public function __construct(Pager $pager, $chunkLength)
+    {
+        $this->pager = $pager;
+        $this->chunkLength = abs(intval($chunkLength));
 
-		if ($this->chunkLength == 0) {
-			$this->chunkLength = 1;
-		}
-	}
+        if ($this->chunkLength == 0) {
+            $this->chunkLength = 1;
+        }
+    }
 
-	/**
-	 * Calculate and returns an array representing the range around the current page.
-	 *
-	 * @return array
-	 */
-	abstract public function getRange();
-
+    /**
+     * Calculate and returns an array representing the range around the current page.
+     *
+     * @return array
+     */
+    abstract public function getRange();
 }

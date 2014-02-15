@@ -1,5 +1,4 @@
 <?php
-
 namespace Phalcon\Mvc\Model\Behavior;
 
 use Phalcon\Mvc\Model\Behavior;
@@ -11,139 +10,131 @@ use Phalcon\Mvc\ModelInterface;
  */
 class Blameable extends Behavior implements BehaviorInterface
 {
-	/**
-	 * Phalcon\Mvc\Model\Behavior\Blameable constructor
-	 *
-	 * @param array $options
-	 */
-	public function __construct($options = null)
-	{
-		$this->_options = $options;
-	}
 
-	/**
-	 * Receive notifications from the Models Manager
-	 *
-	 * @param string                     $eventType
-	 * @param Phalcon\Mvc\ModelInterface $model
-	 */
-	public function notify($eventType, $model)
-	{
+    /**
+     * Class constructor.
+     *
+     * @param array $options
+     */
+    public function __construct($options = null)
+    {
+        $this->_options = $options;
+    }
 
-		//Fires 'logAfterUpdate' if the event is 'afterCreate'
-		if ($eventType == 'afterCreate') {
-			return $this->auditAfterCreate($model);
-		}
+    /**
+     * {@inheritdoc}
+     *
+     * @param string                      $eventType
+     * @param \Phalcon\Mvc\ModelInterface $model
+     */
+    public function notify($eventType, $model)
+    {
+        //Fires 'logAfterUpdate' if the event is 'afterCreate'
+        if ($eventType == 'afterCreate') {
+            return $this->auditAfterCreate($model);
+        }
 
-		//Fires 'logAfterUpdate' if the event is 'afterUpdate'
-		if ($eventType == 'auditUpdate') {
-			return $this->logAfterUpdate($model);
-		}
-	}
+        //Fires 'logAfterUpdate' if the event is 'afterUpdate'
+        if ($eventType == 'afterUpdate') {
+            return $this->auditAfterUpdate($model);
+        }
+    }
 
-	/**
-	 * Creates an Audit isntance based on the current enviroment
-	 *
-	 * @param string                     $type
-	 * @param Phalcon\Mvc\ModelInterface $model
-	 * @return Audit
-	 */
-	public function createAudit($type, ModelInterface $model)
-	{
-		//Get the session service
-		$session = $model->getDI()->getSession();
+    /**
+     * Creates an Audit isntance based on the current enviroment
+     *
+     * @param  string                      $type
+     * @param  \Phalcon\Mvc\ModelInterface $model
+     * @return Audit
+     */
+    public function createAudit($type, ModelInterface $model)
+    {
+        //Get the session service
+        $session = $model->getDI()->getSession();
 
-		//Get the request service
-		$request = $model->getDI()->getRequest();
+        //Get the request service
+        $request = $model->getDI()->getRequest();
 
-		$audit = new Audit();
+        $audit = new Audit();
 
-		//Get the username from session
-		$audit->user_name = $session->get('userName');
+        //Get the username from session
+        $audit->user_name = $session->get('userName');
 
-		//The model who performed the action
-		$audit->model_name = get_class($model);
+        //The model who performed the action
+        $audit->model_name = get_class($model);
 
-		//The client IP address
-		$audit->ipaddress = $request->getClientAddress();
+        //The client IP address
+        $audit->ipaddress = $request->getClientAddress();
 
-		//Action is an update
-		$audit->type = $type;
+        //Action is an update
+        $audit->type = $type;
 
-		//Current time
-		$audit->created_at = date('Y-m-d H:i:s');
+        //Current time
+        $audit->created_at = date('Y-m-d H:i:s');
 
-		return $audit;
-	}
+        return $audit;
+    }
 
-	/**
-	 * Audits an DELETE operation
-	 *
-	 * @param Phalcon\Mvc\ModelInterface $model
-	 * @return boolean
-	 */
-	public function auditAfterCreate(ModelInterface $model)
-	{
-		//Create a new audit
-		$audit = $this->createAudit('C', $model);
+    /**
+     * Audits an DELETE operation
+     *
+     * @param  \Phalcon\Mvc\ModelInterface $model
+     * @return boolean
+     */
+    public function auditAfterCreate(ModelInterface $model)
+    {
+        //Create a new audit
+        $audit    = $this->createAudit('C', $model);
+        $metaData = $model->getModelsMetaData();
+        $fields   = $metaData->getAttributes($model);
+        $details  = array();
 
-		$metaData = $model->getModelsMetaData();
+        foreach ($fields as $field) {
+            $auditDetail = new AuditDetail();
+            $auditDetail->field_name = $field;
+            $auditDetail->old_value = null;
+            $auditDetail->new_value = $model->readAttribute($field);
 
-		$fields = $metaData->getAttributes($model);
+            $details[] = $auditDetail;
+        }
 
-		$details = array();
-		foreach ($fields as $field) {
+        $audit->details = $details;
 
-			$auditDetail = new AuditDetail();
+        return $audit->save();
+    }
 
-			$auditDetail->field_name = $field;
-			$auditDetail->old_value = null;
-			$auditDetail->new_value = $model->readAttribute($field);
+    /**
+     * Audits an UPDATE operation
+     *
+     * @param  \Phalcon\Mvc\ModelInterface $model
+     * @return boolean
+     */
+    public function auditAfterUpdate(ModelInterface $model)
+    {
+        $changedFields = $model->getChangedFields();
 
-			$details[] = $auditDetail;
-		}
+        if (count($changedFields)) {
+            //Create a new audit
+            $audit = $this->createAudit('U', $model);
 
-		$audit->details = $details;
+            //Date the model had before modifications
+            $originalData = $model->getSnapshotData();
 
-		return $audit->save();
-	}
+            $details = array();
+            foreach ($changedFields as $field) {
+                $auditDetail = new AuditDetail();
+                $auditDetail->field_name = $field;
+                $auditDetail->old_value = $originalData[$field];
+                $auditDetail->new_value = $model->readAttribute($field);
 
-	/**
-	 * Audits an UPDATE operation
-	 *
-	 * @param Phalcon\Mvc\ModelInterface $model
-	 * @return boolean
-	 */
-	public function auditAfterUpdate(ModelInterface $model)
-	{
+                $details[] = $auditDetail;
+            }
 
-		$changedFields = $model->getChangedFields();
-		if (count($changedFields)) {
+            $audit->details = $details;
 
-			//Create a new audit
-			$audit = $this->createAudit('U', $model);
+            return $audit->save();
+        }
 
-			//Date the model had before modifications
-			$originalData = $model->getSnapshotData();
-
-			$details = array();
-			foreach ($changedFields as $field) {
-
-				$auditDetail = new AuditDetail();
-
-				$auditDetail->field_name = $field;
-				$auditDetail->old_value = $originalData[$field];
-				$auditDetail->new_value = $model->readAttribute($field);
-
-				$details[] = $auditDetail;
-			}
-
-			$audit->details = $details;
-
-			return $audit->save();
-		}
-
-		return null;
-	}
-
+        return null;
+    }
 }

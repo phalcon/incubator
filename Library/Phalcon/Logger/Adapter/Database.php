@@ -1,5 +1,4 @@
 <?php
-
 namespace Phalcon\Logger\Adapter;
 
 use Phalcon\Logger\Exception;
@@ -11,77 +10,69 @@ use Phalcon\Logger\Exception;
 class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\AdapterInterface
 {
 
-	/**
-	 * Name
-	 */
-	protected $_name;
+    /**
+     * Name
+     */
+    protected $name;
 
-	/**
-	 * Adapter options
-	 */
-	protected $_options;
+    /**
+     * Adapter options
+     */
+    protected $options;
 
-	/**
-	 * Phalcon\Logger\Adapter\Database constructor
-	 *
-	 * @param string $name
-	 * @param array  $options
-	 */
-	public function __construct($name, $options = array())
-	{
+    /**
+     * Class constructor.
+     *
+     * @param  string                    $name
+     * @param  array                     $options
+     * @throws \Phalcon\Logger\Exception
+     */
+    public function __construct($name, $options = array())
+    {
+        if (!isset($options['db'])) {
+            throw new Exception("Parameter 'db' is required");
+        }
 
-		if (!isset($options['db'])) {
-			throw new Exception("Parameter 'db' is required");
-		}
+        if (!isset($options['table'])) {
+            throw new Exception("Parameter 'table' is required");
+        }
 
-		if (!isset($options['table'])) {
-			throw new Exception("Parameter 'table' is required");
-		}
+        $this->name = $name;
+        $this->options = $options;
+    }
 
-		$this->_name = $name;
-		$this->_options = $options;
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @return \Phalcon\Logger\Formatter\Line
+     */
+    public function getFormatter()
+    {
+    }
 
-	/**
-	 * Returns the internal formatter
-	 *
-	 * @return Phalcon\Logger\Formatter\Line
-	 */
-	public function getFormatter()
-	{
-		if (!is_object($this->_formatter)) {
-			$this->_formatter = new \Phalcon\Logger\Formatter\Line();
-		}
+    /**
+     * Writes the log to the file itself
+     *
+     * @param string  $message
+     * @param integer $type
+     * @param integer $time
+     * @param array   $context
+     */
+    public function logInternal($message, $type, $time, $context = array())
+    {
+        return $this->options['db']->execute(
+            'INSERT INTO ' . $this->options['table'] . ' VALUES (null, ?, ?, ?, ?)',
+            array($this->name, $type, $message, $time)
+        );
+    }
 
-		return $this->_formatter;
-	}
-
-	/**
-	 * Writes the log to the file itself
-	 *
-	 * @param string $message
-	 * @param int    $type
-	 * @param int    $time
-	 * @param array  $context
-	 */
-	protected function logInternal($message, $type, $time, $context)
-	{
-		return $this->_options['db']->execute("INSERT INTO " . $this->_options['table'] . " VALUES (null, ?, ?, ?, ?)", array(
-				$this->_name,
-				$type,
-				$this->getFormatter()->interpolate($message, $context),
-				$time
-			));
-	}
-
-	/**
-	 * Closes the logger
-	 *
-	 * @return boolean
-	 */
-	public function close()
-	{
-		$this->_options['db']->close();
-	}
-
+    /**
+     * {@inheritdoc}
+     *
+     * @return boolean
+     */
+    public function close()
+    {
+        $this->options['db']->close();
+    }
 }

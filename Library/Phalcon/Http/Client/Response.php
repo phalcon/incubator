@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -16,16 +15,15 @@
   | Author: Tuğrul Topuz <tugrultopuz@gmail.com>                           |
   +------------------------------------------------------------------------+
 */
-
 namespace Phalcon\Http\Client;
 
 class Response
 {
-	public $body = '';
-	public $header = null;
+    public $body = '';
+    public $header = null;
 
-	function __construct()
-	{
-		$this->header = new Header();
-	}
+    public function __construct()
+    {
+        $this->header = new Header();
+    }
 }
