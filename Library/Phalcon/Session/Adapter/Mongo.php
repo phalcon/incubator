@@ -114,10 +114,14 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function destroy()
+    public function destroy($session_id = null)
     {
+        if (is_null($session_id)) {
+            $session_id = session_id();
+        }
+        
         $options = $this->getOptions();
-        $sessionData = $options['collection']->findOne(array('session_id' => session_id()));
+        $sessionData = $options['collection']->findOne(array('session_id' => $session_id));
         if (is_array($sessionData)) {
             $options['collection']->remove($sessionData);
         }
