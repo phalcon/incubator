@@ -44,12 +44,8 @@ class Database extends Adapter implements AdapterInterface
      * @param  array                  $options
      * @throws \Phalcon\Acl\Exception
      */
-    public function __construct($options)
+    public function __construct(array $options)
     {
-        if (!is_array($options)) {
-            throw new Exception("Acl options must be an array");
-        }
-
         if (!isset($options['db'])) {
             throw new Exception("Parameter 'db' is required");
         }
