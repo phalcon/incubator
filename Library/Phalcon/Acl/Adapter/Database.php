@@ -3,7 +3,7 @@
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2012 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2014 Phalcon Team (http://www.phalconphp.com)       |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
   | with this package in the file docs/LICENSE.txt.                        |
@@ -75,8 +75,8 @@ class Database extends Adapter implements AdapterInterface
      * <code>$acl->addRole(new Phalcon\Acl\Role('administrator'), 'consultor');</code>
      * <code>$acl->addRole('administrator', 'consultor');</code>
      *
-     * @param  string  $role
-     * @param  array   $accessInherits
+     * @param  \Phalcon\Acl\Role|string $role
+     * @param  string                   $accessInherits
      * @return boolean
      */
     public function addRole($role, $accessInherits = null)
@@ -185,8 +185,8 @@ class Database extends Adapter implements AdapterInterface
      * $acl->addResource('customers', array('create', 'search'));
      * </code>
      *
-     * @param  \Phalcon\Acl\Resource $resource
-     * @param  array|string          $accessList
+     * @param  \Phalcon\Acl\Resource|string $resource
+     * @param  array|string                 $accessList
      * @return boolean
      */
     public function addResource($resource, $accessList = null)
@@ -315,9 +315,9 @@ class Database extends Adapter implements AdapterInterface
      * $acl->allow('*', '*', 'browse');
      * </code>
      *
-     * @param string $roleName
-     * @param string $resourceName
-     * @param mixed  $access
+     * @param string       $roleName
+     * @param string       $resourceName
+     * @param array|string $access
      */
     public function allow($roleName, $resourceName, $access)
     {
@@ -339,9 +339,9 @@ class Database extends Adapter implements AdapterInterface
      * $acl->deny('*', '*', 'browse');
      * </code>
      *
-     * @param  string  $roleName
-     * @param  string  $resourceName
-     * @param  mixed   $access
+     * @param  string       $roleName
+     * @param  string       $resourceName
+     * @param  array|string $access
      * @return boolean
      */
     public function deny($roleName, $resourceName, $access)
@@ -502,7 +502,7 @@ class Database extends Adapter implements AdapterInterface
      *
      * @param  string                 $roleName
      * @param  string                 $resourceName
-     * @param  string                 $access
+     * @param  array|string           $access
      * @param  integer                $action
      * @throws \Phalcon\Acl\Exception
      */
