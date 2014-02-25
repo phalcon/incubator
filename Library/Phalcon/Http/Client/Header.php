@@ -136,7 +136,7 @@ class Header implements \Countable
 
         foreach ($content as $field) {
             if (!is_array($field)) {
-                $field = array_map('trim', explode(':', $field));
+                $field = array_map('trim', explode(':', $field, 2));
             }
 
             if (count($field) == 2) {
