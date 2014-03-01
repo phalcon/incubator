@@ -26,7 +26,7 @@ use Phalcon\Session\Exception;
  * Phalcon\Session\Adapter\Mongo
  * Mongo adapter for Phalcon\Session
  */
-class Mongo extends Adapter implements AdapterInterface
+class Mongo extends Adapter implements AdapterInterface, \SessionHandlerInterface
 {
     /**
      * Current session data
@@ -62,32 +62,31 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
+     * @param string $save_path
+     * @param string $name
      * @return boolean
      */
-    public function open()
+    public function open($save_path, $name)
     {
         return true;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @return boolean
      */
     public function close()
     {
-        return false;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @param  string $sessionId
+     * @param  string $session_id
      * @return string
      */
-    public function read($sessionId)
+    public function read($session_id)
     {
-        $sessionData = $this->getCollection()->findOne(array('_id' => $sessionId));
+        $sessionData = $this->getCollection()->findOne(array('_id' => $session_id));
         if (isset($sessionData['data'])) {
             $this->data = $sessionData['data'];
             return $sessionData['data'];
@@ -99,20 +98,20 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param string $sessionId
-     * @param string $data
+     * @param string $session_id
+     * @param string $session_data
      * @return bool
      */
-    public function write($sessionId, $data)
+    public function write($session_id, $session_data)
     {
-        if ($this->data === $data) {
+        if ($this->data === $session_data) {
             return true;
         }
 
         $sessionData = array(
-            '_id' => $sessionId,
+            '_id' => $session_id,
             'modified' => new \MongoDate(),
-            'data' => $data
+            'data' => $session_data
         );
 
         $this->getCollection()->save($sessionData);
@@ -123,26 +122,27 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function destroy($sessionId = null)
+    public function destroy($session_id = null)
     {
-        if (is_null($sessionId)) {
-            $sessionId = session_id();
+        if (is_null($session_id)) {
+            $session_id = session_id();
         }
 
         $this->data = null;
 
-        $remove = $this->getCollection()->remove(array('_id' => $sessionId));
+        $remove = $this->getCollection()->remove(array('_id' => $session_id));
 
         return (bool)$remove['ok'];
     }
 
     /**
      * {@inheritdoc}
+     * @param string $maxlifetime
      */
-    public function gc($lifetime)
+    public function gc($maxlifetime)
     {
         $minAge = new \DateTime();
-        $minAge->sub(new \DateInterval('PT' . $lifetime . 'S'));
+        $minAge->sub(new \DateInterval('PT' . $maxlifetime . 'S'));
         $minAgeMongo = new \MongoDate($minAge->getTimestamp());
 
         $query = array('modified' => array('$lte' => $minAgeMongo));
