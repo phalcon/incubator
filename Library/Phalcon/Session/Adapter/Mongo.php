@@ -28,11 +28,18 @@ use Phalcon\Session\Exception;
  */
 class Mongo extends Adapter implements AdapterInterface
 {
+    /**
+     * Current session data
+     *
+     * @var string
+     */
+    protected $data;
 
     /**
      * Class constructor.
      *
      * @param array $options
+     * @throws Exception
      */
     public function __construct($options = null)
     {
@@ -80,10 +87,9 @@ class Mongo extends Adapter implements AdapterInterface
      */
     public function read($sessionId)
     {
-        $options = $this->getOptions();
-
-        $sessionData = $options['collection']->findOne(array('session_id' => $sessionId));
-        if (is_array($sessionData)) {
+        $sessionData = $this->getCollection()->findOne(array('_id' => $sessionId));
+        if (isset($sessionData['data'])) {
+            $this->data = $sessionData['data'];
             return $sessionData['data'];
         }
 
@@ -95,42 +101,62 @@ class Mongo extends Adapter implements AdapterInterface
      *
      * @param string $sessionId
      * @param string $data
+     * @return bool
      */
     public function write($sessionId, $data)
     {
-        $options = $this->getOptions();
-
-        $sessionData = $options['collection']->findOne(array('session_id' => $sessionId));
-        if (is_array($sessionData)) {
-            $sessionData['data'] = $data;
-        } else {
-            $sessionData = array('session_id' => $sessionId, 'data' => $data);
+        if ($this->data === $data) {
+            return true;
         }
 
-        $options['collection']->save($sessionData);
+        $sessionData = array(
+            '_id' => $sessionId,
+            'modified' => new \MongoDate(),
+            'data' => $data
+        );
 
+        $this->getCollection()->save($sessionData);
+
+        return true;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function destroy($session_id = null)
+    public function destroy($sessionId = null)
     {
-        if (is_null($session_id)) {
-            $session_id = session_id();
+        if (is_null($sessionId)) {
+            $sessionId = session_id();
         }
-        
-        $options = $this->getOptions();
-        $sessionData = $options['collection']->findOne(array('session_id' => $session_id));
-        if (is_array($sessionData)) {
-            $options['collection']->remove($sessionData);
-        }
+
+        $this->data = null;
+
+        $remove = $this->getCollection()->remove(array('_id' => $sessionId));
+
+        return (bool)$remove['ok'];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function gc()
+    public function gc($lifetime)
     {
+        $minAge = new \DateTime();
+        $minAge->sub(new \DateInterval('PT' . $lifetime . 'S'));
+        $minAgeMongo = new \MongoDate($minAge->getTimestamp());
+
+        $query = array('modified' => array('$lte' => $minAgeMongo));
+        $remove = $this->getCollection()->remove($query);
+
+        return (bool)$remove['ok'];
+    }
+
+    /**
+     * @return \MongoCollection
+     */
+    protected function getCollection()
+    {
+        $options = $this->getOptions();
+        return $options['collection'];
     }
 }
