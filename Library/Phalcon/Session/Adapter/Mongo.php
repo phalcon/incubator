@@ -26,7 +26,7 @@ use Phalcon\Session\Exception;
  * Phalcon\Session\Adapter\Mongo
  * Mongo adapter for Phalcon\Session
  */
-class Mongo extends Adapter implements AdapterInterface, \SessionHandlerInterface
+class Mongo extends Adapter implements AdapterInterface
 {
     /**
      * Current session data
