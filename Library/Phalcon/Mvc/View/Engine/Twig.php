@@ -114,6 +114,9 @@ class Twig extends Engine implements EngineInterface
             }, $options),
             new \Twig_SimpleFunction('getSecurityTokenKey', function () use ($di) {
                 return $di->get("security")->getTokenKey();
+            }, $options),
+            new \Twig_SimpleFunction('url', function ($route) use ($di) {
+                return $di->get("url")->get($route);
             }, $options)
         );
 
