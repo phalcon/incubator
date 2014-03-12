@@ -134,7 +134,6 @@ class Extended extends Base
             if (!empty($this->workers)) {
                 $tube = $tubes[array_rand($tubes)];
                 $job = $this->reserveFromTube($tube);
-                var_dump($tube);
 
                 if ($job && ($job instanceof Job)) {
                     $this->spawn($this->workers[$tube], $job);
