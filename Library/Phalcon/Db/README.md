@@ -61,9 +61,9 @@ Usage:
 
 ```php
 
-// SELECT `customers`.`created_at` - INTERVAL 1 DAY FROM `customers`
+// SELECT `customers`.`created_at` - INTERVAL 7 DAY FROM `customers`
 $data = $this->modelsManager->executeQuery(
-	'SELECT created_at - DATE_INTERVAL(7, 'DAY') FROM App\Models\Customers'
+	'SELECT created_at - DATE_INTERVAL(7, "DAY") FROM App\Models\Customers'
 );
 
 // SELECT `customers`.`id`, `customers`.`name` FROM `customers` WHERE MATCH(`customers`.`name`, `customers`.`description`) AGAINST ("+CEO")
