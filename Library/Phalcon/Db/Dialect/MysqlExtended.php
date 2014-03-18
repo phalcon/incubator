@@ -18,7 +18,7 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Phalcon\Db\Adapter\Dialect;
+namespace Phalcon\Db\Dialect;
 
 /**
  * Phalcon\Db\Adapter\Dialect\MysqlExtended
