@@ -212,6 +212,19 @@ class Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\Adapte
     }
 
     /**
+     * Sets memcache instance.
+     *
+     * @param Phalcon\Cache\Backend\Memcache $memcacheInstance memcache instance
+     *
+     * @return $this provides fluent interface
+     */
+    public function setMemcacheInstance(\Phalcon\Cache\Backend\Memcache $memcacheInstance)
+    {
+        $this->memcacheInstance = $memcacheInstance;
+        return $this;
+    }
+
+    /**
      * Returns the sessionId with prefix
      *
      * @param  string $sessionId
