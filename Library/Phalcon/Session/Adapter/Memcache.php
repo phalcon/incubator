@@ -159,7 +159,7 @@ class Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\Adapte
      *
      * @return boolean
      */
-    public function destroy($session_id = NULL)
+    public function destroy($session_id = null)
     {
         if (!$session_id) {
             $session_id = $this->getSessionId($this->getId());
