@@ -221,11 +221,13 @@ class Extended extends Base
         $result = null;
         $lines = $this->getResponseLines('stats-tube ' . $this->getTubeName($tube));
 
-        if (null !== $lines) {
+        if (!empty($lines)) {
             foreach ($lines as $line) {
-                list($name, $value) = explode(':', $line);
-                if (null !== $value) {
-                    $result[$name] = intval($value);
+                if (false !== strpos($line, ':')) {
+                    list($name, $value) = explode(':', $line);
+                    if (null !== $value) {
+                        $result[$name] = intval($value);
+                    }
                 }
             }
         }
@@ -282,6 +284,7 @@ class Extended extends Base
      */
     protected function getResponseLines($cmd)
     {
+        $cmd = trim($cmd);
         $result = null;
         $nbBytes = $this->write($cmd);
 
@@ -289,14 +292,20 @@ class Extended extends Base
             $response = $this->read($nbBytes);
             $matches = [];
 
-            if (!preg_match('#^OK (\d+).*?#', $response, $matches)) {
+            if (!preg_match('#^(OK (\d+))#mi', $response, $matches)) {
                 throw new \RuntimeException(sprintf(
                     'Unhandled response: %s',
                     $response
                 ));
             }
 
-            $result = preg_split("#[\r\n]+#", rtrim($this->read()));
+            if (false !== strpos($cmd, 'stats')) {
+                $response = $this->read($matches[2] - $nbBytes + strlen($matches[1]));
+            } else {
+                $response = $this->read($matches[2] - strlen($matches[1]));
+            }
+
+            $result = preg_split("#[\r\n]+#", rtrim($response));
 
             // discard header line
             if (isset($result[0]) && $result[0] == '---') {
