@@ -73,7 +73,8 @@ class MysqlExtended extends \Phalcon\Db\Dialect\Mysql
                         $arguments[] = $this->getSqlExpression($expression["arguments"][$i]);
                     }
 
-                    return 'MATCH(' . join(', ', $arguments) . ') AGAINST (' . $this->getSqlExpression($expression["arguments"][$length]) . ')';
+                    return 'MATCH(' . join(', ', $arguments) . ') AGAINST (' .
+                        $this->getSqlExpression($expression["arguments"][$length]) . ')';
 
                 case 'FULLTEXT_MATCH_BMODE':
 
@@ -87,7 +88,8 @@ class MysqlExtended extends \Phalcon\Db\Dialect\Mysql
                         $arguments[] = $this->getSqlExpression($expression["arguments"][$i]);
                     }
 
-                    return 'MATCH(' . join(', ', $arguments) . ') AGAINST (' . $this->getSqlExpression($expression["arguments"][$length]) . ' IN BOOLEAN MODE)';
+                    return 'MATCH(' . join(', ', $arguments) . ') AGAINST (' .
+                        $this->getSqlExpression($expression["arguments"][$length]) . ' IN BOOLEAN MODE)';
             }
         }
 
