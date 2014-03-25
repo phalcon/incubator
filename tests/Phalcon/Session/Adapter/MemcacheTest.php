@@ -66,13 +66,14 @@ class MemcacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \PHPUnit_Framework_Error_Notice
-     * @expectedExceptionMessage Memcache::connect(): Server 127.0.0.1 (tcp 11211) failed with: Connection refused (111)
+     * @expectedExceptionMessage Memcache::connect(): Server 192.0.2.0 (tcp 11211) failed with:
+     * Connection timed out (110)
      */
     public function testExecutingReadMethodWithoutMemcacheServerShouldGetExpectedKey()
     {
         $keyPrefix = 'testprefix';
         $memcacheAdapter = new \Phalcon\Session\Adapter\Memcache(array(
-            'host' => '127.0.0.1',
+            'host' => '192.0.2.0',
             'prefix' => $keyPrefix,
         ));
         $sessionid = md5(rand(), true);
