@@ -137,6 +137,9 @@ class Extended extends Base
 
                 if ($job && ($job instanceof Job)) {
                     $this->spawn($this->workers[$tube], $job);
+                } else {
+                    // There is no jobs so let's sleep to not increase CPU usage
+                    usleep(rand(7000, 10000));
                 }
             } else {
                 sleep(10);
