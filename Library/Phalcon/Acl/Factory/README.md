@@ -8,7 +8,7 @@ This factory is intended to be used to ease setup of \Phalcon\Acl\Adapter\Memory
 in case \Phalcon\Config or one of its adapters is used for configuration.
 
 To setup acl service in DI service.php file using acl.ini file:
-(example of structure and options in ini file can be found in [tests/Phalcon\Acl\Factory\_fixtures\acl.ini](https://github.com/phalcon/incubator/blob/1.3.0/tests/Phalcon/Acl/Factory/_fixtures/acl.ini))
+(example of structure and options in ini file can be found in [tests/Phalcon\Acl\Factory\_fixtures\acl.ini](https://github.com/phalcon/incubator/blob/master/tests/Phalcon/Acl/Factory/_fixtures/acl.ini))
 
 ```php
 <?php
@@ -22,7 +22,7 @@ $di['acl'] = function () {
 ```
 
 To setup acl service in DI service.php file using acl.php (array) file:
-(example of structure and options in ini file can be found in [tests/Phalcon\Acl\Factory\_fixtures\acl.php](https://github.com/phalcon/incubator/blob/1.3.0/tests/Phalcon/Acl/Factory/_fixtures/acl.php))
+(example of structure and options in ini file can be found in [tests/Phalcon\Acl\Factory\_fixtures\acl.php](https://github.com/phalcon/incubator/blob/master/tests/Phalcon/Acl/Factory/_fixtures/acl.php))
 
 ```php
 <?php
