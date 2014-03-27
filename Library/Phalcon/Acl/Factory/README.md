@@ -27,7 +27,7 @@ To setup acl service in DI service.php file using acl.php (array) file:
 ```php
 <?php
 $di['acl'] = function () use ($di) {
-    $aclPhpConfig = new \Phalcon\Config\Adapter\Php(__DIR__ . '/acl.php');
+    $aclPhpConfig = new \Phalcon\Config(include __DIR__ . '/acl.php');
     $factory = new \Phalcon\Acl\Factory\Memory();
     // returns instance of \Phalcon\Acl\Adapter\Memory
     return $factory->create($aclPhpConfig);

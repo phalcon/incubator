@@ -93,10 +93,10 @@ class MemoryTest extends \PHPUnit_Framework_TestCase
         $acl = $factory->create($config->get('acl'));
     }
 
-    public function testFactoryShouldWorkIfCreatedFromConfigArrayAdapter()
+    public function testFactoryShouldWorkIfCreatedFromConfigPHPArray()
     {
         $factory = new \Phalcon\Acl\Factory\Memory();
-        $acl = $factory->create(new \Phalcon\Config\Adapter\Php(__DIR__ . '/_fixtures/acl.php'));
+        $acl = $factory->create(new \Phalcon\Config(include __DIR__ . '/_fixtures/acl.php'));
     }
 
     protected function assertAclIsConfiguredAsExpected(\Phalcon\Acl\Adapter\Memory $acl, \Phalcon\Config $config)
