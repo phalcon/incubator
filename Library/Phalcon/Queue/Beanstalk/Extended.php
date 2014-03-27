@@ -157,7 +157,7 @@ class Extended extends Base
     public function putInTube($tube, $data, $options = null)
     {
         if (null === $options) {
-            $options = [];
+            $options = array();
         }
 
         if (!array_key_exists('delay', $options)) {
@@ -198,7 +198,7 @@ class Extended extends Base
      */
     public function getTubes()
     {
-        $result = [];
+        $result = array();
         $lines = $this->getResponseLines('list-tubes');
 
         if (null !== $lines) {
@@ -293,7 +293,7 @@ class Extended extends Base
 
         if ($nbBytes && ($nbBytes > 0)) {
             $response = $this->read($nbBytes);
-            $matches = [];
+            $matches = array();
 
             if (!preg_match('#^(OK (\d+))#mi', $response, $matches)) {
                 throw new \RuntimeException(sprintf(
@@ -334,7 +334,7 @@ class Extended extends Base
 
         if ($nbBytes && ($nbBytes > 0)) {
             $response = $this->read($nbBytes);
-            $matches  = [];
+            $matches  = array();
 
             if (!preg_match('#^WATCHING (\d+).*?#', $response, $matches)) {
                 throw new \RuntimeException(sprintf(

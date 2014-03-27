@@ -24,11 +24,11 @@ class Csv extends Adapter implements AdapterInterface
             throw new \Exception('Parameter "file" is required.');
         }
 
-        $default = [
+        $default = array(
             'delimiter' => ';',
             'length'    => 0,
             'enclosure' => '"',
-        ];
+        );
 
         $options = array_merge($default, $options);
         if (false === ($file = @fopen($options['file'], 'rb'))) {
