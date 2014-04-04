@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Phalcon": "Library/"
+            "Phalcon": "Library/Phalcon/"
         }
     }
 
