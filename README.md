@@ -63,6 +63,7 @@ $loader->register();
 ### Acl
 * [Phalcon\Acl\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Acl/Adapter) - ACL lists stored in database tables
 * [Phalcon\Acl\Adapter\Mongo](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Acl/Adapter) - ACL lists stored in Mongo collections
+* [Phalcon\Acl\Factory\Memory](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Acl/Factory) - ACL factory class intended for use with Memory adapter (digitronac)
 
 ### Cache
 * [Phalcon\Cache\Backend\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Database backend for caching data (phalcon)
