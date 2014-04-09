@@ -21,8 +21,8 @@
         "codeception/codeception": "*"
     },
     "autoload": {
-        "psr-0": {
-            "Phalcon": "Library/Phalcon/"
+        "psr-4": {
+            "Phalcon\\": "Library/Phalcon/"
         }
     }
 
