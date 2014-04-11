@@ -9,4 +9,4 @@ namespace Phalcon\Filter;
 class Exception
 {
 
-} 
+}
