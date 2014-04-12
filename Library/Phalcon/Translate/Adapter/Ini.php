@@ -80,7 +80,9 @@ class Ini implements AdapterInterface
      * @param   array $placeholders
      * @return  string
      */
+    // @codingStandardsIgnoreStart
     public function _($translateKey, $placeholders = null)
+    // @codingStandardsIgnoreEnd
     {
         return $this->query($translateKey, $placeholders);
     }
