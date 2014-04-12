@@ -45,12 +45,13 @@ use Phalcon\Translate\Adapter;
 use Phalcon\Translate\AdapterInterface;
 use Phalcon\Translate\Exception;
 
-class Ini implements AdapterInterface {
+class Ini implements AdapterInterface
+{
     
     /**
      * @var array
      */
-    protected $translate;    
+    protected $translate;
     
     /**
      * Class constructor.
@@ -70,7 +71,7 @@ class Ini implements AdapterInterface {
         }
 
         $this->translate = parse_ini_file($options['file']);
-    }    
+    }
 
     /**
      * Returns the translation string of the given key
@@ -79,7 +80,8 @@ class Ini implements AdapterInterface {
      * @param   array $placeholders
      * @return  string
      */
-    public function _($translateKey, $placeholders=null){
+    public function _($translateKey, $placeholders = null)
+    {
         return $this->query($translateKey, $placeholders);
     }
 
@@ -90,11 +92,12 @@ class Ini implements AdapterInterface {
      * @param   array $placeholders
      * @return  string
      */
-    public function query($translateKey, $placeholders=null){
-        
+    public function query($translateKey, $placeholders = null)
+    {
+
         if (!$this->exists($translateKey)) {
             return $translateKey;
-        }        
+        }
         
         $translation = $this->translate[$translateKey];
         
@@ -103,7 +106,7 @@ class Ini implements AdapterInterface {
                 $translation = str_replace('%' . $key . '%', $value, $translation);
             }
         }
-        
+
         return $translation;
     }
 
@@ -113,7 +116,8 @@ class Ini implements AdapterInterface {
      * @param   string $index
      * @return  bool
      */
-    public function exists($index){
+    public function exists($index)
+    {
         return array_key_exists($index, $this->translate);
     }
 }
