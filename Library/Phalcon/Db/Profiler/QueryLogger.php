@@ -13,6 +13,8 @@ namespace Phalcon\Db\Profiler;
  * $eventsManager->attach('db', $queryLogger);
  * </code>
  *
+ * @see http://docs.phalconphp.com/en/latest/reference/db.html#profiling-sql-statements
+ *
  * @package Phalcon\Db\Profiler
  */
 class QueryLogger
