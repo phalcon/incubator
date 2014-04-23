@@ -73,7 +73,16 @@ class QueryLoggerTest extends \PHPUnit_Framework_TestCase
             ->will(
                 $this->returnCallback(
                     function ($priority, $logItem) use ($expectedLogItem) {
-                        $this->assertEquals(json_encode($expectedLogItem, JSON_FORCE_OBJECT), $logItem);
+                        $expectedLogItemJson = json_encode($expectedLogItem, JSON_FORCE_OBJECT);
+                        if ($expectedLogItemJson !== $logItem) {
+                            throw new \PHPUnit_Framework_ExpectationFailedException(
+                                sprintf(
+                                    'Failed asserting that JSON of expected log item "%s" matches log item JSON "%s"',
+                                    $expectedLogItemJson,
+                                    $logItem
+                                )
+                            );
+                        }
                     }
                 )
             );
@@ -145,4 +154,4 @@ class QueryLoggerTest extends \PHPUnit_Framework_TestCase
         $queryLogger = new \Phalcon\Db\Profiler\QueryLogger();
         $queryLogger->afterQuery($eventMock, $pdoMock);
     }
-} 
+}
