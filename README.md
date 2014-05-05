@@ -75,6 +75,7 @@ $loader->register();
 
 ### Database
 * [Phalcon\Db\Adapter\Cacheable\Mysql](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Db) - MySQL adapter that agressively caches all the queries executed (phalcon)
+* [Phalcon\Db\Profiler\QueryLogger](https://github.com/phalcon/incubator/tree/1.3.0/Library/Phalcon/Db/Profiler#querylogger) - Query profiling/logging component (digitronac)
 
 ### Debug
 * [Phalcon\Debug\Dump](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Debug) - Variable dumper (digitronac)
