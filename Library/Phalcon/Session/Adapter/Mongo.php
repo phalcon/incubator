@@ -130,7 +130,7 @@ class Mongo extends Adapter implements AdapterInterface
 
         $this->data = null;
 
-        $remove = $this->getCollection()->remove(array('_id' => $session_id));
+        $remove = $this->getCollection()->remove(array('_id' => new MongoId($session_id)));
 
         return (bool)$remove['ok'];
     }
