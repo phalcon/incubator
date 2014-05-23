@@ -6,7 +6,7 @@ Extension of [built-in Phalcon filters](http://docs.phalconphp.com/en/latest/ref
 Usage example of filters available here:
 
 File\Mime2Extension
-___________________
+-------------------
 
 Converts file mime type to extension. List of mime types taken from [here](https://raw.githubusercontent.com/EllisLab/CodeIgniter/develop/application/config/mimes.php)
 
