@@ -123,6 +123,7 @@ class Mongo extends Adapter implements AdapterInterface
         $sessionData = $options['collection']->findOne(array('session_id' => $session_id));
         if (is_array($sessionData)) {
             $options['collection']->remove($sessionData);
+            session_destroy();
         }
     }
 
