@@ -34,7 +34,7 @@ CREATE TABLE audit_detail (
 ```
 
 DateTime
-________
+--------
 
 DateTime behavior.
  Enables models to use instances of \DateTime objects for db datetime fields.
