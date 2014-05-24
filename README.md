@@ -80,6 +80,9 @@ $loader->register();
 ### Debug
 * [Phalcon\Debug\Dump](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Debug) - Variable dumper (digitronac)
 
+### Filter
+* [Phalcon\Filter\File\Mime2Extension](https://github.com/phalcon/incubator/tree/1.3.0/Library/Phalcon/Filter#filemime2extension) - Converts file mime type to appropriate extension (digitronac)
+
 ### Logger
 * [Phalcon\Logger\Adapter\Firephp](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to log messages in Firebug (phalcon)
 * [Phalcon\Logger\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to store logs in a database table (phalcon)
