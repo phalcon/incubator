@@ -93,6 +93,11 @@ $loader->register();
 ### ORM Validators
 * [Phalcon\Mvc\Model\Validator\ConfirmationOf](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model) - Allows to validate if a field has a confirmation field with the same value (suxxes)
 
+### ORM Behaviors
+* [Phalcon\Mvc\Model\Behavior\Blameable](https://github.com/phalcon/incubator/tree/1.3.0/Library/Phalcon/Phalcon/Mvc/Model/Behavior#blameable) - Keeps track of data changed by users on specific models (phalcon)
+* [Phalcon\Mvc\Model\Behavior\DateTime](https://github.com/phalcon/incubator/tree/1.3.0/Library/Phalcon/Phalcon/Mvc/Model/Behavior#datetime) - Enables models to use instances of DateTime objects for datetime type fields (digitronac)
+
+
 ### Error Handling
 * [Phalcon\Error](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Error) - Error handler used to centralize the error handling and displaying clean error pages (theDisco)
 * [Phalcon\Utils\PrettyExceptions](https://github.com/phalcon/pretty-exceptions) - Pretty Exceptions is an utility to show exceptions/errors/warnings/notices using a nicely visualization. (phalcon/kenjikobe)
