@@ -1,6 +1,11 @@
 Phalcon\Mvc\Model\Behavior
 ==========================
 
+Blameable
+---------
+
+[Link to tutorial](http://blog.phalconphp.com/post/47652831003/tutorial-creating-a-blameable-behavior-with-phalcon)
+
 ```php
 
 class Products extends Phalcon\Mvc\Model
