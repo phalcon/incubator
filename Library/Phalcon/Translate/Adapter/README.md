@@ -57,6 +57,18 @@ echo $translate->_('Hello'); //Bonjour
 echo $translate->_('My name is %name%', array('name' => 'Peter')); //Je m'appelle Peter
 ```
 
+Alternatively, multiple domains, each with a different directory can be specified:
+
+```php
+$translate = new Phalcon\Translate\Adapter\Gettext(array(
+	'locale' => 'fr_FR',
+    'domains' => array(
+	    'messages' => '../app/lang',
+	    'warnings' => '../app/lang-warnings'
+    )
+));
+```
+
 ### Translation contexts
 
 Use the __() (alias to cquery()) method if you have multiple translations of a string in different contexts:
