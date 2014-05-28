@@ -179,7 +179,7 @@ class Redis extends Prefixable
     public function flush()
     {
         $options = $this->getOptions();
-
-        return $options['redis']->flushAll();
+        $keys = $options['redis']->keys($this->getPrefixedIdentifier('*'));
+        return $options['redis']->delete($keys);
     }
 }
