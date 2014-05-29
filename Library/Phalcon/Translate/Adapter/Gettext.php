@@ -43,7 +43,8 @@ class Gettext extends Adapter implements AdapterInterface
      *                       (string|array) file
      *                       (string) directory
      *                       ~ or ~
-     *                       (array) domains (instead of file and directory), where keys are domain names and values their respective directories.
+     *                       (array) domains (instead of file and directory), where keys are domain names and values
+     *                               their respective directories.
      * @throws \Phalcon\Translate\Exception
      */
     public function __construct($options)
