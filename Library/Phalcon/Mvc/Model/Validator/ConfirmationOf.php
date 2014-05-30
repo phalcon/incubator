@@ -30,7 +30,6 @@ class ConfirmationOf extends \Phalcon\Mvc\Model\Validator
 
         if ($fieldConfirmationValue) {
             if ($fieldValue !== $fieldConfirmationValue) {
-                $this->appendMessage($message, $field, 'ConfirmationOf');
                 $this->appendMessage($message, $fieldConfirmation, 'ConfirmationOf');
 
                 return false;
