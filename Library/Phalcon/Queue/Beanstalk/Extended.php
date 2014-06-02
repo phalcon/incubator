@@ -204,7 +204,7 @@ class Extended extends Base
         if (null !== $lines) {
             foreach ($lines as $line) {
                 $line = ltrim($line, '- ');
-                if (0 === strpos($line, $this->tubePrefix)) {
+                if (empty($this->tubePrefix) || (0 === strpos($line, $this->tubePrefix))) {
                     $result[] = $line;
                 }
             }
@@ -246,10 +246,12 @@ class Extended extends Base
      */
     protected function getTubeName($tube)
     {
-        $tube = str_replace($this->tubePrefix, '', $tube);
+        if ((null !== $this->tubePrefix) && (null !== $tube)) {
+            $tube = str_replace($this->tubePrefix, '', $tube);
 
-        if (null !== $tube && (0 !== strcmp($tube, 'default'))) {
-            return $this->tubePrefix . $tube;
+            if (0 !== strcmp($tube, 'default')) {
+                return $this->tubePrefix . $tube;
+            }
         }
 
         return $tube;
@@ -287,33 +289,24 @@ class Extended extends Base
      */
     protected function getResponseLines($cmd)
     {
-        $cmd = trim($cmd);
         $result = null;
-        $nbBytes = $this->write($cmd);
+        $this->write(trim($cmd));
 
-        if ($nbBytes && ($nbBytes > 0)) {
-            $response = $this->read($nbBytes);
-            $matches = array();
+        $response = $this->read();
+        $matches  = array();
 
-            if (!preg_match('#^(OK (\d+))#mi', $response, $matches)) {
-                throw new \RuntimeException(sprintf(
-                    'Unhandled response: %s',
-                    $response
-                ));
-            }
+        if (!preg_match('#^(OK (\d+))#mi', $response, $matches)) {
+            throw new \RuntimeException(sprintf(
+                'Unhandled response: %s',
+                $response
+            ));
+        }
 
-            if (false !== strpos($cmd, 'stats')) {
-                $response = $this->read($matches[2] - $nbBytes + strlen($matches[1]));
-            } else {
-                $response = $this->read($matches[2] - strlen($matches[1]));
-            }
+        $result = preg_split("#[\r\n]+#", rtrim($this->read($matches[2])));
 
-            $result = preg_split("#[\r\n]+#", rtrim($response));
-
-            // discard header line
-            if (isset($result[0]) && $result[0] == '---') {
-                array_shift($result);
-            }
+        // discard header line
+        if (isset($result[0]) && $result[0] == '---') {
+            array_shift($result);
         }
 
         return $result;
