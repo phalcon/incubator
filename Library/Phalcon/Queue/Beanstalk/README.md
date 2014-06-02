@@ -21,13 +21,13 @@ class IndexController extends Controller
     {
         if ($this->request->isPost()) {
             // Connect to the queue
-            $queue = new BeanstalkExtended(array(
+            $beanstalk = new BeanstalkExtended(array(
                 'host'   => '192.168.0.21',
                 'prefix' => 'project-name',
             ));
 
             // Save the video info in database and send it to post-process
-            $queue->putInTube('processVideo', 4871);
+            $beanstalk->putInTube('processVideo', 4871);
         }
     }
 
@@ -37,13 +37,13 @@ class IndexController extends Controller
     public function deleteVideoAction()
     {
         // Connect to the queue
-        $queue = new BeanstalkExtended(array(
+        $beanstalk = new BeanstalkExtended(array(
             'host'   => '192.168.0.21',
             'prefix' => 'project-name',
         ));
 
         // Send the command to physical unlink to the queue
-        $queue->putInTube('deleteVideo', 4871);
+        $beanstalk->putInTube('deleteVideo', 4871);
     }
 
 }
@@ -60,12 +60,12 @@ Now handle the queues in console script (e.g.: php app/bin/video.php):
 use Phalcon\Queue\Beanstalk\Extended as BeanstalkExtended;
 use Phalcon\Queue\Beanstalk\Job;
 
-$queue = new BeanstalkExtended(array(
+$beanstalk = new BeanstalkExtended(array(
     'host'   => '192.168.0.21',
     'prefix' => 'project-name',
 ));
 
-$queue->addWorker('processVideo', function (Job $job) {
+$beanstalk->addWorker('processVideo', function (Job $job) {
     // Here we should collect the meta information, make the screenshots, convert the video to the FLV etc.
     $videoId = $job->getBody();
 
@@ -73,7 +73,7 @@ $queue->addWorker('processVideo', function (Job $job) {
     exit(0);
 });
 
-$queue->addWorker('deleteVideo', function (Job $job) {
+$beanstalk->addWorker('deleteVideo', function (Job $job) {
     // Here we should collect the meta information, make the screenshots, convert the video to the FLV etc.
     $videoId = $job->getBody();
 
@@ -83,7 +83,7 @@ $queue->addWorker('deleteVideo', function (Job $job) {
 });
 
 // Start processing queues
-$queue->doWork();
+$beanstalk->doWork();
 ```
 
 Simple console script that outputs tubes stats:
@@ -94,13 +94,13 @@ Simple console script that outputs tubes stats:
 use Phalcon\Queue\Beanstalk\Extended as BeanstalkExtended;
 use Phalcon\Queue\Beanstalk\Job;
 
-$prefix = 'project-name';
-$queue  = new BeanstalkExtended(array(
+$prefix   = 'project-name';
+beanstalk = new BeanstalkExtended(array(
     'host'   => '192.168.0.21',
     'prefix' => $prefix,
 ));
 
-foreach ($queue->getTubes() as $tube) {
+foreach ($beanstalk->getTubes() as $tube) {
     if (0 === strpos($tube, $prefix)) {
         try {
             $stats = $beanstalk->getTubeStats($tube);
