@@ -134,10 +134,12 @@ class Extended extends Base
             if (!empty($this->workers)) {
                 $tube = $tubes[array_rand($tubes)];
                 $job = $this->reserveFromTube($tube);
-                var_dump($tube);
 
                 if ($job && ($job instanceof Job)) {
                     $this->spawn($this->workers[$tube], $job);
+                } else {
+                    // There is no jobs so let's sleep to not increase CPU usage
+                    usleep(rand(7000, 10000));
                 }
             } else {
                 sleep(10);
@@ -155,7 +157,7 @@ class Extended extends Base
     public function putInTube($tube, $data, $options = null)
     {
         if (null === $options) {
-            $options = [];
+            $options = array();
         }
 
         if (!array_key_exists('delay', $options)) {
@@ -196,7 +198,7 @@ class Extended extends Base
      */
     public function getTubes()
     {
-        $result = [];
+        $result = array();
         $lines = $this->getResponseLines('list-tubes');
 
         if (null !== $lines) {
@@ -222,11 +224,13 @@ class Extended extends Base
         $result = null;
         $lines = $this->getResponseLines('stats-tube ' . $this->getTubeName($tube));
 
-        if (null !== $lines) {
+        if (!empty($lines)) {
             foreach ($lines as $line) {
-                list($name, $value) = explode(':', $line);
-                if (null !== $value) {
-                    $result[$name] = intval($value);
+                if (false !== strpos($line, ':')) {
+                    list($name, $value) = explode(':', $line);
+                    if (null !== $value) {
+                        $result[$name] = intval($value);
+                    }
                 }
             }
         }
@@ -283,21 +287,28 @@ class Extended extends Base
      */
     protected function getResponseLines($cmd)
     {
+        $cmd = trim($cmd);
         $result = null;
         $nbBytes = $this->write($cmd);
 
         if ($nbBytes && ($nbBytes > 0)) {
             $response = $this->read($nbBytes);
-            $matches = [];
+            $matches = array();
 
-            if (!preg_match('#^OK (\d+).*?#', $response, $matches)) {
+            if (!preg_match('#^(OK (\d+))#mi', $response, $matches)) {
                 throw new \RuntimeException(sprintf(
                     'Unhandled response: %s',
                     $response
                 ));
             }
 
-            $result = preg_split("#[\r\n]+#", rtrim($this->read()));
+            if (false !== strpos($cmd, 'stats')) {
+                $response = $this->read($matches[2] - $nbBytes + strlen($matches[1]));
+            } else {
+                $response = $this->read($matches[2] - strlen($matches[1]));
+            }
+
+            $result = preg_split("#[\r\n]+#", rtrim($response));
 
             // discard header line
             if (isset($result[0]) && $result[0] == '---') {
@@ -323,7 +334,7 @@ class Extended extends Base
 
         if ($nbBytes && ($nbBytes > 0)) {
             $response = $this->read($nbBytes);
-            $matches  = [];
+            $matches  = array();
 
             if (!preg_match('#^WATCHING (\d+).*?#', $response, $matches)) {
                 throw new \RuntimeException(sprintf(

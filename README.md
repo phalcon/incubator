@@ -2,7 +2,7 @@
 
 Phalcon is a web framework delivered as a C extension providing high performance and lower resource consumption.
 
-This is a repository to publish/share/experimient with new adapters, prototypes or functionality that potentially can be incorporated to the C-framework.
+This is a repository to publish/share/experiment with new adapters, prototypes or functionality that potentially can be incorporated to the C-framework.
 
 Also we welcome submissions from the community of snippets that could extend the framework more.
 
@@ -63,6 +63,7 @@ $loader->register();
 ### Acl
 * [Phalcon\Acl\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Acl/Adapter) - ACL lists stored in database tables
 * [Phalcon\Acl\Adapter\Mongo](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Acl/Adapter) - ACL lists stored in Mongo collections
+* [Phalcon\Acl\Factory\Memory](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Acl/Factory) - ACL factory class intended for use with Memory adapter (digitronac)
 
 ### Cache
 * [Phalcon\Cache\Backend\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Database backend for caching data (phalcon)

@@ -66,4 +66,25 @@ class Redis extends Base
 
         return $this->redis;
     }
+    
+    /**
+     * {@inheritdoc}
+     * @param  string $key
+     * @return array
+     */
+    public function read($key)
+    {
+        return parent::read($key) ?: null;
+    }
+    
+    /**
+     * Returns the sessionId with prefix
+     *
+     * @param  string $id
+     * @return string
+     */
+    protected function getId($id)
+    {
+        return str_replace('\\', ':', parent::getId($id));
+    }
 }

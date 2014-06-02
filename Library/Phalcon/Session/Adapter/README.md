@@ -54,7 +54,7 @@ $di->set('session', function(){
 
     $memcache = new Phalcon\Session\Adapter\Memcache(array(
         'host'          => '127.0.0.1',     // mandatory
-        'post'          => 11211,           // optional (standard: 11211)
+        'port'          => 11211,           // optional (standard: 11211)
         'lifetime'      => 8600,            // optional (standard: 8600)
         'prefix'        => 'my-app'         // optional (standard: [empty_string]), means memcache key is my-app_31231jkfsdfdsfds3
         'persistent'    => false            // optional (standard: false)

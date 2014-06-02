@@ -29,7 +29,7 @@ class Twig extends Engine implements EngineInterface
         $this->twig = new Twig\Environment($di, $loader, $options);
 
         $this->twig->addExtension(new Twig\CoreExtension());
-        $this->registryFunctions($view);
+        $this->registryFunctions($view, $di);
 
         parent::__construct($view, $di);
     }
@@ -39,7 +39,7 @@ class Twig extends Engine implements EngineInterface
      *
      * @param \Phalcon\Mvc\ViewInterface $view
      */
-    protected function registryFunctions($view)
+    protected function registryFunctions($view, $di)
     {
         $options = array(
             'is_safe' => array('html')
@@ -109,11 +109,14 @@ class Twig extends Engine implements EngineInterface
             new \Twig_SimpleFunction('getDocType', function () {
                 return \Phalcon\Tag::getDocType();
             }, $options),
-            new \Twig_SimpleFunction('getSecurityToken', function () {
-                return $this->security->getToken();
+            new \Twig_SimpleFunction('getSecurityToken', function () use ($di) {
+                return $di->get("security")->getToken();
             }, $options),
-            new \Twig_SimpleFunction('getSecurityTokenKey', function () {
-                return $this->security->getTokenKey();
+            new \Twig_SimpleFunction('getSecurityTokenKey', function () use ($di) {
+                return $di->get("security")->getTokenKey();
+            }, $options),
+            new \Twig_SimpleFunction('url', function ($route) use ($di) {
+                return $di->get("url")->get($route);
             }, $options)
         );
 

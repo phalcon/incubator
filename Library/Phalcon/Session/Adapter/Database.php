@@ -156,10 +156,14 @@ class Database extends Adapter implements AdapterInterface
      * {@inheritdoc}
      * @return boolean
      */
-    public function destroy()
+    public function destroy($session_id = null)
     {
         if (!$this->isStarted() || $this->isDestroyed) {
             return true;
+        }
+        
+        if (is_null($session_id)) {
+            $session_id = $this->getId();
         }
 
         $this->isDestroyed = true;
@@ -170,7 +174,7 @@ class Database extends Adapter implements AdapterInterface
                 $options['db']->escapeIdentifier($options['table']),
                 $options['db']->escapeIdentifier('session_id')
             ),
-            array($this->getId())
+            array($session_id)
         );
 
         session_regenerate_id();
