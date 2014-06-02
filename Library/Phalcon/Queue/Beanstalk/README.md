@@ -92,10 +92,9 @@ Simple console script that outputs tubes stats:
 #!/usr/bin/env php
 <?php
 use Phalcon\Queue\Beanstalk\Extended as BeanstalkExtended;
-use Phalcon\Queue\Beanstalk\Job;
 
-$prefix   = 'project-name';
-beanstalk = new BeanstalkExtended(array(
+$prefix    = 'project-name';
+$beanstalk = new BeanstalkExtended(array(
     'host'   => '192.168.0.21',
     'prefix' => $prefix,
 ));
