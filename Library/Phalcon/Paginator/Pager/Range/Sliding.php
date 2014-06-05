@@ -39,8 +39,8 @@ class Sliding extends Range
             $chunk = $pages;
         }
 
-        $chunkStart = $page - (floor($chunk / 2));
-        $chunkEnd = $page + (ceil($chunk / 2) - 1);
+        $chunkStart = (int) ($page - (floor($chunk / 2)));
+        $chunkEnd = (int) ($page + (ceil($chunk / 2) - 1));
 
         if ($chunkStart < 1) {
             $adjust = 1 - $chunkStart;
