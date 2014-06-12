@@ -1,5 +1,5 @@
 <?php
-namespace Phalcon\Tests\Paginator\Pager;
+namespace Phalcon\Tests\Paginator;
 
 class Pager extends \PHPUnit_Framework_TestCase
 {
