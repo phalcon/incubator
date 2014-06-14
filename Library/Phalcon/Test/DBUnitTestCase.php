@@ -1,6 +1,6 @@
 <?php
 /**
- * UnitTestCase.php
+ * DBUnitTestCase.php
  * Phalcon_Test_UnitTestCase
  * Unit Test Helper
  * PhalconPHP Framework
