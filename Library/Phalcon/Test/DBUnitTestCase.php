@@ -29,7 +29,7 @@ use Phalcon\Mvc\Url;
  *
  * @package Phalcon\Test
  */
-abstract class DBUnitTestCaseasd extends \PHPUnit_Extensions_Database_TestCase
+abstract class DBUnitTestCase extends \PHPUnit_Extensions_Database_TestCase
 {
 
     /**
