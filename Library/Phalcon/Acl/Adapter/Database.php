@@ -367,66 +367,29 @@ class Database extends Adapter implements AdapterInterface
      */
     public function isAllowed($role, $resource, $access)
     {
-        /**
-         * Check if there is a specific rule for that resource/access
-         */
-        $sql = 'SELECT allowed FROM ' .
-            $this->options['accessList'] .
-            ' WHERE roles_name = ? AND resources_name = ? AND access_name = ?';
-        $allowed = $this->options['db']->fetchOne($sql, Db::FETCH_NUM, array($role, $resource, $access));
-        if (is_array($allowed)) {
-            return (bool) $allowed[0];
-        }
-
-        /**
-         * Check if there is an common rule for that resource
-         */
-        $sql = 'SELECT allowed FROM ' .
-            $this->options['accessList'] .
-            ' WHERE roles_name = ? AND resources_name = ? AND access_name = ?';
-        $allowed = $this->options['db']->fetchOne($sql, Db::FETCH_NUM, array($role, $resource, '*'));
-        if (is_array($allowed)) {
-            return (bool) $allowed[0];
-        }
-
-        $sql = 'SELECT roles_inherit FROM ' . $this->options['rolesInherits'] . ' WHERE roles_name = ?';
-        $inheritedRoles = $this->options['db']->fetchAll($sql, Db::FETCH_NUM, array($role));
-
-        /**
-         * Check inherited roles for a specific rule
-         */
-        $sqlAccess = 'SELECT allowed FROM ' .
-            $this->options['accessList'] .
-            ' WHERE roles_name = ? AND resources_name = ? AND access_name = ?';
-
-        foreach ($inheritedRoles as $row) {
-            $allowed = $this->options['db']->fetchOne($sqlAccess, Db::FETCH_NUM, array($row[0], $resource, $access));
-            if (is_array($allowed)) {
-                return (bool) $allowed[0];
-            }
-        }
-
-        /**
-         * Check inherited roles for a specific rule
-         */
-        $sqlAccessAny = 'SELECT allowed FROM ' .
-            $this->options['accessList'] .
-            ' WHERE roles_name = ? AND resources_name = ? AND access_name = ?';
-
-        foreach ($inheritedRoles as $row) {
-            $allowed = $this->options['db']->fetchOne($sqlAccessAny, Db::FETCH_NUM, array($row[0], $resource, '*'));
-            if (is_array($allowed)) {
-                return (bool) $allowed[0];
-            }
-        }
-
-        /**
-         * Check if there is a common rule for that access
-         */
-        $sql = 'SELECT allowed FROM ' .
-            $this->options['accessList'] .
-            ' WHERE roles_name = ? AND resources_name = ? AND access_name = ?';
-        $allowed = $this->options['db']->fetchOne($sql, Db::FETCH_NUM, array($role, '*', $access));
+        $sql = implode(' ', [
+            'SELECT allowed FROM', $this->options['accessList'], 'AS a',
+            // role_name in:
+            'WHERE roles_name IN (',
+                // given 'role'-parameter
+                'SELECT ? ',
+                // inherited role_names
+                'UNION SELECT roles_inherit FROM', $this->options['rolesInherits'], 'WHERE roles_name = ?',
+                // or 'any'
+                "UNION SELECT '*'",
+            ')',
+            // resources_name should be given one or 'any'            
+            "AND resources_name IN (?, '*')",
+            // access_name should be given one or 'any'
+            "AND access_name IN (?, '*')",
+            // order be the sum of bools for 'literals' before 'any'
+            "ORDER BY (roles_name != '*')+(resources_name != '*')+(access_name != '*') DESC",
+            // get only one...
+            'LIMIT 1'
+        ]);
+        
+        // fetch one entry...
+        $allowed = $this->options['db']->fetchOne($sql, Db::FETCH_NUM, array($role, $role, $resource, $access));
         if (is_array($allowed)) {
             return (bool) $allowed[0];
         }
