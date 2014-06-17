@@ -31,174 +31,197 @@ use Phalcon\Session\Exception;
 class Database extends Adapter implements AdapterInterface
 {
 
-    /**
-     * Flag to check if session is destroyed.
-     *
-     * @var boolean
-     */
-    protected $isDestroyed = false;
+	/**
+	 * Flag to check if session is destroyed.
+	 *
+	 * @var boolean
+	 */
+	protected $isDestroyed = false;
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param  array                      $options
-     * @throws \Phalcon\Session\Exception
-     */
-    public function __construct($options = null)
-    {
-        if (!isset($options['db'])) {
-            throw new Exception("The parameter 'db' is required");
-        }
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @param  array                      $options
+	 * @throws \Phalcon\Session\Exception
+	 */
+	public function __construct($options = null)
+	{
+		if (!isset($options['db'])) {
+			throw new Exception("The parameter 'db' is required");
+		}
 
-        if (!isset($options['table'])) {
-            throw new Exception("The parameter 'table' is required");
-        }
+		if (!isset($options['table'])) {
+			throw new Exception("The parameter 'table' is required");
+		}
 
-        parent::__construct($options);
+		if (!isset($options['col_session_id'])) {
+			$options['col_session_id'] = 'session_id';
+		}
 
-        session_set_save_handler(
-            array($this, 'open'),
-            array($this, 'close'),
-            array($this, 'read'),
-            array($this, 'write'),
-            array($this, 'destroy'),
-            array($this, 'gc')
-        );
-    }
+		if (!isset($options['col_data'])) {
+			$options['col_data'] = 'data';
+		}
 
-    /**
-     * {@inheritdoc}
-     * @return boolean
-     */
-    public function open()
-    {
-        return true;
-    }
+		if (!isset($options['col_created_at'])) {
+			$options['col_created_at'] = 'created_at';
+		}
 
-    /**
-     * {@inheritdoc}
-     * @return boolean
-     */
-    public function close()
-    {
-        return false;
-    }
+		if (!isset($options['col_modified_at'])) {
+			$options['col_modified_at'] = 'modified_at';
+		}
 
-    /**
-     * {@inheritdoc}
-     * @param  string $sessionId
-     * @return string
-     */
-    public function read($sessionId)
-    {
-        $options = $this->getOptions();
-        $row = $options['db']->fetchOne(
-            sprintf(
-                'SELECT %s FROM %s WHERE %s = ?',
-                $options['db']->escapeIdentifier('data'),
-                $options['db']->escapeIdentifier($options['table']),
-                $options['db']->escapeIdentifier('session_id')
-            ),
-            Db::FETCH_NUM,
-            array($sessionId)
-        );
+		parent::__construct($options);
 
-        if (!empty($row)) {
-            return $row[0];
-        }
+		session_set_save_handler(
+			array($this, 'open'),
+			array($this, 'close'),
+			array($this, 'read'),
+			array($this, 'write'),
+			array($this, 'destroy'),
+			array($this, 'gc')
+		);
+	}
 
-        return '';
-    }
+	/**
+	 * {@inheritdoc}
+	 * @return boolean
+	 */
+	public function open()
+	{
+		return true;
+	}
 
-    /**
-     * {@inheritdoc}
-     * @param  string  $sessionId
-     * @param  string  $data
-     * @return boolean
-     */
-    public function write($sessionId, $data)
-    {
-        if ($this->isDestroyed || empty($data)) {
-            return false;
-        }
+	/**
+	 * {@inheritdoc}
+	 * @return boolean
+	 */
+	public function close()
+	{
+		return false;
+	}
 
-        $options = $this->getOptions();
-        $row = $options['db']->fetchOne(
-            sprintf(
-                'SELECT COUNT(*) FROM %s WHERE %s = ?',
-                $options['db']->escapeIdentifier($options['table']),
-                $options['db']->escapeIdentifier('session_id')
-            ),
-            Db::FETCH_NUM,
-            array($sessionId)
-        );
+	/**
+	 * {@inheritdoc}
+	 * @param  string $sessionId
+	 * @return string
+	 */
+	public function read($sessionId)
+	{
+		$options = $this->getOptions();
+		$row = $options['db']->fetchOne(
+			sprintf(
+				'SELECT %s FROM %s WHERE %s = ?',
+				$options['db']->escapeIdentifier($options['col_data']),
+				$options['db']->escapeIdentifier($options['table']),
+				$options['db']->escapeIdentifier($options['col_session_id'])
+			),
+			Db::FETCH_NUM,
+			array($sessionId)
+		);
 
-        if (!empty($row) && intval($row[0]) > 0) {
-            return $options['db']->execute(
-                sprintf(
-                    'UPDATE %s SET %s = ?, %s = ? WHERE %s = ?',
-                    $options['db']->escapeIdentifier($options['table']),
-                    $options['db']->escapeIdentifier('data'),
-                    $options['db']->escapeIdentifier('modified_at'),
-                    $options['db']->escapeIdentifier('session_id')
-                ),
-                array($data, time(), $sessionId)
-            );
-        } else {
-            return $options['db']->execute(
-                sprintf('INSERT INTO %s VALUES (?, ?, ?, 0)', $options['db']->escapeIdentifier($options['table'])),
-                array($sessionId, $data, time())
-            );
-        }
-    }
+		if (!empty($row)) {
+			return $row[0];
+		}
 
-    /**
-     * {@inheritdoc}
-     * @return boolean
-     */
-    public function destroy($session_id = null)
-    {
-        if (!$this->isStarted() || $this->isDestroyed) {
-            return true;
-        }
-        
-        if (is_null($session_id)) {
-            $session_id = $this->getId();
-        }
+		return '';
+	}
 
-        $this->isDestroyed = true;
-        $options = $this->getOptions();
-        $result = $options['db']->execute(
-            sprintf(
-                'DELETE FROM %s WHERE %s = ?',
-                $options['db']->escapeIdentifier($options['table']),
-                $options['db']->escapeIdentifier('session_id')
-            ),
-            array($session_id)
-        );
+	/**
+	 * {@inheritdoc}
+	 * @param  string  $sessionId
+	 * @param  string  $data
+	 * @return boolean
+	 */
+	public function write($sessionId, $data)
+	{
+		if ($this->isDestroyed || empty($data)) {
+			return false;
+		}
 
-        session_regenerate_id();
+		$options = $this->getOptions();
+		$row = $options['db']->fetchOne(
+			sprintf(
+				'SELECT COUNT(*) FROM %s WHERE %s = ?',
+				$options['db']->escapeIdentifier($options['table']),
+				$options['db']->escapeIdentifier($options['col_session_id'])
+			),
+			Db::FETCH_NUM,
+			array($sessionId)
+		);
 
-        return $result;
-    }
+		if (!empty($row) && intval($row[0]) > 0) {
 
-    /**
-     * {@inheritdoc}
-     * @param  integer $maxlifetime
-     * @return boolean
-     */
-    public function gc($maxlifetime)
-    {
-        $options = $this->getOptions();
+			return $options['db']->execute(
+				sprintf(
+					'UPDATE %s SET %s = ?, %s = ? WHERE %s = ?',
+					$options['db']->escapeIdentifier($options['table']),
+					$options['db']->escapeIdentifier($options['col_data']),
+					$options['db']->escapeIdentifier($options['col_modified_at']),
+					$options['db']->escapeIdentifier($options['col_session_id'])
+				),
+				array($data, time(), $sessionId)
+			);
+		} else {
+			return $options['db']->execute(
+				sprintf(
+					'INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?, ?, 0)',
+					$options['db']->escapeIdentifier($options['table']),
+					$options['db']->escapeIdentifier($options['col_session_id']),
+					$options['db']->escapeIdentifier($options['col_data']),
+					$options['db']->escapeIdentifier($options['col_created_at']),
+					$options['db']->escapeIdentifier($options['col_modified_at'])),
+				array($sessionId, $data, time())
+			);
+		}
+	}
 
-        return $options['db']->execute(
-            sprintf(
-                'DELETE FROM %s WHERE %s + %d < ?',
-                $options['db']->escapeIdentifier($options['table']),
-                $options['db']->escapeIdentifier('modified_at'),
-                $maxlifetime
-            ),
-            array(time())
-        );
-    }
+	/**
+	 * {@inheritdoc}
+	 * @return boolean
+	 */
+	public function destroy($session_id = null)
+	{
+		if (!$this->isStarted() || $this->isDestroyed) {
+			return true;
+		}
+
+		if (is_null($session_id)) {
+			$session_id = $this->getId();
+		}
+
+		$this->isDestroyed = true;
+		$options = $this->getOptions();
+		$result = $options['db']->execute(
+			sprintf(
+				'DELETE FROM %s WHERE %s = ?',
+				$options['db']->escapeIdentifier($options['table']),
+				$options['db']->escapeIdentifier($options['col_session_id'])
+			),
+			array($session_id)
+		);
+
+		session_regenerate_id();
+
+		return $result;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 * @param  integer $maxlifetime
+	 * @return boolean
+	 */
+	public function gc($maxlifetime)
+	{
+		$options = $this->getOptions();
+
+		return $options['db']->execute(
+			sprintf(
+				'DELETE FROM %s WHERE %s + %d < ?',
+				$options['db']->escapeIdentifier($options['table']),
+				$options['db']->escapeIdentifier($options['col_modifiad_at']),
+				$maxlifetime
+			),
+			array(time())
+		);
+	}
 }
