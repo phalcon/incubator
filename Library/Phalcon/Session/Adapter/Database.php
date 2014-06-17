@@ -169,7 +169,8 @@ class Database extends Adapter implements AdapterInterface
                     $options['db']->escapeIdentifier($options['col_session_id']),
                     $options['db']->escapeIdentifier($options['col_data']),
                     $options['db']->escapeIdentifier($options['col_created_at']),
-                    $options['db']->escapeIdentifier($options['col_modified_at'])),
+                    $options['db']->escapeIdentifier($options['col_modified_at'])
+                ),
                 array($sessionId, $data, time())
             );
         }
