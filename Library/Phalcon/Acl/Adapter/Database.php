@@ -367,7 +367,7 @@ class Database extends Adapter implements AdapterInterface
      */
     public function isAllowed($role, $resource, $access)
     {
-        $sql = implode(' ', [
+        $sql = implode(' ', array(
             'SELECT allowed FROM', $this->options['accessList'], 'AS a',
             // role_name in:
             'WHERE roles_name IN (',
@@ -386,7 +386,7 @@ class Database extends Adapter implements AdapterInterface
             "ORDER BY (roles_name != '*')+(resources_name != '*')+(access_name != '*') DESC",
             // get only one...
             'LIMIT 1'
-        ]);
+        ));
         
         // fetch one entry...
         $allowed = $this->options['db']->fetchOne($sql, Db::FETCH_NUM, array($role, $role, $resource, $access));
