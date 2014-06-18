@@ -73,3 +73,4 @@ class Security extends \Phalcon\Security
         }
         return null;
     }
+}
