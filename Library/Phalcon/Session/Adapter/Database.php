@@ -219,7 +219,7 @@ class Database extends Adapter implements AdapterInterface
             sprintf(
                 'DELETE FROM %s WHERE %s + %d < ?',
                 $options['db']->escapeIdentifier($options['table']),
-                $options['db']->escapeIdentifier($options['col_modifiad_at']),
+                $options['db']->escapeIdentifier($options['col_modified_at']),
                 $maxlifetime
             ),
             array(time())
