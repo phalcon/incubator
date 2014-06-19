@@ -126,33 +126,12 @@ class Database extends Adapter implements AdapterInterface
         }
 
         $options = $this->getOptions();
-        $row = $options['db']->fetchOne(
-            sprintf(
-                'SELECT COUNT(*) FROM %s WHERE %s = ?',
-                $options['db']->escapeIdentifier($options['table']),
-                $options['db']->escapeIdentifier('session_id')
-            ),
-            Db::FETCH_NUM,
-            array($sessionId)
+        $time = time();
+        
+        return $options['db']->execute(
+            sprintf('REPLACE INTO %s VALUES (?, ?, ?, ?)', $options['db']->escapeIdentifier($options['table'])),
+            array($sessionId, $data, $time, $time)
         );
-
-        if (!empty($row) && intval($row[0]) > 0) {
-            return $options['db']->execute(
-                sprintf(
-                    'UPDATE %s SET %s = ?, %s = ? WHERE %s = ?',
-                    $options['db']->escapeIdentifier($options['table']),
-                    $options['db']->escapeIdentifier('data'),
-                    $options['db']->escapeIdentifier('modified_at'),
-                    $options['db']->escapeIdentifier('session_id')
-                ),
-                array($data, time(), $sessionId)
-            );
-        } else {
-            return $options['db']->execute(
-                sprintf('INSERT INTO %s VALUES (?, ?, ?, 0)', $options['db']->escapeIdentifier($options['table'])),
-                array($sessionId, $data, time())
-            );
-        }
     }
 
     /**
