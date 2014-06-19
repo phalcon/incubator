@@ -378,7 +378,7 @@ class Database extends Adapter implements AdapterInterface
                 // or 'any'
                 "UNION SELECT '*'",
             ')',
-            // resources_name should be given one or 'any'            
+            // resources_name should be given one or 'any'
             "AND resources_name IN (?, '*')",
             // access_name should be given one or 'any'
             "AND access_name IN (?, '*')",
