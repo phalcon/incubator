@@ -152,7 +152,8 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        $this->getDI()->reset();
+        $di = $this->getDI();
+        $di::reset();
         parent::tearDown();
     }
 }
