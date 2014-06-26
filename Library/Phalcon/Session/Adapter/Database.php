@@ -91,16 +91,19 @@ class Database extends Adapter implements AdapterInterface
      */
     public function read($sessionId)
     {
+        $maxlifetime = (int)ini_get('session.gc_maxlifetime');
         $options = $this->getOptions();
         $row = $options['db']->fetchOne(
             sprintf(
-                'SELECT %s FROM %s WHERE %s = ?',
+                'SELECT %s FROM %s WHERE %s = ? AND %s + %d >= ?',
                 $options['db']->escapeIdentifier('data'),
                 $options['db']->escapeIdentifier($options['table']),
-                $options['db']->escapeIdentifier('session_id')
+                $options['db']->escapeIdentifier('session_id'),
+                $options['db']->escapeIdentifier('modified_at'),
+                $maxlifetime
             ),
             Db::FETCH_NUM,
-            array($sessionId)
+            array($sessionId, time())
         );
 
         if (!empty($row)) {
