@@ -38,8 +38,13 @@ class Gettext extends Adapter implements AdapterInterface
     /**
      * Class constructor.
      *
-     * @param array $options Required options: (string) locale,
-     *                       (string|array) file, (string) directory.
+     * @param array $options Required options: 
+     *                       (string) locale
+     *                       (string|array) file
+     *                       (string) directory
+     *                       ~ or ~
+     *                       (array) domains (instead of file and directory), where keys are domain names and values
+     *                               their respective directories.
      * @throws \Phalcon\Translate\Exception
      */
     public function __construct($options)
@@ -52,29 +57,50 @@ class Gettext extends Adapter implements AdapterInterface
             throw new Exception('Parameter "locale" is required');
         }
 
-        if (!isset($options['file'])) {
-            throw new Exception('Parameter "file" is required');
+        if (isset($options['domains'])) {
+            unset($options['file']);
+            unset($options['directory']);
         }
 
-        if (!isset($options['directory'])) {
-            throw new Exception('Parameter "directory" is required');
+        if (!isset($options['domains']) && !isset($options['file'])) {
+            throw new Exception('Option "file" is required unless "domains" is specified.');
+        }
+
+        if (!isset($options['domains']) && !isset($options['directory'])) {
+            throw new Exception('Option "directory" is required unless "domains" is specified.');
+        }
+
+        if (isset($options['domains']) && !is_array($options['domains'])) {
+            throw new Exception('If the option "domains" is specified it must be an array.');
         }
 
         putenv("LC_ALL=" . $options['locale']);
         setlocale(LC_ALL, $options['locale']);
 
-        if (is_array($options['file'])) {
-            foreach ($options['file'] as $file) {
-                bindtextdomain($file, $options['directory']);
+        if (isset($options['domains'])) {
+            foreach ($options['domains'] as $domain => $dir) {
+                bindtextdomain($domain, $dir);
             }
-
             // set the first domain as default
-            $this->defaultDomain = reset($options['file']);
-            $this->domains = $options['file'];
+            reset($options['domains']);
+            $this->defaultDomain = key($options['domains']);
+            // save list of domains
+            $this->domains = array_keys($options['domains']);
+            
         } else {
-            bindtextdomain($options['file'], $options['directory']);
-            $this->defaultDomain = $options['file'];
-            $this->domains = array($options['file']);
+            if (is_array($options['file'])) {
+                foreach ($options['file'] as $domain) {
+                    bindtextdomain($domain, $options['directory']);
+                }
+
+                // set the first domain as default
+                $this->defaultDomain = reset($options['file']);
+                $this->domains = $options['file'];
+            } else {
+                bindtextdomain($options['file'], $options['directory']);
+                $this->defaultDomain = $options['file'];
+                $this->domains = array($options['file']);
+            }
         }
 
         textdomain($this->defaultDomain);
@@ -259,7 +285,7 @@ class Gettext extends Adapter implements AdapterInterface
     }
 
     /**
-     * Returns the translation related to the given key and context (msgctxt) 
+     * Returns the translation related to the given key and context (msgctxt)
      * from a specific domain with plural form support.
      *
      * @param  string  $domain
