@@ -65,12 +65,12 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
 
         $this->options = $options;
         $this->stmtSelect = sprintf(
-                'SELECT value FROM %s WHERE language = :language AND key_name = :key_name',
-                $options['table']
+            'SELECT value FROM %s WHERE language = :language AND key_name = :key_name',
+            $options['table']
         );
         $this->stmtExists = sprintf(
-                'SELECT COUNT(*) AS `count` FROM %s WHERE language = :language AND key_name = :key_name',
-                $options['table']
+            'SELECT COUNT(*) AS `count` FROM %s WHERE language = :language AND key_name = :key_name',
+            $options['table']
         );
     }
 
