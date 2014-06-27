@@ -60,7 +60,7 @@ class Database extends Adapter implements AdapterInterface
      * @param  array  $placeholders
      * @return string
      */
-    public function query($index, array $placeholders = array())
+    public function query($index, $placeholders = null)
     {
         $options = $this->options;
 
@@ -74,11 +74,17 @@ class Database extends Adapter implements AdapterInterface
         );
 
         if (!$translation) {
-            $translation['value'] = $index;
+            return $index;
         }
 
-        foreach ($placeholders as $key => $value) {
-            $translation['value'] = str_replace('%' . $key . '%', $value, $translation['value']);
+        if ($placeholders == null) {
+            return $translation['value'];
+        }
+
+        if (is_array($placeholders)) {
+            foreach ($placeholders as $key => $value) {
+                $translation['value'] = str_replace('%' . $key . '%', $value, $translation['value']);
+            }
         }
 
         return $translation['value'];
