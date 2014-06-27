@@ -66,9 +66,14 @@ class Database extends Adapter implements AdapterInterface
 
         $translation = $options['db']->fetchOne(
             sprintf(
+<<<<<<< HEAD
                 "SELECT value FROM %s WHERE language = '%s' AND key_name = ?",
                 $options['table'],
                 $options['language']
+=======
+                "SELECT value FROM %s WHERE language = ? AND key_name = ?",
+                $options['table'],
+>>>>>>> parent of c5f8368... Sry: Comma to much.
             ),
             null,
             array($index)
