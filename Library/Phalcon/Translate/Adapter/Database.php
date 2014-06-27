@@ -64,8 +64,14 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
         }
 
         $this->options = $options;
-        $this->stmtSelect = sprintf('SELECT value FROM %s WHERE language = :language AND key_name = :key_name', $options['table']);
-        $this->stmtExists = sprintf('SELECT COUNT(*) AS `count` FROM %s WHERE language = :language AND key_name = :key_name', $options['table']);
+        $this->stmtSelect = sprintf(
+                        'SELECT value FROM %s WHERE language = :language AND key_name = :key_name', 
+                        $options['table']
+        );
+        $this->stmtExists = sprintf(
+                        'SELECT COUNT(*) AS `count` FROM %s WHERE language = :language AND key_name = :key_name', 
+                        $options['table']
+        );
     }
 
     /**
@@ -78,7 +84,10 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
     public function query($translateKey, $placeholders = null)
     {
         $options = $this->options;
-        $translation = $options['db']->fetchOne($this->stmtSelect, \Phalcon\Db::FETCH_ASSOC, array('language' => $options['language'], 'key_name' => $translateKey));
+        $translation = $options['db']->fetchOne($this->stmtSelect, 
+            \Phalcon\Db::FETCH_ASSOC, 
+            array('language' => $options['language'], 'key_name' => $translateKey)
+        );
         $value = empty($translation['value']) ? $translateKey : $translation['value'];
 
         if (is_array($placeholders)) {
@@ -97,7 +106,10 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param  array  $placeholders
      * @return string
      */
-    public function _($translateKey, $placeholders = null){
+    // @codingStandardsIgnoreStart
+    public function _($translateKey, $placeholders = null)
+    // @codingStandardsIgnoreEnd
+    {
         return $this->query($translateKey, $placeholders);
     }
 
@@ -107,9 +119,13 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param  string  $translateKey
      * @return boolean
      */
-    public function exists($translateKey){
+    public function exists($translateKey)
+    {
         $options = $this->options;
-        $result = $options['db']->fetchOne($this->stmtExists, \Phalcon\Db::FETCH_ASSOC, array('language' => $options['language'], 'key_name' => $translateKey));
+        $result = $options['db']->fetchOne($this->stmtExists, 
+            \Phalcon\Db::FETCH_ASSOC, 
+            array('language' => $options['language'], 'key_name' => $translateKey)
+        );
         return !empty($result['count']);
     }
 
@@ -120,7 +136,8 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param  string  $message
      * @return boolean
      */
-    public function add($translateKey, $message){
+    public function add($translateKey, $message)
+    {
         $options = $this->options;
         $data = array('language' => $options['language'], 'key_name' => $translateKey, 'value' => $message);
         return $options['db']->insert($options['table'], array_values($data), array_keys($data));
@@ -133,7 +150,8 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param  string  $message
      * @return boolean
      */
-    public function update($translateKey, $message){
+    public function update($translateKey, $message)
+    {
         $options = $this->options;
         return $options['db']->update($options['table'], array('value'), array($message), array(
             'conditions' => 'key_name = ? AND language = ?',
@@ -147,9 +165,13 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param  string  $translateKey
      * @return boolean
      */
-    public function delete($translateKey){
+    public function delete($translateKey)
+    {
         $options = $this->options;
-        return $options['db']->delete($options['table'], 'key_name = :key AND language = :lang', array('key' => $translateKey, 'lang' => $options['language']));
+        return $options['db']->delete($options['table'], 
+            'key_name = :key AND language = :lang', 
+            array('key' => $translateKey, 'lang' => $options['language'])
+        );
     }
 
     /**
@@ -159,8 +181,10 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param  string  $message
      * @return boolean
      */
-    public function set($translateKey, $message){
-        return $this->exists($translateKey) ? $this->update($translateKey, $message) : $this->add($translateKey, $message);
+    public function set($translateKey, $message)
+    {
+        return $this->exists($translateKey) ? 
+            $this->update($translateKey, $message) : $this->add($translateKey, $message);
     }    
 
     /**
@@ -169,7 +193,8 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param  string $translateKey
      * @return string
      */
-    public function offsetExists($translateKey){
+    public function offsetExists($translateKey)
+    {
         return $this->exists($translateKey);
     }
     
@@ -180,7 +205,8 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param  string $message
      * @return string
      */
-    public function offsetSet($translateKey, $message){
+    public function offsetSet($translateKey, $message)
+    {
         return $this->update($translateKey, $message);
     }
     
@@ -190,7 +216,8 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param string $translateKey
      * @return string
      */
-    public function offsetGet($translateKey){
+    public function offsetGet($translateKey)
+    {
         return $this->query($translateKey);
     }
     
@@ -200,7 +227,8 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param  string $translateKey
      * @return string
      */
-    public function offsetUnset($translateKey){
+    public function offsetUnset($translateKey)
+    {
         return $this->delete($translateKey);
     }
 }
