@@ -65,12 +65,12 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
 
         $this->options = $options;
         $this->stmtSelect = sprintf(
-                        'SELECT value FROM %s WHERE language = :language AND key_name = :key_name', 
-                        $options['table']
+                'SELECT value FROM %s WHERE language = :language AND key_name = :key_name',
+                $options['table']
         );
         $this->stmtExists = sprintf(
-                        'SELECT COUNT(*) AS `count` FROM %s WHERE language = :language AND key_name = :key_name', 
-                        $options['table']
+                'SELECT COUNT(*) AS `count` FROM %s WHERE language = :language AND key_name = :key_name',
+                $options['table']
         );
     }
 
@@ -84,8 +84,9 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
     public function query($translateKey, $placeholders = null)
     {
         $options = $this->options;
-        $translation = $options['db']->fetchOne($this->stmtSelect, 
-            \Phalcon\Db::FETCH_ASSOC, 
+        $translation = $options['db']->fetchOne(
+            $this->stmtSelect,
+            \Phalcon\Db::FETCH_ASSOC,
             array('language' => $options['language'], 'key_name' => $translateKey)
         );
         $value = empty($translation['value']) ? $translateKey : $translation['value'];
@@ -122,8 +123,9 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
     public function exists($translateKey)
     {
         $options = $this->options;
-        $result = $options['db']->fetchOne($this->stmtExists, 
-            \Phalcon\Db::FETCH_ASSOC, 
+        $result = $options['db']->fetchOne(
+            $this->stmtExists,
+            \Phalcon\Db::FETCH_ASSOC,
             array('language' => $options['language'], 'key_name' => $translateKey)
         );
         return !empty($result['count']);
@@ -168,8 +170,9 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
     public function delete($translateKey)
     {
         $options = $this->options;
-        return $options['db']->delete($options['table'], 
-            'key_name = :key AND language = :lang', 
+        return $options['db']->delete(
+            $options['table'],
+            'key_name = :key AND language = :lang',
             array('key' => $translateKey, 'lang' => $options['language'])
         );
     }
@@ -183,9 +186,9 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      */
     public function set($translateKey, $message)
     {
-        return $this->exists($translateKey) ? 
+        return $this->exists($translateKey) ?
             $this->update($translateKey, $message) : $this->add($translateKey, $message);
-    }    
+    }
 
     /**
      * {@inheritdoc}
