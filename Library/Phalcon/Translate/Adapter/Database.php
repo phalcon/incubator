@@ -74,11 +74,7 @@ class Database extends Adapter implements AdapterInterface
         );
 
         if (!$translation) {
-            return $index;
-        }
-
-        if ($placeholders == null) {
-            return $translation['value'];
+            $translation['value'] = $index;
         }
 
         if (is_array($placeholders)) {
