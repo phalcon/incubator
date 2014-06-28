@@ -115,18 +115,27 @@ class Curl extends Request
         return $response;
     }
 
-    private function initPostFields($params)
+    /**
+     * Prepare data for a cURL post.
+     *
+     * @param mixed   $params      Data to send.
+     * @param boolean $useEncoding Whether to url-encode params. Defaults to true.
+     *
+     * @return void
+     */
+    private function initPostFields($params, $useEncoding = true)
     {
-        $multiPart = false;
-        foreach ($params as $param) {
-            if (is_string($param) && preg_match('/^@/', $param)) {
-                $multiPart = true;
-                break;
+        if (is_array($params)) {
+            foreach ($params as $param) {
+                if (is_string($param) && preg_match('/^@/', $param)) {
+                    $useEncoding = false;
+                    break;
+                }
             }
         }
 
         if (!empty($params) && is_array($params)) {
-            $this->setOption(CURLOPT_POSTFIELDS, $multiPart ? $params : http_build_query($params));
+            $this->setOption(CURLOPT_POSTFIELDS, $useEncoding ? http_build_query($params) : $params);
         }
     }
 
@@ -197,7 +206,7 @@ class Curl extends Request
         return $this->send();
     }
 
-    public function post($uri, $params = array())
+    public function post($uri, $params = array(), $useEncoding = true)
     {
         $this->setOptions(array(
             CURLOPT_URL           => $this->resolveUri($uri),
@@ -205,12 +214,12 @@ class Curl extends Request
             CURLOPT_CUSTOMREQUEST => 'POST'
         ));
 
-        $this->initPostFields($params);
+        $this->initPostFields($params, $useEncoding);
 
         return $this->send();
     }
 
-    public function put($uri, $params = array())
+    public function put($uri, $params = array(), $useEncoding = true)
     {
         $this->setOptions(array(
             CURLOPT_URL           => $this->resolveUri($uri),
@@ -218,7 +227,7 @@ class Curl extends Request
             CURLOPT_CUSTOMREQUEST => 'PUT'
         ));
 
-        $this->initPostFields($params);
+        $this->initPostFields($params, $useEncoding);
 
         return $this->send();
     }
