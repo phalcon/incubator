@@ -132,10 +132,14 @@ class Curl extends Request
                     break;
                 }
             }
+
+            if ($useEncoding) {
+                $params = http_build_query($params);
+            }
         }
 
-        if (!empty($params) && is_array($params)) {
-            $this->setOption(CURLOPT_POSTFIELDS, $useEncoding ? http_build_query($params) : $params);
+        if (!empty($params)) {
+            $this->setOption(CURLOPT_POSTFIELDS, $params);
         }
     }
 
