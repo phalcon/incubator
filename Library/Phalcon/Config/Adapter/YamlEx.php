@@ -8,7 +8,7 @@ use Phalcon\Config\Exception;
  * Phalcon\Config\Adapter\Yaml
  * Reads yaml files and convert it to Phalcon\Config objects.
  */
-class Yaml extends Config implements \ArrayAccess
+class YamlEx extends Config implements \ArrayAccess
 {
 
     /**
