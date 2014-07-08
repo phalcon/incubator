@@ -107,6 +107,23 @@ class Header implements \Countable
         return $this->fields;
     }
 
+    /**
+     * Determine if a header exists with a specific key.
+     *
+     * @param string $name Key to lookup.
+     *
+     * @return boolean
+     */
+    public function has($name)
+    {
+        foreach ($this->getAll() as $key => $value) {
+            if (0 === strcmp(strtolower($key), strtolower($name))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function remove($name)
     {
         unset($this->fields[$name]);
