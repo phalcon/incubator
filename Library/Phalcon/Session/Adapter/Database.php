@@ -54,20 +54,20 @@ class Database extends Adapter implements AdapterInterface
             throw new Exception("The parameter 'table' is required");
         }
 
-        if (!isset($options['col_session_id'])) {
-            $options['col_session_id'] = 'session_id';
+        if (!isset($options['column_session_id'])) {
+            $options['column_session_id'] = 'session_id';
         }
 
-        if (!isset($options['col_data'])) {
-            $options['col_data'] = 'data';
+        if (!isset($options['column_data'])) {
+            $options['column_data'] = 'data';
         }
 
-        if (!isset($options['col_created_at'])) {
-            $options['col_created_at'] = 'created_at';
+        if (!isset($options['column_created_at'])) {
+            $options['column_created_at'] = 'created_at';
         }
 
-        if (!isset($options['col_modified_at'])) {
-            $options['col_modified_at'] = 'modified_at';
+        if (!isset($options['column_modified_at'])) {
+            $options['column_modified_at'] = 'modified_at';
         }
 
         parent::__construct($options);
@@ -111,9 +111,9 @@ class Database extends Adapter implements AdapterInterface
         $row = $options['db']->fetchOne(
             sprintf(
                 'SELECT %s FROM %s WHERE %s = ?',
-                $options['db']->escapeIdentifier($options['col_data']),
+                $options['db']->escapeIdentifier($options['column_data']),
                 $options['db']->escapeIdentifier($options['table']),
-                $options['db']->escapeIdentifier($options['col_session_id'])
+                $options['db']->escapeIdentifier($options['column_session_id'])
             ),
             Db::FETCH_NUM,
             array($sessionId)
@@ -143,7 +143,7 @@ class Database extends Adapter implements AdapterInterface
             sprintf(
                 'SELECT COUNT(*) FROM %s WHERE %s = ?',
                 $options['db']->escapeIdentifier($options['table']),
-                $options['db']->escapeIdentifier($options['col_session_id'])
+                $options['db']->escapeIdentifier($options['column_session_id'])
             ),
             Db::FETCH_NUM,
             array($sessionId)
@@ -155,9 +155,9 @@ class Database extends Adapter implements AdapterInterface
                 sprintf(
                     'UPDATE %s SET %s = ?, %s = ? WHERE %s = ?',
                     $options['db']->escapeIdentifier($options['table']),
-                    $options['db']->escapeIdentifier($options['col_data']),
-                    $options['db']->escapeIdentifier($options['col_modified_at']),
-                    $options['db']->escapeIdentifier($options['col_session_id'])
+                    $options['db']->escapeIdentifier($options['column_data']),
+                    $options['db']->escapeIdentifier($options['column_modified_at']),
+                    $options['db']->escapeIdentifier($options['column_session_id'])
                 ),
                 array($data, time(), $sessionId)
             );
@@ -166,10 +166,10 @@ class Database extends Adapter implements AdapterInterface
                 sprintf(
                     'INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?, ?, 0)',
                     $options['db']->escapeIdentifier($options['table']),
-                    $options['db']->escapeIdentifier($options['col_session_id']),
-                    $options['db']->escapeIdentifier($options['col_data']),
-                    $options['db']->escapeIdentifier($options['col_created_at']),
-                    $options['db']->escapeIdentifier($options['col_modified_at'])
+                    $options['db']->escapeIdentifier($options['column_session_id']),
+                    $options['db']->escapeIdentifier($options['column_data']),
+                    $options['db']->escapeIdentifier($options['column_created_at']),
+                    $options['db']->escapeIdentifier($options['column_modified_at'])
                 ),
                 array($sessionId, $data, time())
             );
@@ -196,7 +196,7 @@ class Database extends Adapter implements AdapterInterface
             sprintf(
                 'DELETE FROM %s WHERE %s = ?',
                 $options['db']->escapeIdentifier($options['table']),
-                $options['db']->escapeIdentifier($options['col_session_id'])
+                $options['db']->escapeIdentifier($options['column_session_id'])
             ),
             array($session_id)
         );
@@ -219,7 +219,7 @@ class Database extends Adapter implements AdapterInterface
             sprintf(
                 'DELETE FROM %s WHERE %s + %d < ?',
                 $options['db']->escapeIdentifier($options['table']),
-                $options['db']->escapeIdentifier($options['col_modified_at']),
+                $options['db']->escapeIdentifier($options['column_modified_at']),
                 $maxlifetime
             ),
             array(time())
