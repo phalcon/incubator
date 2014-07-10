@@ -107,7 +107,7 @@ class Database extends Adapter implements AdapterInterface
      */
     public function read($sessionId)
     {
-	    $maxlifetime = (int) ini_get('session.gc_maxlifetime');
+        $maxlifetime = (int) ini_get('session.gc_maxlifetime');
         $options = $this->getOptions();
         $row = $options['db']->fetchOne(
             sprintf(
