@@ -24,7 +24,7 @@ namespace Phalcon\Db\Adapter\Pdo;
 class MysqlExt extends \Phalcon\Db\Adapter\Pdo\Mysql implements \Phalcon\Events\EventsAwareInterface, \Phalcon\Db\AdapterInterface {
 
     /**
-     * Returns the first field if firs row in a SQL query result
+     * Returns the first field if first row in a SQL query result
      *
      *<code>
      *    //Getting count of robots
