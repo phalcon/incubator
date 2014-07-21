@@ -9,19 +9,20 @@ namespace Phalcon\Db\Adapter\Pdo;
  *
  *<code>
  *
- *	$config = array(
- *		"host" => "192.168.0.11",
- *		"dbname" => "blog",
- *		"port" => 3306,
- *		"username" => "sigma",
- *		"password" => "secret"
- *	);
+ *    $config = array(
+ *        "host" => "192.168.0.11",
+ *        "dbname" => "blog",
+ *        "port" => 3306,
+ *        "username" => "sigma",
+ *        "password" => "secret"
+ *    );
  *
- *	$connection = new Phalcon\Db\Adapter\Pdo\MysqlExt($config);
+ *    $connection = new Phalcon\Db\Adapter\Pdo\MysqlExt($config);
  *
  *</code>
  */
-class MysqlExt extends \Phalcon\Db\Adapter\Pdo\Mysql implements \Phalcon\Events\EventsAwareInterface, \Phalcon\Db\AdapterInterface {
+class MysqlExt extends \Phalcon\Db\Adapter\Pdo\Mysql implements \Phalcon\Events\EventsAwareInterface, \Phalcon\Db\AdapterInterface
+{
 
     /**
      * Returns the first field if first row in a SQL query result
@@ -40,10 +41,10 @@ class MysqlExt extends \Phalcon\Db\Adapter\Pdo\Mysql implements \Phalcon\Events\
      * @param array $placeholders
      * @return mixed
      */
-    public function fetchField($sqlQuery, $placeholders=null)
+    public function fetchField($sqlQuery, $placeholders = null)
     {
         $row = $this->fetchOne($sqlQuery, \Phalcon\Db::FETCH_NUM, $placeholders);
-        if($row && isset($row[0])) {
+        if ($row && isset($row[0])) {
             return $row[0];
         } else {
             return null;
@@ -69,17 +70,19 @@ class MysqlExt extends \Phalcon\Db\Adapter\Pdo\Mysql implements \Phalcon\Events\
      * INSERT INTO `robots` (`name`, `year`) VALUES ("Astro boy", 1952);
      * </code>
      *
-     * @param 	string $table
-     * @param 	array $data
-     * @param 	array $dataTypes
-     * @return 	boolean
+     * @param    string $table
+     * @param    array $data
+     * @param    array $dataTypes
+     * @return    boolean
      */
-    public function insertAsDict($table, $data, $dataTypes=null)
+    public function insertAsDict($table, $data, $dataTypes = null)
     {
-        if(empty($data)) return false;
+        if (empty($data)) {
+            return false;
+        }
 
         $values = $fields = array();
-        foreach($data as $field => $value) {
+        foreach ($data as $field => $value) {
             $fields[] = $field;
             $values[] = $value;
         }
@@ -106,23 +109,24 @@ class MysqlExt extends \Phalcon\Db\Adapter\Pdo\Mysql implements \Phalcon\Events\
      * UPDATE `robots` SET `name` = "Astro boy" WHERE id = 101
      * </code>
      *
-     * @param 	string $table
-     * @param 	array $data
-     * @param 	string $whereCondition
-     * @param 	array $dataTypes
-     * @return 	boolean
+     * @param    string $table
+     * @param    array $data
+     * @param    string $whereCondition
+     * @param    array $dataTypes
+     * @return    boolean
      */
-    public function updateAsDict($table, $data, $whereCondition=null, $dataTypes=null)
+    public function updateAsDict($table, $data, $whereCondition = null, $dataTypes = null)
     {
-        if(empty($data)) return false;
+        if (empty($data)) {
+            return false;
+        }
 
         $values = $fields = array();
-        foreach($data as $field => $value) {
+        foreach ($data as $field => $value) {
             $fields[] = $field;
             $values[] = $value;
         }
 
         return $this->update($table, $fields, $values, $whereCondition, $dataTypes);
     }
-
-} 
+}
