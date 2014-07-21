@@ -2,6 +2,10 @@
 
 namespace Phalcon\Db\Adapter\Pdo;
 
+use Phalcon\Db\Adapter\Pdo\Mysql;
+use Phalcon\Db\AdapterInterface;
+use Phalcon\Events\EventsAwareInterface;
+
 /**
  * Phalcon\Db\Adapter\Pdo\MysqlExt
  *
@@ -21,7 +25,7 @@ namespace Phalcon\Db\Adapter\Pdo;
  *
  *</code>
  */
-class MysqlExt extends \Phalcon\Db\Adapter\Pdo\Mysql implements \Phalcon\Events\EventsAwareInterface, \Phalcon\Db\AdapterInterface
+class MysqlExt extends Mysql implements EventsAwareInterface, AdapterInterface
 {
 
     /**
