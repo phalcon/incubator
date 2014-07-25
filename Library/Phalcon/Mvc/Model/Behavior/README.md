@@ -1,6 +1,27 @@
 Phalcon\Mvc\Model\Behavior
 ==========================
+NestedSet
+--------------
+```php
+use Phalcon\Mvc\Model\Behavior\NestedSet as NestedSetBehavior;
 
+class Categories extends \Phalcon\Mvc\Model
+{
+
+    public function initialize()
+    {
+        $this->addBehavior(new NestedSetBehavior(array(
+            'leftAttribute' => 'lft',
+            'rightAttribute' => 'rgt',
+            'levelAttribute' => 'level'
+        )));
+    }
+
+}
+```
+
+Blameable
+--------------
 ```php
 
 class Products extends Phalcon\Mvc\Model
