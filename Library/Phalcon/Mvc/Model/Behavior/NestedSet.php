@@ -520,31 +520,31 @@ class NestedSet extends Behavior implements BehaviorInterface
     {
         $owner=$this->getOwner();
 
-        if(!$target) {
+        if (!$target) {
             throw new \Phalcon\Mvc\Model\Exception('Target node is not defined.');
         }
 
-        if($this->getIsNewRecord()) {
+        if ($this->getIsNewRecord()) {
             throw new \Phalcon\Mvc\Model\Exception('The node should not be new record.');
         }
 
-        if($this->getIsDeletedRecord()) {
+        if ($this->getIsDeletedRecord()) {
             throw new \Phalcon\Mvc\Model\Exception('The node should not be deleted.');
         }
 
-        if($target->getIsDeletedRecord()) {
+        if ($target->getIsDeletedRecord()) {
             throw new \Phalcon\Mvc\Model\Exception('The target node should not be deleted.');
         }
 
-        if($owner==$target) {
+        if ($owner==$target) {
             throw new \Phalcon\Mvc\Model\Exception('The target node should not be self.');
         }
 
-        if($target->isDescendantOf($owner)) {
+        if ($target->isDescendantOf($owner)) {
             throw new \Phalcon\Mvc\Model\Exception('The target node should not be descendant.');
         }
 
-        if(!$levelUp && $target->isRoot()) {
+        if (!$levelUp && $target->isRoot()) {
             throw new \Phalcon\Mvc\Model\Exception('The target node should not be root.');
         }
 
@@ -664,7 +664,7 @@ class NestedSet extends Behavior implements BehaviorInterface
     {
         $owner=$this->getOwner();
 
-        if(!$target) {
+        if (!$target) {
             throw new \Phalcon\Mvc\Model\Exception('The node cannot be inserted because target is not defined.');
         }
 
