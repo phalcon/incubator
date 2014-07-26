@@ -49,12 +49,13 @@ class NestedSet extends Behavior implements BehaviorInterface
 
     public function notify($eventType, $model)
     {
+        $message = 'You should not use this method when NestedSetBehavior attached. Use the methods of behavior.';
         switch ($eventType) {
             case 'beforeCreate':
             case 'beforeDelete':
             case 'beforeUpdate':
                 if (!$this->ignoreEvent) {
-                    throw new \Phalcon\Mvc\Model\Exception('You should not use this method when NestedSetBehavior attached. Use the methods of behavior.');
+                    throw new \Phalcon\Mvc\Model\Exception($message);
                 }
                 break;
         }
@@ -417,9 +418,19 @@ class NestedSet extends Behavior implements BehaviorInterface
         $levelDelta=1-$owner->{$this->levelAttribute};
         $delta=1-$left;
 
+        $condition = $this->leftAttribute.'>='.$left.' AND ';
+        $condition.= $this->rightAttribute.'<='.$right.' AND ';
+        $condition.= $this->rootAttribute.'='.$owner->{$this->rootAttribute};
+
         $this->ignoreEvent = true;
-        foreach ($owner::find($this->leftAttribute.'>='.$left.' AND '.$this->rightAttribute.'<='.$right.' AND '.$this->rootAttribute.'='.$owner->{$this->rootAttribute}) as $i) {
-            if ($i->update(array($this->leftAttribute=>$i->{$this->leftAttribute}+$delta, $this->rightAttribute=>$i->{$this->rightAttribute}+$delta, $this->levelAttribute=>$i->{$this->levelAttribute}+$levelDelta, $this->rootAttribute=>$owner->{$this->primaryKey})) == false) {
+        foreach ($owner::find($condition) as $i) {
+            $arr = array(
+                $this->leftAttribute=>$i->{$this->leftAttribute}+$delta,
+                $this->rightAttribute=>$i->{$this->rightAttribute}+$delta,
+                $this->levelAttribute=>$i->{$this->levelAttribute}+$levelDelta,
+                $this->rootAttribute=>$owner->{$this->primaryKey}
+            );
+            if ($i->update($arr) == false) {
                 $owner->getDI()->getDb()->rollback();
                 $this->ignoreEvent = false;
                 return false;
@@ -484,7 +495,8 @@ class NestedSet extends Behavior implements BehaviorInterface
             }
             $this->ignoreEvent=false;
         } else {
-            $condition=$this->leftAttribute.'>='.$owner->{$this->leftAttribute}.' AND '.$this->rightAttribute.'<='.$owner->{$this->rightAttribute};
+            $condition=$this->leftAttribute.'>='.$owner->{$this->leftAttribute}.' AND ';
+            $condition.=$this->rightAttribute.'<='.$owner->{$this->rightAttribute};
 
             if ($this->hasManyRoots) {
                 $condition.=' AND '.$this->rootAttribute.'='.$owner->{$this->rootAttribute};
@@ -501,7 +513,9 @@ class NestedSet extends Behavior implements BehaviorInterface
             $this->ignoreEvent = false;
         }
 
-        $this->shiftLeftRight($owner->{$this->rightAttribute}+1, $owner->{$this->leftAttribute}-$owner->{$this->rightAttribute}-1);
+        $key = $owner->{$this->rightAttribute}+1;
+        $delta = $owner->{$this->leftAttribute}-$owner->{$this->rightAttribute}-1;
+        $this->shiftLeftRight($key, $delta);
 
         $owner->getDI()->getDb()->commit();
 
@@ -557,7 +571,8 @@ class NestedSet extends Behavior implements BehaviorInterface
         if ($this->hasManyRoots && $owner->{$this->rootAttribute}!==$target->{$this->rootAttribute}) {
             $this->ignoreEvent = true;
             foreach (array($this->leftAttribute,$this->rightAttribute) as $attribute) {
-                foreach ($owner::find($attribute.'>='.$key.' AND '.$this->rootAttribute.'='.$target->{$this->rootAttribute}) as $i) {
+                $condition = $attribute.'>='.$key.' AND '.$this->rootAttribute.'='.$target->{$this->rootAttribute};
+                foreach ($owner::find($condition) as $i) {
                     if ($i->update(array($attribute=>$i->{$attribute}+$right-$left+1)) == false) {
                         $owner->getDI()->getDb()->rollback();
                         $this->ignoreEvent = false;
@@ -568,8 +583,17 @@ class NestedSet extends Behavior implements BehaviorInterface
 
             $delta=$key-$left;
 
-            foreach ($owner::find($this->leftAttribute.'>='.$left.' AND '.$this->rightAttribute.'<='.$right.' AND '.$this->rootAttribute.'='.$target->{$this->rootAttribute}) as $i) {
-                if ($i->update(array($this->leftAttribute=>$i->{$this->leftAttribute}+$delta, $this->rightAttribute=>$i->{$this->rightAttribute}+$delta, $this->levelAttribute=>$i->{$this->levelAttribute}+$levelDelta, $this->rootAttribute=>$target->{$this->rootAttribute})) == false) {
+            $condition = $this->leftAttribute.'>='.$left.' AND ';
+            $condition .= $this->rightAttribute.'<='.$right.' AND ';
+            $condition .= $this->rootAttribute.'='.$target->{$this->rootAttribute};
+            foreach ($owner::find($condition) as $i) {
+                $arr = array(
+                    $this->leftAttribute=>$i->{$this->leftAttribute}+$delta,
+                    $this->rightAttribute=>$i->{$this->rightAttribute}+$delta,
+                    $this->levelAttribute=>$i->{$this->levelAttribute}+$levelDelta,
+                    $this->rootAttribute=>$target->{$this->rootAttribute}
+                );
+                if ($i->update($arr) == false) {
                     $owner->getDI()->getDb()->rollback();
                     $this->ignoreEvent = false;
                     return false;
