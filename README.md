@@ -65,6 +65,10 @@ $loader->register();
 * [Phalcon\Acl\Adapter\Mongo](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Acl/Adapter) - ACL lists stored in Mongo collections
 * [Phalcon\Acl\Factory\Memory](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Acl/Factory) - ACL factory class intended for use with Memory adapter (digitronac)
 
+### Behaviors
+* [Phalcon\Mvc\Model\Befavior\Blameable](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Befavior) - logs with every created or updated row in your database who created and who updated it. 
+* [Phalcon\Mvc\Model\Befavior\NestedSet](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Befavior) - Nested Set behavior for models (braska)
+
 ### Cache
 * [Phalcon\Cache\Backend\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Database backend for caching data (phalcon)
 * [Phalcon\Cache\Backend\Redis](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Redis backend for caching data (kenjikobe)
