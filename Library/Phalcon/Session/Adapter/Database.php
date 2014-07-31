@@ -111,15 +111,17 @@ class Database extends Adapter implements AdapterInterface
         $options = $this->getOptions();
         $row = $options['db']->fetchOne(
             sprintf(
-                'SELECT %s FROM %s WHERE %s = ? AND %s + %d >= ?',
+                'SELECT %s FROM %s WHERE %s = ? AND (%s + %d >= ? OR %s + %d >= ?)',
                 $options['db']->escapeIdentifier($options['column_data']),
                 $options['db']->escapeIdentifier($options['table']),
                 $options['db']->escapeIdentifier($options['column_session_id']),
                 $options['db']->escapeIdentifier($options['column_modified_at']),
+                $maxlifetime,
+                $options['db']->escapeIdentifier($options['column_created_at']),
                 $maxlifetime
             ),
             Db::FETCH_NUM,
-            array($sessionId, time())
+            array($sessionId, time(), time())
         );
 
         if (!empty($row)) {
