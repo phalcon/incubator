@@ -168,7 +168,7 @@ class Database extends Adapter implements AdapterInterface
         } else {
             return $options['db']->execute(
                 sprintf(
-                    'INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?, ?, 0)',
+                    'INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?, ?, NULL)',
                     $options['db']->escapeIdentifier($options['table']),
                     $options['db']->escapeIdentifier($options['column_session_id']),
                     $options['db']->escapeIdentifier($options['column_data']),
