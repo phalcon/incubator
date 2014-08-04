@@ -111,11 +111,12 @@ class Database extends Adapter implements AdapterInterface
         $options = $this->getOptions();
         $row = $options['db']->fetchOne(
             sprintf(
-                'SELECT %s FROM %s WHERE %s = ? AND %s + %d >= ?',
+                'SELECT %s FROM %s WHERE %s = ? AND COALESCE(%s, %s) + %d >= ?',
                 $options['db']->escapeIdentifier($options['column_data']),
                 $options['db']->escapeIdentifier($options['table']),
                 $options['db']->escapeIdentifier($options['column_session_id']),
                 $options['db']->escapeIdentifier($options['column_modified_at']),
+                $options['db']->escapeIdentifier($options['column_created_at']),
                 $maxlifetime
             ),
             Db::FETCH_NUM,
@@ -167,7 +168,7 @@ class Database extends Adapter implements AdapterInterface
         } else {
             return $options['db']->execute(
                 sprintf(
-                    'INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?, ?, 0)',
+                    'INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?, ?, NULL)',
                     $options['db']->escapeIdentifier($options['table']),
                     $options['db']->escapeIdentifier($options['column_session_id']),
                     $options['db']->escapeIdentifier($options['column_data']),
