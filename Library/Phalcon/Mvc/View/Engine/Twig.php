@@ -26,8 +26,8 @@ class Twig extends Engine implements EngineInterface
     public function __construct($view, $di = null, $options = array(), $loader = null)
     {
         
-        if ( $loader !== null){
-            $loader     = new \Twig_Loader_Filesystem($view->getViewsDir());
+        if ( $loader === null){
+            $loader = new \Twig_Loader_Filesystem($view->getViewsDir());
         }
         
         $this->twig = new Twig\Environment($di, $loader, $options);
