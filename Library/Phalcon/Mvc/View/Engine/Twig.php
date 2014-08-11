@@ -23,9 +23,13 @@ class Twig extends Engine implements EngineInterface
      * @param \Phalcon\DiInterface       $di
      * @param array                      $options
      */
-    public function __construct($view, $di = null, $options = array())
+    public function __construct($view, $di = null, $options = array(), $loader = null)
     {
-        $loader     = new \Twig_Loader_Filesystem($view->getViewsDir());
+        
+        if ( $loader !== null){
+            $loader     = new \Twig_Loader_Filesystem($view->getViewsDir());
+        }
+        
         $this->twig = new Twig\Environment($di, $loader, $options);
 
         $this->twig->addExtension(new Twig\CoreExtension());
