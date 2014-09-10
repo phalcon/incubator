@@ -1,3 +1,7 @@
+[![Latest Stable Version](https://poser.pugx.org/phalcon/incubator/v/stable.svg)](https://packagist.org/packages/phalcon/incubator)
+[![Total Downloads](https://poser.pugx.org/phalcon/incubator/downloads.svg)](https://packagist.org/packages/phalcon/incubator)
+[![License](https://poser.pugx.org/phalcon/incubator/license.svg)](https://packagist.org/packages/phalcon/incubator)
+
 # Phalcon Incubator
 
 Phalcon is a web framework delivered as a C extension providing high performance and lower resource consumption.
