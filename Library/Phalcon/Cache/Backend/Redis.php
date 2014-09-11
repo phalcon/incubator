@@ -1,4 +1,5 @@
 <?php
+
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -16,7 +17,8 @@
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
   |          Nikita Vershinin <endeveit@gmail.com>                         |
   +------------------------------------------------------------------------+
-*/
+ */
+
 namespace Phalcon\Cache\Backend;
 
 use Phalcon\Cache\Exception;
@@ -88,7 +90,7 @@ class Redis extends Prefixable
             throw new Exception('The cache must be started first');
         }
 
-        $options  = $this->getOptions();
+        $options = $this->getOptions();
         $frontend = $this->getFrontend();
 
         if ($content === null) {
@@ -180,6 +182,15 @@ class Redis extends Prefixable
     {
         $options = $this->getOptions();
         $keys = $options['redis']->keys($this->getPrefixedIdentifier('*'));
+        $redis_prefix = $options['redis']->getOption(\Redis::OPT_PREFIX);
+
+        if (!empty($redis_prefix)) {
+            $redis_prefix_len = strlen($redis_prefix);
+            $keys = array_map(function($key) use($redis_prefix_len) {
+                return substr($key, $redis_prefix_len);
+            }, $keys);
+        }
+
         return $options['redis']->delete($keys);
     }
 }
