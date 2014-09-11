@@ -182,12 +182,12 @@ class Redis extends Prefixable
     {
         $options = $this->getOptions();
         $keys = $options['redis']->keys($this->getPrefixedIdentifier('*'));
-        $redis_prefix = $options['redis']->getOption(\Redis::OPT_PREFIX);
+        $redisPrefix = $options['redis']->getOption(\Redis::OPT_PREFIX);
 
-        if (!empty($redis_prefix)) {
-            $redis_prefix_len = strlen($redis_prefix);
-            $keys = array_map(function($key) use($redis_prefix_len) {
-                return substr($key, $redis_prefix_len);
+        if (!empty($redisPrefix)) {
+            $redisPrefixLen = strlen($redisPrefix);
+            $keys = array_map(function ($key) use ($redisPrefixLen) {
+                return substr($key, $redisPrefixLen);
             }, $keys);
         }
 
