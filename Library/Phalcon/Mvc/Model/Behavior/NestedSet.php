@@ -205,17 +205,6 @@ class NestedSet extends Behavior implements BehaviorInterface
     }
 
     /**
-     * Named scope. Gets root node(s).
-     *
-     * @return \Phalcon\Mvc\Model\ResultsetInterface.
-     */
-    public function roots()
-    {
-        $owner = $this->getOwner();
-        return $owner::find($this->leftAttribute . ' = 1');
-    }
-
-    /**
      * Named scope. Gets parent of node.
      *
      * @return \Phalcon\Mvc\ModelInterface.
@@ -235,6 +224,17 @@ class NestedSet extends Behavior implements BehaviorInterface
         }
 
         return $query->execute()->getFirst();
+    }
+
+    /**
+     * Named scope. Gets root node(s).
+     *
+     * @return \Phalcon\Mvc\Model\ResultsetInterface.
+     */
+    public function roots()
+    {
+        $owner = $this->getOwner();
+        return $owner::find($this->leftAttribute . ' = 1');
     }
 
     /**
