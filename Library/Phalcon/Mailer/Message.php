@@ -530,4 +530,5 @@ class Message
         else
             return $this->mailer->normalizeEmail($email);
     }
-} 
+
+}

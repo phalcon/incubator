@@ -271,4 +271,5 @@ class Mailer extends Component
         else
             return $str;
     }
-} 
+
+}
