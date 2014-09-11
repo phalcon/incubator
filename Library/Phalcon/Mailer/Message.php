@@ -7,7 +7,7 @@
  * @author      Stanislav Kiryukhin <korsar.zn@gmail.com>
  * @copyright   Copyright (c) 2014, CKGroup.ru
  *
- * @version 	0.0.1
+ * @version     0.0.1
  * ----------------------------------------------
  * All Rights Reserved.
  * ----------------------------------------------
@@ -30,7 +30,7 @@ class Message
     /**
      *  content type HTML
      */
-    const CONTENT_TYPE_HTML  = 'text/html';
+    const CONTENT_TYPE_HTML = 'text/html';
 
     /**
      * @var Mailer
@@ -65,12 +65,60 @@ class Message
     {
         $email = $this->normalizeEmail($email);
 
-        if(is_array($email))
+        if (is_array($email)) {
             $this->getMessage()->setFrom($email);
-        else
+        } else {
             $this->getMessage()->addFrom($email, $name);
+        }
 
         return $this;
+    }
+
+    /**
+     * @param $email
+     *
+     * @return array|string
+     */
+    protected function normalizeEmail($email)
+    {
+        if (is_array($email)) {
+
+            $emails = [];
+
+            foreach ($email as $k => $v) {
+                if (is_int($k)) {
+                    $emails[$k] = $this->mailer->normalizeEmail($v);
+                } else {
+                    $k = $this->mailer->normalizeEmail($k);
+                    $emails[$k] = $v;
+                }
+            }
+
+            return $emails;
+
+        } else {
+            return $this->mailer->normalizeEmail($email);
+        }
+    }
+
+    /**
+     * @return \Swift_Message
+     */
+    public function getMessage()
+    {
+        if (!$this->message) {
+            $this->message = $this->getSwift()->createMessage();
+        }
+
+        return $this->message;
+    }
+
+    /**
+     * @return \Swift_Mailer
+     */
+    protected function getSwift()
+    {
+        return $this->mailer->getSwift();
     }
 
     /**
@@ -83,10 +131,11 @@ class Message
     {
         $email = $this->normalizeEmail($email);
 
-        if(is_array($email))
+        if (is_array($email)) {
             $this->getMessage()->setReplyTo($email);
-        else
+        } else {
             $this->getMessage()->addReplyTo($email, $name);
+        }
 
         return $this;
     }
@@ -101,14 +150,14 @@ class Message
     {
         $email = $this->normalizeEmail($email);
 
-        if(is_array($email))
+        if (is_array($email)) {
             $this->getMessage()->setTo($email);
-        else
+        } else {
             $this->getMessage()->addTo($email, $name);
+        }
 
         return $this;
     }
-
 
     /**
      * @param $email
@@ -120,10 +169,11 @@ class Message
     {
         $email = $this->normalizeEmail($email);
 
-        if(is_array($email))
+        if (is_array($email)) {
             $this->getMessage()->setCc($email);
-        else
+        } else {
             $this->getMessage()->addCc($email, $name);
+        }
 
         return $this;
     }
@@ -138,10 +188,11 @@ class Message
     {
         $email = $this->normalizeEmail($email);
 
-        if(is_array($email))
+        if (is_array($email)) {
             $this->getMessage()->setBcc($email);
-        else
+        } else {
             $this->getMessage()->addBcc($email, $name);
+        }
 
         return $this;
     }
@@ -262,12 +313,11 @@ class Message
         return $this->getMessage()->getPriority();
     }
 
-
     /**
      * Attach a file to the message.
      *
-     * @param  string  $file
-     * @param  array   $options
+     * @param  string $file
+     * @param  array $options
      *
      * @return Message
      */
@@ -278,11 +328,60 @@ class Message
     }
 
     /**
+     * Create a Swift Attachment instance.
+     *
+     * @param  string $file
+     *
+     * @return \Swift_Attachment
+     */
+    protected function createAttachmentViaPath($file)
+    {
+        return \Swift_Attachment::fromPath($file);
+    }
+
+    /**
+     * Prepare and attach the given attachment.
+     *
+     * @param  \Swift_Attachment $attachment
+     * @param  array $options
+     *
+     * @return Message
+     */
+    protected function prepareAttachment(\Swift_Attachment $attachment, Array $options = [])
+    {
+        if (isset($options['mime'])) {
+            $attachment->setContentType($options['mime']);
+        }
+
+        if (isset($options['as'])) {
+            $attachment->setFilename($options['as']);
+        }
+
+        $eventManager = $this->mailer->getEventsManager();
+
+        if ($eventManager) {
+            $result = $eventManager->fire('mailer:beforeAttachFile', $this, [$attachment]);
+        } else {
+            $result = true;
+        }
+
+        if ($result) {
+            $this->getMessage()->attach($attachment);
+
+            if ($eventManager) {
+                $eventManager->fire('mailer:afterAttachFile', $this, [$attachment]);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Attach in-memory data as an attachment.
      *
-     * @param  string  $data
-     * @param  string  $name
-     * @param  array   $options
+     * @param  string $data
+     * @param  string $name
+     * @param  array $options
      *
      * @return Message
      */
@@ -293,9 +392,22 @@ class Message
     }
 
     /**
+     * Create a Swift Attachment instance from data.
+     *
+     * @param  string $data
+     * @param  string $name
+     *
+     * @return \Swift_Attachment
+     */
+    protected function createAttachmentViaData($data, $name)
+    {
+        return \Swift_Attachment::newInstance($data, $name);
+    }
+
+    /**
      * Embed a file in the message and get the CID.
      *
-     * @param  string  $file
+     * @param  string $file
      *
      * @return string
      */
@@ -306,11 +418,21 @@ class Message
     }
 
     /**
+     * @param $file
+     *
+     * @return \Swift_Image
+     */
+    protected function createEmbedViaPath($file)
+    {
+        return \Swift_Image::fromPath($file);
+    }
+
+    /**
      * Embed in-memory data in the message and get the CID.
      *
-     * @param  string  $data
-     * @param  string  $name
-     * @param  string  $contentType
+     * @param  string $data
+     * @param  string $name
+     * @param  string $contentType
      *
      * @return string
      */
@@ -321,29 +443,42 @@ class Message
     }
 
     /**
+     * @param $data
+     * @param $name
+     * @param null $contentType
+     *
+     * @return \Swift_Image
+     */
+    protected function createEmbedViaData($data, $name, $contentType = null)
+    {
+        return \Swift_Image::newInstance($data, $name, $contentType);
+    }
+
+    /**
      * @return bool
      */
     public function send()
     {
         $eventManager = $this->mailer->getEventsManager();
 
-        if($eventManager)
+        if ($eventManager) {
             $result = $eventManager->fire('mailer:beforeSend', $this);
-        else
+        } else {
             $result = true;
+        }
 
-        if($result !== false)
-        {
+        if ($result !== false) {
             $this->failedRecipients = [];
             $result = $this->getSwift()->send($this->getMessage(), $this->failedRecipients);
 
-            if($eventManager)
+            if ($eventManager) {
                 $eventManager->fire('mailer:afterSend', $this, [$this->failedRecipients]);
+            }
 
             return (bool)$result;
-        }
-        else
+        } else {
             return false;
+        }
     }
 
     /**
@@ -400,135 +535,6 @@ class Message
     public function getCc()
     {
         return $this->getMessage()->getCc();
-    }
-
-    /**
-     * @return \Swift_Message
-     */
-    public function getMessage()
-    {
-        if(!$this->message)
-            $this->message = $this->getSwift()->createMessage();
-
-        return $this->message;
-    }
-
-    /**
-     * @return \Swift_Mailer
-     */
-    protected function getSwift()
-    {
-        return $this->mailer->getSwift();
-    }
-
-    /**
-     * Prepare and attach the given attachment.
-     *
-     * @param  \Swift_Attachment  $attachment
-     * @param  array  $options
-     *
-     * @return Message
-     */
-    protected function prepareAttachment(\Swift_Attachment $attachment, Array $options = [])
-    {
-        if(isset($options['mime']))
-            $attachment->setContentType($options['mime']);
-
-        if(isset($options['as']))
-            $attachment->setFilename($options['as']);
-
-        $eventManager = $this->mailer->getEventsManager();
-
-        if($eventManager)
-            $result = $eventManager->fire('mailer:beforeAttachFile', $this, [$attachment]);
-        else
-            $result = true;
-
-        if($result)
-        {
-            $this->getMessage()->attach($attachment);
-
-            if($eventManager)
-                $eventManager->fire('mailer:afterAttachFile', $this, [$attachment]);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Create a Swift Attachment instance.
-     *
-     * @param  string  $file
-     *
-     * @return \Swift_Attachment
-     */
-    protected function createAttachmentViaPath($file)
-    {
-        return \Swift_Attachment::fromPath($file);
-    }
-
-    /**
-     * Create a Swift Attachment instance from data.
-     *
-     * @param  string  $data
-     * @param  string  $name
-     *
-     * @return \Swift_Attachment
-     */
-    protected function createAttachmentViaData($data, $name)
-    {
-        return \Swift_Attachment::newInstance($data, $name);
-    }
-
-
-    /**
-     * @param $file
-     *
-     * @return \Swift_Image
-     */
-    protected function createEmbedViaPath($file)
-    {
-        return \Swift_Image::fromPath($file);
-    }
-
-    /**
-     * @param $data
-     * @param $name
-     * @param null $contentType
-     *
-     * @return \Swift_Image
-     */
-    protected function createEmbedViaData($data, $name, $contentType = null)
-    {
-        return \Swift_Image::newInstance($data, $name, $contentType);
-    }
-
-    /**
-     * @param $email
-     *
-     * @return array|string
-     */
-    protected function normalizeEmail($email)
-    {
-        if(is_array($email))
-        {
-            $emails = [];
-
-            foreach($email as $k => $v)
-            {
-                if(is_int($k))
-                    $emails[$k] = $this->mailer->normalizeEmail($v);
-                else
-                {
-                    $k = $this->mailer->normalizeEmail($k);
-                    $emails[$k] = $v;
-                }
-            }
-
-            return $emails;
-        }
-        else
-            return $this->mailer->normalizeEmail($email);
     }
 
 }
