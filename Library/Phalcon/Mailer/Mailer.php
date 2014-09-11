@@ -14,6 +14,7 @@
  */
 namespace Phalcon\Mailer;
 
+
 use Phalcon\Mvc\User\Component;
 use Phalcon\Mvc\View;
 use Phalcon\Config;
@@ -24,250 +25,250 @@ use Phalcon\Config;
  */
 class Mailer extends Component
 {
-	/**
-	 * @var array
-	 */
-	protected $config;
+    /**
+     * @var array
+     */
+    protected $config;
 
-	/**
-	 * @var mixed
-	 */
-	protected $transport;
+    /**
+     * @var mixed
+     */
+    protected $transport;
 
-	/**
-	 * @var \Swift_Mailer
-	 */
-	protected $mailer;
+    /**
+     * @var \Swift_Mailer
+     */
+    protected $mailer;
 
-	/**
-	 * @var View\Simple
-	 */
-	protected $view;
+    /**
+     * @var View\Simple
+     */
+    protected $view;
 
-	/**
-	 * @param array $config
-	 */
-	public function __construct(Array $config)
-	{
-		$this->configure($config);
-	}
+    /**
+     * @param array $config
+     */
+    public function __construct(Array $config)
+    {
+        $this->configure($config);
+    }
 
-	/**
-	 * @return \Swift_Mailer
-	 */
-	public function getSwift()
-	{
-		return $this->mailer;
-	}
+    /**
+     * @return \Swift_Mailer
+     */
+    public function getSwift()
+    {
+        return $this->mailer;
+    }
 
-	/**
-	 * @param $view
-	 * @param array $params
-	 * @param null $viewsDir
-	 *
-	 * @return Message
-	 */
-	public function createMessageFromView($view, $params = [], $viewsDir = null)
-	{
-		$message = $this->createMessage();
-		$message->content($this->renderView($view, $params, $viewsDir), $message::CONTENT_TYPE_HTML);
+    /**
+     * @param $view
+     * @param array $params
+     * @param null $viewsDir
+     *
+     * @return Message
+     */
+    public function createMessageFromView($view, $params = [], $viewsDir = null)
+    {
+        $message = $this->createMessage();
+        $message->content($this->renderView($view, $params, $viewsDir), $message::CONTENT_TYPE_HTML);
 
-		return $message;
-	}
+        return $message;
+    }
 
-	/**
-	 * @return \Phalcon\Mailer\Message
-	 */
-	public function createMessage()
-	{
-		$eventsManager = $this->getEventsManager();
+    /**
+     * @return \Phalcon\Mailer\Message
+     */
+    public function createMessage()
+    {
+        $eventsManager = $this->getEventsManager();
 
-		if($eventsManager)
-			$eventsManager->fire('mailer:beforeCreateMessage', $this);
+        if($eventsManager)
+            $eventsManager->fire('mailer:beforeCreateMessage', $this);
 
-		/** @var $message Message */
-		$message = $this->getDI()->get('\Phalcon\Mailer\Message', [$this]);
+        /** @var $message Message */
+        $message = $this->getDI()->get('\Phalcon\Mailer\Message', [$this]);
 
-		if(($from = $this->getConfig('from')))
-			$message->from($from['email'], isset($from['name']) ? $from['name'] : null);
+        if(($from = $this->getConfig('from')))
+            $message->from($from['email'], isset($from['name']) ? $from['name'] : null);
 
-		if($eventsManager)
-			$eventsManager->fire('mailer:afterCreateMessage', $this, [$message]);
+        if($eventsManager)
+            $eventsManager->fire('mailer:afterCreateMessage', $this, [$message]);
 
-		return $message;
-	}
+        return $message;
+    }
 
-	/**
-	 * @param $email
-	 *
-	 * @return string
-	 */
-	public function normalizeEmail($email)
-	{
-		if(preg_match('#[^(\x20-\x7F)]+#', $email))
-		{
-			list($user, $domain) = explode('@', $email);
-			return $user . '@' . $this->punycode($domain);
-		}
-		else
-			return $email;
-	}
-
-
-	/**
-	 * Register SwiftMailer
-	 */
-	protected function registerSwiftMailer()
-	{
-		$this->mailer = new \Swift_Mailer($this->transport);
-	}
+    /**
+     * @param $email
+     *
+     * @return string
+     */
+    public function normalizeEmail($email)
+    {
+        if(preg_match('#[^(\x20-\x7F)]+#', $email))
+        {
+            list($user, $domain) = explode('@', $email);
+            return $user . '@' . $this->punycode($domain);
+        }
+        else
+            return $email;
+    }
 
 
-	protected function registerSwiftTransport()
-	{
-		switch($driver = $this->getConfig('driver'))
-		{
-			case 'smtp':
-				$this->transport = $this->registerTransportSmtp();
-			break;
+    /**
+     * Register SwiftMailer
+     */
+    protected function registerSwiftMailer()
+    {
+        $this->mailer = new \Swift_Mailer($this->transport);
+    }
 
-			case 'mail':
-				$this->transport = $this->registerTransportMail();
-			break;
 
-			case 'sendmail':
-				$this->transport = $this->registerTransportSendmail();
-			break;
+    protected function registerSwiftTransport()
+    {
+        switch($driver = $this->getConfig('driver'))
+        {
+            case 'smtp':
+                $this->transport = $this->registerTransportSmtp();
+            break;
 
-			default:
-				throw new \InvalidArgumentException(sprintf('Driver-mail "%s" is not supported', $driver));
-		}
-	}
+            case 'mail':
+                $this->transport = $this->registerTransportMail();
+            break;
 
-	/**
-	 * @return \Swift_SmtpTransport
-	 */
-	protected function registerTransportSmtp()
-	{
-		$config = $this->getConfig();
+            case 'sendmail':
+                $this->transport = $this->registerTransportSendmail();
+            break;
 
-		$transport = \Swift_SmtpTransport::newInstance($config['host'], $config['port']);
+            default:
+                throw new \InvalidArgumentException(sprintf('Driver-mail "%s" is not supported', $driver));
+        }
+    }
 
-		if(isset($config['encryption']))
-			$transport->setEncryption($config['encryption']);
+    /**
+     * @return \Swift_SmtpTransport
+     */
+    protected function registerTransportSmtp()
+    {
+        $config = $this->getConfig();
 
-		if(isset($config['username']))
-		{
-			$transport->setUsername($this->normalizeEmail($config['username']));
-			$transport->setPassword($config['password']);
-		}
+        $transport = \Swift_SmtpTransport::newInstance($config['host'], $config['port']);
 
-		return $transport;
-	}
+        if(isset($config['encryption']))
+            $transport->setEncryption($config['encryption']);
 
-	/**
-	 * @return \Swift_SendmailTransport
-	 */
-	protected function registerTransportSendmail()
-	{
-		return \Swift_SendmailTransport::newInstance($this->getConfig('sendmail', '/usr/sbin/sendmail -bs'));
-	}
+        if(isset($config['username']))
+        {
+            $transport->setUsername($this->normalizeEmail($config['username']));
+            $transport->setPassword($config['password']);
+        }
 
-	/**
-	 * @return \Swift_MailTransport
-	 */
-	protected function registerTransportMail()
-	{
-		return \Swift_MailTransport::newInstance();
-	}
+        return $transport;
+    }
 
-	/**
-	 * @param $config
-	 */
-	protected function configure(Array $config)
-	{
-		$this->config = $config;
+    /**
+     * @return \Swift_SendmailTransport
+     */
+    protected function registerTransportSendmail()
+    {
+        return \Swift_SendmailTransport::newInstance($this->getConfig('sendmail', '/usr/sbin/sendmail -bs'));
+    }
 
-		$this->registerSwiftTransport();
-		$this->registerSwiftMailer();
-	}
+    /**
+     * @return \Swift_MailTransport
+     */
+    protected function registerTransportMail()
+    {
+        return \Swift_MailTransport::newInstance();
+    }
 
-	/**
-	 * @param null $key
-	 * @param null $default
-	 *
-	 * @return mixed
-	 */
-	protected function getConfig($key = null, $default = null)
-	{
-		if($key !== null)
-		{
-			if(isset($this->config[$key]))
-				return $this->config[$key];
-			else
-				return $default;
-		}
-		else
-			return $this->config;
-	}
+    /**
+     * @param $config
+     */
+    protected function configure(Array $config)
+    {
+        $this->config = $config;
 
-	/**
-	 * @param $viewPath
-	 * @param $params
-	 * @param null $viewsDir
-	 *
-	 * @return string
-	 */
-	protected function renderView($viewPath, $params, $viewsDir = null)
-	{
-		$view = $this->getView();
+        $this->registerSwiftTransport();
+        $this->registerSwiftMailer();
+    }
 
-		if($viewsDir !== null)
-		{
-			$viewsDirOld = $view->getViewsDir();
-			$view->setViewsDir($viewsDir);
+    /**
+     * @param null $key
+     * @param null $default
+     *
+     * @return mixed
+     */
+    protected function getConfig($key = null, $default = null)
+    {
+        if($key !== null)
+        {
+            if(isset($this->config[$key]))
+                return $this->config[$key];
+            else
+                return $default;
+        }
+        else
+            return $this->config;
+    }
 
-			$content = $view->render($viewPath, $params);
-			$view->setViewsDir($viewsDirOld);
+    /**
+     * @param $viewPath
+     * @param $params
+     * @param null $viewsDir
+     *
+     * @return string
+     */
+    protected function renderView($viewPath, $params, $viewsDir = null)
+    {
+        $view = $this->getView();
 
-			return $content;
-		}
-		else
-			return $view->render($viewPath, $params);
-	}
+        if($viewsDir !== null)
+        {
+            $viewsDirOld = $view->getViewsDir();
+            $view->setViewsDir($viewsDir);
 
-	/**
-	 * @return View\Simple
-	 */
-	protected function getView()
-	{
-		if($this->view)
-			return $this->view;
-		else
-		{
-			if(!($viewsDir = $this->getConfig('viewsDir')))
-				$viewsDir = $this->getDI()->get('view')->getViewsDir();
+            $content = $view->render($viewPath, $params);
+            $view->setViewsDir($viewsDirOld);
 
-			/** @var $view \Phalcon\Mvc\View\Simple */
-			$view = $this->getDI()->get('\Phalcon\View\Simple');
-			$view->setViewsDir($viewsDir);
+            return $content;
+        }
+        else
+            return $view->render($viewPath, $params);
+    }
 
-			return $this->view = $view;
-		}
-	}
+    /**
+     * @return View\Simple
+     */
+    protected function getView()
+    {
+        if($this->view)
+            return $this->view;
+        else
+        {
+            if(!($viewsDir = $this->getConfig('viewsDir')))
+                $viewsDir = $this->getDI()->get('view')->getViewsDir();
 
-	/**
-	 * Convert UTF-8 encoded domain name to ASCII
-	 *
-	 * @param $str
-	 *
-	 * @return string
-	 */
-	protected function punycode($str)
-	{
-		if(function_exists('idn_to_ascii'))
-			return idn_to_ascii($str);
-		else
-			return $str;
-	}
+            /** @var $view \Phalcon\Mvc\View\Simple */
+            $view = $this->getDI()->get('\Phalcon\View\Simple');
+            $view->setViewsDir($viewsDir);
+
+            return $this->view = $view;
+        }
+    }
+
+    /**
+     * Convert UTF-8 encoded domain name to ASCII
+     *
+     * @param $str
+     *
+     * @return string
+     */
+    protected function punycode($str)
+    {
+        if(function_exists('idn_to_ascii'))
+            return idn_to_ascii($str);
+        else
+            return $str;
+    }
 } 
