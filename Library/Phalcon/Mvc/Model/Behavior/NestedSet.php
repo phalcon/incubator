@@ -222,7 +222,9 @@ class NestedSet extends Behavior implements BehaviorInterface
      *
      * @return \Phalcon\Mvc\ModelInterface
      */
-    public function parent() {$owner = $this->getOwner();
+    public function parent()
+    {
+        $owner = $this->getOwner();
 
         $query = $owner::query()
             ->where($this->leftAttribute . '<' . $owner->{$this->leftAttribute})
