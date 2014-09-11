@@ -222,6 +222,7 @@ class NestedSet extends Behavior implements BehaviorInterface
      *
      * @return \Phalcon\Mvc\ModelInterface
      */
+    // @codingStandardsIgnoreStart
     public function parent()
     {
         $owner = $this->getOwner();
@@ -238,6 +239,7 @@ class NestedSet extends Behavior implements BehaviorInterface
 
         return $query->execute()->getFirst();
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * Named scope. Gets previous sibling of node.
