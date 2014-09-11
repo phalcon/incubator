@@ -276,5 +276,4 @@ class Mailer extends Component
             return $this->view = $view;
         }
     }
-
 }

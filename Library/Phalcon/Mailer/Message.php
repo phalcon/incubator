@@ -536,5 +536,4 @@ class Message
     {
         return $this->getMessage()->getCc();
     }
-
 }
