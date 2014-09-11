@@ -120,9 +120,9 @@ class Database extends Adapter implements AdapterInterface
     public function addInherit($roleName, $roleToInherit)
     {
         $sql = 'SELECT COUNT(*) FROM ' . $this->options['roles'] . ' WHERE name = ?';
-        $exists = $this->options['db']->fetchOne($sql, null, array($roleToInherit));
+        $exists = $this->options['db']->fetchOne($sql, null, array($roleName));
         if (!$exists[0]) {
-            throw new Exception("Role '" . $roleToInherit . "' does not exist in the role list");
+            throw new Exception("Role '" . $roleName . "' does not exist in the role list");
         }
 
         $exists = $this->options['db']->fetchOne(
