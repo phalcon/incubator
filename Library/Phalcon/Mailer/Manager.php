@@ -1,6 +1,6 @@
 <?php
 /**
- * MailerService.php 2014-08-31 04:11
+ * Manager.php 2014-08-31 04:11
  * ----------------------------------------------
  *
  *
@@ -19,10 +19,10 @@ use Phalcon\Mvc\User\Component;
 use Phalcon\Mvc\View;
 
 /**
- * Class Mailer
- * @package Phalcon\Mailer
+ * Class Manager
+ * @package Phalcon\Manager
  */
-class Mailer extends Component
+class Manager extends Component
 {
     /**
      * @var array
@@ -45,7 +45,7 @@ class Mailer extends Component
     protected $view;
 
     /**
-     * Create a new Mailer component using $config for configuring
+     * Create a new MailerManager component using $config for configuring
      *
      * @param array $config
      */
@@ -99,7 +99,7 @@ class Mailer extends Component
      *
      * @return \Phalcon\Mailer\Message
      *
-     * @see \Phalcon\Mailer\Mailer::createMessage()
+     * @see \Phalcon\Mailer\Manager::createMessage()
      */
     public function createMessageFromView($view, $params = [], $viewsDir = null)
     {
@@ -126,7 +126,7 @@ class Mailer extends Component
      *
      * @return string
      *
-     * @see \Phalcon\Mailer\Mailer::punycode()
+     * @see \Phalcon\Mailer\Manager::punycode()
      */
     public function normalizeEmail($email)
     {
@@ -142,12 +142,12 @@ class Mailer extends Component
     }
 
     /**
-     * Configure Mailer class
+     * Configure MailerManager class
      *
      * @param array $config
      *
-     * @see \Phalcon\Mailer\Mailer::registerSwiftTransport()
-     * @see \Phalcon\Mailer\Mailer::registerSwiftMailer()
+     * @see \Phalcon\Mailer\Manager::registerSwiftTransport()
+     * @see \Phalcon\Mailer\Manager::registerSwiftMailer()
      */
     protected function configure(array $config)
     {

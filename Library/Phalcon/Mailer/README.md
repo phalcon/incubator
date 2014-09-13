@@ -44,7 +44,7 @@ Mailer wrapper over SwiftMailer for Phalcon.
 
 ## Example ##
 
-	$mailer = new \Phalcon\Mailer\Mailer($config);
+	$mailer = new \Phalcon\Mailer\Manager($config);
 	
 	$message = $mailer->createMessage()
 			->to('example_to@gmail.com', 'OPTIONAL NAME')

@@ -32,7 +32,7 @@ class Message
     const CONTENT_TYPE_HTML = 'text/html';
 
     /**
-     * @var \Phalcon\Mailer\Mailer
+     * @var \Phalcon\Mailer\Manager
      */
     protected $mailer;
 
@@ -51,9 +51,9 @@ class Message
     /**
      * Create a new Message using $mailer for sending from SwiftMailer
      *
-     * @param Mailer $mailer
+     * @param Manager $mailer
      */
-    public function __construct(Mailer $mailer)
+    public function __construct(Manager $mailer)
     {
         $this->mailer = $mailer;
     }
