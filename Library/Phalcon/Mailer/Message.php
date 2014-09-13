@@ -34,7 +34,7 @@ class Message
     /**
      * @var \Phalcon\Mailer\Manager
      */
-    protected $mailer;
+    protected $manger;
 
     /**
      * @var \Swift_Message
@@ -51,11 +51,11 @@ class Message
     /**
      * Create a new Message using $mailer for sending from SwiftMailer
      *
-     * @param Manager $mailer
+     * @param Manager $manger
      */
-    public function __construct(Manager $mailer)
+    public function __construct(Manager $manger)
     {
-        $this->mailer = $mailer;
+        $this->manger = $manger;
     }
 
     /**
@@ -588,10 +588,20 @@ class Message
     public function getMessage()
     {
         if (!$this->message) {
-            $this->message = $this->getSwift()->createMessage();
+            $this->message = $this->getManager()->getSwift()->createMessage();
         }
 
         return $this->message;
+    }
+
+    /**
+     * Return a {@link \Phalcon\Mailer\Manager} instance
+     *
+     * @return \Phalcon\Mailer\Manager
+     */
+    public function getManager()
+    {
+        return $this->manger;
     }
 
     /**
@@ -615,7 +625,7 @@ class Message
      */
     public function send()
     {
-        $eventManager = $this->mailer->getEventsManager();
+        $eventManager = $this->getManager()->getEventsManager();
 
         if ($eventManager) {
             $result = $eventManager->fire('mailer:beforeSend', $this);
@@ -627,7 +637,7 @@ class Message
 
             $this->failedRecipients = [];
 
-            $count = $this->getSwift()->send($this->getMessage(), $this->failedRecipients);
+            $count = $this->getManager()->getSwift()->send($this->getMessage(), $this->failedRecipients);
 
             if ($eventManager) {
                 $eventManager->fire('mailer:afterSend', $this, [$count, $this->failedRecipients]);
@@ -660,7 +670,7 @@ class Message
             $attachment->setFilename($options['as']);
         }
 
-        $eventManager = $this->mailer->getEventsManager();
+        $eventManager = $this->getManager()->getEventsManager();
 
         if ($eventManager) {
             $result = $eventManager->fire('mailer:beforeAttachFile', $this, [$attachment]);
@@ -738,16 +748,6 @@ class Message
     }
 
     /**
-     * Return a {@link \Swift_Mailer} instance
-     *
-     * @return \Swift_Mailer
-     */
-    protected function getSwift()
-    {
-        return $this->mailer->getSwift();
-    }
-
-    /**
      * Normalize IDN domains.
      *
      * @param $email
@@ -762,9 +762,9 @@ class Message
 
             foreach ($email as $k => $v) {
                 if (is_int($k)) {
-                    $emails[$k] = $this->mailer->normalizeEmail($v);
+                    $emails[$k] = $this->getManager()->normalizeEmail($v);
                 } else {
-                    $k = $this->mailer->normalizeEmail($k);
+                    $k = $this->getManager()->normalizeEmail($k);
                     $emails[$k] = $v;
                 }
             }
@@ -772,7 +772,7 @@ class Message
             return $emails;
 
         } else {
-            return $this->mailer->normalizeEmail($email);
+            return $this->getManager()->normalizeEmail($email);
         }
     }
 }
