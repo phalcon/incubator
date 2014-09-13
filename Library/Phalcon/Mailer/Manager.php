@@ -191,13 +191,16 @@ class Manager extends Component
      *
      * @return \Swift_SmtpTransport
      *
-     * @see \Swift_SmtpTransport::newInstance()
+     * @see \Swift_SmtpTransport
      */
     protected function registerTransportSmtp()
     {
         $config = $this->getConfig();
 
-        $transport = \Swift_SmtpTransport::newInstance($config['host'], $config['port']);
+        /** @var $transport \Swift_SmtpTransport: */
+        $transport = $this->getDI()->get('\Swift_SmtpTransport')
+            ->setHost($config['host'])
+            ->setPort($config['port']);
 
         if (isset($config['encryption'])) {
 
@@ -255,11 +258,11 @@ class Manager extends Component
      *
      * @return \Swift_MailTransport
      *
-     * @see \Swift_MailTransport::newInstance()
+     * @see \Swift_MailTransport
      */
     protected function registerTransportMail()
     {
-        return \Swift_MailTransport::newInstance();
+        return $this->getDI()->get('\Swift_MailTransport');
     }
 
     /**
@@ -267,11 +270,15 @@ class Manager extends Component
      *
      * @return \Swift_SendmailTransport
      *
-     * @see \Swift_SendmailTransport::newInstance()
+     * @see \Swift_SendmailTransport
      */
     protected function registerTransportSendmail()
     {
-        return \Swift_SendmailTransport::newInstance($this->getConfig('sendmail', '/usr/sbin/sendmail -bs'));
+        /** @var $transport \Swift_SendmailTransport */
+        $transport = $this->getDI()->get('\Swift_SendmailTransport')
+            ->setCommand($this->getConfig('sendmail', '/usr/sbin/sendmail -bs'));
+
+        return $transport;
     }
 
     /**
@@ -281,7 +288,7 @@ class Manager extends Component
      */
     protected function registerSwiftMailer()
     {
-        $this->mailer = new \Swift_Mailer($this->transport);
+        $this->mailer = $this->getDI()->get('\Swift_Mailer', [$this->transport]);
     }
 
     /**
