@@ -34,7 +34,7 @@ class Message
     /**
      * @var \Phalcon\Mailer\Manager
      */
-    protected $manger;
+    protected $manager;
 
     /**
      * @var \Swift_Message
@@ -51,11 +51,11 @@ class Message
     /**
      * Create a new Message using $mailer for sending from SwiftMailer
      *
-     * @param Manager $manger
+     * @param Manager $manager
      */
-    public function __construct(Manager $manger)
+    public function __construct(Manager $manager)
     {
-        $this->manger = $manger;
+        $this->manager = $manager;
     }
 
     /**
@@ -601,7 +601,7 @@ class Message
      */
     public function getManager()
     {
-        return $this->manger;
+        return $this->manager;
     }
 
     /**
