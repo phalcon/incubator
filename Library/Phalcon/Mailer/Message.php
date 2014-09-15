@@ -678,7 +678,7 @@ class Message
             $result = true;
         }
 
-        if ($result) {
+        if ($result !== false) {
             $this->getMessage()->attach($attachment);
 
             if ($eventManager) {
@@ -700,7 +700,14 @@ class Message
      */
     protected function createAttachmentViaPath($file)
     {
-        return \Swift_Attachment::fromPath($file);
+        /** @var $byteStream \Swift_ByteStream_FileByteStream */
+        $byteStream  = $this->getManager()->getDI()->get('\Swift_ByteStream_FileByteStream', [$file]);
+
+        /** @var $image \Swift_Attachment */
+        $attachment = $this->getManager()->getDI()->get('\Swift_Attachment')
+            ->setFile($byteStream);
+
+        return $attachment;
     }
 
     /**
@@ -715,7 +722,7 @@ class Message
      */
     protected function createAttachmentViaData($data, $name)
     {
-        return \Swift_Attachment::newInstance($data, $name);
+        return $this->getManager()->getDI()->get('\Swift_Attachment', [$data, $name]);
     }
 
     /**
@@ -729,7 +736,14 @@ class Message
      */
     protected function createEmbedViaPath($file)
     {
-        return \Swift_Image::fromPath($file);
+        /** @var $byteStream \Swift_ByteStream_FileByteStream */
+        $byteStream  = $this->getManager()->getDI()->get('\Swift_ByteStream_FileByteStream', [$file]);
+
+        /** @var $image \Swift_Image */
+        $image = $this->getManager()->getDI()->get('\Swift_Image')
+            ->setFile($byteStream);
+
+        return $image;
     }
 
     /**
@@ -744,7 +758,7 @@ class Message
      */
     protected function createEmbedViaData($data, $name = null)
     {
-        return \Swift_Image::newInstance($data, $name);
+        return $this->getManager()->getDI()->get('\Swift_Image', [$data, $name]);
     }
 
     /**
