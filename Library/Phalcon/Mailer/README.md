@@ -3,6 +3,16 @@ Phalcon\Mailer
 
 Mailer wrapper over SwiftMailer for Phalcon.
 
+## Installing ##
+
+- composer [phalcon/incubator](https://packagist.org/packages/phalcon/incubator) (install all incubator)*, or*
+- composer [sksoft/phalcon-mailer](https://packagist.org/packages/sksoft/phalcon-mailer) (install only mailer component)
+
+
+**Add in code:**
+
+    require_once('vendor/autoload.php');
+
 ## Configure ##
 
 **SMTP**
