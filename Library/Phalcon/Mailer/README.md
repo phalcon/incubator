@@ -5,11 +5,34 @@ Mailer wrapper over SwiftMailer for Phalcon.
 
 ## Installing ##
 
-- composer [phalcon/incubator](https://packagist.org/packages/phalcon/incubator) (install all incubator)*, or*
-- composer [sksoft/phalcon-mailer](https://packagist.org/packages/sksoft/phalcon-mailer) (install only mailer component)
+Install composer in a common location or in your project:
+
+    curl -s http://getcomposer.org/installer | php
+
+Create the composer.json file as follows:
+
+*Install all Phalcon\Incubator*
+
+	{
+		"require": {
+			"phalcon/incubator": "dev-master"
+		}
+	}
+
+*Install only mailer component*
+
+	{
+		"require": {
+			"sksoft/phalcon-mailer": "~1.0"
+		}
+	}
+
+Run the composer installer:
+
+    php composer.phar install
 
 
-**Add in code:**
+Add in your the code
 
     require_once('vendor/autoload.php');
 
