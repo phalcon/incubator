@@ -91,7 +91,7 @@ class Curl extends Request
         $this->setOption(CURLOPT_CONNECTTIMEOUT, $timeout);
     }
 
-    private function send($customHeader = array(), $forceFullBodyReturn = false)
+    private function send($customHeader = array(), $fullResponse = false)
     {
         if (!empty($customHeader)) {
             $header = $customHeader;
@@ -116,7 +116,7 @@ class Curl extends Request
         $response = new Response();
         $response->header->parse(substr($content, 0, $headerSize));
         
-        if ($forceFullBodyReturn) {
+        if ($fullResponse) {
             $response->body = $content;
         } else {
             $response->body = substr($content, $headerSize);
@@ -169,7 +169,7 @@ class Curl extends Request
         }
     }
 
-    public function get($uri, $params = array(), $customHeader = array(), $forceFullBodyReturn = false)
+    public function get($uri, $params = array(), $customHeader = array(), $fullResponse = false)
     {
         $uri = $this->resolveUri($uri);
 
@@ -183,10 +183,10 @@ class Curl extends Request
             CURLOPT_CUSTOMREQUEST => 'GET'
         ));
 
-        return $this->send($customHeader, $forceFullBodyReturn);
+        return $this->send($customHeader, $fullResponse);
     }
 
-    public function head($uri, $params = array(), $customHeader = array(), $forceFullBodyReturn = false)
+    public function head($uri, $params = array(), $customHeader = array(), $fullResponse = false)
     {
         $uri = $this->resolveUri($uri);
 
@@ -200,10 +200,10 @@ class Curl extends Request
             CURLOPT_CUSTOMREQUEST => 'HEAD'
         ));
 
-        return $this->send($customHeader, $forceFullBodyReturn);
+        return $this->send($customHeader, $fullResponse);
     }
 
-    public function delete($uri, $params = array(), $customHeader = array(), $forceFullBodyReturn = false)
+    public function delete($uri, $params = array(), $customHeader = array(), $fullResponse = false)
     {
         $uri = $this->resolveUri($uri);
 
@@ -217,10 +217,10 @@ class Curl extends Request
             CURLOPT_CUSTOMREQUEST => 'DELETE'
         ));
 
-        return $this->send($customHeader, $forceFullBodyReturn);
+        return $this->send($customHeader, $fullResponse);
     }
 
-    public function post($uri, $params = array(), $useEncoding = true, $customHeader = array(), $forceFullBodyReturn = false)
+    public function post($uri, $params = array(), $useEncoding = true, $customHeader = array(), $fullResponse = false)
     {
         $this->setOptions(array(
             CURLOPT_URL           => $this->resolveUri($uri),
@@ -230,10 +230,10 @@ class Curl extends Request
 
         $this->initPostFields($params, $useEncoding);
 
-        return $this->send($customHeader, $forceFullBodyReturn);
+        return $this->send($customHeader, $fullResponse);
     }
 
-    public function put($uri, $params = array(), $useEncoding = true, $customHeader = array(), $forceFullBodyReturn = false)
+    public function put($uri, $params = array(), $useEncoding = true, $customHeader = array(), $fullResponse = false)
     {
         $this->setOptions(array(
             CURLOPT_URL           => $this->resolveUri($uri),
@@ -243,6 +243,6 @@ class Curl extends Request
 
         $this->initPostFields($params, $useEncoding, $customHeader);
 
-        return $this->send($customHeader, $forceFullBodyReturn);
+        return $this->send($customHeader, $fullResponse);
     }
 }
