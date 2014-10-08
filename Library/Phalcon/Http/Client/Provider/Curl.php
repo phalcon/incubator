@@ -169,7 +169,7 @@ class Curl extends Request
         }
     }
 
-    public function get($uri, $params = array(), $customHeader = array())
+    public function get($uri, $params = array(), $customHeader = array(), $forceFullBodyReturn = false)
     {
         $uri = $this->resolveUri($uri);
 
@@ -183,10 +183,10 @@ class Curl extends Request
             CURLOPT_CUSTOMREQUEST => 'GET'
         ));
 
-        return $this->send($customHeader);
+        return $this->send($customHeader, $forceFullBodyReturn);
     }
 
-    public function head($uri, $params = array(), $customHeader = array())
+    public function head($uri, $params = array(), $customHeader = array(), $forceFullBodyReturn = false)
     {
         $uri = $this->resolveUri($uri);
 
@@ -200,10 +200,10 @@ class Curl extends Request
             CURLOPT_CUSTOMREQUEST => 'HEAD'
         ));
 
-        return $this->send($customHeader);
+        return $this->send($customHeader, $forceFullBodyReturn);
     }
 
-    public function delete($uri, $params = array(), $customHeader = array())
+    public function delete($uri, $params = array(), $customHeader = array(), $forceFullBodyReturn = false)
     {
         $uri = $this->resolveUri($uri);
 
@@ -217,10 +217,10 @@ class Curl extends Request
             CURLOPT_CUSTOMREQUEST => 'DELETE'
         ));
 
-        return $this->send($customHeader);
+        return $this->send($customHeader, $forceFullBodyReturn);
     }
 
-    public function post($uri, $params = array(), $useEncoding = true, $customHeader = array())
+    public function post($uri, $params = array(), $useEncoding = true, $customHeader = array(), $forceFullBodyReturn = false)
     {
         $this->setOptions(array(
             CURLOPT_URL           => $this->resolveUri($uri),
@@ -230,10 +230,10 @@ class Curl extends Request
 
         $this->initPostFields($params, $useEncoding);
 
-        return $this->send($customHeader);
+        return $this->send($customHeader, $forceFullBodyReturn);
     }
 
-    public function put($uri, $params = array(), $useEncoding = true, $customHeader = array())
+    public function put($uri, $params = array(), $useEncoding = true, $customHeader = array(), $forceFullBodyReturn = false)
     {
         $this->setOptions(array(
             CURLOPT_URL           => $this->resolveUri($uri),
@@ -243,6 +243,6 @@ class Curl extends Request
 
         $this->initPostFields($params, $useEncoding, $customHeader);
 
-        return $this->send();
+        return $this->send($customHeader, $forceFullBodyReturn);
     }
 }
