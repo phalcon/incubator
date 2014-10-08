@@ -333,7 +333,7 @@ class Manager extends Component
             }
 
             /** @var $view \Phalcon\Mvc\View\Simple */
-            $view = $this->getDI()->get('\Phalcon\View\Simple');
+            $view = $this->getDI()->get('\Phalcon\Mvc\View\Simple');
             $view->setViewsDir($viewsDir);
 
             return $this->view = $view;
