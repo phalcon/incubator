@@ -17,7 +17,7 @@ class Smarty extends Engine implements EngineInterface
     protected $smarty;
 
     /**
-     * Class constructor.
+     * {@inheritdoc}
      *
      * @param \Phalcon\Mvc\ViewInterface $view
      * @param \Phalcon\DiInterface       $di
