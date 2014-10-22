@@ -44,6 +44,51 @@ This adapter uses the following table to store the data:
 ```
 
 
+Libmemcache
+---------
+This adapter uses a Libmemcached backend to store session data:
+
+```php
+
+$di->set('session', function(){
+
+    $memcache = new Phalcon\Session\Adapter\Libmemcached(array(
+        'frontCache' => new Phalcon\Cache\Frontend\Data(array(
+            "lifetime" => 172800
+        )),
+        'servers' => array(
+            array('host' => 'localhost',
+               'port' => 11211,
+               'weight' => 1),
+        ),
+        'client' => array(
+                Memcached::OPT_HASH => Memcached::HASH_MD5,
+                Memcached::OPT_PREFIX_KEY => 'prefix.',
+        )
+    ));
+    $memcache->start();
+    return $memcache;
+});
+
+```
+Set by default
+```php
+
+$di->set('session', function(){
+
+    $memcache = new Phalcon\Session\Adapter\Libmemcached(array(        
+        'servers' => array(
+            array('host' => 'localhost',
+               'port' => 11211,
+               'weight' => 1),
+        )
+    ));
+    $memcache->start();
+    return $memcache;
+});
+
+```
+
 Memcache
 ---------
 This adapter uses a Memcache backend to store session data:
