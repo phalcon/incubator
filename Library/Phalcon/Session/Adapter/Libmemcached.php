@@ -60,9 +60,10 @@ class Libmemcached extends Phalcon\Session\Adapter implements Phalcon\Session\Ad
             //lifetime settings
             if ($options['frontCache'] instanceof \Phalcon\Cache\FrontendInterface) {
                 $this->options['frontCache'] = $options['frontCache'];
-            } else{
+            } else {
                 $this->options['frontCache'] = new Phalcon\Cache\Frontend\Data(
-                        array("lifetime" => self::DEFAULT_OPTION_LIFETIME ));
+                    array("lifetime" => self::DEFAULT_OPTION_LIFETIME)
+                );
             }
 
             //server settings
@@ -79,6 +80,12 @@ class Libmemcached extends Phalcon\Session\Adapter implements Phalcon\Session\Ad
                     \Memcached::OPT_PREFIX_KEY => self::DEFAULT_OPTION_PREFIX,
                 );
             }
+            if (isset($options["useEncryption"]) &&
+                    $options["useEncryption"] instanceof \Phalcon\CryptInterface ) {
+                $this->options["useEncryption"] = $options["useEncryption"];
+
+            }
+
         } else {
             throw new Phalcon\Session\Exception("No configuration given or wrong");
         }
@@ -123,9 +130,13 @@ class Libmemcached extends Phalcon\Session\Adapter implements Phalcon\Session\Ad
      */
     public function read($sessionId)
     {
-        return $this->getMemcacheInstance()->get(
-            $this->getSessionId($sessionId)
-        );
+        $ret = $this->getMemcacheInstance()->get($sessionId);
+        $encryption = $this->getOption("useEncryption");
+        if ($encryption == null) {
+            return $ret;
+        }
+
+        return $encryption->decrypt($ret);
     }
 
     /**
@@ -136,8 +147,13 @@ class Libmemcached extends Phalcon\Session\Adapter implements Phalcon\Session\Ad
      */
     public function write($sessionId, $data)
     {
+
+        $encryption = $this->getOption("useEncryption");
+        if ($encryption !== null) {
+            $data = $encryption->encrypt($data);
+        }
         $this->getMemcacheInstance()->save(
-            $this->getSessionId($sessionId),
+            $sessionId,
             $data
         );
     }
@@ -152,9 +168,9 @@ class Libmemcached extends Phalcon\Session\Adapter implements Phalcon\Session\Ad
     public function destroy($session_id = null)
     {
         if (!$session_id) {
-            $session_id = $this->getSessionId($this->getId());
+            $session_id = $this->getId();
         } else {
-            $session_id = $this->getSessionId($session_id);
+            $session_id = $session_id;
         }
         return $this->getMemcacheInstance()->delete($session_id);
     }
@@ -191,12 +207,10 @@ class Libmemcached extends Phalcon\Session\Adapter implements Phalcon\Session\Ad
     {
         if ($this->memcacheInstance === null) {
             $this->memcacheInstance = new Phalcon\Cache\Backend\Libmemcached(
+                $this->options['frontCache'],
                 array(
-                    $this->options['frontCache'],
-                    array(
-                        'servers' => $this->options['servers'],
-                        'client' => $this->options['client']
-                    )
+                    'servers' => $this->options['servers'],
+                    'client' => $this->options['client']
                 )
             );
         }
@@ -215,18 +229,5 @@ class Libmemcached extends Phalcon\Session\Adapter implements Phalcon\Session\Ad
     {
         $this->memcacheInstance = $memcacheInstance;
         return $this;
-    }
-
-    /**
-     * Returns the sessionId with prefix
-     *
-     * @param  string $sessionId
-     * @return string
-     */
-    protected function getSessionId($sessionId)
-    {
-        return (strlen($this->getOption('prefix')) > 0)
-            ? $this->getOption('prefix') . '_' . $sessionId
-            : $sessionId;
     }
 }
