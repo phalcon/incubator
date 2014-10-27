@@ -461,7 +461,7 @@ class NestedSet extends Behavior implements BehaviorInterface
     {
         $owner = $this->getOwner();
 
-        if (!$owner->id) {
+        if (!$owner->readAttribute($this->primaryKey)) {
             return $this->makeRoot($attributes, $whiteList);
         }
         $this->ignoreEvent = true;
