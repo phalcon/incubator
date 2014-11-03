@@ -684,7 +684,7 @@ class NestedSet extends Behavior implements BehaviorInterface
                 $attribute,
                 $delta,
                 $condition
-                );
+            );
             $this->owner->getWriteConnection()->query($query);
         }
     }
