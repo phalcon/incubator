@@ -677,12 +677,14 @@ class NestedSet extends Behavior implements BehaviorInterface
                 $condition.=' AND '.$this->rootAttribute.'='.$owner->{$this->rootAttribute};
             }
 
-            $query = sprintf('UPDATE %s SET %s=%s+%d WHERE %s', 
-                    $this->owner->getSource(), 
-                    $attribute, 
-                    $attribute, 
-                    $delta, 
-                    $condition);
+            $query = sprintf(
+                'UPDATE %s SET %s=%s+%d WHERE %s',
+                $this->owner->getSource(),
+                $attribute,
+                $attribute,
+                $delta,
+                $condition
+                );
             $this->owner->getWriteConnection()->query($query);
         }
     }
