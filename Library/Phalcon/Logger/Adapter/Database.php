@@ -106,27 +106,30 @@ class Database extends Adapter implements AdapterInterface
      */
     protected function getTypeString($type)
     {
-        // Get the constants which are defined in the Logger class
-        $oClass = new \ReflectionClass('Phalcon\Logger');
-        $constants = $oClass->getConstants();
-
-        // Remove EMERGENCE as it is poor English
-        if (array_key_exists('EMERGENCE', $constants)) {
-            unset($constants['EMERGENCE']);
+        switch ($type) {
+            case Logger::EMERGENCE:
+            case Logger::EMERGENCY:
+                return 'emergency';
+            case Logger::CRITICAL:
+                return 'critical';
+            case Logger::ALERT:
+                return 'alert';
+            case Logger::ERROR:
+                return 'error';
+            case Logger::WARNING:
+                return 'warning';
+            case Logger::NOTICE:
+                return 'notice';
+            case Logger::INFO:
+                return 'info';
+            case Logger::CUSTOM:
+                // use CUSTOM for success status
+                return 'success';
+            case Logger::DEBUG:
+            case Logger::SPECIAL:
+            default:
+                return 'debug';
         }
-
-        // Use CUSTOM constant as SUCCESS
-        // (comment it if you don't want to use CUSTOM as SUCCESS)
-        if (array_key_exists('CUSTOM', $constants)) {
-            $constants['SUCCESS'] = $constants['CUSTOM'];
-            unset($constants['CUSTOM']);
-        }
-
-        // Flip the array to get keys as (type) numbers
-        $constants = array_flip($constants);
-
-        // return type as lowercase string (error, notice, etc.)
-        return strtolower($constants[$type]);
     }
 
     public function getFormatter()
