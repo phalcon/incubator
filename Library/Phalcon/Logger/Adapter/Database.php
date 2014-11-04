@@ -2,9 +2,6 @@
 /**
  * Database adapter for the Phalcon\Logger functionality
  *
- * User: mraspor
- * Date: 11/3/14
- * Time: 3:32 PM
  */
 
 namespace Phalcon\Logger\Adapter;
