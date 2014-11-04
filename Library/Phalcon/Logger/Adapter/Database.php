@@ -55,10 +55,15 @@ class Database extends Adapter implements AdapterInterface
      * @param int $type
      * @param int $time
      * @param null|array $context
+     * @throws \Phalcon\Logger\Exception
      * @return bool
      */
     public function logInternal($message, $type, $time, $context = null)
     {
+        if(!$this->db) {
+            throw new LoggerException('You must provide a database adapter for the Logger service');
+        }
+
         $context = $this->getContextAsString($context);
 
         return $this->db->execute('INSERT INTO ' . $this->table . ' VALUES(NULL, ?, ?, ?, ?, ?)',
