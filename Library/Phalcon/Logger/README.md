@@ -38,8 +38,17 @@ CREATE TABLE `t_log` (
   `context` text COMMENT 'added information, where, who, why',
   PRIMARY KEY (`id`),
   KEY `inx_type` (`type`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ```
+
+Use it as you would normally use logger service.
+
+```php
+$this->logger->info('This is info message');
+// OR
+$this->logger->warning('This is a warning', ['user' => $user]);
+```
+
 
 Firephp
 -------
