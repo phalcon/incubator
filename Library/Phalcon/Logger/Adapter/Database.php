@@ -9,10 +9,10 @@ namespace Phalcon\Logger\Adapter;
 
 use Phalcon\Db\Adapter\Pdo;
 use Phalcon\Db\Column;
-use Phalcon\DI;
-use Phalcon\Logger;
 use Phalcon\Logger\Adapter;
 use Phalcon\Logger\AdapterInterface;
+use Phalcon\Logger\Exception as LoggerException;
+use Phalcon\Logger;
 
 class Database extends Adapter implements AdapterInterface
 {
@@ -30,10 +30,17 @@ class Database extends Adapter implements AdapterInterface
      */
     protected $table;
 
+    /**
+     * Constructor
+     *
+     * @param string $table
+     * @param \Phalcon\Db\Adapter $db
+     * @throws \Phalcon\Logger\Exception
+     */
     public function __construct($table, \Phalcon\Db\Adapter $db = null)
     {
         if (!$table) {
-            throw new \InvalidArgumentException('You must supply a table name to which the log records will be written');
+            throw new LoggerException('You must supply a table name to which the log records will be written');
         }
 
         $this->table = $table;
@@ -55,7 +62,7 @@ class Database extends Adapter implements AdapterInterface
         $context = $this->getContextAsString($context);
 
         return $this->db->execute('INSERT INTO ' . $this->table . ' VALUES(NULL, ?, ?, ?, ?, ?)',
-            array($this->getTypeName($type),
+            array($this->getTypeString($type),
                   $type,
                   $message,
                   $time,
@@ -97,7 +104,7 @@ class Database extends Adapter implements AdapterInterface
      * @param int $type
      * @return string
      */
-    protected function getTypeName($type)
+    protected function getTypeString($type)
     {
         // Get the constants which are defined in the Logger class
         $oClass = new \ReflectionClass('Phalcon\Logger');
@@ -109,6 +116,7 @@ class Database extends Adapter implements AdapterInterface
         }
 
         // Use CUSTOM constant as SUCCESS
+        // (comment it if you don't want to use CUSTOM as SUCCESS)
         if (array_key_exists('CUSTOM', $constants)) {
             $constants['SUCCESS'] = $constants['CUSTOM'];
             unset($constants['CUSTOM']);
@@ -155,10 +163,41 @@ class Database extends Adapter implements AdapterInterface
      *
      * @param string $message
      * @param null|array $context
-     * @return Adapter
+     * @return \Phalcon\Logger\Adapter
      */
     public function success($message, $context = null)
     {
         return $this->log(Logger::CUSTOM, $message, $context);
     }
-} 
+
+    /**
+     * Begin transaction
+     *
+     * @return Adapter|void
+     */
+    public function begin()
+    {
+        $this->db->begin();
+    }
+
+    /**
+     * Commit transaction
+     *
+     * @return Adapter|void
+     */
+    public function commit()
+    {
+        $this->db->commit();
+    }
+
+    /**
+     * Rollback transaction
+     * (happens automatically if commit never reached)
+     *
+     * @return Adapter|void
+     */
+    public function rollback()
+    {
+        $this->db->rollback();
+    }
+}
