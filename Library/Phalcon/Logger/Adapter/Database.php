@@ -7,7 +7,7 @@
  * Time: 3:32 PM
  */
 
-namespace Library\Logger\Adapter;
+namespace Phalcon\Logger\Adapter;
 
 
 use Phalcon\Db\Adapter\Pdo;
