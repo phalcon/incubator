@@ -10,3 +10,7 @@ composer.phar
 /codeception/acceptance/WebGuy.php
 /codeception/functional/TestGuy.php
 /codeception/unit/CodeGuy.php
+.buildpath
+.project
+.settings/org.eclipse.php.core.prefs
+.settings/org.eclipse.wst.common.project.facet.core.xml

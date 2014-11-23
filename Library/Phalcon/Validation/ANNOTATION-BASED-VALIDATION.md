@@ -83,8 +83,8 @@ var_export($form->doValidate());
  )
 ```
 
-## Some Validation Handler (you can see more under Phalcon\Validation\Handler)
-* [Phalcon\Validation\Handler\Filter](hu2008yinxiang/incubator/Library/Phalcon/Validation/Handler/Filter) - use <method>filter_var</method> validate the field.
-* [Phalcon\Validation\Handler\NotEmpty](hu2008yinxiang/incubator/Library/Phalcon/Validation/Handler/NotEmpty) - validate if the field is empty.
-* [Phalcon\Validation\Handler\Between](hu2008yinxiang/incubator/Library/Phalcon/Validation/Handler/Between) - specify a range for the field.
-* [Phalcon\Validation\Handler\Number](hu2008yinxiang/incubator/Library/Phalcon/Validation/Handler/Number) - validate if the field is a number.
+## Some Validation Handler (you can see more under [Phalcon\Validation\Handler](hu2008yinxiang/incubator/Library/Phalcon/Validation/Handler))
+* [Phalcon\Validation\Handler\Filter](hu2008yinxiang/incubator/Library/Phalcon/Validation/Handler/Filter.php) - use <method>filter_var</method> validate the field.
+* [Phalcon\Validation\Handler\NotEmpty](hu2008yinxiang/incubator/Library/Phalcon/Validation/Handler/NotEmpty.php) - validate if the field is empty.
+* [Phalcon\Validation\Handler\Between](hu2008yinxiang/incubator/Library/Phalcon/Validation/Handler/Between.php) - specify a range for the field.
+* [Phalcon\Validation\Handler\Number](hu2008yinxiang/incubator/Library/Phalcon/Validation/Handler/Number.php) - validate if the field is a number.
