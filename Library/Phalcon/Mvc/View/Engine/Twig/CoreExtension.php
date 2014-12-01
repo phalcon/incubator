@@ -52,22 +52,24 @@ class CoreExtension extends \Twig_Extension
      * Returns string with CSS.
      *
      * @param  \Phalcon\Mvc\View\Engine\Twig\Environment $env
+     * @param  string|null                               $options Assets CollectionName
      * @return string
      */
-    public function functionAssetsOutputCss(Environment $env)
+    public function functionAssetsOutputCss(Environment $env, $options)
     {
-        return $this->getAssetsOutput($env, 'outputCss');
+        return $this->getAssetsOutput($env, 'outputCss', $options);
     }
 
     /**
      * Returns string with JS.
      *
      * @param  \Phalcon\Mvc\View\Engine\Twig\Environment $env
+     * @param  string|null                               $options Assets CollectionName
      * @return string
      */
-    public function functionAssetsOutputJs(Environment $env)
+    public function functionAssetsOutputJs(Environment $env, $options)
     {
-        return $this->getAssetsOutput($env, 'outputJs');
+        return $this->getAssetsOutput($env, 'outputJs', $options);
     }
 
     /**
@@ -87,12 +89,13 @@ class CoreExtension extends \Twig_Extension
      *
      * @param  \Phalcon\Mvc\View\Engine\Twig\Environment $env
      * @param  string                                    $method
+     * @param  string|null                               $options Assets CollectionName
      * @return string
      */
-    protected function getAssetsOutput(Environment $env, $method)
+    protected function getAssetsOutput(Environment $env, $method, $options = null)
     {
         $env->getDi()->get('assets')->useImplicitOutput(false);
-        $result = $env->getDi()->get('assets')->$method();
+        $result = $env->getDi()->get('assets')->$method($options);
         $env->getDi()->get('assets')->useImplicitOutput(true);
 
         return $result;
