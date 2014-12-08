@@ -55,7 +55,7 @@ class CoreExtension extends \Twig_Extension
      * @param  string|null                               $options Assets CollectionName
      * @return string
      */
-    public function functionAssetsOutputCss(Environment $env, $options)
+    public function functionAssetsOutputCss(Environment $env, $options = null)
     {
         return $this->getAssetsOutput($env, 'outputCss', $options);
     }
@@ -67,7 +67,7 @@ class CoreExtension extends \Twig_Extension
      * @param  string|null                               $options Assets CollectionName
      * @return string
      */
-    public function functionAssetsOutputJs(Environment $env, $options)
+    public function functionAssetsOutputJs(Environment $env, $options = null)
     {
         return $this->getAssetsOutput($env, 'outputJs', $options);
     }
