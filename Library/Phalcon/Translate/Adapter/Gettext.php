@@ -182,10 +182,10 @@ class Gettext extends Adapter implements AdapterInterface
      */
     // @codingStandardsIgnoreStart
     public function __($msgid, $msgctxt = null, $placeholders = null, $category = LC_MESSAGES)
-    // @codingStandardsIgnoreEnd
     {
         return $this->cquery($msgid, $msgctxt, $placeholders, $category);
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * Returns the translation related to the given key and context (msgctxt) from a specific domain.
