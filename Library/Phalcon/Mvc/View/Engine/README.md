@@ -77,7 +77,7 @@ $di->set('view', function() {
         array(
             '.twig' => function($view, $di) {
                 //Setting up Twig Environment Options
-                $option = array('cache' => '../cache/');
+                $options = array('cache' => '../cache/');
                 $twig = new \Phalcon\Mvc\View\Engine\Twig($view, $di, $options);
                 return $twig;
             }));
