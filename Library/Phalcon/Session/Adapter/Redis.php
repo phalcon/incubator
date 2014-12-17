@@ -57,7 +57,7 @@ class Redis extends Adapter implements AdapterInterface
         }
 
         if (isset($options['cookie_secure'])) {
-            ini_set('session.cookie_lifetime', $options['cookie_secure']);
+            ini_set('session.cookie_secure', $options['cookie_secure']);
         }
 
         parent::__construct($options);
