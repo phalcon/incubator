@@ -5,10 +5,11 @@ use Phalcon\Config;
 use Phalcon\Config\Exception;
 
 /**
- * Phalcon\Config\Adapter\Yaml
+ * Phalcon\Config\Adapter\ExtendedYaml
  * Reads yaml files and convert it to Phalcon\Config objects.
+ * Unlike native Yaml adapter supports callbacks.
  */
-class Yaml extends Config implements \ArrayAccess
+class ExtendedYaml extends Config implements \ArrayAccess
 {
 
     /**
