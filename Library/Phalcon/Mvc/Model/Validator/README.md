@@ -26,7 +26,7 @@ class User extends Model
      public function validation()
      {
           $this->validate(new ConfirmationOf(array(
-          field' => 'password',
+               'field' => 'password',
                'field_confirmation' => 'password_confirmation',
                'message' => 'Both fields should contain equal values'
           )));
