@@ -12,9 +12,9 @@ use Phalcon\Mvc\Model\Validator as ModelValidator,
  * Validates that a value is between a range of two values
  *
  *<code>
- *use Esig\Model\Validator\Between;
+ *use Phalcon\Mvc\Model\Validator\Between;
  *
- *class Subscriptors extends Phalcon\Mvc\Model
+ *class Sliders extends Phalcon\Mvc\Model
  *{
  *
  *	public function validation()
