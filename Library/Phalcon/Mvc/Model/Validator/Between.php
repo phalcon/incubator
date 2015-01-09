@@ -1,10 +1,10 @@
 <?php
 namespace Phalcon\Mvc\Model\Validator;
 
-use Phalcon\Mvc\Model\Validator as ModelValidator,
-    Phalcon\Mvc\Model\ValidatorInterface,
-    Phalcon\Mvc\Model\Exception,
-    Phalcon\Mvc\ModelInterface;
+use Phalcon\Mvc\Model\Validator as ModelValidator;
+use Phalcon\Mvc\Model\ValidatorInterface;
+use Phalcon\Mvc\Model\Exception;
+use Phalcon\Mvc\ModelInterface;
 
 /**
  * Phalcon\Mvc\Model\Validator\Between
