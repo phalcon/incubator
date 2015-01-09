@@ -12,7 +12,8 @@ use Phalcon\Mvc\ModelInterface;
  * Validates that a value is a valid number in proper decimal format (negative and decimal numbers allowed).
  * Optionally, a specific number of digits can be checked too.
  *
- * Uses {@link http://www.php.net/manual/en/function.localeconv.php locale conversion} to allow decimal point to be locale specific.
+ * Uses {@link http://www.php.net/manual/en/function.localeconv.php locale conversion} to allow decimal point to be
+ * locale specific.
  *
  *<code>
  *use Phalcon\Mvc\Model\Validator\Decimal;
@@ -86,7 +87,7 @@ class Decimal extends ModelValidator implements ValidatorInterface
             list($decimal) = array_values(localeconv());
         }
 
-        $regexp = (bool) preg_match('#^[+-]?[0-9]'.$digits.preg_quote($decimal).'[0-9]{'.( (int) $places).'}$#', $value);
+        $regexp = (bool) preg_match('#^[+-]?[0-9]'.$digits.preg_quote($decimal).'[0-9]{'.((int) $places).'}$#', $value);
 
         if (!$regexp) {
             // Check if the developer has defined a custom message
