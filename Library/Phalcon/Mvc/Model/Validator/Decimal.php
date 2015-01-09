@@ -59,6 +59,12 @@ class Decimal extends ModelValidator implements ValidatorInterface
             throw new Exception('Field name must be a string');
         }
 
+        $value = $record->readAttribute($field);
+
+        if (true === $this->isSetOption('allowEmpty') && empty($value)) {
+            return true;
+        }
+
         if (false === $this->isSetOption('places')) {
             throw new Exception('A number of decimal places must be set');
         }
@@ -79,8 +85,6 @@ class Decimal extends ModelValidator implements ValidatorInterface
             // Get the decimal point for the current locale
             list($decimal) = array_values(localeconv());
         }
-
-        $value = $record->readAttribute($field);
 
         $regexp = (bool) preg_match('#^[+-]?[0-9]'.$digits.preg_quote($decimal).'[0-9]{'.( (int) $places).'}$#', $value);
 
