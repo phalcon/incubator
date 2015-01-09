@@ -39,3 +39,34 @@ class User extends Model
 }
 
 ```
+
+Decimal
+--------------
+Allows to validate if a field has a valid number in proper decimal format (negative and decimal numbers allowed).
+Optionally, a specific number of digits can be checked too. Uses [locale conversion](http://www.php.net/manual/en/function.localeconv.php) to allow decimal point to be locale specific.
+
+```php
+use Phalcon\Mvc\Model\Validator\Decimal;
+
+use Phalcon\Mvc\Model;
+
+class Product extends Model
+{
+
+     public function validation()
+     {
+         $this->validate(new Decimal(array(
+              'field' => 'price',
+              'places' => 2,
+              'digit' => 3, // optional
+              'message' => 'Price must contain valid decimal value',
+         )));
+
+         if ($this->validationHasFailed() == true) {
+              return false;
+         }
+     }
+
+}
+
+```
