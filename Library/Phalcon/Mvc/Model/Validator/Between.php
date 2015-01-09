@@ -55,14 +55,18 @@ class Between extends ModelValidator implements ValidatorInterface
             throw new Exception('Field name must be a string');
         }
 
+        $value = $record->readAttribute($field);
+
+        if (true === $this->isSetOption('allowEmpty') && empty($value)) {
+            return true;
+        }
+
         if (false === $this->isSetOption('min') || false === $this->isSetOption('max')) {
             throw new Exception('A minimum and maximum must be set');
         }
 
         $maximum = $this->getOption('max');
         $minimum = $this->getOption('min');
-
-        $value = $record->readAttribute($field);
 
         if ($value < $minimum || $value > $maximum) {
             // Check if the developer has defined a custom message
