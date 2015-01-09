@@ -20,19 +20,20 @@ use Phalcon\Mvc\Model\Validator as ModelValidator,
  *class Product extends Phalcon\Mvc\Model
  *{
  *
- *	public function validation()
- *	{
- *		$this->validate(new Decimal(array(
- *			'field' => 'price',
- *			'places' => 2,
- *			'digit' => 3, // optional
- *			'message' => 'Price must contain valid decimal value',
- *		)));
+ *  public function validation()
+ *  {
+ *      $this->validate(new Decimal(array(
+ *          'field' => 'price',
+ *          'places' => 2,
+ *          'digit' => 3, // optional
+ *          'point' => ',' // optional. uses to override system decimal point
+ *          'message' => 'Price must contain valid decimal value',
+ *      )));
  *
- *		if ($this->validationHasFailed() == true) {
- *			return false;
- *		}
- *	}
+ *      if ($this->validationHasFailed() == true) {
+ *          return false;
+ *      }
+ *  }
  *
  *}
  *</code>
@@ -72,8 +73,12 @@ class Decimal extends ModelValidator implements ValidatorInterface
             $digits = '+';
         }
 
-        // Get the decimal point for the current locale
-        list($decimal) = array_values(localeconv());
+        if ($this->isSetOption('point')) {
+            $decimal = $this->getOption('point');
+        } else {
+            // Get the decimal point for the current locale
+            list($decimal) = array_values(localeconv());
+        }
 
         $value = $record->readAttribute($field);
 

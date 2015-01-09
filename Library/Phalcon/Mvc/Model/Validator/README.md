@@ -59,6 +59,7 @@ class Product extends Model
               'field' => 'price',
               'places' => 2,
               'digit' => 3, // optional
+              'point' => ',' // optional. uses to override system decimal point
               'message' => 'Price must contain valid decimal value',
          )));
 
