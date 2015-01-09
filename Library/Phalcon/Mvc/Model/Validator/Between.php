@@ -51,11 +51,11 @@ class Between extends ModelValidator implements ValidatorInterface
 
         $field = $this->getOption('field');
 
-        if(false === is_string($field)) {
+        if (false === is_string($field)) {
             throw new Exception('Field name must be a string');
         }
 
-        if(false === $this->isSetOption('min') || false === $this->isSetOption('max')) {
+        if (false === $this->isSetOption('min') || false === $this->isSetOption('max')) {
             throw new Exception('A minimum and maximum must be set');
         }
 
@@ -66,10 +66,7 @@ class Between extends ModelValidator implements ValidatorInterface
 
         if ($value < $minimum || $value > $maximum) {
             // Check if the developer has defined a custom message
-            $message = $this->getOption('message');
-            if (false === isset($message)) {
-                $message = sprintf('%s is not between a valid range', $field);
-            }
+            $message = $this->getOption('message') ?: sprintf('%s is not between a valid range', $field);
 
             $this->appendMessage($message, $field, 'Between');
             return false;
