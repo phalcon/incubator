@@ -41,11 +41,12 @@ class User extends Model
 ```
 
 Decimal
---------------
+-------
 Allows to validate if a field has a valid number in proper decimal format (negative and decimal numbers allowed).
 Optionally, a specific number of digits can be checked too. Uses [locale conversion](http://www.php.net/manual/en/function.localeconv.php) to allow decimal point to be locale specific.
 
 ```php
+
 use Phalcon\Mvc\Model\Validator\Decimal;
 
 use Phalcon\Mvc\Model;
@@ -68,6 +69,35 @@ class Product extends Model
          }
      }
 
+}
+
+```
+
+Between
+-------
+Validates that a value is between a range of two values
+
+```php
+
+use Phalcon\Mvc\Model\Validator\Between;
+
+use Phalcon\Mvc\Model;
+
+class Slider extends Model
+{
+     public function validation()
+     {
+          $this->validate(new Between(array(
+               'field' => 'position',
+               'max' => 50,
+               'min' => 2,
+               'message' => 'Position is not between a valid range'
+          )));
+
+          if ($this->validationHasFailed() == true) {
+               return false;
+          }
+     }
 }
 
 ```

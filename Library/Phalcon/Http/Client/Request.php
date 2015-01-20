@@ -55,7 +55,7 @@ abstract class Request
 
     public function getBaseUri()
     {
-        return $this->baseUri->toString();
+        return $this->baseUri;
     }
 
     public function resolveUri($uri)
