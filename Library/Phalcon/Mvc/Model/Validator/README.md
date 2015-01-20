@@ -39,3 +39,31 @@ class User extends Model
 }
 
 ```
+
+Between
+-------
+Validates that a value is between a range of two values
+
+```php
+
+use Phalcon\Mvc\Model\Validator\Between;
+
+use Phalcon\Mvc\Model;
+
+class Slider extends Model
+{
+     public function validation()
+     {
+          $this->validate(new Between(array(
+               'field' => 'position',
+               'max' => 50,
+               'min' => 2,
+               'message' => 'Position is not between a valid range'
+          )));
+
+          if ($this->validationHasFailed() == true) {
+               return false;
+          }
+     }
+}
+```
