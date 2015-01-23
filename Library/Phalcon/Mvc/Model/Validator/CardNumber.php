@@ -46,7 +46,7 @@ class CardNumber extends \Phalcon\Mvc\Model\Validator
 
         $fieldValue = $record->readAttribute($field);
 
-        $value = strrev(preg_replace('/[^\d]/','',$fieldValue));
+        $value = strrev(preg_replace('/[^\d]/', '', $fieldValue));
         $checkSum = 0;
 
         for ($i = 0; $i < strlen($value); $i++) {
@@ -55,14 +55,15 @@ class CardNumber extends \Phalcon\Mvc\Model\Validator
                 $temp = $value[$i];
             } else {
                 $vabufl = $value[$i] * 2;
-                if ($temp > 9)  $temp -= 9;
+                if ($temp > 9) {
+                    $temp -= 9;
+                }
             }
 
             $checkSum += $temp;
         }
 
-        if ( ($checkSum % 10) != 0)
-        {
+        if (($checkSum % 10) != 0) {
             $message = $this->getOption('message') ?: 'Credit card number is invalid';
 
             $this->appendMessage($message, $field, "CardNumber");
