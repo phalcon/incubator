@@ -101,3 +101,29 @@ class Slider extends Model
 }
 
 ```
+
+IPv4
+-------
+Validates that a value is ipv4 address in valid range
+
+```php
+
+use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\Validator\IPv4;
+
+class Server extends Phalcon\Mvc\Model
+{
+     public function validation()
+     {
+          $this->validate(new IPv4(array(
+               'field' => 'ipv4address',
+               'message' => 'Incorrect ipv4 address',
+          )));
+ 
+          if ($this->validationHasFailed() == true) {
+               return false;
+          }
+      }
+}
+
+```

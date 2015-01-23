@@ -100,6 +100,7 @@ $loader->register();
 
 ### ORM Validators
 * [Phalcon\Mvc\Model\Validator\ConfirmationOf](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model) - Allows to validate if a field has a confirmation field with the same value (suxxes)
+* [Phalcon\Mvc\Model\Validator\IPv4](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Validates that a value is ipv4 address in valid range (parshikov)
 
 ### Error Handling
 * [Phalcon\Error](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Error) - Error handler used to centralize the error handling and displaying clean error pages (theDisco)
