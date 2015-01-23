@@ -2,6 +2,8 @@
 namespace Phalcon\Mvc\Model\Validator;
 
 use Phalcon\Mvc\Model\Exception;
+use Phalcon\Mvc\ModelInterface;
+use Phalcon\Mvc\CollectionInterface;
 
 /**
  * Phalcon\Mvc\Model\Validator\CardNumber
@@ -33,7 +35,11 @@ class IPv4 extends \Phalcon\Mvc\Model\Validator
 {
     public function validate($record)
     {
-        if (false === is_object($record) || false === ($record instanceof Phalcon\Mvc\ModelInterface || $record instanceof Phalcon\Mvc\CollectionInterface)) {
+        if (false === is_object($record)) {
+            throw new Exception('Invalid parameter type.');
+        }
+
+        if (false === ($record instanceof ModelInterface || $record instanceof CollectionInterface)) {
             throw new Exception('Invalid parameter type.');
         }
 
@@ -44,16 +50,13 @@ class IPv4 extends \Phalcon\Mvc\Model\Validator
         }
 
         $fieldValue = $record->readAttribute($field);
+        $this->getOption('message') ?: 'IPv4 is incorrect';
 
         $result = preg_match('/^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/', $fieldValue, $matches);
 
         // Address contains not allowed symbols
         if (1 != $result) {
-            $this->appendMessage(
-                $this->getOption('message')
-                ?: 'IPv4 is incorrect',
-                $field, "IPv4");
-
+            $this->appendMessage( $message, $field, "IPv4");
             return false;
         }
         
@@ -66,22 +69,13 @@ class IPv4 extends \Phalcon\Mvc\Model\Validator
         foreach ($matches as $key => $value) {
             // Rejects 0.0.0.0/8 addresses
             if (0 == $key && 0 == $value) {
-                $this->appendMessage(
-                    $this->getOption('message')
-                    ?: 'IPv4 is incorrect',
-                    $field, "IPv4"
-                );
-                
-                return false;
+                $this->appendMessage( $message, $field, "IPv4");
+            return false;
             } else {
                 // Rejects incorrect octets
                 if (($value < 0 || $value > 255)) {
-                    $this->appendMessage(
-                        $this->getOption('message')
-                        ?: 'IPv4 is incorrect',
-                    $field, "IPv4");
-
-                    return false;
+                    $this->appendMessage( $message, $field, "IPv4");
+            return false;
                 }
             }
         }
