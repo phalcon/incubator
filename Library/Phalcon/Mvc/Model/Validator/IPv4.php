@@ -56,7 +56,7 @@ class IPv4 extends \Phalcon\Mvc\Model\Validator
 
         // Address contains not allowed symbols
         if (1 != $result) {
-            $this->appendMessage( $message, $field, "IPv4");
+            $this->appendMessage($message, $field, "IPv4");
             return false;
         }
         
@@ -69,13 +69,13 @@ class IPv4 extends \Phalcon\Mvc\Model\Validator
         foreach ($matches as $key => $value) {
             // Rejects 0.0.0.0/8 addresses
             if (0 == $key && 0 == $value) {
-                $this->appendMessage( $message, $field, "IPv4");
-            return false;
+                $this->appendMessage($message, $field, "IPv4");
+                return false;
             } else {
                 // Rejects incorrect octets
                 if (($value < 0 || $value > 255)) {
-                    $this->appendMessage( $message, $field, "IPv4");
-            return false;
+                    $this->appendMessage($message, $field, "IPv4");
+                return false;
                 }
             }
         }
