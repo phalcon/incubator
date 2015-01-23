@@ -50,7 +50,7 @@ class IPv4 extends \Phalcon\Mvc\Model\Validator
         }
 
         $fieldValue = $record->readAttribute($field);
-        $this->getOption('message') ?: 'IPv4 is incorrect';
+        $message = $this->getOption('message') ?: 'IPv4 is incorrect';
 
         $result = preg_match('/^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/', $fieldValue, $matches);
 
