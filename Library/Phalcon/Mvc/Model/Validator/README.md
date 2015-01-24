@@ -142,12 +142,15 @@ class Server extends Phalcon\Mvc\Model
      public function validation()
      {
           $this->validate(new IPv4(array(
-               'field' => 'ipv4address',
-               'message' => 'Incorrect ipv4 address',
+              'field'             => 'server_ip',
+              'version'           => IP::VERSION_4 | IP::VERSION_6, // v6 and v4. The same if not specified
+              'allowReserved'     => false,   // False if not specified. Ignored for v6
+              'allowPrivate'      => false,   // False if not specified
+              'message'           => 'IP address has to be correct'
           )));
  
           if ($this->validationHasFailed() == true) {
-               return false;
+              return false;
           }
       }
 }
