@@ -20,6 +20,7 @@ use Phalcon\Mvc\CollectionInterface;
  *  {
  *      $this->validate(new CardNumber(array(
  *          'field' => 'cardnumber',
+ *          'type'   => CardNumber::VISA, // Any if not specified
  *          'message' => 'Card number must be valid',
  *      )));
  *
