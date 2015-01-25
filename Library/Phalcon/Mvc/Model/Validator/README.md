@@ -104,7 +104,7 @@ class Slider extends Model
 
 CardNumber
 -------
-Validates credit card number using Luhn algorithm
+Validates credit card number using Luhn algorithm.
 
 ```php
 
@@ -116,8 +116,9 @@ class User extends Phalcon\Mvc\Model
      public function validation()
      {
           $this->validate(new CardNumber(array(
-               'field' => 'cardnumber',
-               'message' => 'Card number must be valid',
+                'field' => 'cardnumber',
+                'type'   => CardNumber::VISA, // Only one type. Any if not specified
+                'message' => 'Card number must be valid',
           )));
  
           if ($this->validationHasFailed() == true) {
