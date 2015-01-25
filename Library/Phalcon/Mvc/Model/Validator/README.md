@@ -127,3 +127,32 @@ class User extends Phalcon\Mvc\Model
 }
 
 ```
+
+IPv4
+-------
+Validates that a value is ipv4 address in valid range
+
+```php
+
+use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\Validator\IPv4;
+
+class Server extends Phalcon\Mvc\Model
+{
+     public function validation()
+     {
+          $this->validate(new IPv4(array(
+              'field'             => 'server_ip',
+              'version'           => IP::VERSION_4 | IP::VERSION_6, // v6 and v4. The same if not specified
+              'allowReserved'     => false,   // False if not specified. Ignored for v6
+              'allowPrivate'      => false,   // False if not specified
+              'message'           => 'IP address has to be correct'
+          )));
+ 
+          if ($this->validationHasFailed() == true) {
+              return false;
+          }
+      }
+}
+
+```
