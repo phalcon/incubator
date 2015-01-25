@@ -86,18 +86,18 @@ class CardNumber extends \Phalcon\Mvc\Model\Validator
         $checkSum = 0;
 
         for ($i = 0; $i < strlen($value); $i++) {
-
             if (($i % 2) == 0) {
                 $temp = $value[$i];
             } else {
-                $vabufl = $value[$i] * 2;
+                $temp = $value[$i] * 2;
                 if ($temp > 9) {
                     $temp -= 9;
                 }
             }
-
             $checkSum += $temp;
         }
+
+        
 
         if (($checkSum % 10) != 0) {
             $message = $this->getOption('message') ?: 'Credit card number is invalid';
