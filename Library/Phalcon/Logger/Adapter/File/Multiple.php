@@ -133,6 +133,7 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
     protected function getTypeString($type)
     {
         switch ($type) {
+            case Logger::EMERGENCY:
             case Logger::EMERGENCE:
             case Logger::CRITICAL:
                 // emergence, critical
