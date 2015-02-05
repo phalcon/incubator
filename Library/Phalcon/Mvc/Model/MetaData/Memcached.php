@@ -61,30 +61,23 @@ class Memcached extends Base
      */
     public function __construct($options = null)
     {
-        if (is_array($options))
-        {
-            if (!isset($options['host']))
-            {
+        if (is_array($options)) {
+            if (!isset($options['host'])) {
                 throw new Exception('No host given in options');
             }
 
-            if (!isset($options['port']))
-            {
+            if (!isset($options['port'])) {
                 $options['port'] = self::$defaultPort;
             }
 
-            if (!isset($options['prefix']))
-            {
+            if (!isset($options['prefix'])) {
                 $options['prefix'] = self::$defaultPrefix;
             }
 
-            if (!isset($options['weight']))
-            {
+            if (!isset($options['weight'])) {
                 $options['weight'] = self::$defaultWeight;
             }
-        }
-        else
-        {
+        } else {
             throw new Exception('No configuration given');
         }
 
@@ -97,21 +90,21 @@ class Memcached extends Base
      */
     protected function getCacheBackend()
     {
-        if (null === $this->memcached)
-        {
-            $this->memcached = new CacheBackend(new CacheFrontend(array('lifetime' => $this->options['lifetime'])), array(
-                'servers' => array(
-                    array(
-                        'host'   => $this->options['host'],
-                        'port'   => $this->options['port'],
-                        'weight' => $this->options['weight']
+        if (null === $this->memcached) {
+            $this->memcached = new CacheBackend(new CacheFrontend(array('lifetime' => $this->options['lifetime'])),
+                array(
+                    'servers' => array(
+                        array(
+                            'host'   => $this->options['host'],
+                            'port'   => $this->options['port'],
+                            'weight' => $this->options['weight']
+                        ),
                     ),
-                ),
-                'client'  => array(
-                    MemcachedGeneric::OPT_HASH       => MemcachedGeneric::HASH_MD5,
-                    MemcachedGeneric::OPT_PREFIX_KEY => $this->options['prefix'],
-                )
-            ));
+                    'client'  => array(
+                        MemcachedGeneric::OPT_HASH       => MemcachedGeneric::HASH_MD5,
+                        MemcachedGeneric::OPT_PREFIX_KEY => $this->options['prefix'],
+                    )
+                ));
         }
 
         return $this->memcached;
