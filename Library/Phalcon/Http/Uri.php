@@ -108,7 +108,7 @@ class Uri
         }
 
         if (!empty($parts['query'])) {
-            $uri .= '?' . (is_array($parts['query']) ? http_build_query($parts['query']) : $parts['query']);
+            $uri .= '?' . $this->buildQuery($parts['query']);
         }
 
         if (!empty($parts['fragment'])) {
@@ -116,6 +116,11 @@ class Uri
         }
 
         return $uri;
+    }
+
+    public function buildQuery($query)
+    {
+      return (is_array($query) ? http_build_query($query) : $query);
     }
 
     public function resolve($uri)
