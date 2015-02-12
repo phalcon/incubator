@@ -120,7 +120,7 @@ class Uri
 
     public function buildQuery($query)
     {
-      return (is_array($query) ? http_build_query($query) : $query);
+        return (is_array($query) ? http_build_query($query) : $query);
     }
 
     public function resolve($uri)
