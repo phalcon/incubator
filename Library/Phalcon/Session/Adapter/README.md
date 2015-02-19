@@ -56,7 +56,7 @@ $di->set('session', function(){
         'host'          => '127.0.0.1',     // mandatory
         'port'          => 11211,           // optional (standard: 11211)
         'lifetime'      => 8600,            // optional (standard: 8600)
-        'prefix'        => 'my-app'         // optional (standard: [empty_string]), means memcache key is my-app_31231jkfsdfdsfds3
+        'prefix'        => 'my-app',         // optional (standard: [empty_string]), means memcache key is my-app_31231jkfsdfdsfds3
         'persistent'    => false            // optional (standard: false)
     ));
     $memcache->start();
