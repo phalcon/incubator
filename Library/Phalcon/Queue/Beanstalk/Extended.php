@@ -239,6 +239,31 @@ class Extended extends Base
     }
 
     /**
+     * Returns information about specified job if it exists
+     *
+     * @param   int $job_id
+     * @return null|array
+     */
+    public function getJobStats($job_id)
+    {
+        $result = null;
+        $lines = $this->getResponseLines('stats-job ' . (int)$job_id);
+
+        if (!empty($lines)) {
+            foreach ($lines as $line) {
+                if (false !== strpos($line, ':')) {
+                    list($name, $value) = explode(':', $line);
+                    if (null !== $value) {
+                        $result[$name] = intval($value);
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Returns the tube name with prefix.
      *
      * @param  string|null $tube
