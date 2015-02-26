@@ -8,6 +8,7 @@
  * to license@phalconphp.com so we can send you a copy immediately.
  *
  * @author Nikita Vershinin <endeveit@gmail.com>
+ * @author Ilya Gusev <mail@igusev.ru>
  */
 namespace Phalcon\Mvc\Model\MetaData;
 
@@ -64,7 +65,7 @@ abstract class Base extends MetaData {
      */
     public function read($key)
     {
-        return $this->getCacheBackend()->get($this->getId($key), $this->options['lifetime']);
+        return $this->getCacheBackend()->get($this->prepareKey($key), $this->options['lifetime']);
     }
 
     /**
@@ -75,20 +76,18 @@ abstract class Base extends MetaData {
      */
     public function write($key, $data)
     {
-        $this->getCacheBackend()->save($this->getId($key), $data, $this->options['lifetime']);
+        $this->getCacheBackend()->save($this->prepareKey($key), $data, $this->options['lifetime']);
     }
 
     /**
-     * Returns the sessionId with prefix
+     * Returns the key with a prefix or other changes
      *
-     * @param  string $id
+     * @param  string $key
      * @return string
      */
-    protected function getId($id)
+    protected function prepareKey($key)
     {
-        return (!empty($this->options['prefix']) > 0)
-            ? $this->options['prefix'] . '_' . $id
-            : $id;
+        return $this->options['prefix'] . $key;
     }
 
     /**
