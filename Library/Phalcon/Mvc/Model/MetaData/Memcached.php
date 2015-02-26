@@ -14,6 +14,7 @@
  * @package  Phalcon\Mvc\Model\MetaData
  * @author   Nikita Vershinin    <endeveit@gmail.com>
  * @author   Dmitriy Zhavoronkov <dimaz.lark@gmail.com>
+ * @author   Ilya Gusev <mail@igusev.ru>
  * @license  New BSD License
  * @link     http://phalconphp.com/
  */
@@ -45,13 +46,6 @@ class Memcached extends Base
     protected static $defaultPort = 11211;
 
     /**
-     * Default option for prefix.
-     *
-     * @var string
-     */
-    protected static $defaultPrefix = 'prefix.';
-
-    /**
      * Default option for weight.
      *
      * @var int
@@ -81,10 +75,6 @@ class Memcached extends Base
 
             if (!isset($options['port'])) {
                 $options['port'] = self::$defaultPort;
-            }
-
-            if (!isset($options['prefix'])) {
-                $options['prefix'] = self::$defaultPrefix;
             }
 
             if (!isset($options['weight'])) {
