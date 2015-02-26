@@ -117,9 +117,13 @@ class Memcached extends Base
 
     /**
      * {@inheritdoc}
+     *
+     * @value string $key
+     *
      * @return string
      */
-    protected function prepareKey($key) {
+    protected function prepareKey($key)
+    {
         return $key;
     }
 }

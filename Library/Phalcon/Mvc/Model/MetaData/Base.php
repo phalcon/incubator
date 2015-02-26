@@ -1,14 +1,18 @@
 <?php
 /**
- * Phalcon Framework
- * This source file is subject to the New BSD License that is bundled
+  * Phalcon Framework
+  * This source file is subject to the New BSD License that is bundled
  * with this package in the file docs/LICENSE.txt.
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@phalconphp.com so we can send you a copy immediately.
  *
- * @author Nikita Vershinin <endeveit@gmail.com>
- * @author Ilya Gusev <mail@igusev.ru>
+ * @category Phalcon
+ * @package  Phalcon\Mvc\Model\MetaData
+ * @author   Nikita Vershinin <endeveit@gmail.com>
+ * @author   Ilya Gusev <mail@igusev.ru>
+ * @license  New BSD License
+ * @link     http://phalconphp.com/
  */
 namespace Phalcon\Mvc\Model\MetaData;
 
@@ -16,10 +20,17 @@ use Phalcon\Mvc\Model\MetaData;
 
 /**
  * \Phalcon\Mvc\Model\MetaData\Base
- * Base class for \Phalcon\Mvc\Model\MetaData\Memcache and \Phalcon\Mvc\Model\MetaData\Redis adapters.
+ * Base class for metadata adapters.
+ *
+ * @category Phalcon
+ * @package  Phalcon\Mvc\Model\MetaData
+ * @author   Nikita Vershinin <endeveit@gmail.com>
+ * @author   Ilya Gusev <mail@igusev.ru>
+ * @license  New BSD License
+ * @link     http://phalconphp.com/
  */
-abstract class Base extends MetaData {
-
+abstract class Base extends MetaData
+{
     /**
      * Default options for cache backend.
      *
@@ -40,7 +51,8 @@ abstract class Base extends MetaData {
     /**
      * Class constructor.
      *
-     * @param  null|array                   $options
+     * @param null|array $options
+     *
      * @throws \Phalcon\Mvc\Model\Exception
      */
     public function __construct($options = null)
@@ -65,7 +77,10 @@ abstract class Base extends MetaData {
      */
     public function read($key)
     {
-        return $this->getCacheBackend()->get($this->prepareKey($key), $this->options['lifetime']);
+        return $this->getCacheBackend()->get(
+            $this->prepareKey($key),
+            $this->options['lifetime']
+        );
     }
 
     /**
@@ -76,13 +91,18 @@ abstract class Base extends MetaData {
      */
     public function write($key, $data)
     {
-        $this->getCacheBackend()->save($this->prepareKey($key), $data, $this->options['lifetime']);
+        $this->getCacheBackend()->save(
+            $this->prepareKey($key),
+            $data,
+            $this->options['lifetime']
+        );
     }
 
     /**
      * Returns the key with a prefix or other changes
      *
-     * @param  string $key
+     * @param string $key
+     *
      * @return string
      */
     protected function prepareKey($key)
