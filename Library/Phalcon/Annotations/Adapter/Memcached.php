@@ -28,7 +28,9 @@ use Phalcon\Annotations\Adapter;
 /*
  * Stores the parsed annotations to Memcached. This adapter is suitable for production.
  */
-class Memcached extends Base {
+
+class Memcached extends Base
+{
     /**
      * Default option for memcached port.
      *
@@ -57,18 +59,23 @@ class Memcached extends Base {
      *
      * @throws \Phalcon\Mvc\Model\Exception
      */
-    public function __construct($options = null) {
-        if(is_array($options)) {
-            if(!isset($options['host']))
+    public function __construct($options = null)
+    {
+        if (is_array($options)) {
+            if (!isset($options['host'])) {
                 throw new Exception('No host given in options');
+            }
 
-            if(!isset($options['port']))
+            if (!isset($options['port'])) {
                 $options['port'] = self::$defaultPort;
+            }
 
-            if(!isset($options['weight']))
+            if (!isset($options['weight'])) {
                 $options['weight'] = self::$defaultWeight;
-        } else
+            }
+        } else {
             throw new Exception('No configuration given');
+        }
 
         parent::__construct($options);
     }
@@ -77,8 +84,9 @@ class Memcached extends Base {
      * {@inheritdoc}
      * @return \Phalcon\Cache\Backend\Libmemcached
      */
-    protected function getCacheBackend() {
-        if(null === $this->memcached) {
+    protected function getCacheBackend()
+    {
+        if (null === $this->memcached) {
             $this->memcached = new CacheBackend(
                 new CacheFrontend(array('lifetime' => $this->options['lifetime'])),
                 array(
@@ -105,7 +113,8 @@ class Memcached extends Base {
      * {@inheritdoc}
      * @return string
      */
-    protected function prepareKey($key) {
+    protected function prepareKey($key)
+    {
         return $key;
     }
 }

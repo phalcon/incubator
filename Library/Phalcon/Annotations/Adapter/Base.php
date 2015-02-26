@@ -27,7 +27,8 @@ use Phalcon\Annotations\AdapterInterface;
  * \Phalcon\Annotations\Adapter\Base
  * Base class for \Phalcon\Annotations\Adapter\Memcached and other adapters.
  */
-abstract class Base extends Adapter implements AdapterInterface {
+abstract class Base extends Adapter implements AdapterInterface
+{
     /**
      * Default option for cache lifetime.
      *
@@ -56,13 +57,16 @@ abstract class Base extends Adapter implements AdapterInterface {
      *
      * @throws \Phalcon\Mvc\Model\Exception
      */
-    public function __construct($options = null) {
-        if(is_array($options)) {
-            if(!isset($options['lifetime']))
+    public function __construct($options = null)
+    {
+        if (is_array($options)) {
+            if (!isset($options['lifetime'])) {
                 $options['lifetime'] = self::$defaultLifetime;
+            }
 
-            if(!isset($options['prefix']))
+            if (!isset($options['prefix'])) {
                 $options['prefix'] = self::$defaultPrefix;
+            }
         }
 
         $this->options = $options;
@@ -74,8 +78,10 @@ abstract class Base extends Adapter implements AdapterInterface {
      *
      * @return array
      */
-    public function read($key) {
-        return $this->getCacheBackend()->get($this->prepareKey($key), $this->options['lifetime']);
+    public function read($key)
+    {
+        return $this->getCacheBackend()->get($this->prepareKey($key),
+            $this->options['lifetime']);
     }
 
     /**
@@ -84,8 +90,10 @@ abstract class Base extends Adapter implements AdapterInterface {
      * @param string $key
      * @param array $data
      */
-    public function write($key, $data) {
-        $this->getCacheBackend()->save($this->prepareKey($key), $data, $this->options['lifetime']);
+    public function write($key, $data)
+    {
+        $this->getCacheBackend()->save($this->prepareKey($key), $data,
+            $this->options['lifetime']);
     }
 
     /**
