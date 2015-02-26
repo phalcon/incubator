@@ -1,7 +1,7 @@
 <?php
 /**
-  * Phalcon Framework
-  * This source file is subject to the New BSD License that is bundled
+ * Phalcon Framework
+ * This source file is subject to the New BSD License that is bundled
  * with this package in the file docs/LICENSE.txt.
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
