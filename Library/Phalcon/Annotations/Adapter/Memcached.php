@@ -25,7 +25,6 @@ use Phalcon\Mvc\Model\Exception;
 use Memcached as MemcachedGeneric;
 use Phalcon\Annotations\Adapter;
 
-
 /**
  * Class Memcached
  *
