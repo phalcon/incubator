@@ -25,10 +25,23 @@ use Phalcon\Mvc\Model\Exception;
 use Memcached as MemcachedGeneric;
 use Phalcon\Annotations\Adapter;
 
-/*
- * Stores the parsed annotations to Memcached. This adapter is suitable for production.
- */
 
+/**
+ * Class Memcached
+ *
+ * Stores the parsed annotations to Memcached.
+ * This adapter is suitable for production.
+ *
+ *<code>
+ * $annotations = new \Phalcon\Annotations\Adapter\Memcached();
+ *</code>
+ *
+ * @category Phalcon
+ * @package  Phalcon\Annotations\Adapter
+ * @author   Ilya Gusev <mail@igusev.ru>
+ * @license  New BSD License
+ * @link     http://phalconphp.com/
+ */
 class Memcached extends Base
 {
     /**
@@ -111,6 +124,9 @@ class Memcached extends Base
 
     /**
      * {@inheritdoc}
+     *
+     * @param string $key
+     *
      * @return string
      */
     protected function prepareKey($key)
