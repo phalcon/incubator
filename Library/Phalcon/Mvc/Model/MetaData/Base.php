@@ -11,16 +11,13 @@
  */
 namespace Phalcon\Mvc\Model\MetaData;
 
-use Phalcon\DI\InjectionAwareInterface;
 use Phalcon\Mvc\Model\MetaData;
-use Phalcon\Mvc\Model\MetaDataInterface;
 
 /**
  * \Phalcon\Mvc\Model\MetaData\Base
  * Base class for \Phalcon\Mvc\Model\MetaData\Memcache and \Phalcon\Mvc\Model\MetaData\Redis adapters.
  */
-abstract class Base extends MetaData implements InjectionAwareInterface, MetaDataInterface
-{
+abstract class Base extends MetaData {
 
     /**
      * Default options for cache backend.
