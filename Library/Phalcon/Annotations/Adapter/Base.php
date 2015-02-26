@@ -33,7 +33,7 @@ use Phalcon\Annotations\AdapterInterface;
  * @license  New BSD License
  * @link     http://phalconphp.com/
  */
-abstract class Base extends Adapter implements AdapterInterface
+abstract class Base extends Adapter
 {
     /**
      * Default option for cache lifetime.
