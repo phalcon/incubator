@@ -96,6 +96,9 @@ $loader->register();
 * [Phalcon\Logger\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to store logs in a database table (phalcon)
 * [Phalcon\Logger\Adapter\Firelogger](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to log messages in the Firelogger console in Firebug (phalcon)
 
+### Mailer
+* [Phalcon\Mailer\Manager](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mailer) - Mailer wrapper over SwiftMailer (KorsaR-ZN)
+
 ### Template Engines
 * [Phalcon\Mvc\View\Engine\Mustache](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/View/Engine) - Adapter for Mustache (phalcon)
 * [Phalcon\Mvc\View\Engine\Twig](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/View/Engine) - Adapter for Twig (phalcon)
