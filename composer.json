@@ -19,7 +19,8 @@
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
         "squizlabs/php_codesniffer": "1.*",
-        "codeception/codeception": "*"
+        "codeception/codeception": "*",
+        "symfony/http-kernel": "*"
     },
     "autoload": {
         "psr-0": {
