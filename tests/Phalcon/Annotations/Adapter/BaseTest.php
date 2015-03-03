@@ -33,7 +33,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function dataRead()
+    public function dataReadWrite()
     {
         return array(
             array('test1', 'data1'),
@@ -61,7 +61,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider dataRead
+     * @dataProvider dataReadWrite
      */
     public function testRead($key, $data)
     {
@@ -74,6 +74,22 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $mock->expects($this->once())->method('getCacheBackend')->willReturn($cacheBackend);
 
         $this->assertEquals($data, $mock->read($key));
+    }
+
+    /**
+     * @dataProvider dataReadWrite
+     */
+    public function testWrite($key, $data)
+    {
+        $mock = $this->getObject(null);
+        $mock->expects($this->once())->method('prepareKey')->willReturn($key);
+
+        $cacheBackend = new CacheBackend(new CacheFrontend(array('lifetime' => 86400)));
+
+        $mock->expects($this->once())->method('getCacheBackend')->willReturn($cacheBackend);
+        $mock->write($key, $data, 86400);
+
+        $this->assertEquals($data, $cacheBackend->get($key));
     }
 
 
