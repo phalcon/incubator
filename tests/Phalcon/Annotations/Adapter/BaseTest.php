@@ -17,7 +17,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     protected $classname = '\Phalcon\Annotations\Adapter\Base';
 
-    public function getOptions()
+    public function dataConstructor()
     {
         return array(
             array(array('lifetime' => 23), array('lifetime' => 23, 'prefix' => '')),
@@ -30,13 +30,18 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    protected function getObject($options)
+    {
+        return $this->getMockForAbstractClass($this->classname, array('options' => $options), '', true,
+            true, true, array(), true);
+    }
+
     /**
-     * @dataProvider getOptions
+     * @dataProvider dataConstructor
      */
     public function testConstructor($options, $expected)
     {
-        $mock = $this->getMockForAbstractClass($this->classname, array('options' => $options), '', true,
-            true, true, array(), true);
+        $mock = $this->getObject($options);
         $reflectedProperty = new \ReflectionProperty(get_class($mock), 'options');
         $reflectedProperty->setAccessible(true);
         $this->assertEquals($expected, $reflectedProperty->getValue($mock));
