@@ -73,9 +73,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
         $mock->expects($this->once())->method('getCacheBackend')->willReturn($cacheBackend);
 
-        $reflectedMethod = new \ReflectionMethod(get_class($mock), 'getCacheBackend');
-        $reflectedMethod->setAccessible(true);
-
         $this->assertEquals($data, $mock->read($key));
     }
 
