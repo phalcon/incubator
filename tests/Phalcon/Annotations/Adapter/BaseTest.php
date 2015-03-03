@@ -2,6 +2,9 @@
 
 namespace Phalcon\Annotations\Adapter;
 
+use Phalcon\Cache\Backend\Memory as CacheBackend;
+use Phalcon\Cache\Frontend\Data as CacheFrontend;
+
 /**
  * \Phalcon\Annotations\Adapter\BaseTest
  * Tests for class \Phalcon\Annotations\Adapter\Base
@@ -30,6 +33,16 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function dataRead()
+    {
+        return array(
+            array('test1', 'data1'),
+            array('test1', (object) array('key' => 'value')),
+            array('test1', array('key' => 'value')),
+            array('test1', null)
+        );
+    }
+
     protected function getObject($options)
     {
         return $this->getMockForAbstractClass($this->classname, array('options' => $options), '', true,
@@ -45,6 +58,25 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectedProperty = new \ReflectionProperty(get_class($mock), 'options');
         $reflectedProperty->setAccessible(true);
         $this->assertEquals($expected, $reflectedProperty->getValue($mock));
+    }
+
+    /**
+     * @dataProvider dataRead
+     */
+    public function testRead($key, $data)
+    {
+        $mock = $this->getObject(null);
+        $mock->expects($this->once())->method('prepareKey')->willReturn($key);
+
+        $cacheBackend = new CacheBackend(new CacheFrontend(array('lifetime' => 86400)));
+        $cacheBackend->save($key, $data, 86400);
+
+        $mock->expects($this->once())->method('getCacheBackend')->willReturn($cacheBackend);
+
+        $reflectedMethod = new \ReflectionMethod(get_class($mock), 'getCacheBackend');
+        $reflectedMethod->setAccessible(true);
+
+        $this->assertEquals($data, $mock->read($key));
     }
 
 
