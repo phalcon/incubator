@@ -73,8 +73,8 @@ $loader->register();
 * [Phalcon\Annotations\Adapter\Memcached](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Annotations/Adapter) - Memcached adapter for storing annotations (igusev)
 
 ### Behaviors
-* [Phalcon\Mvc\Model\Befavior\Blameable](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Befavior) - logs with every created or updated row in your database who created and who updated it. 
-* [Phalcon\Mvc\Model\Befavior\NestedSet](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Befavior) - Nested Set behavior for models (braska)
+* [Phalcon\Mvc\Model\Behavior\Blameable](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Behavior) - logs with every created or updated row in your database who created and who updated it. 
+* [Phalcon\Mvc\Model\Behavior\NestedSet](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Behavior) - Nested Set behavior for models (braska)
 
 ### Cache
 * [Phalcon\Cache\Backend\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Database backend for caching data (phalcon)
