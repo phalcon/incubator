@@ -118,7 +118,8 @@ abstract class Base extends Adapter
     /**
      * Returns cache backend instance.
      *
-     * @return \Phalcon\Cache\BackendInterface
+     * @abstract
+     * @@implements \Phalcon\Cache\BackendInterface
      */
     abstract protected function getCacheBackend();
 }
