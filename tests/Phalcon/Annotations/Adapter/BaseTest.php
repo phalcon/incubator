@@ -92,5 +92,19 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data, $cacheBackend->get($key));
     }
 
+    public function testHasDefaultLifetime()
+    {
+        $this->assertClassHasStaticAttribute('defaultLifetime', $this->classname);
+    }
+
+    public function testHasDefaultPrefix()
+    {
+        $this->assertClassHasStaticAttribute('defaultPrefix', $this->classname);
+    }
+
+    public function testHasOptions()
+    {
+        $this->assertClassHasAttribute('options', $this->classname);
+    }
 
 }
