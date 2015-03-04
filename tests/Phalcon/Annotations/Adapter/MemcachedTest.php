@@ -220,6 +220,20 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Phalcon\Cache\Backend\Libmemcached', $reflectedMethod->invoke($object));
     }
 
+
+    /**
+     *
+     * @requires extension memcached
+     */
+    public function testGetCacheBackend2()
+    {
+        $object = new \Phalcon\Annotations\Adapter\Memcached(array('host' => '127.0.0.1'));
+
+        $reflectedMethod = new \ReflectionMethod(get_class($object), 'getCacheBackend');
+        $reflectedMethod->setAccessible(true);
+        $this->assertInstanceOf('\Phalcon\Cache\Backend\Libmemcached', $reflectedMethod->invoke($object));
+    }
+
     public function testHasDefaultPort()
     {
         $this->assertClassHasStaticAttribute('defaultPort', '\Phalcon\Annotations\Adapter\Memcached');
