@@ -166,6 +166,16 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function dataReadWrite()
+    {
+        return array(
+            array('test1', 'data1'),
+            array('test1', (object) array('key' => 'value')),
+            array('test1', array('key' => 'value')),
+            array('test1', null)
+        );
+    }
+
     /**
      * @expectedException           \Phalcon\Mvc\Model\Exception
      * @expectedExceptionMessage    No host given in options
@@ -233,6 +243,51 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
         $reflectedMethod->setAccessible(true);
         $this->assertInstanceOf('\Phalcon\Cache\Backend\Libmemcached', $reflectedMethod->invoke($object));
     }
+
+    /**
+     *
+     * @dataProvider dataReadWrite
+     * @requires extension memcached
+     */
+    public function testReadWriteWithoutPrefix($key, $data)
+    {
+        $object = new \Phalcon\Annotations\Adapter\Memcached(array('host' => '127.0.0.1'));
+
+        $object->write($key, $data);
+
+        $this->assertEquals($data, $object->read($key));
+    }
+
+    /**
+     *
+     * @dataProvider dataReadWrite
+     * @requires extension memcached
+     */
+    public function testReadWriteWithPrefix($key, $data)
+    {
+        $object = new \Phalcon\Annotations\Adapter\Memcached(array('host' => '127.0.0.1', 'prefix' => 'test_'));
+
+        $object->write($key, $data);
+
+        $this->assertEquals($data, $object->read($key));
+    }
+
+    /**
+     *
+     * @requires extension memcached
+     */
+    //    public function testReadWriteWithoutPrefix2($key, $data)
+    //    {
+    //        $object = new \Phalcon\Annotations\Adapter\Memcached(array('host' => '127.0.0.1');
+    //
+    //        $object->write($key, $data);
+    //
+    //        $this->assertEquals($data, $object->read($key));
+    //
+    //        $reflectedMethod = new \ReflectionMethod(get_class($object), 'getCacheBackend');
+    //        $reflectedMethod->setAccessible(true);
+    //        $this->assertInstanceOf('\Phalcon\Cache\Backend\Libmemcached', $reflectedMethod->invoke($object));
+    //    }
 
     public function testHasDefaultPort()
     {
