@@ -1,7 +1,7 @@
 language: php
 
 install:
-  - tests/memcache-setup.sh
+  - tests/memcached.sh
 
 before_script:
   - ./tests/install-php-extension.sh
