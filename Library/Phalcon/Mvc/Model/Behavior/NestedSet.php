@@ -182,7 +182,7 @@ class NestedSet extends Behavior implements BehaviorInterface
     /**
      * Named scope. Gets children for node (direct descendants only).
      *
-     * @return \Phalcon\Mvc\Model\ResultsetInterface.
+     * @return \Phalcon\Mvc\Model\ResultsetInterface
      */
     public function children()
     {
@@ -194,7 +194,7 @@ class NestedSet extends Behavior implements BehaviorInterface
      *
      * @param  int $depth the depth.
      *
-     * @return \Phalcon\Mvc\Model\ResultsetInterface.
+     * @return \Phalcon\Mvc\Model\ResultsetInterface
      */
     public function ancestors($depth = null)
     {
@@ -219,7 +219,7 @@ class NestedSet extends Behavior implements BehaviorInterface
     /**
      * Named scope. Gets root node(s).
      *
-     * @return \Phalcon\Mvc\Model\ResultsetInterface.
+     * @return \Phalcon\Mvc\Model\ResultsetInterface
      */
     public function roots()
     {
@@ -255,7 +255,7 @@ class NestedSet extends Behavior implements BehaviorInterface
     /**
      * Named scope. Gets previous sibling of node.
      *
-     * @return \Phalcon\Mvc\ModelInterface.
+     * @return \Phalcon\Mvc\ModelInterface
      */
     public function prev()
     {
@@ -273,7 +273,7 @@ class NestedSet extends Behavior implements BehaviorInterface
     /**
      * Named scope. Gets next sibling of node.
      *
-     * @return \Phalcon\Mvc\ModelInterface.
+     * @return \Phalcon\Mvc\ModelInterface
      */
     public function next()
     {
@@ -291,7 +291,7 @@ class NestedSet extends Behavior implements BehaviorInterface
     /**
      * Prepends node to target as first child.
      *
-     * @param  \Phalcon\Mvc\ModelInterface $target the target.
+     * @param  \Phalcon\Mvc\ModelInterface $target the target
      * @param  array $attributes                   list of attributes.
      *
      * @return boolean                     whether the prepending succeeds.
@@ -556,11 +556,11 @@ class NestedSet extends Behavior implements BehaviorInterface
     }
 
     /**
-     * @param  \Phalcon\Mvc\ModelInterface $target .
-     * @param  int $key                            .
-     * @param  int $levelUp                        .
+     * @param  \Phalcon\Mvc\ModelInterface $target
+     * @param  int $key
+     * @param  int $levelUp
      *
-     * @return boolean.
+     * @return boolean
      * @throws \Phalcon\Mvc\Model\Exception
      */
     private function moveNode($target, $key, $levelUp)
@@ -692,8 +692,8 @@ class NestedSet extends Behavior implements BehaviorInterface
     }
 
     /**
-     * @param int $key   .
-     * @param int $delta .
+     * @param int $key
+     * @param int $delta
      */
     private function shiftLeftRight($key, $delta)
     {
@@ -719,12 +719,12 @@ class NestedSet extends Behavior implements BehaviorInterface
     }
 
     /**
-     * @param  \Phalcon\Mvc\ModelInterface $target .
-     * @param  int $key                            .
-     * @param  int $levelUp                        .
-     * @param  array $attributes                   .
+     * @param  \Phalcon\Mvc\ModelInterface $target
+     * @param  int $key
+     * @param  int $levelUp
+     * @param  array $attributes
      *
-     * @return boolean.
+     * @return boolean
      * @throws \Phalcon\Mvc\Model\Exception
      */
     private function addNode($target, $key, $levelUp, $attributes)
@@ -772,10 +772,10 @@ class NestedSet extends Behavior implements BehaviorInterface
     }
 
     /**
-     * @param  array $attributes .
-     * @param  array $whiteList  .
+     * @param  array $attributes
+     * @param  array $whiteList
      *
-     * @return boolean.
+     * @return boolean
      * @throws \Phalcon\Mvc\Model\Exception
      */
     private function makeRoot($attributes, $whiteList)
