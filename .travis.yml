@@ -5,7 +5,7 @@ install:
 
 before_script:
   - ./tests/install-php-extension.sh
-  - composer update --dev
+  - composer update
 
 php:
   - 5.3
