@@ -19,7 +19,6 @@
 
 namespace Phalcon\Annotations\Adapter;
 
-
 use Phalcon\Annotations\Adapter;
 use Phalcon\Annotations\AdapterInterface;
 
