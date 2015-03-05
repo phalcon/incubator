@@ -10,7 +10,7 @@ env:
 
 before_script:
   - ./tests/install-php-extension.sh ${PHALCON_VERSION}
-  - php -r "echo Phalcon\Version::get()."\n";"
+  - php -r "echo \Phalcon\Version::get()."\n";"
   - composer update
 
 php:
