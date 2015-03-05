@@ -157,7 +157,7 @@ class NestedSet extends Behavior implements BehaviorInterface
      *
      * @param  int $depth the depth.
      *
-     * @return \Phalcon\Mvc\Model\ResultsetInterface.
+     * @return \Phalcon\Mvc\Model\ResultsetInterface
      */
     public function descendants($depth = null)
     {
@@ -371,7 +371,7 @@ class NestedSet extends Behavior implements BehaviorInterface
      *
      * @param  \Phalcon\Mvc\ModelInterface $target the target.
      *
-     * @return boolean                     whether the moving succeeds.
+     * @return boolean
      */
     public function moveBefore($target)
     {
@@ -383,7 +383,7 @@ class NestedSet extends Behavior implements BehaviorInterface
      *
      * @param  \Phalcon\Mvc\ModelInterface $target the target.
      *
-     * @return boolean                     whether the moving succeeds.
+     * @return boolean
      */
     public function moveAfter($target)
     {
@@ -395,7 +395,7 @@ class NestedSet extends Behavior implements BehaviorInterface
      *
      * @param  \Phalcon\Mvc\ModelInterface $target the target.
      *
-     * @return boolean                     whether the moving succeeds.
+     * @return boolean
      */
     public function moveAsFirst($target)
     {
@@ -407,7 +407,7 @@ class NestedSet extends Behavior implements BehaviorInterface
      *
      * @param  \Phalcon\Mvc\ModelInterface $target the target.
      *
-     * @return boolean                     whether the moving succeeds.
+     * @return boolean
      */
     public function moveAsLast($target)
     {
@@ -417,7 +417,7 @@ class NestedSet extends Behavior implements BehaviorInterface
     /**
      * Move node as new root.
      *
-     * @return boolean                      whether the moving succeeds.
+     * @return boolean
      * @throws \Phalcon\Mvc\Model\Exception
      */
     public function moveAsRoot()
@@ -481,7 +481,7 @@ class NestedSet extends Behavior implements BehaviorInterface
      * @param  array $attributes list of attributes.
      * @param  array $whiteList  whether to perform validation.
      *
-     * @return boolean whether the saving succeeds.
+     * @return boolean
      */
     public function saveNode($attributes = null, $whiteList = null)
     {
@@ -500,7 +500,7 @@ class NestedSet extends Behavior implements BehaviorInterface
     /**
      * Deletes node and it's descendants.
      *
-     * @return boolean                      whether the deletion is successful.
+     * @return boolean
      * @throws \Phalcon\Mvc\Model\Exception
      */
     public function deleteNode()
