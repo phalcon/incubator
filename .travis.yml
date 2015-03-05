@@ -1,7 +1,6 @@
 language: php
 
 env:
-  - PHALCON_VERSION="2.0.0"
   - PHALCON_VERSION="1.3.5"
   - PHALCON_VERSION="1.3.4"
   - PHALCON_VERSION="1.3.3"
