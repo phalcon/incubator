@@ -1,5 +1,8 @@
 language: php
 
+install:
+  - tests/unit/data/travis/memcache-setup.sh
+
 before_script:
   - ./tests/install-php-extension.sh
   - composer update --dev
@@ -12,3 +15,7 @@ php:
 script:
   - php vendor/bin/phpcs --standard=PSR2 --encoding=utf-8 Library/
   - phpunit --configuration tests/phpunit.xml.dist
+
+
+services:
+  - memcached
