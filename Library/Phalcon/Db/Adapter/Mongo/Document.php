@@ -40,7 +40,6 @@ class Document
         }
 
         while ($iterator->valid()) {
-
             $key = $iterator->key();
             $value = $iterator->current();
 

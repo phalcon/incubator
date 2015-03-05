@@ -19,7 +19,6 @@
 
 namespace Phalcon\Annotations\Adapter;
 
-
 use Phalcon\Annotations\Adapter;
 use Phalcon\Annotations\AdapterInterface;
 
@@ -65,14 +64,12 @@ abstract class Base extends Adapter
      */
     public function __construct($options = null)
     {
-        if (is_array($options)) {
-            if (!isset($options['lifetime'])) {
-                $options['lifetime'] = self::$defaultLifetime;
-            }
+        if (!is_array($options) || !isset($options['lifetime'])) {
+            $options['lifetime'] = self::$defaultLifetime;
+        }
 
-            if (!isset($options['prefix'])) {
-                $options['prefix'] = self::$defaultPrefix;
-            }
+        if (!is_array($options) || !isset($options['prefix'])) {
+            $options['prefix'] = self::$defaultPrefix;
         }
 
         $this->options = $options;
@@ -97,7 +94,7 @@ abstract class Base extends Adapter
      * {@inheritdoc}
      *
      * @param string $key
-     * @param array  $data
+     * @param array $data
      */
     public function write($key, $data)
     {
@@ -120,7 +117,8 @@ abstract class Base extends Adapter
     /**
      * Returns cache backend instance.
      *
-     * @return \Phalcon\Cache\BackendInterface
+     * @abstract
+     * @@implements \Phalcon\Cache\BackendInterface
      */
     abstract protected function getCacheBackend();
 }

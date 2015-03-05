@@ -31,15 +31,15 @@ class MysqlExtended extends \Phalcon\Db\Dialect\Mysql
     /**
      * Transforms an intermediate representation for a expression into a database system valid expression
      *
-     * @param array expression
+     * @param array  expression
      * @param string escapeChar
+     *
      * @return string
      */
     public function getSqlExpression($expression, $escapeChar = null)
     {
 
         if ($expression["type"] == 'functionCall') {
-
             switch ($expression["name"]) {
 
                 case 'DATE_INTERVAL':
@@ -74,7 +74,7 @@ class MysqlExtended extends \Phalcon\Db\Dialect\Mysql
                     }
 
                     return 'MATCH(' . join(', ', $arguments) . ') AGAINST (' .
-                        $this->getSqlExpression($expression["arguments"][$length]) . ')';
+                    $this->getSqlExpression($expression["arguments"][$length]) . ')';
 
                 case 'FULLTEXT_MATCH_BMODE':
 
@@ -89,7 +89,7 @@ class MysqlExtended extends \Phalcon\Db\Dialect\Mysql
                     }
 
                     return 'MATCH(' . join(', ', $arguments) . ') AGAINST (' .
-                        $this->getSqlExpression($expression["arguments"][$length]) . ' IN BOOLEAN MODE)';
+                    $this->getSqlExpression($expression["arguments"][$length]) . ' IN BOOLEAN MODE)';
             }
         }
 

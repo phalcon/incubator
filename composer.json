@@ -14,11 +14,11 @@
     "require": {
         "php": ">=5.3.6",
         "ext-phalcon": ">=1.2.4",
-        "swiftmailer/swiftmailer": "~5.2"
+        "swiftmailer/swiftmailer": ">=5.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*",
-        "squizlabs/php_codesniffer": "1.*",
+        "phpunit/phpunit": "4.5.*",
+        "squizlabs/php_codesniffer": "2.*",
         "codeception/codeception": "*"
     },
     "autoload": {

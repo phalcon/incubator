@@ -38,13 +38,14 @@ class Gettext extends Adapter implements AdapterInterface
     /**
      * Class constructor.
      *
-     * @param array $options Required options: 
-     *                       (string) locale
-     *                       (string|array) file
-     *                       (string) directory
-     *                       ~ or ~
-     *                       (array) domains (instead of file and directory), where keys are domain names and values
-     *                               their respective directories.
+     * @param array $options         Required options:
+     *                               (string) locale
+     *                               (string|array) file
+     *                               (string) directory
+     *                               ~ or ~
+     *                               (array) domains (instead of file and directory), where keys are domain names and
+     *                               values their respective directories.
+     *
      * @throws \Phalcon\Translate\Exception
      */
     public function __construct($options)
@@ -86,7 +87,7 @@ class Gettext extends Adapter implements AdapterInterface
             $this->defaultDomain = key($options['domains']);
             // save list of domains
             $this->domains = array_keys($options['domains']);
-            
+
         } else {
             if (is_array($options['file'])) {
                 foreach ($options['file'] as $domain) {
@@ -110,8 +111,9 @@ class Gettext extends Adapter implements AdapterInterface
      * {@inheritdoc}
      *
      * @param  string $index
-     * @param  array  $placeholders
+     * @param  array $placeholders
      * @param  string $domain
+     *
      * @return string
      */
     public function query($index, $placeholders = null, $domain = null)
@@ -134,10 +136,11 @@ class Gettext extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param  string                    $msgid
-     * @param  string                    $msgctxt      Optional. If ommitted or NULL, this method behaves as query().
-     * @param  array                     $placeholders Optional.
-     * @param  string                    $category     Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @param  string $msgid
+     * @param  string $msgctxt     Optional. If ommitted or NULL, this method behaves as query().
+     * @param  array $placeholders Optional.
+     * @param  string $category    Optional. Specify the locale category. Defaults to LC_MESSAGES
+     *
      * @return string
      * @throws \InvalidArgumentException
      */
@@ -155,7 +158,7 @@ class Gettext extends Adapter implements AdapterInterface
         }
 
         $contextString = "{$msgctxt}\004{$msgid}";
-        $translation   = dcgettext($domain, $contextString, $category);
+        $translation = dcgettext($domain, $contextString, $category);
 
         if ($translation == $contextString) {
             $translation = $msgid;
@@ -174,10 +177,11 @@ class Gettext extends Adapter implements AdapterInterface
      * Returns the translation related to the given key and context (msgctxt).
      * This is an alias to cquery().
      *
-     * @param  string  $msgid
-     * @param  string  $msgctxt      Optional.
-     * @param  array   $placeholders Optional.
-     * @param  integer $category     Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @param  string $msgid
+     * @param  string $msgctxt     Optional.
+     * @param  array $placeholders Optional.
+     * @param  integer $category   Optional. Specify the locale category. Defaults to LC_MESSAGES
+     *
      * @return string
      */
     // @codingStandardsIgnoreStart
@@ -190,11 +194,12 @@ class Gettext extends Adapter implements AdapterInterface
     /**
      * Returns the translation related to the given key and context (msgctxt) from a specific domain.
      *
-     * @param  string  $domain
-     * @param  string  $msgid
-     * @param  string  $msgctxt      Optional.
-     * @param  array   $placeholders Optional.
-     * @param  integer $category     Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @param  string $domain
+     * @param  string $msgid
+     * @param  string $msgctxt     Optional.
+     * @param  array $placeholders Optional.
+     * @param  integer $category   Optional. Specify the locale category. Defaults to LC_MESSAGES
+     *
      * @return string
      */
     public function dquery($domain, $msgid, $msgctxt = null, $placeholders = null, $category = LC_MESSAGES)
@@ -205,11 +210,12 @@ class Gettext extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param  string  $msgid1
-     * @param  string  $msgid2
+     * @param  string $msgid1
+     * @param  string $msgid2
      * @param  integer $count
-     * @param  array   $placeholders
-     * @param  string  $domain
+     * @param  array $placeholders
+     * @param  string $domain
+     *
      * @return string
      */
     public function nquery($msgid1, $msgid2, $count, $placeholders = null, $domain = null)
@@ -235,12 +241,13 @@ class Gettext extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param  string                    $msgid1
-     * @param  string                    $msgid2
-     * @param  integer                   $count
-     * @param  string                    $msgctxt      Optional. If ommitted or NULL, this method behaves as nquery().
-     * @param  array                     $placeholders Optional.
-     * @param  string                    $category     Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @param  string $msgid1
+     * @param  string $msgid2
+     * @param  integer $count
+     * @param  string $msgctxt     Optional. If ommitted or NULL, this method behaves as nquery().
+     * @param  array $placeholders Optional.
+     * @param  string $category    Optional. Specify the locale category. Defaults to LC_MESSAGES
+     *
      * @return string
      * @throws \InvalidArgumentException
      */
@@ -269,7 +276,7 @@ class Gettext extends Adapter implements AdapterInterface
 
         $contextString1 = "{$msgctxt}\004{$msgid1}";
         $contextString2 = "{$msgctxt}\004{$msgid2}";
-        $translation   = dcngettext($domain, $contextString1, $contextString2, $count, $category);
+        $translation = dcngettext($domain, $contextString1, $contextString2, $count, $category);
 
         if ($translation == $contextString) {
             $translation = $msgid;
@@ -288,13 +295,14 @@ class Gettext extends Adapter implements AdapterInterface
      * Returns the translation related to the given key and context (msgctxt)
      * from a specific domain with plural form support.
      *
-     * @param  string  $domain
-     * @param  string  $msgid1
-     * @param  string  $msgid2
+     * @param  string $domain
+     * @param  string $msgid1
+     * @param  string $msgid2
      * @param  integer $count
-     * @param  string  $msgctxt      Optional.
-     * @param  array   $placeholders Optional.
-     * @param  integer $category     Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @param  string $msgctxt     Optional.
+     * @param  array $placeholders Optional.
+     * @param  integer $category   Optional. Specify the locale category. Defaults to LC_MESSAGES
+     *
      * @return string
      */
     public function dnquery(
@@ -316,7 +324,8 @@ class Gettext extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param  string  $index
+     * @param  string $index
+     *
      * @return boolean
      */
     public function exists($index)
@@ -328,7 +337,8 @@ class Gettext extends Adapter implements AdapterInterface
      * Changes the current domain (i.e. the translation file). The passed domain must be one
      * of those passed to the constructor.
      *
-     * @param  string                    $domain
+     * @param  string $domain
+     *
      * @return string                    Returns the new current domain.
      * @throws \InvalidArgumentException
      */
