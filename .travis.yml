@@ -1,8 +1,11 @@
 language: php
 
+install:
+  - tests/memcached.sh
+
 before_script:
   - ./tests/install-php-extension.sh
-  - composer update --dev
+  - composer update
 
 php:
   - 5.3
@@ -12,3 +15,7 @@ php:
 script:
   - php vendor/bin/phpcs --standard=PSR2 --encoding=utf-8 Library/
   - phpunit --configuration tests/phpunit.xml.dist
+
+
+services:
+  - memcached
