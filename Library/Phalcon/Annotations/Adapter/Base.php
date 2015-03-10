@@ -64,14 +64,12 @@ abstract class Base extends Adapter
      */
     public function __construct($options = null)
     {
-        if (is_array($options)) {
-            if (!isset($options['lifetime'])) {
-                $options['lifetime'] = self::$defaultLifetime;
-            }
+        if (!is_array($options) || !isset($options['lifetime'])) {
+            $options['lifetime'] = self::$defaultLifetime;
+        }
 
-            if (!isset($options['prefix'])) {
-                $options['prefix'] = self::$defaultPrefix;
-            }
+        if (!is_array($options) || !isset($options['prefix'])) {
+            $options['prefix'] = self::$defaultPrefix;
         }
 
         $this->options = $options;
