@@ -128,8 +128,19 @@ class Redis extends Prefixable
     public function delete($keyName)
     {
         $options = $this->getOptions();
+        $redisPrefix = $options['redis']->getOption(\Redis::OPT_PREFIX);
 
-        return $options['redis']->delete($this->getPrefixedIdentifier($keyName)) > 0;
+        if (!empty($redisPrefix)) {
+            $redisPrefixLen = strlen($redisPrefix);
+            $keys = $options['redis']->getKeys($this->getPrefixedIdentifier($keyName) . '*');
+            $keys = array_map(function ($key) use ($redisPrefixLen) {
+                return substr($key, $redisPrefixLen);
+            }, $keys);
+
+            return $options['redis']->delete($keys) > 0;
+        } else {
+            return $options['redis']->delete($this->getPrefixedIdentifier($keyName)) > 0;
+        }
     }
 
     /**
