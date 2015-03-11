@@ -23,13 +23,13 @@ class Twig extends Engine implements EngineInterface
      * @param \Phalcon\DiInterface       $di
      * @param array                      $options
      */
-    public function __construct($view, $di = null, $options = array())
+    public function __construct($view, $di = null, $options = array(), $user_functions = array())
     {
         $loader     = new \Twig_Loader_Filesystem($view->getViewsDir());
         $this->twig = new Twig\Environment($di, $loader, $options);
 
         $this->twig->addExtension(new Twig\CoreExtension());
-        $this->registryFunctions($view, $di);
+        $this->registryFunctions($view, $di, $user_functions);
 
         parent::__construct($view, $di);
     }
@@ -39,7 +39,7 @@ class Twig extends Engine implements EngineInterface
      *
      * @param \Phalcon\Mvc\ViewInterface $view
      */
-    protected function registryFunctions($view, $di)
+    protected function registryFunctions($view, $di, $user_functions)
     {
         $options = array(
             'is_safe' => array('html')
@@ -119,7 +119,9 @@ class Twig extends Engine implements EngineInterface
                 return $di->get("url")->get($route);
             }, $options)
         );
-
+    
+        $functions = array_merge($functions, $user_functions);
+        
         foreach ($functions as $function) {
             $this->twig->addFunction($function);
         }
