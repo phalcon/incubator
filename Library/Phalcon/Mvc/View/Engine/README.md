@@ -102,7 +102,7 @@ $di->set('view', function() {
                 //Setting up Twig Environment Options
                 $options = array('cache' => '../cache/');
                 // Adding support for the native PHP chunk_split function
-		$user_functions = array(
+                $user_functions = array(
 		            new \Twig_SimpleFunction('chunk_split', function ($string, $len = 76, $end = "\r\n") use ($di) {
 		                return chunk_split($string, $len, $end);
 		            }, $options)
