@@ -22,14 +22,15 @@ class Twig extends Engine implements EngineInterface
      * @param \Phalcon\Mvc\ViewInterface $view
      * @param \Phalcon\DiInterface       $di
      * @param array                      $options
+     * @param array                      $userFunctions
      */
-    public function __construct($view, $di = null, $options = array(), $user_functions = array())
+    public function __construct($view, $di = null, $options = array(), $userFunctions = array())
     {
         $loader     = new \Twig_Loader_Filesystem($view->getViewsDir());
         $this->twig = new Twig\Environment($di, $loader, $options);
 
         $this->twig->addExtension(new Twig\CoreExtension());
-        $this->registryFunctions($view, $di, $user_functions);
+        $this->registryFunctions($view, $di, $userFunctions);
 
         parent::__construct($view, $di);
     }
@@ -38,8 +39,10 @@ class Twig extends Engine implements EngineInterface
      * Registers common function in Twig
      *
      * @param \Phalcon\Mvc\ViewInterface $view
+     * @param \Phalcon\DiInterface       $di
+     * @param array                      $userFunctions
      */
-    protected function registryFunctions($view, $di, $user_functions)
+    protected function registryFunctions($view, $di, $userFunctions = array())
     {
         $options = array(
             'is_safe' => array('html')
@@ -119,9 +122,11 @@ class Twig extends Engine implements EngineInterface
                 return $di->get("url")->get($route);
             }, $options)
         );
-    
-        $functions = array_merge($functions, $user_functions);
-        
+
+        if (!empty($userFunctions)) {
+            $functions = array_merge($functions, $userFunctions);
+        }
+
         foreach ($functions as $function) {
             $this->twig->addFunction($function);
         }
