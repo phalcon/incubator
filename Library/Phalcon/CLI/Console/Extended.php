@@ -91,9 +91,11 @@ class Extended extends \Phalcon\CLI\Console
                         foreach ($actionAnnotations as $actAnnotation) {
                             $_anotation = $actAnnotation->getName();
                             if ($_anotation == 'description') {
-                                $this->documentation[$taskName]['actions'][$actionName]['description'] = $actAnnotation->getArguments();
+                                $getDesc = $actAnnotation->getArguments();
+                                $this->documentation[$taskName]['actions'][$actionName]['description'] = $getDesc;
                             } elseif ($_anotation == 'param') {
-                                $this->documentation[$taskName]['actions'][$actionName]['params'][] = $actAnnotation->getArguments();
+                                $getParams = $actAnnotation->getArguments();
+                                $this->documentation[$taskName]['actions'][$actionName]['params'][]  = $getParams;
                             }
                         }
                     }
