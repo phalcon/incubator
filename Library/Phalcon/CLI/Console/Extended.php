@@ -17,8 +17,7 @@ class Extended extends \Phalcon\CLI\Console
 
     public function handle(array $arguments)
     {
-
-        if (isset($arguments['task']) && in_array( $arguments['task'], array('-h','--help','help'))) {
+        if (isset($arguments['task']) && in_array($arguments['task'], array('-h','--help','help'))) {
             $this->setTasksDir();
             $this->createHelp();
             $this->showHelp();
@@ -63,12 +62,12 @@ class Extended extends \Phalcon\CLI\Console
         }
 
         foreach ($scannedTasksDir as $taskFile) {
-            $taskClass = str_replace('.php','',$taskFile);
-            $taskName  = strtolower(str_replace('Task','',$taskClass));
+            $taskClass = str_replace('.php', '', $taskFile);
+            $taskName  = strtolower(str_replace('Task', '', $taskClass));
 
             $this->documentation[$taskName] = array('description'=>array(''), 'actions'=>array());
 
-            $reflector = $reader->get( $taskClass );
+            $reflector = $reader->get($taskClass);
             $annotations = $reflector->getClassAnnotations();
 
             $methodAnnotations = $reflector->getMethodsAnnotations();
@@ -83,7 +82,7 @@ class Extended extends \Phalcon\CLI\Console
                 //Method Annotations
                 if ($methodAnnotations) {
                     foreach ($methodAnnotations as $action => $collection) {
-                        $actionName = strtolower(str_replace('Action','',$action));
+                        $actionName = strtolower(str_replace('Action', '', $action));
 
                         $this->documentation[$taskName]['actions'][$actionName]=array();
 
@@ -197,4 +196,4 @@ class Extended extends \Phalcon\CLI\Console
             }
         }
     }
-} 
+}
