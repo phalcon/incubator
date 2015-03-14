@@ -20,7 +20,7 @@ class Smarty extends Engine implements EngineInterface
     /**
      * {@inheritdoc}
      *
-     * @param \Phalcon\Mvc\ViewInterface $view
+     * @param \Phalcon\Mvc\ViewInterface|\Phalcon\Mvc\View\Simple $view
      * @param \Phalcon\DiInterface       $di
      */
     public function __construct($view, DiInterface $di = null)
