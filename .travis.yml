@@ -6,6 +6,9 @@ env:
   - PHALCON_VERSION="1.3.3"
   - PHALCON_VERSION="1.3.2"
 
+install:
+  - tests/memcached.sh
+
 before_script:
   - ./tests/install-php-extension.sh ${PHALCON_VERSION}
   - php -r 'echo \Phalcon\Version::get()."\n";'
@@ -20,3 +23,6 @@ php:
 script:
   - php vendor/bin/phpcs --standard=PSR2 --encoding=utf-8 Library/
   - phpunit --configuration tests/phpunit.xml.dist
+
+services:
+  - memcached

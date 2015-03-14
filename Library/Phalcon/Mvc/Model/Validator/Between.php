@@ -17,19 +17,19 @@ use Phalcon\Mvc\ModelInterface;
  *class Sliders extends Phalcon\Mvc\Model
  *{
  *
- *	public function validation()
- *	{
- *		$this->validate(new Between(array(
- *			'field' => 'position',
- *			'max' => 50,
- *			'min' => 2,
- *			'message' => 'Position is not between a valid range',
- *		)));
+ *    public function validation()
+ *    {
+ *        $this->validate(new Between(array(
+ *            'field' => 'position',
+ *            'max' => 50,
+ *            'min' => 2,
+ *            'message' => 'Position is not between a valid range',
+ *        )));
  *
- *		if ($this->validationHasFailed() == true) {
- *			return false;
- *		}
- *	}
+ *        if ($this->validationHasFailed() == true) {
+ *            return false;
+ *        }
+ *    }
  *
  *}
  *</code>
@@ -40,6 +40,7 @@ class Between extends ModelValidator implements ValidatorInterface
      * {@inheritdoc}
      *
      * @param $record
+     *
      * @return boolean
      * @throws Exception
      */

@@ -20,6 +20,7 @@ use Phalcon\Mvc\View;
 
 /**
  * Class Manager
+ *
  * @package Phalcon\Manager
  */
 class Manager extends Component
@@ -131,7 +132,6 @@ class Manager extends Component
     public function normalizeEmail($email)
     {
         if (preg_match('#[^(\x20-\x7F)]+#', $email)) {
-
             list($user, $domain) = explode('@', $email);
 
             return $user . '@' . $this->punycode($domain);
@@ -203,7 +203,6 @@ class Manager extends Component
             ->setPort($config['port']);
 
         if (isset($config['encryption'])) {
-
             $transport->setEncryption($config['encryption']);
         }
 
@@ -327,7 +326,6 @@ class Manager extends Component
         if ($this->view) {
             return $this->view;
         } else {
-
             if (!($viewsDir = $this->getConfig('viewsDir'))) {
                 $viewsDir = $this->getDI()->get('view')->getViewsDir();
             }
