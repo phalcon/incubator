@@ -43,7 +43,8 @@ class Gettext extends Adapter implements AdapterInterface
      *                               (string|array) file
      *                               (string) directory
      *                               ~ or ~
-     *                               (array) domains (instead of file and directory), where keys are domain names and
+     *                               (array) domains (instead of file and directory),
+     *                               where keys are domain names and
      *                               values their respective directories.
      *
      * @throws \Phalcon\Translate\Exception
@@ -137,9 +138,11 @@ class Gettext extends Adapter implements AdapterInterface
      * {@inheritdoc}
      *
      * @param  string $msgid
-     * @param  string $msgctxt     Optional. If ommitted or NULL, this method behaves as query().
+     * @param  string $msgctxt     Optional. If ommitted or NULL,
+     *                             this method behaves as query().
      * @param  array $placeholders Optional.
-     * @param  string $category    Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @param  string $category    Optional. Specify the locale category.
+     *                             Defaults to LC_MESSAGES
      *
      * @return string
      * @throws \InvalidArgumentException
@@ -175,7 +178,8 @@ class Gettext extends Adapter implements AdapterInterface
      * @param  string $msgid
      * @param  string $msgctxt     Optional.
      * @param  array $placeholders Optional.
-     * @param  integer $category   Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @param  integer $category   Optional. Specify the locale category.
+     *                             Defaults to LC_MESSAGES
      *
      * @return string
      */
@@ -187,7 +191,8 @@ class Gettext extends Adapter implements AdapterInterface
     // @codingStandardsIgnoreEnd
 
     /**
-     * Returns the translation related to the given key and context (msgctxt) from a specific domain.
+     * Returns the translation related to the given key
+     * and context (msgctxt) from a specific domain.
      *
      * @param  string $domain
      * @param  string $msgid
@@ -242,6 +247,7 @@ class Gettext extends Adapter implements AdapterInterface
      * @param  string $msgctxt     Optional. If ommitted or NULL, this method behaves as nquery().
      * @param  array $placeholders Optional.
      * @param  string $category    Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @param  string $domain      Optional.
      *
      * @return string
      * @throws \InvalidArgumentException
