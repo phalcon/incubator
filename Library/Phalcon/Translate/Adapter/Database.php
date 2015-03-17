@@ -22,14 +22,27 @@ use Phalcon\Translate\Adapter;
 use Phalcon\Translate\AdapterInterface;
 use Phalcon\Translate\Exception;
 
-class Database extends Adapter implements AdapterInterface
+class Database extends Adapter implements AdapterInterface, \ArrayAccess
 {
-
     /**
      * @var array
      */
     protected $options;
 
+    /**
+     * Statement for Exist
+     *
+     * @var array
+     */
+    protected $stmtExists;
+
+    /**
+     * Statement for Read
+     *
+     * @var array
+     */
+    protected $stmtSelect;
+    
     /**
      * Class constructor.
      *
@@ -51,62 +64,174 @@ class Database extends Adapter implements AdapterInterface
         }
 
         $this->options = $options;
+        $this->stmtSelect = sprintf(
+            'SELECT value FROM %s WHERE language = :language AND key_name = :key_name',
+            $options['table']
+        );
+        $this->stmtExists = sprintf(
+            'SELECT COUNT(*) AS `count` FROM %s WHERE language = :language AND key_name = :key_name',
+            $options['table']
+        );
     }
 
     /**
      * {@inheritdoc}
      *
-     * @param  string $index
+     * @param  string $translateKey
      * @param  array  $placeholders
      * @return string
      */
-    public function query($index, $placeholders = null)
+    public function query($translateKey, $placeholders = null)
     {
         $options = $this->options;
-
         $translation = $options['db']->fetchOne(
-            sprintf(
-                "SELECT value FROM %s WHERE language = '%s' AND key_name = ?",
-                $options['table'],
-                $options['language']
-            ),
-            null,
-            array($index)
+            $this->stmtSelect,
+            \Phalcon\Db::FETCH_ASSOC,
+            array('language' => $options['language'], 'key_name' => $translateKey)
         );
-
-        if (!$translation) {
-            return $index;
-        }
-
-        if ($placeholders == null) {
-            return $translation['value'];
-        }
+        $value = empty($translation['value']) ? $translateKey : $translation['value'];
 
         if (is_array($placeholders)) {
-            foreach ($placeholders as $key => $value) {
-                $translation['value'] = str_replace('%' . $key . '%', $value, $translation['value']);
+            foreach ($placeholders as $k => $v) {
+                $value = str_replace('%' . $k . '%', $v, $value);
             }
         }
 
-        return $translation['value'];
+        return $value;
+    }
+
+    /**
+     * Returns the translation string of the given key
+     *
+     * @param  string $translateKey
+     * @param  array  $placeholders
+     * @return string
+     */
+    // @codingStandardsIgnoreStart
+    public function _($translateKey, $placeholders = null)
+    // @codingStandardsIgnoreEnd
+    {
+        return $this->query($translateKey, $placeholders);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @param  string  $index
+     * @param  string  $translateKey
      * @return boolean
      */
-    public function exists($index)
+    public function exists($translateKey)
     {
         $options = $this->options;
-
-        $exists = $options['db']->fetchOne(
-            "SELECT COUNT(*) FROM " . $options['table'] . " WHERE key_name = ?0",
-            null,
-            array($index)
+        $result = $options['db']->fetchOne(
+            $this->stmtExists,
+            \Phalcon\Db::FETCH_ASSOC,
+            array('language' => $options['language'], 'key_name' => $translateKey)
         );
+        return !empty($result['count']);
+    }
 
-        return $exists[0] > 0;
+    /**
+     * Adds a translation for given key (No existance check!)
+     *
+     * @param  string  $translateKey
+     * @param  string  $message
+     * @return boolean
+     */
+    public function add($translateKey, $message)
+    {
+        $options = $this->options;
+        $data = array('language' => $options['language'], 'key_name' => $translateKey, 'value' => $message);
+        return $options['db']->insert($options['table'], array_values($data), array_keys($data));
+    }
+
+    /**
+     * Update a translation for given key (No existance check!)
+     *
+     * @param  string  $translateKey
+     * @param  string  $message
+     * @return boolean
+     */
+    public function update($translateKey, $message)
+    {
+        $options = $this->options;
+        return $options['db']->update($options['table'], array('value'), array($message), array(
+            'conditions' => 'key_name = ? AND language = ?',
+            'bind' => array('key' => $translateKey, 'lang' => $options['language'])
+        ));
+    }
+
+    /**
+     * Deletes a translation for given key (No existance check!)
+     *
+     * @param  string  $translateKey
+     * @return boolean
+     */
+    public function delete($translateKey)
+    {
+        $options = $this->options;
+        return $options['db']->delete(
+            $options['table'],
+            'key_name = :key AND language = :lang',
+            array('key' => $translateKey, 'lang' => $options['language'])
+        );
+    }
+
+    /**
+     * Sets (insert or updates) a translation for given key
+     *
+     * @param  string  $translateKey
+     * @param  string  $message
+     * @return boolean
+     */
+    public function set($translateKey, $message)
+    {
+        return $this->exists($translateKey) ?
+            $this->update($translateKey, $message) : $this->add($translateKey, $message);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param  string $translateKey
+     * @return string
+     */
+    public function offsetExists($translateKey)
+    {
+        return $this->exists($translateKey);
+    }
+    
+    /**
+     * {@inheritdoc}
+     *
+     * @param  string $translateKey
+     * @param  string $message
+     * @return string
+     */
+    public function offsetSet($translateKey, $message)
+    {
+        return $this->update($translateKey, $message);
+    }
+    
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $translateKey
+     * @return string
+     */
+    public function offsetGet($translateKey)
+    {
+        return $this->query($translateKey);
+    }
+    
+    /**
+     * {@inheritdoc}
+     *
+     * @param  string $translateKey
+     * @return string
+     */
+    public function offsetUnset($translateKey)
+    {
+        return $this->delete($translateKey);
     }
 }
