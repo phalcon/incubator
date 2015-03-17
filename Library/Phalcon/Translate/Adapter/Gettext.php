@@ -22,7 +22,7 @@ use Phalcon\Translate\Adapter;
 use Phalcon\Translate\AdapterInterface;
 use Phalcon\Translate\Exception;
 
-class Gettext extends Adapter implements AdapterInterface
+class Gettext extends Base implements AdapterInterface
 {
 
     /**
@@ -149,13 +149,7 @@ class Gettext extends Adapter implements AdapterInterface
             $translation = dgettext($domain, $index);
         }
 
-        if (is_array($placeholders)) {
-            foreach ($placeholders as $key => $value) {
-                $translation = str_replace('%' . $key . '%', $value, $translation);
-            }
-        }
-
-        return $translation;
+        return self::setPlaceholders($translation, $placeholders);
     }
 
     /**
@@ -186,13 +180,7 @@ class Gettext extends Adapter implements AdapterInterface
             $translation = $msgid;
         }
 
-        if (is_array($placeholders)) {
-            foreach ($placeholders as $key => $value) {
-                $translation = str_replace('%' . $key . '%', $value, $translation);
-            }
-        }
-
-        return $translation;
+        return self::setPlaceholders($translation, $placeholders);
     }
 
     /**
@@ -251,13 +239,7 @@ class Gettext extends Adapter implements AdapterInterface
             $translation = dngettext($domain, $msgid1, $msgid2, $count);
         }
 
-        if (is_array($placeholders)) {
-            foreach ($placeholders as $key => $value) {
-                $translation = str_replace('%' . $key . '%', $value, $translation);
-            }
-        }
-
-        return $translation;
+        return self::setPlaceholders($translation, $placeholders);
     }
 
     /**
@@ -298,13 +280,7 @@ class Gettext extends Adapter implements AdapterInterface
             $translation = $msgid;
         }
 
-        if (is_array($placeholders)) {
-            foreach ($placeholders as $key => $value) {
-                $translation = str_replace('%' . $key . '%', $value, $translation);
-            }
-        }
-
-        return $translation;
+        return self::setPlaceholders($translation, $placeholders);
     }
 
     /**
