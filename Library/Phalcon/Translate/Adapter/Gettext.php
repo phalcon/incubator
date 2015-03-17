@@ -59,53 +59,77 @@ class Gettext extends Adapter implements AdapterInterface
             throw new Exception('Parameter "locale" is required');
         }
 
-        if (isset($options['domains'])) {
-            unset($options['file']);
-            unset($options['directory']);
-        }
-
-        if (!isset($options['domains']) && !isset($options['file'])) {
-            throw new Exception('Option "file" is required unless "domains" is specified.');
-        }
-
-        if (!isset($options['domains']) && !isset($options['directory'])) {
-            throw new Exception('Option "directory" is required unless "domains" is specified.');
-        }
-
-        if (isset($options['domains']) && !is_array($options['domains'])) {
-            throw new Exception('If the option "domains" is specified it must be an array.');
-        }
-
         putenv("LC_ALL=" . $options['locale']);
         setlocale(LC_ALL, $options['locale']);
 
-        if (isset($options['domains'])) {
-            foreach ($options['domains'] as $domain => $dir) {
-                bindtextdomain($domain, $dir);
-            }
-            // set the first domain as default
-            reset($options['domains']);
-            $this->defaultDomain = key($options['domains']);
-            // save list of domains
-            $this->domains = array_keys($options['domains']);
-
-        } else {
-            if (is_array($options['file'])) {
-                foreach ($options['file'] as $domain) {
-                    bindtextdomain($domain, $options['directory']);
-                }
-
-                // set the first domain as default
-                $this->defaultDomain = reset($options['file']);
-                $this->domains = $options['file'];
-            } else {
-                bindtextdomain($options['file'], $options['directory']);
-                $this->defaultDomain = $options['file'];
-                $this->domains = array($options['file']);
-            }
-        }
+        $this->prepareOptions($options);
 
         textdomain($this->defaultDomain);
+    }
+
+    /**
+     * Validator for constructor
+     *
+     * @param array $options
+     *
+     */
+    protected function prepareOptions($options)
+    {
+        if (isset($options['domains'])) {
+            $this->prepareOptionsWithDomain($options);
+        } else {
+            $this->prepareOptionsWithoutDomain($options);
+        }
+    }
+
+    /**
+     * Validator for gettext with domains
+     *
+     * @param array $options
+     *
+     * @throws \Phalcon\Translate\Exception
+     */
+    private function prepareOptionsWithDomain($options)
+    {
+        if (!is_array($options['domains'])) {
+            throw new Exception('Parameter "domains" must be an array.');
+        }
+        unset($options['file']);
+        unset($options['directory']);
+
+        foreach ($options['domains'] as $domain => $dir) {
+            bindtextdomain($domain, $dir);
+        }
+        // set the first domain as default
+        reset($options['domains']);
+        $this->defaultDomain = key($options['domains']);
+        // save list of domains
+        $this->domains = array_keys($options['domains']);
+    }
+
+    /**
+     * Validator for gettext without domains
+     *
+     * @param array $options
+     *
+     * @throws \Phalcon\Translate\Exception
+     */
+    private function prepareOptionsWithoutDomain($options)
+    {
+        self::validateOptionsWithoutDomain($options);
+        if (!is_array($options['file'])) {
+            $options['file'] = array($options['file']);
+        }
+
+        foreach ($options['file'] as $domain) {
+            bindtextdomain($domain, $options['directory']);
+        }
+
+        // set the first domain as default
+        $this->defaultDomain = reset($options['file']);
+        $this->domains = $options['file'];
+
+        return $options;
     }
 
     /**
@@ -363,6 +387,19 @@ class Gettext extends Adapter implements AdapterInterface
     {
         if (!is_int($count) || $count < 0) {
             throw new \InvalidArgumentException("Count must be a nonnegative integer. $count given.");
+        }
+    }
+
+    /**
+     * Validate required fields in $options
+     *
+     * @access public
+     * @throws \InvalidArgumentException
+     */
+    public static function validateOptionsWithoutDomain($options)
+    {
+        if (!isset($options['file'], $options['directory'])) {
+            throw new  \InvalidArgumentException('Parameters "file" and "directory" are required.');
         }
     }
 }
