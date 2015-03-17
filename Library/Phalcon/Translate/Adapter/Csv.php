@@ -4,7 +4,7 @@ namespace Phalcon\Translate\Adapter;
 use Phalcon\Translate\Adapter;
 use Phalcon\Translate\AdapterInterface;
 
-class Csv extends Adapter implements AdapterInterface
+class Csv extends Base implements AdapterInterface
 {
 
     /**
@@ -59,14 +59,7 @@ class Csv extends Adapter implements AdapterInterface
             return $index;
         }
 
-        $translation = $this->translate[$index];
-        if (is_array($placeholders)) {
-            foreach ($placeholders as $key => $value) {
-                $translation = str_replace('%' . $key . '%', $value, $translation);
-            }
-        }
-
-        return $translation;
+        return self::setPlaceholders($this->translate[$index], $placeholders);
     }
 
     /**
