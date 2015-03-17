@@ -272,12 +272,11 @@ class Gettext extends Base implements AdapterInterface
 
         $this->setDomain($domain);
 
-        $contextString1 = "{$msgctxt}\004{$msgid1}";
-        $contextString2 = "{$msgctxt}\004{$msgid2}";
-        $translation = dcngettext($domain, $contextString1, $contextString2, $count, $category);
+        $context = "{$msgctxt}\004";
+        $translation = dcngettext($domain, $context . $msgid1, $context . $msgid2, $count, $category);
 
-        if ($translation == $contextString) {
-            $translation = $msgid;
+        if (strpos($translation, $context, 0) === 0) {
+            $translation = substr($translation, strlen($context));
         }
 
         return self::setPlaceholders($translation, $placeholders);
