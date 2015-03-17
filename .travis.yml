@@ -12,6 +12,7 @@ install:
 before_script:
   - ./tests/install-php-extension.sh ${PHALCON_VERSION}
   - php -r 'echo \Phalcon\Version::get()."\n";'
+  - composer self-update
   - composer update
 
 php:
