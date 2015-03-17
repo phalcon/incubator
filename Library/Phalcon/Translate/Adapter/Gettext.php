@@ -220,9 +220,7 @@ class Gettext extends Adapter implements AdapterInterface
      */
     public function nquery($msgid1, $msgid2, $count, $placeholders = null, $domain = null)
     {
-        if (!is_int($count) || $count < 0) {
-            throw new \InvalidArgumentException("Count must be a nonnegative integer. $count given.");
-        }
+        self::validateCount($count);
         if ($domain === null) {
             $translation = ngettext($msgid1, $msgid2, $count);
         } else {
@@ -261,9 +259,7 @@ class Gettext extends Adapter implements AdapterInterface
         $category = LC_MESSAGES,
         $domain = null
     ) {
-        if (!is_int($count) || $count < 0) {
-            throw new \InvalidArgumentException("Count must be a nonnegative integer. $count given.");
-        }
+        self::validateCount($count);
         if ($msgctxt === null) {
             return $this->nquery($msgid1, $msgid2, $count, $placeholders, $domain);
         }
@@ -310,9 +306,6 @@ class Gettext extends Adapter implements AdapterInterface
         $placeholders = null,
         $category = LC_MESSAGES
     ) {
-        if (!is_int($count) || $count < 0) {
-            throw new \InvalidArgumentException("Count must be a nonnegative integer. $count given.");
-        }
         return $this->cnquery($msgid1, $msgid2, $count, $msgctxt, $placeholders, $category, $domain);
     }
 
@@ -358,5 +351,18 @@ class Gettext extends Adapter implements AdapterInterface
     public function resetDomain()
     {
         return textdomain($this->defaultDomain);
+    }
+
+    /**
+     * Count parameter validation
+     *
+     * @access public
+     * @throws \InvalidArgumentException
+     */
+    public static function validateCount($count)
+    {
+        if (!is_int($count) || $count < 0) {
+            throw new \InvalidArgumentException("Count must be a nonnegative integer. $count given.");
+        }
     }
 }
