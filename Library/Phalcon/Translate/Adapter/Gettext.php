@@ -146,16 +146,11 @@ class Gettext extends Adapter implements AdapterInterface
      */
     public function cquery($msgid, $msgctxt = null, $placeholders = null, $category = LC_MESSAGES, $domain = null)
     {
-        if ($domain !== null && !in_array($domain, $this->domains)) {
-            throw new \InvalidArgumentException($domain . ' is invalid translation domain');
-        }
         if ($msgctxt === null) {
             return $this->query($msgid, $placeholders, $domain);
         }
 
-        if ($domain === null) {
-            $domain = textdomain(null);
-        }
+        $this->setDomain($domain);
 
         $contextString = "{$msgctxt}\004{$msgid}";
         $translation = dcgettext($domain, $contextString, $category);
@@ -263,16 +258,11 @@ class Gettext extends Adapter implements AdapterInterface
         if (!is_int($count) || $count < 0) {
             throw new \InvalidArgumentException("Count must be a nonnegative integer. $count given.");
         }
-        if ($domain !== null && !in_array($domain, $this->domains)) {
-            throw new \InvalidArgumentException($domain . ' is invalid translation domain');
-        }
         if ($msgctxt === null) {
             return $this->nquery($msgid1, $msgid2, $count, $placeholders, $domain);
         }
 
-        if ($domain === null) {
-            $domain = textdomain(null);
-        }
+        $this->setDomain($domain);
 
         $contextString1 = "{$msgctxt}\004{$msgid1}";
         $contextString2 = "{$msgctxt}\004{$msgid2}";
