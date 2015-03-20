@@ -1,6 +1,9 @@
-[![Latest Stable Version](https://poser.pugx.org/phalcon/incubator/v/stable.svg)](https://packagist.org/packages/phalcon/incubator)
-[![Total Downloads](https://poser.pugx.org/phalcon/incubator/downloads.svg)](https://packagist.org/packages/phalcon/incubator)
-[![License](https://poser.pugx.org/phalcon/incubator/license.svg)](https://packagist.org/packages/phalcon/incubator)
+[![Latest Version](https://img.shields.io/packagist/v/phalcon/incubator.svg?style=flat-square)](https://github.com/phalcon/incubator/releases)
+[![Software License](https://img.shields.io/badge/license-BSD--3-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Build Status](https://img.shields.io/travis/phalcon/incubator/master.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/phalcon/incubator.svg?style=flat-square)](https://scrutinizer-ci.com/g/phalcon/incubator/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/g/phalcon/incubator.svg?style=flat-square)](https://scrutinizer-ci.com/g/phalcon/incubator)
+[![Total Downloads](https://img.shields.io/packagist/dt/phalcon/incubator.svg?style=flat-square)](https://packagist.org/packages/phalcon/incubator)
 
 # Phalcon Incubator
 
@@ -143,5 +146,4 @@ Current Build Status
 --------------------
 Incubator is built under Travis CI service. Every commit pushed to this repository will queue a build into the continuous integration service and will run all PHPUnit tests to ensure that everything is going well and the project is stable. The current build status is:
 
-[![Build Status](https://secure.travis-ci.org/phalcon/incubator.png?branch=master)](http://travis-ci.org/phalcon/incubator)
-
+[![Build Status](https://img.shields.io/travis/phalcon/incubator/master.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
