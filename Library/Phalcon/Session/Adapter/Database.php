@@ -224,9 +224,10 @@ class Database extends Adapter implements AdapterInterface
 
         return $options['db']->execute(
             sprintf(
-                'DELETE FROM %s WHERE %s + %d < ?',
+                'DELETE FROM %s WHERE COALESCE(%s, %s) + %d < ?',
                 $options['db']->escapeIdentifier($options['table']),
                 $options['db']->escapeIdentifier($options['column_modified_at']),
+                $options['db']->escapeIdentifier($options['column_created_at']),
                 $maxlifetime
             ),
             array(time())
