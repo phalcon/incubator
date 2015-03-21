@@ -82,7 +82,33 @@ class CardNumberTest extends \PHPUnit_Framework_TestCase
                 null,
                 1270338206812535,
                 false
-            )
+            ),
+            array(
+                CardNumber::AMERICAN_EXPRESS,
+                370676121989775,
+                true
+            ),
+            array(
+                CardNumber::AMERICAN_EXPRESS,
+                340136100802926,
+                true
+            ),
+            array(
+                CardNumber::AMERICAN_EXPRESS,
+                344922644454845,
+                true
+            ),
+            array(
+                CardNumber::AMERICAN_EXPRESS,
+                370282036294748,
+                true
+            ),
+            array(
+                CardNumber::AMERICAN_EXPRESS,
+                370676121989775,
+                true
+            ),
+
         );
     }
 
@@ -99,7 +125,7 @@ class CardNumberTest extends \PHPUnit_Framework_TestCase
         $obj = new \TestCardNumberModel();
 
         $obj->cardnumber = $cardnumber;
-        if ($type) {
+        if ($type || $type === 0) {
             $obj->type = $type;
         }
         $this->assertEquals($willReturn, $obj->validation());

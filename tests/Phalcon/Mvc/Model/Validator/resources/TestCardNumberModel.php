@@ -11,7 +11,7 @@ class TestCardNumberModel extends \Phalcon\Mvc\Model
         $params = array(
             'field' => 'cardnumber'
         );
-        if ($this->type) {
+        if ($this->type || $this->type === 0) {
             $params['type'] = $this->type;
         }
         $this->validate(
