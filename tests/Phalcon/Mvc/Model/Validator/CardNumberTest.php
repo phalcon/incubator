@@ -181,4 +181,23 @@ class CardNumberTest extends \PHPUnit_Framework_TestCase
         $this->assertNotInstanceOf('Phalcon\Mvc\ModelInterface', $obj);
         $obj->validation();
     }
+
+    /**
+     * @expectedException           \Phalcon\Mvc\Model\Exception
+     * @expectedExceptionMessage    Incorrect type specifier
+     */
+    public function testValidateIncorrectType()
+    {
+        $di = New DI();
+        $di->set('modelsManager', new Manager());
+
+        require_once(__DIR__ . '/resources/TestCardNumberModel.php');
+
+        $obj = new \TestCardNumberModel();
+
+        $obj->type = 500;
+        $obj->cardnumber = 1270338206812535;
+
+        $obj->validation();
+    }
 }
