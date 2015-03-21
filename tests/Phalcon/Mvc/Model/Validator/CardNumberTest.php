@@ -200,4 +200,20 @@ class CardNumberTest extends \PHPUnit_Framework_TestCase
 
         $obj->validation();
     }
+
+    /**
+     * @expectedException           \Phalcon\Mvc\Model\Exception
+     * @expectedExceptionMessage    Field name must be a string
+     */
+    public function testValidateIncorrectFieldType()
+    {
+        $di = New DI();
+        $di->set('modelsManager', new Manager());
+
+        require_once(__DIR__ . '/resources/TestCardNumberIncorrectField.php');
+
+        $obj = new \TestCardNumberIncorrectField();
+
+        $obj->validation();
+    }
 }
