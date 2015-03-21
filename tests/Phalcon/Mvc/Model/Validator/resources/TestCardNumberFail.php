@@ -6,7 +6,7 @@ class TestCardNumberFail
     public $cardnumber;
     public $type;
 
-    private $validations = [];
+    private $validations = array();
 
     public function validation()
     {
