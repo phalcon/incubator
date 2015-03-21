@@ -137,4 +137,22 @@ class CardNumberTest extends \PHPUnit_Framework_TestCase
         $this->assertNotInstanceOf('Phalcon\Mvc\ModelInterface', $obj);
         $obj->validation();
     }
+
+    /**
+     * @expectedException           \Phalcon\Mvc\Model\Exception
+     * @expectedExceptionMessage    Invalid parameter type.
+     */
+    public function testValidateOtherInstance()
+    {
+        require_once(__DIR__ . '/resources/TestCardNumberFail.php');
+
+        $obj = new \TestCardNumberFail();
+
+        $obj->type = CardNumber::MASTERCARD;
+        $obj->cardnumber = 1270338206812535;
+
+        $this->assertNotInstanceOf('Phalcon\Mvc\CollectionInterface', $obj);
+        $this->assertNotInstanceOf('Phalcon\Mvc\ModelInterface', $obj);
+        $obj->validation();
+    }
 }
