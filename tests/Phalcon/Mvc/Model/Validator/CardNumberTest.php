@@ -117,4 +117,24 @@ class CardNumberTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Phalcon\Mvc\ModelInterface', $obj);
         $this->assertNotInstanceOf('Phalcon\Mvc\CollectionInterface', $obj);
     }
+
+
+    public function testValidateInstanceOfCollection()
+    {
+        $di = New DI();
+        $di->set('collectionManager', function () {
+            return new \Phalcon\Mvc\Collection\Manager();
+        });
+
+        require_once(__DIR__ . '/resources/TestCardNumberCollection.php');
+
+        $obj = new \TestCardNumberCollection($di);
+
+        $obj->type = CardNumber::MASTERCARD;
+        $obj->cardnumber = 1270338206812535;
+
+        $this->assertInstanceOf('Phalcon\Mvc\CollectionInterface', $obj);
+        $this->assertNotInstanceOf('Phalcon\Mvc\ModelInterface', $obj);
+        $obj->validation();
+    }
 }
