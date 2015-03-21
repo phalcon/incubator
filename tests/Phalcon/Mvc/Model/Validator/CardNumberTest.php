@@ -104,4 +104,17 @@ class CardNumberTest extends \PHPUnit_Framework_TestCase
         }
         $this->assertEquals($willReturn, $obj->validation());
     }
+
+    public function testValidateInstanceOfModel()
+    {
+        $di = New DI();
+        $di->set('modelsManager', new Manager());
+
+        require_once(__DIR__ . '/resources/TestCardNumberModel.php');
+
+        $obj = new \TestCardNumberModel();
+
+        $this->assertInstanceOf('Phalcon\Mvc\ModelInterface', $obj);
+        $this->assertNotInstanceOf('Phalcon\Mvc\CollectionInterface', $obj);
+    }
 }
