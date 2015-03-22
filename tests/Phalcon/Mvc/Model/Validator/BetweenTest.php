@@ -114,4 +114,32 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
 
         $obj->validation();
     }
+
+    public function testValidateIsEmpty()
+    {
+        $di = New DI();
+        $di->set('modelsManager', new Manager());
+
+        require_once(__DIR__ . '/resources/TestBetweenModel.php');
+
+        $obj = new \TestBetweenModel();
+
+        $obj->min = 1;
+        $obj->max = 3;
+        $this->assertEquals(false, $obj->validation());
+    }
+    public function testValidateIsEmptyWithFlag()
+    {
+        $di = New DI();
+        $di->set('modelsManager', new Manager());
+
+        require_once(__DIR__ . '/resources/TestBetweenModel.php');
+
+        $obj = new \TestBetweenModel();
+
+        $obj->min = 1;
+        $obj->max = 3;
+        $obj->allowEmpty = true;
+        $this->assertEquals(true, $obj->validation());
+    }
 }

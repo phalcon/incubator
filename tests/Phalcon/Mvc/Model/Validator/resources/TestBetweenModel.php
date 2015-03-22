@@ -6,6 +6,7 @@ class TestBetweenModel extends \Phalcon\Mvc\Model
     public $min;
     public $max;
     public $message;
+    public $allowEmpty;
 
     public function validation()
     {
@@ -21,6 +22,9 @@ class TestBetweenModel extends \Phalcon\Mvc\Model
         }
         if ($this->message) {
             $params['message'] = $this->message;
+        }
+        if ($this->allowEmpty) {
+            $params['allowEmpty'] = $this->allowEmpty;
         }
         $this->validate(
             new \Phalcon\Mvc\Model\Validator\Between(
