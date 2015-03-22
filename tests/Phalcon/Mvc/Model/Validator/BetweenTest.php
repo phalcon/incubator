@@ -98,4 +98,20 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
         $this->assertNotInstanceOf('Phalcon\Mvc\ModelInterface', $obj);
         $obj->validation();
     }
+
+    /**
+     * @expectedException           \Phalcon\Mvc\Model\Exception
+     * @expectedExceptionMessage    Field name must be a string
+     */
+    public function testValidateIncorrectFieldType()
+    {
+        $di = New DI();
+        $di->set('modelsManager', new Manager());
+
+        require_once(__DIR__ . '/resources/TestBetweenIncorrectField.php');
+
+        $obj = new \TestBetweenIncorrectField();
+
+        $obj->validation();
+    }
 }
