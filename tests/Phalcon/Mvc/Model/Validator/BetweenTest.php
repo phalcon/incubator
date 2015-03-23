@@ -142,4 +142,37 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
         $obj->allowEmpty = true;
         $this->assertEquals(true, $obj->validation());
     }
+    /**
+     * @expectedException           \Phalcon\Mvc\Model\Exception
+     * @expectedExceptionMessage    A minimum and maximum must be set
+     */
+    public function testValidateWithoutMin()
+    {
+        $di = New DI();
+        $di->set('modelsManager', new Manager());
+
+        require_once(__DIR__ . '/resources/TestBetweenModel.php');
+
+        $obj = new \TestBetweenModel();
+
+        $obj->max = 3;
+        $obj->validation();
+    }
+    /**
+     * @expectedException           \Phalcon\Mvc\Model\Exception
+     * @expectedExceptionMessage    A minimum and maximum must be set
+     */
+    public function testValidateWithoutMax()
+    {
+        $di = New DI();
+        $di->set('modelsManager', new Manager());
+
+        require_once(__DIR__ . '/resources/TestBetweenModel.php');
+
+        $obj = new \TestBetweenModel();
+
+        $obj->min = 1;
+
+        $obj->validation();
+    }
 }

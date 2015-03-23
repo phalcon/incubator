@@ -17,7 +17,7 @@ class TestBetweenModel extends \Phalcon\Mvc\Model
         if ($this->min) {
             $params['min'] = $this->min;
         }
-        if ($this->min) {
+        if ($this->max) {
             $params['max'] = $this->max;
         }
         if ($this->message) {
