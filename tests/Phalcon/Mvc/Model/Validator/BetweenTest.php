@@ -176,6 +176,7 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
 
         $obj->validation();
     }
+
     /**
      * @expectedException           \Phalcon\Mvc\Model\Exception
      * @expectedExceptionMessage    A minimum and maximum must be set
@@ -192,5 +193,48 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
         $obj->min = 1;
 
         $obj->validation();
+    }
+
+    public function testValidateDefaultMessage()
+    {
+        $di = New DI();
+        $di->set('modelsManager', new Manager());
+
+        require_once(__DIR__ . '/resources/TestBetweenModel.php');
+
+        $obj = new \TestBetweenModel();
+
+        $obj->min = 1;
+        $obj->max = 2;
+        $obj->position = 3;
+
+        $obj->validation();
+        $messages = $obj->getMessages();
+        $this->assertEquals(
+            $messages[0]->getMessage(),
+            'position is not between a valid range'
+        );
+    }
+
+    public function testValidateCustomMessage()
+    {
+        $di = New DI();
+        $di->set('modelsManager', new Manager());
+
+        require_once(__DIR__ . '/resources/TestBetweenModel.php');
+
+        $obj = new \TestBetweenModel();
+
+        $obj->min = 1;
+        $obj->max = 2;
+        $obj->position = 3;
+        $obj->message = 'test 123';
+
+        $obj->validation();
+        $messages = $obj->getMessages();
+        $this->assertEquals(
+            $messages[0]->getMessage(),
+            'test 123'
+        );
     }
 }
