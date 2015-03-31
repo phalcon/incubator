@@ -65,4 +65,14 @@ class Smarty extends Engine implements EngineInterface
             $this->smarty->$k = $v;
         }
     }
+    
+    /**
+     * Get Smarty object
+     *
+     * @return \Smarty
+     */
+    public function getSmarty()
+    {
+        return $this->smarty;
+    }
 }
