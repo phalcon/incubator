@@ -31,7 +31,7 @@ class Uniqueness extends Validator implements ValidatorInterface
 {
     /**
      * Database connection
-     * @var Phalcon\Db\Adapter\Pdo
+     * @var \Phalcon\Db\Adapter\Pdo
      */
     private $db;
 
@@ -66,11 +66,11 @@ class Uniqueness extends Validator implements ValidatorInterface
     /**
      * Executes the uniqueness validation
      *
-     * @param  Phalcon\Validation $validator
+     * @param  \Phalcon\Validation $validator
      * @param  string             $attribute
      * @return boolean
      */
-    public function validate($validator, $attribute)
+    public function validate(\Phalcon\Validation $validator, $attribute)
     {
         $table = $this->getOption('table');
         $column = $this->getOption('column');
