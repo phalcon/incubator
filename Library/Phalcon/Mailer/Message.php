@@ -633,20 +633,19 @@ class Message
             $result = true;
         }
 
-        if ($result !== false) {
-            $this->failedRecipients = [];
-
-            $count = $this->getManager()->getSwift()->send($this->getMessage(), $this->failedRecipients);
-
-            if ($eventManager) {
-                $eventManager->fire('mailer:afterSend', $this, [$count, $this->failedRecipients]);
-            }
-
-            return $count;
-
-        } else {
+        if ($result === false) {
             return false;
         }
+
+        $this->failedRecipients = [];
+
+        $count = $this->getManager()->getSwift()->send($this->getMessage(), $this->failedRecipients);
+
+        if ($eventManager) {
+            $eventManager->fire('mailer:afterSend', $this, [$count, $this->failedRecipients]);
+        }
+
+        return $count;
     }
 
     /**
@@ -782,7 +781,6 @@ class Message
             }
 
             return $emails;
-
         } else {
             return $this->getManager()->normalizeEmail($email);
         }
