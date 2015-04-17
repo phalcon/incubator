@@ -17,7 +17,6 @@ class PSR extends Loader
      */
     public function autoLoad($className)
     {
-
         $array = explode('\\', $className);
         if (array_key_exists($array[0], $this->_namespaces)) {
             $array[0] = $this->_namespaces[$array[0]];

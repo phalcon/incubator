@@ -163,7 +163,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
         $retval = $this->hs->executeSingle($this->hsIndex, '=', array($id), 1, 0);
 
         if (!isset($retval[0], $retval[0][2])) {
-           return '';
+            return '';
         }
 
         $this->fields['id']       = $retval[0][0];

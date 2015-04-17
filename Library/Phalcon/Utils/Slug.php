@@ -34,7 +34,6 @@ class Slug
      */
     public static function generate($string, $replace = array(), $delimiter = '-')
     {
-
         if (!extension_loaded('iconv')) {
             throw new \Phalcon\Exception('iconv module not loaded');
         }
