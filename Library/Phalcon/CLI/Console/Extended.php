@@ -68,36 +68,42 @@ class Extended extends \Phalcon\CLI\Console
             $this->documentation[$taskName] = array('description'=>array(''), 'actions'=>array());
 
             $reflector = $reader->get($taskClass);
+
             $annotations = $reflector->getClassAnnotations();
+
+            if (!$annotations) {
+                continue;
+            }
+
+            //Class Annotations
+            foreach ($annotations as $annotation) {
+                if ($annotation->getName() == 'description') {
+                    $this->documentation[$taskName]['description'] = $annotation->getArguments();
+                }
+            }
 
             $methodAnnotations = $reflector->getMethodsAnnotations();
 
-            if ($annotations) {
-                //Class Annotations
-                foreach ($annotations as $annotation) {
-                    if ($annotation->getName() == 'description') {
-                        $this->documentation[$taskName]['description'] = $annotation->getArguments();
-                    }
-                }
-                //Method Annotations
-                if ($methodAnnotations) {
-                    foreach ($methodAnnotations as $action => $collection) {
-                        $actionName = strtolower(str_replace('Action', '', $action));
+            //Method Annotations
+            if (!$methodAnnotations) {
+                continue;
+            }
 
-                        $this->documentation[$taskName]['actions'][$actionName]=array();
+            foreach ($methodAnnotations as $action => $collection) {
+                $actionName = strtolower(str_replace('Action', '', $action));
 
-                        $actionAnnotations = $collection->getAnnotations();
+                $this->documentation[$taskName]['actions'][$actionName]=array();
 
-                        foreach ($actionAnnotations as $actAnnotation) {
-                            $_anotation = $actAnnotation->getName();
-                            if ($_anotation == 'description') {
-                                $getDesc = $actAnnotation->getArguments();
-                                $this->documentation[$taskName]['actions'][$actionName]['description'] = $getDesc;
-                            } elseif ($_anotation == 'param') {
-                                $getParams = $actAnnotation->getArguments();
-                                $this->documentation[$taskName]['actions'][$actionName]['params'][]  = $getParams;
-                            }
-                        }
+                $actionAnnotations = $collection->getAnnotations();
+
+                foreach ($actionAnnotations as $actAnnotation) {
+                    $_anotation = $actAnnotation->getName();
+                    if ($_anotation == 'description') {
+                        $getDesc = $actAnnotation->getArguments();
+                        $this->documentation[$taskName]['actions'][$actionName]['description'] = $getDesc;
+                    } elseif ($_anotation == 'param') {
+                        $getParams = $actAnnotation->getArguments();
+                        $this->documentation[$taskName]['actions'][$actionName]['params'][]  = $getParams;
                     }
                 }
             }
@@ -154,48 +160,50 @@ class Extended extends \Phalcon\CLI\Console
         echo '           command [<task> [<action> [<param1> <param2> ... <paramN>] ] ]'. PHP_EOL;
         echo PHP_EOL;
         foreach ($this->documentation as $task => $doc) {
-            if ($taskTogetHelp == $task) {
-                echo  PHP_EOL;
-                echo "Task: " . $task . PHP_EOL . PHP_EOL ;
+            if ($taskTogetHelp != $task) {
+                continue;
+            }
 
-                foreach ($doc['description'] as $line) {
-                    echo '  '.$line . PHP_EOL;
+            echo  PHP_EOL;
+            echo "Task: " . $task . PHP_EOL . PHP_EOL ;
+
+            foreach ($doc['description'] as $line) {
+                echo '  '.$line . PHP_EOL;
+            }
+            echo  PHP_EOL;
+            echo 'Available actions:'.PHP_EOL.PHP_EOL;
+
+            foreach ($doc['actions'] as $actionName => $aDoc) {
+                echo '           '.$actionName . PHP_EOL;
+                if (isset($aDoc['description'])) {
+                    echo '               '.implode(PHP_EOL, $aDoc['description']) . PHP_EOL;
                 }
                 echo  PHP_EOL;
-                echo 'Available actions:'.PHP_EOL.PHP_EOL;
+                if (isset($aDoc['params']) && is_array($aDoc['params'])) {
+                    echo '               Parameters:'.PHP_EOL;
+                    foreach ($aDoc['params'] as $param) {
+                        if (is_array($param)) {
+                            $_to_print = '';
+                            if (isset($param[0]['name'])) {
+                                $_to_print = $param[0]['name'];
+                            }
 
-                foreach ($doc['actions'] as $actionName => $aDoc) {
-                    echo '           '.$actionName . PHP_EOL;
-                    if (isset($aDoc['description'])) {
-                        echo '               '.implode(PHP_EOL, $aDoc['description']) . PHP_EOL;
-                    }
-                    echo  PHP_EOL;
-                    if (isset($aDoc['params']) && is_array($aDoc['params'])) {
-                        echo '               Parameters:'.PHP_EOL;
-                        foreach ($aDoc['params'] as $param) {
-                            if (is_array($param)) {
-                                $_to_print = '';
-                                if (isset($param[0]['name'])) {
-                                    $_to_print = $param[0]['name'];
-                                }
+                            if (isset($param[0]['type'])) {
+                                $_to_print .= ' ( '.$param[0]['type'].' )';
+                            }
 
-                                if (isset($param[0]['type'])) {
-                                    $_to_print .= ' ( '.$param[0]['type'].' )';
-                                }
+                            if (isset($param[0]['description'])) {
+                                $_to_print .= ' '.$param[0]['description'].PHP_EOL;
+                            }
 
-                                if (isset($param[0]['description'])) {
-                                    $_to_print .= ' '.$param[0]['description'].PHP_EOL;
-                                }
-
-                                if (!empty($_to_print)) {
-                                    echo '                   '.$_to_print;
-                                }
+                            if (!empty($_to_print)) {
+                                echo '                   '.$_to_print;
                             }
                         }
                     }
                 }
-                break;
             }
+            break;
         }
     }
 }
