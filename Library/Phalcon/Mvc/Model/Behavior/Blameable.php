@@ -113,28 +113,28 @@ class Blameable extends Behavior implements BehaviorInterface
     {
         $changedFields = $model->getChangedFields();
 
-        if (count($changedFields)) {
-            //Create a new audit
-            $audit = $this->createAudit('U', $model);
-
-            //Date the model had before modifications
-            $originalData = $model->getSnapshotData();
-
-            $details = array();
-            foreach ($changedFields as $field) {
-                $auditDetail = new AuditDetail();
-                $auditDetail->field_name = $field;
-                $auditDetail->old_value = $originalData[$field];
-                $auditDetail->new_value = $model->readAttribute($field);
-
-                $details[] = $auditDetail;
-            }
-
-            $audit->details = $details;
-
-            return $audit->save();
+        if (count($changedFields) == 0) {
+            return null;
         }
 
-        return null;
+        //Create a new audit
+        $audit = $this->createAudit('U', $model);
+
+        //Date the model had before modifications
+        $originalData = $model->getSnapshotData();
+
+        $details = array();
+        foreach ($changedFields as $field) {
+            $auditDetail = new AuditDetail();
+            $auditDetail->field_name = $field;
+            $auditDetail->old_value = $originalData[$field];
+            $auditDetail->new_value = $model->readAttribute($field);
+
+            $details[] = $auditDetail;
+        }
+
+        $audit->details = $details;
+
+        return $audit->save();
     }
 }
