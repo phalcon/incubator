@@ -88,7 +88,6 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
      */
     public function getTypeString($type)
     {
-
         switch ($type) {
             case Logger::EMERGENCE:
             case Logger::CRITICAL:
@@ -203,10 +202,14 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
     {
         if (is_bool($var) || is_null($var) || is_int($var) || is_float($var)) {
             return $var;
-        } elseif (is_string($var)) {
+        }
+
+        if (is_string($var)) {
             // intentionally @
             return @iconv('UTF-16', 'UTF-8//IGNORE', iconv($this->encoding, 'UTF-16//IGNORE', $var));
-        } elseif (is_array($var)) {
+        }
+
+        if (is_array($var)) {
             static $marker;
             if ($marker === null) {
                 $marker = uniqid("\x00", true);
@@ -214,7 +217,9 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
 
             if (isset($var[$marker])) {
                 return '*RECURSION*';
-            } elseif ($level < $this->maxPickleDepth || !$this->maxPickleDepth) {
+            }
+
+            if ($level < $this->maxPickleDepth || !$this->maxPickleDepth) {
                 $var[$marker] = true;
                 $res = array();
 
@@ -227,19 +232,21 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
                 unset($var[$marker]);
 
                 return $res;
-
-            } else {
-                return '...';
             }
 
-        } elseif (is_object($var)) {
+            return '...';
+        }
+
+        if (is_object($var)) {
             $arr = (array) $var;
             $arr['__class##'] = get_class($var);
 
             static $list = array(); // detects recursions
             if (in_array($var, $list, true)) {
                 return '*RECURSION*';
-            } elseif ($level < $this->maxPickleDepth || !$this->maxPickleDepth) {
+            }
+
+            if ($level < $this->maxPickleDepth || !$this->maxPickleDepth) {
                 $list[] = $var;
                 $res = array();
 
@@ -254,15 +261,16 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
                 array_pop($list);
 
                 return $res;
-            } else {
-                return '...';
             }
-        } elseif (is_resource($var)) {
-            return '*' . get_resource_type($var) . ' resource*';
 
-        } else {
-            return '*unknown type*';
+            return '...';
         }
+
+        if (is_resource($var)) {
+            return '*' . get_resource_type($var) . ' resource*';
+        }
+
+        return '*unknown type*';
     }
 
     /**
