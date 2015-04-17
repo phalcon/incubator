@@ -162,15 +162,15 @@ class HandlerSocket extends Adapter implements AdapterInterface
     {
         $retval = $this->hs->executeSingle($this->hsIndex, '=', array($id), 1, 0);
 
-        if (isset($retval[0], $retval[0][2])) {
-            $this->fields['id']       = $retval[0][0];
-            $this->fields['modified'] = $retval[0][1];
-            $this->fields['data']     = '';
-
-            return $retval[0][2];
-        } else {
-            return '';
+        if (!isset($retval[0], $retval[0][2])) {
+           return '';
         }
+
+        $this->fields['id']       = $retval[0][0];
+        $this->fields['modified'] = $retval[0][1];
+        $this->fields['data']     = '';
+
+        return $retval[0][2];
     }
 
     /**
