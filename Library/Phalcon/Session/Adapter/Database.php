@@ -32,6 +32,13 @@ class Database extends Adapter implements AdapterInterface
 {
 
     /**
+     * Flag to check if session has been started.
+     *
+     * @var boolean
+     */
+    protected $isStarted = false;
+
+    /**
      * Flag to check if session is destroyed.
      *
      * @var boolean
@@ -81,6 +88,27 @@ class Database extends Adapter implements AdapterInterface
             array($this, 'destroy'),
             array($this, 'gc')
         );
+
+        $this->start();
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return boolean
+     */
+    public function isStarted()
+    {
+        return $this->isStarted;
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return boolean
+     */
+    public function start()
+    {
+        $this->isStarted = true;
+        return true;
     }
 
     /**
