@@ -35,6 +35,13 @@ class Uniqueness extends Validator implements ValidatorInterface
      */
     private $db;
 
+    /**
+     * Class constructor.
+     *
+     * @param  array               $options
+     * @param  DbConnection        $db
+     * @throws ValidationException
+     */
     public function __construct(array $options = array(), $db = null)
     {
         parent::__construct($options);
@@ -48,9 +55,7 @@ class Uniqueness extends Validator implements ValidatorInterface
             }
         }
 
-        if ($db instanceof DbConnection) {
-            $this->db = $db;
-        } else {
+        if (!($db instanceof DbConnection)) {
             throw new ValidationException('Validator Uniquness require connection to database');
         }
 
@@ -61,13 +66,15 @@ class Uniqueness extends Validator implements ValidatorInterface
         if (false === $this->isSetOption('column')) {
             throw new ValidationException('Validator require column option to be set');
         }
+
+        $this->db = $db;
     }
 
     /**
      * Executes the uniqueness validation
      *
      * @param  \Phalcon\Validation $validator
-     * @param  string             $attribute
+     * @param  string              $attribute
      * @return boolean
      */
     public function validate(\Phalcon\Validation $validator, $attribute)
