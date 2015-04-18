@@ -68,20 +68,20 @@ class Memcached extends Base
      */
     public function __construct($options = null)
     {
-        if (is_array($options)) {
-            if (!isset($options['host'])) {
-                throw new Exception('No host given in options');
-            }
-
-            if (!isset($options['port'])) {
-                $options['port'] = self::$defaultPort;
-            }
-
-            if (!isset($options['weight'])) {
-                $options['weight'] = self::$defaultWeight;
-            }
-        } else {
+        if (!is_array($options)) {
             throw new Exception('No configuration given');
+        }
+
+        if (!isset($options['host'])) {
+            throw new Exception('No host given in options');
+        }
+
+        if (!isset($options['port'])) {
+            $options['port'] = self::$defaultPort;
+        }
+
+        if (!isset($options['weight'])) {
+            $options['weight'] = self::$defaultWeight;
         }
 
         parent::__construct($options);

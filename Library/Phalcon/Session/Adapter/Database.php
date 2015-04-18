@@ -153,11 +153,11 @@ class Database extends Adapter implements AdapterInterface
             array($sessionId, time())
         );
 
-        if (!empty($row)) {
-            return $row[0];
+        if (empty($row)) {
+            return '';
         }
 
-        return '';
+        return $row[0];
     }
 
     /**

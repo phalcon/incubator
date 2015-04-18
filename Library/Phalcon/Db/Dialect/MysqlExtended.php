@@ -38,7 +38,6 @@ class MysqlExtended extends \Phalcon\Db\Dialect\Mysql
      */
     public function getSqlExpression($expression, $escapeChar = null)
     {
-
         if ($expression["type"] == 'functionCall') {
             switch ($expression["name"]) {
 
