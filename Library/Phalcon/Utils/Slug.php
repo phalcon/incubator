@@ -24,17 +24,17 @@ namespace Phalcon\Utils;
 class Slug
 {
     /**
-     * Creates a slug to be used for pretty URLs
+     * Creates a slug to be used for pretty URLs.
      *
      * @link http://cubiq.org/the-perfect-php-clean-url-generator
-     * @param         $string
-     * @param  array  $replace
-     * @param  string $delimiter
+     * @param                     $string
+     * @param  array              $replace
+     * @param  string             $delimiter
      * @return mixed
+     * @throws \Phalcon\Exception
      */
     public static function generate($string, $replace = array(), $delimiter = '-')
     {
-
         if (!extension_loaded('iconv')) {
             throw new \Phalcon\Exception('iconv module not loaded');
         }
