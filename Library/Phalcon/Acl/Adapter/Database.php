@@ -225,7 +225,6 @@ class Database extends Adapter implements AdapterInterface
      */
     public function addResourceAccess($resourceName, $accessList)
     {
-
         if (!$this->isResource($resourceName)) {
             throw new Exception("Resource '" . $resourceName . "' does not exist in ACL");
         }
@@ -233,22 +232,17 @@ class Database extends Adapter implements AdapterInterface
         $sql = 'SELECT COUNT(*) FROM ' .
             $this->options['resourcesAccesses'] .
             ' WHERE resources_name = ? AND access_name = ?';
-        if (is_array($accessList)) {
-            foreach ($accessList as $accessName) {
-                $exists = $this->options['db']->fetchOne($sql, null, array($resourceName, $accessName));
-                if (!$exists[0]) {
-                    $this->options['db']->execute(
-                        'INSERT INTO ' . $this->options['resourcesAccesses'] . ' VALUES (?, ?)',
-                        array($resourceName, $accessName)
-                    );
-                }
-            }
-        } else {
-            $exists = $this->options['db']->fetchOne($sql, null, array($resourceName, $accessList));
+
+        if (!is_array($accessList)) {
+            $accessList = array($accessList);
+        }
+
+        foreach ($accessList as $accessName) {
+            $exists = $this->options['db']->fetchOne($sql, null, array($resourceName, $accessName));
             if (!$exists[0]) {
                 $this->options['db']->execute(
                     'INSERT INTO ' . $this->options['resourcesAccesses'] . ' VALUES (?, ?)',
-                    array($resourceName, $accessList)
+                    array($resourceName, $accessName)
                 );
             }
         }
@@ -475,12 +469,12 @@ class Database extends Adapter implements AdapterInterface
             throw new Exception('Role "' . $roleName . '" does not exist in the list');
         }
 
-        if (is_array($access)) {
-            foreach ($access as $accessName) {
-                $this->insertOrUpdateAccess($roleName, $resourceName, $accessName, $action);
-            }
-        } else {
-            $this->insertOrUpdateAccess($roleName, $resourceName, $access, $action);
+        if (!is_array($access)) {
+            $access = array($access);
+        }
+
+        foreach ($access as $accessName) {
+            $this->insertOrUpdateAccess($roleName, $resourceName, $accessName, $action);
         }
     }
 }

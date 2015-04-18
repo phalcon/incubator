@@ -201,28 +201,19 @@ class Mongo extends Adapter implements AdapterInterface
 
         $resourcesAccesses = $this->getCollection('resourcesAccesses');
 
-        if (is_array($accessList)) {
-            foreach ($accessList as $accessName) {
-                $exists = $resourcesAccesses->count(array(
-                    'resources_name' => $resourceName,
-                    'access_name'    => $accessName
-                ));
-                if (!$exists) {
-                    $resourcesAccesses->insert(array(
-                        'resources_name' => $resourceName,
-                        'access_name'    => $accessName
-                    ));
-                }
-            }
-        } else {
+        if (!is_array($accessList)) {
+            $accessList = array($accessList);
+        }
+
+        foreach ($accessList as $accessName) {
             $exists = $resourcesAccesses->count(array(
                 'resources_name' => $resourceName,
-                'access_name'    => $accessList
+                'access_name'    => $accessName
             ));
             if (!$exists) {
                 $resourcesAccesses->insert(array(
                     'resources_name' => $resourceName,
-                    'access_name'    => $accessList
+                    'access_name'    => $accessName
                 ));
             }
         }
@@ -450,17 +441,16 @@ class Mongo extends Adapter implements AdapterInterface
      */
     protected function allowOrDeny($roleName, $resourceName, $access, $action)
     {
-
         if (!$this->isRole($roleName)) {
             throw new Exception('Role "' . $roleName . '" does not exist in the list');
         }
 
-        if (is_array($access)) {
-            foreach ($access as $accessName) {
-                $this->insertOrUpdateAccess($roleName, $resourceName, $accessName, $action);
-            }
-        } else {
-            $this->insertOrUpdateAccess($roleName, $resourceName, $access, $action);
+        if (!is_array($access)) {
+            $access = array($access);
+        }
+
+        foreach ($access as $accessName) {
+            $this->insertOrUpdateAccess($roleName, $resourceName, $accessName, $action);
         }
     }
 }
