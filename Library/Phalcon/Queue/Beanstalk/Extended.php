@@ -241,7 +241,7 @@ class Extended extends Base
     /**
      * Returns information about specified job if it exists
      *
-     * @param   int $job_id
+     * @param  int        $job_id
      * @return null|array
      */
     public function getJobStats($job_id)
