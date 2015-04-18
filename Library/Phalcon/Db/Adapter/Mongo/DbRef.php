@@ -41,11 +41,11 @@ class DbRef extends \MongoDBRef
 
         $doc = self::get($db, $ref);
 
-        if (!is_null($doc)) {
-            return new Document($collection, $doc);
-        } else {
+        if (is_null($doc)) {
             return null;
         }
+
+        return new Document($collection, $doc);
     }
 
     public function __get($name)
