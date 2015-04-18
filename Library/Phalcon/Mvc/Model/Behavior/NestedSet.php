@@ -62,17 +62,17 @@ class NestedSet extends Behavior implements BehaviorInterface
 
     public function missingMethod($model, $method, $arguments = null)
     {
-        if (method_exists($this, $method)) {
-            $this->setOwner($model);
-            $result = call_user_func_array(array($this, $method), $arguments);
-            if ($result === null) {
-                return '';
-            }
-
-            return $result;
+        if (!method_exists($this, $method)) {
+            return null;
         }
 
-        return null;
+        $this->setOwner($model);
+        $result = call_user_func_array(array($this, $method), $arguments);
+        if ($result === null) {
+            return '';
+        }
+
+        return $result;
     }
 
     public function getOwner()
