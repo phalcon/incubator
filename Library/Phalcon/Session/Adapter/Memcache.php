@@ -67,28 +67,28 @@ class Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\Adapte
      */
     public function __construct($options = null)
     {
-        if (is_array($options)) {
-            if (!isset($options["host"])) {
-                throw new Phalcon\Session\Exception("No session host given in options");
-            }
-
-            if (!isset($options["port"])) {
-                $options["port"] = self::DEFAULT_OPTION_PORT;
-            }
-
-            if (!isset($options["lifetime"])) {
-                $options["lifetime"] = self::DEFAULT_OPTION_LIFETIME;
-            }
-
-            if (!isset($options["persistent"])) {
-                $options["persistent"] = self::DEFAULT_OPTION_PERSISTENT;
-            }
-
-            if (!isset($options["prefix"])) {
-                $options["prefix"] = self::DEFAULT_OPTION_PREFIX;
-            }
-        } else {
+        if (!is_array($options)) {
             throw new Phalcon\Session\Exception("No configuration given");
+        }
+
+        if (!isset($options["host"])) {
+            throw new Phalcon\Session\Exception("No session host given in options");
+        }
+
+        if (!isset($options["port"])) {
+            $options["port"] = self::DEFAULT_OPTION_PORT;
+        }
+
+        if (!isset($options["lifetime"])) {
+            $options["lifetime"] = self::DEFAULT_OPTION_LIFETIME;
+        }
+
+        if (!isset($options["persistent"])) {
+            $options["persistent"] = self::DEFAULT_OPTION_PERSISTENT;
+        }
+
+        if (!isset($options["prefix"])) {
+            $options["prefix"] = self::DEFAULT_OPTION_PREFIX;
         }
 
         session_set_save_handler(
@@ -183,11 +183,11 @@ class Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\Adapte
     public function getOption($key)
     {
         $options = $this->getOptions();
-        if (isset($options[$key])) {
-            return $options[$key];
+        if (!isset($options[$key])) {
+            return null;
         }
 
-        return null;
+        return $options[$key];
     }
 
     /**

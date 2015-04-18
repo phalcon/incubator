@@ -38,7 +38,7 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * Class constructor.
      *
-     * @param array $options
+     * @param  array     $options
      * @throws Exception
      */
     public function __construct($options = null)
@@ -62,11 +62,11 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param string $save_path
-     * @param string $name
+     * @param  string  $savePath
+     * @param  string  $name
      * @return boolean
      */
-    public function open($save_path, $name)
+    public function open($savePath, $name)
     {
         return true;
     }
@@ -81,37 +81,37 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param  string $session_id
+     * @param  string $sessionId
      * @return string
      */
-    public function read($session_id)
+    public function read($sessionId)
     {
-        $sessionData = $this->getCollection()->findOne(array('_id' => $session_id));
-        if (isset($sessionData['data'])) {
-            $this->data = $sessionData['data'];
-            return $sessionData['data'];
+        $sessionData = $this->getCollection()->findOne(array('_id' => $sessionId));
+        if (!isset($sessionData['data'])) {
+            return null;
         }
 
-        return null;
+        $this->data = $sessionData['data'];
+        return $sessionData['data'];
     }
 
     /**
      * {@inheritdoc}
      *
-     * @param string $session_id
-     * @param string $session_data
+     * @param  string $sessionId
+     * @param  string $sessionData
      * @return bool
      */
-    public function write($session_id, $session_data)
+    public function write($sessionId, $sessionData)
     {
-        if ($this->data === $session_data) {
+        if ($this->data === $sessionData) {
             return true;
         }
 
         $sessionData = array(
-            '_id' => $session_id,
+            '_id' => $sessionId,
             'modified' => new \MongoDate(),
-            'data' => $session_data
+            'data' => $sessionData
         );
 
         $this->getCollection()->save($sessionData);
@@ -122,15 +122,15 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function destroy($session_id = null)
+    public function destroy($sessionId = null)
     {
-        if (is_null($session_id)) {
-            $session_id = session_id();
+        if (is_null($sessionId)) {
+            $sessionId = session_id();
         }
 
         $this->data = null;
 
-        $remove = $this->getCollection()->remove(array('_id' => $session_id));
+        $remove = $this->getCollection()->remove(array('_id' => $sessionId));
 
         return (bool)$remove['ok'];
     }
