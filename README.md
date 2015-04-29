@@ -1,8 +1,5 @@
 [![Latest Version](https://img.shields.io/packagist/v/phalcon/incubator.svg?style=flat-square)](https://github.com/phalcon/incubator/releases)
 [![Software License](https://img.shields.io/badge/license-BSD--3-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/phalcon/incubator/master.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
-[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/phalcon/incubator.svg?style=flat-square)](https://scrutinizer-ci.com/g/phalcon/incubator/code-structure)
-[![Quality Score](https://img.shields.io/scrutinizer/g/phalcon/incubator.svg?style=flat-square)](https://scrutinizer-ci.com/g/phalcon/incubator)
 [![Total Downloads](https://img.shields.io/packagist/dt/phalcon/incubator.svg?style=flat-square)](https://packagist.org/packages/phalcon/incubator)
 
 # Phalcon Incubator
