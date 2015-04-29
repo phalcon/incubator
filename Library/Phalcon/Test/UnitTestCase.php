@@ -100,7 +100,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
      */
     public function checkExtension($extension)
     {
-        $message = function($ext) {
+        $message = function ($ext) {
             sprintf('Warning: %s extension is not loaded', $ext);
         };
 
