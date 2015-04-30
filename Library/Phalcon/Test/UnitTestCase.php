@@ -5,7 +5,7 @@
  * Unit Test Helper
  * PhalconPHP Framework
  *
- * @copyright (c) 2011-2012 Phalcon Team
+ * @copyright (c) 2011-2015 Phalcon Team
  * @link          http://www.phalconphp.com
  * @author        Andres Gutierrez <andres@phalconphp.com>
  * @author        Nikolaos Dimopoulos <nikos@phalconphp.com>
@@ -96,12 +96,23 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
      * Checks if a particular extension is loaded and if not it marks
      * the tests skipped
      *
-     * @param string $extension
+     * @param mixed $extension
      */
     public function checkExtension($extension)
     {
-        if (!extension_loaded($extension)) {
-            $this->markTestSkipped("Warning: {$extension} extension is not loaded");
+        $message = function ($ext) {
+            sprintf('Warning: %s extension is not loaded', $ext);
+        };
+
+        if (is_array($extension)) {
+            foreach ($extension as $ext) {
+                if (!extension_loaded($ext)) {
+                    $this->markTestSkipped($message($ext));
+                    break;
+                }
+            }
+        } elseif (!extension_loaded($extension)) {
+            $this->markTestSkipped($message($extension));
         }
     }
 
