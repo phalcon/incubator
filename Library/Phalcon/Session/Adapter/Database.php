@@ -107,6 +107,7 @@ class Database extends Adapter implements AdapterInterface
      */
     public function start()
     {
+        parent::start();
         $this->isStarted = true;
         return true;
     }
