@@ -23,7 +23,7 @@ class Smarty extends Engine implements EngineInterface
      * @param \Phalcon\Mvc\ViewInterface $view
      * @param \Phalcon\DiInterface       $di
      */
-    public function __construct($view, DiInterface $di = null)
+    public function __construct($view, \Phalcon\DiInterface $dependencyInjector = null)
     {
         $this->smarty               = new \Smarty();
         $this->smarty->template_dir = '.';
@@ -33,7 +33,7 @@ class Smarty extends Engine implements EngineInterface
         $this->smarty->caching      = false;
         $this->smarty->debugging    = true;
 
-        parent::__construct($view, $di);
+        parent::__construct($view, $dependencyInjector);
     }
 
     /**
