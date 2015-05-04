@@ -1,7 +1,7 @@
 <?php
 namespace Phalcon\Mvc\Model\Validator;
 
-use Phalcon\Mvc\Model\Validator as ModelValidator;
+use Phalcon\Mvc\Model\Validator;
 use Phalcon\Mvc\Model\ValidatorInterface;
 use Phalcon\Mvc\Model\Exception;
 use Phalcon\Mvc\ModelInterface;
@@ -34,7 +34,7 @@ use Phalcon\Mvc\ModelInterface;
  *}
  *</code>
  */
-class Between extends ModelValidator implements ValidatorInterface
+class Between extends Validator implements ValidatorInterface
 {
     /**
      * {@inheritdoc}
@@ -44,12 +44,8 @@ class Between extends ModelValidator implements ValidatorInterface
      * @return boolean
      * @throws Exception
      */
-    public function validate($record)
+    public function validate(ModelInterface $record)
     {
-        if (false === is_object($record) || false === $record instanceof ModelInterface) {
-            throw new Exception('Invalid parameter type.');
-        }
-
         $field = $this->getOption('field');
 
         if (false === is_string($field)) {
