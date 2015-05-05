@@ -32,18 +32,34 @@ Create the composer.json file as follows:
 }
 ```
 
+For 2.0.x branch please use:
+
+```json
+{
+    "require": {
+        "phalcon/incubator": "2.0.*@dev"
+    }
+}
+```
+
 Run the composer installer:
 
 ```bash
 php composer.phar install
 ```
 
-### Installing via Github
+### Installing via GitHub
 
 Just clone the repository in a common location or inside your project:
 
 ```
 git clone https://github.com/phalcon/incubator.git
+```
+
+For a specific Git branch (eg 2.0.x) please use:
+
+```
+git clone -b 2.0.x git@github.com:phalcon/incubator.git
 ```
 
 ## Autoloading from the Incubator
