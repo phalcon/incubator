@@ -8,6 +8,7 @@ Phalcon is a web framework delivered as a C extension providing high performance
 
 This is a repository to publish/share/experiment with new adapters, prototypes or functionality that can potentially be incorporated into the framework.
 
+We also welcome submissions of snippets from the community, to further extend the framework.
 
 The code in this repository is written in PHP.
 
