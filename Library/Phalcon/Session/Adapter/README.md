@@ -43,29 +43,6 @@ This adapter uses the following table to store the data:
 )
 ```
 
-
-Memcache
----------
-This adapter uses a Memcache backend to store session data:
-
-```php
-
-$di->set('session', function(){
-
-    $memcache = new Phalcon\Session\Adapter\Memcache(array(
-        'host'          => '127.0.0.1',     // mandatory
-        'port'          => 11211,           // optional (standard: 11211)
-        'lifetime'      => 8600,            // optional (standard: 8600)
-        'prefix'        => 'my-app'         // optional (standard: [empty_string]), means memcache key is my-app_31231jkfsdfdsfds3
-        'persistent'    => false            // optional (standard: false)
-    ));
-    $memcache->start();
-    return $memcache;
-});
-
-```
-
-
 Mongo
 -----
 This adapter uses a Mongo database backend to store session data:
