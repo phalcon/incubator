@@ -216,7 +216,9 @@ class Redis extends Adapter implements AdapterInterface
      */
     public function dropResourceAccess($resource, $accessList)
     {
-        if (!is_array($accessList)) $accessList = (array)$accessList;
+        if (!is_array($accessList)) {
+            $accessList = (array)$accessList;
+        }
         array_unshift($accessList, "resourcesAccesses:$resource");
         call_user_func_array(array($this->redis, 'sRem'), $accessList);
     }
@@ -242,8 +244,9 @@ class Redis extends Adapter implements AdapterInterface
      */
     public function allow($role, $resource, $access)
     {
-        if ($role !== '*' && $resource !== '*')
+        if ($role !== '*' && $resource !== '*') {
             $this->allowOrDeny($role, $resource, $access, Acl::ALLOW);
+        }
         if ($role === '*' || empty($role)) {
             $this->rolePermission($resource, $access, Acl::ALLOW);
         }
@@ -261,10 +264,11 @@ class Redis extends Adapter implements AdapterInterface
     protected function resourcePermission($role, $access, $allowOrDeny)
     {
         foreach ($this->getResources() as $resource) {
-            if ($role === '*' || empty($role))
+            if ($role === '*' || empty($role)) {
                 $this->rolePermission($resource, $access, $allowOrDeny);
-            else
+            } else {
                 $this->allowOrDeny($role, $resource, $access, $allowOrDeny);
+            }
         }
     }
 
@@ -277,10 +281,11 @@ class Redis extends Adapter implements AdapterInterface
     protected function rolePermission($resource, $access, $allowOrDeny)
     {
         foreach ($this->getRoles() as $role) {
-            if ($resource === '*' || empty($resource))
+            if ($resource === '*' || empty($resource)) {
                 $this->resourcePermission($role, $access, $allowOrDeny);
-            else
+            } else {
                 $this->allowOrDeny($role, $resource, $access, $allowOrDeny);
+            }
         }
     }
 
@@ -333,13 +338,16 @@ class Redis extends Adapter implements AdapterInterface
      */
     public function isAllowed($role, $resource, $access)
     {
-        if ($this->redis->sIsMember("accessList:$role:$resource:" . Acl::ALLOW, $access)) return Acl::ALLOW;
+        if ($this->redis->sIsMember("accessList:$role:$resource:" . Acl::ALLOW, $access)) {
+            return Acl::ALLOW;
+        }
 
         if ($this->redis->exists("rolesInherits:$role")) {
             $rolesInherits = $this->redis->sMembers("rolesInherits:$role");
             foreach ($rolesInherits as $role) {
-                if ($this->redis->sIsMember("accessList:$role:$resource:" . Acl::ALLOW, $access))
+                if ($this->redis->sIsMember("accessList:$role:$resource:" . Acl::ALLOW, $access)) {
                     return Acl::ALLOW;
+                }
             }
         }
 
@@ -364,9 +372,11 @@ class Redis extends Adapter implements AdapterInterface
          * Check if the access is valid in the resource
          */
         if ($this->isResourceAccess($resourceName, $accessName)) {
-            if (!$this->setNXAccess) throw new Exception(
-                "Access '" . $accessName . "' does not exist in resource '" . $resourceName . "' in ACL"
-            );
+            if (!$this->setNXAccess)  {
+                throw new Exception(
+                    "Access '" . $accessName . "' does not exist in resource '" . $resourceName . "' in ACL"
+                );
+            }
             $this->addResourceAccess($resourceName, $accessName);
         }
         $this->redis->sAdd("accessList:$roleName:$resourceName:$action", $accessName);
@@ -381,7 +391,6 @@ class Redis extends Adapter implements AdapterInterface
         $this->redis->sAdd("$accessList:$action", $accessName);
 
         $this->redis->sAdd("$accessList:{$this->getDefaultAction()}", "*");
-
 
         return true;
     }
@@ -412,5 +421,4 @@ class Redis extends Adapter implements AdapterInterface
             $this->setAccess($roleName, $resourceName, $access, $action);
         }
     }
-
 }
