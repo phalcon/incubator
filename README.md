@@ -77,6 +77,10 @@ $loader->registerNamespaces(array(
 $loader->register();
 ```
 
+## Contributing
+
+See CONTRIBUTING.md
+
 ## Contributions Index
 
 ### Acl
