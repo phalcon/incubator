@@ -6,9 +6,8 @@
 
 Phalcon is a web framework delivered as a C extension providing high performance and lower resource consumption.
 
-This is a repository to publish/share/experiment with new adapters, prototypes or functionality that potentially can be incorporated to the C-framework.
+This is a repository to publish/share/experiment with new adapters, prototypes or functionality that can potentially be incorporated into the framework.
 
-Also we welcome submissions from the community of snippets that could extend the framework more.
 
 The code in this repository is written in PHP.
 
@@ -22,8 +21,16 @@ Install composer in a common location or in your project:
 curl -s http://getcomposer.org/installer | php
 ```
 
-Create the composer.json file as follows:
+If you are using Phalcon 2.0.x, create a composer.json file as follows:
+```json
+{
+    "require": {
+        "phalcon/incubator": "2.0.*@dev"
+    }
+}
+```
 
+If you are still using Phalcon 1.3.x, create a composer.json with the following instead:
 ```json
 {
     "require": {
@@ -32,15 +39,6 @@ Create the composer.json file as follows:
 }
 ```
 
-For 2.0.x branch please use:
-
-```json
-{
-    "require": {
-        "phalcon/incubator": "2.0.*@dev"
-    }
-}
-```
 
 Run the composer installer:
 
@@ -98,19 +96,15 @@ $loader->register();
 * [Phalcon\Cache\Backend\Wincache](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Wincache backend for caching data (nazwa)
 
 ### Config
-* [Phalcon\Config\Adapter\Json](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Config/Adapter) - Json adapter (ofpiyush)
-* [Phalcon\Config\Adapter\Yaml](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Config/Adapter) - YAML adapter (freekzy)
+* [Phalcon\Config\Adapter\ExtendedYaml](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Config/Adapter) - YAML adapter (freekzy)
 
 ### Database
 * [Phalcon\Db\Adapter\Cacheable\Mysql](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Db) - MySQL adapter that agressively caches all the queries executed (phalcon)
 
-### Debug
-* [Phalcon\Debug\Dump](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Debug) - Variable dumper (digitronac)
-
 ### Logger
-* [Phalcon\Logger\Adapter\Firephp](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to log messages in Firebug (phalcon)
 * [Phalcon\Logger\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to store logs in a database table (phalcon)
 * [Phalcon\Logger\Adapter\Firelogger](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to log messages in the Firelogger console in Firebug (phalcon)
+* [Phalcon\Logger\Adapter\File\Multiple](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to log to multiple files (Richard Laffers)
 
 ### Mailer
 * [Phalcon\Mailer\Manager](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mailer) - Mailer wrapper over SwiftMailer (KorsaR-ZN)
@@ -123,7 +117,7 @@ $loader->register();
 ### ORM Validators
 * [Phalcon\Mvc\Model\Validator\ConfirmationOf](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Allows to validate if a field has a confirmation field with the same value (suxxes)
 * [Phalcon\Mvc\Model\Validator\CardNumber](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Allows to validate credit cadrd number using Luhn algorithm (parshikov)
-* [Phalcon\Mvc\Model\Validator\IPv4](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Validates that a value is ipv4 address in valid range (parshikov)
+* [Phalcon\Mvc\Model\Validator\IP](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Validates that a value is ip (v4 or v6) address in valid range (parshikov)
 * [Phalcon\Mvc\Model\Validator\Decimal](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Allows to validate if a field has a valid number in proper decimal format (negative and decimal numbers allowed) (sergeyklay) 
 * [Phalcon\Mvc\Model\Validator\Between](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Validates that a value is between a range of two values (sergeyklay)
 
@@ -140,13 +134,10 @@ $loader->register();
 * [Phalcon\Test\UnitTestCase](https://github.com/silverbadge/incubator/tree/master/Library/Phalcon/Test) - Generic test case wrapper (thecodeassassin)
 
 ### Translate
-* [Phalcon\Translate\Adapter\Gettext](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Translate/Adapter) - Translation adapter for Gettext (phalcon)
 * [Phalcon\Translate\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Translate/Adapter) - Translation adapter using relational databases (phalcon)
-* [Phalcon\Translate\Adapter\Csv](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Translate/Adapter) - Translation adapter using CSV (phalcon)
 
 ### Session
 * [Phalcon\Session\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - Database adapter for storing sessions (phalcon)
-* [Phalcon\Session\Adapter\Memcache](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - Memcache adapter for storing sessions (meets-ecommerce)
 * [Phalcon\Session\Adapter\Mongo](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - MongoDb adapter for storing sessions (phalcon)
 * [Phalcon\Session\Adapter\Redis](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - Redis adapter for storing sessions (phalcon)
 * [Phalcon\Session\Adapter\HandlerSocket](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - HandlerSocket adapter for storing sessions (Xrymz)
@@ -159,4 +150,4 @@ Current Build Status
 --------------------
 Incubator is built under Travis CI service. Every commit pushed to this repository will queue a build into the continuous integration service and will run all PHPUnit tests to ensure that everything is going well and the project is stable. The current build status is:
 
-[![Build Status](https://img.shields.io/travis/phalcon/incubator/master.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
+[![Build Status](https://img.shields.io/travis/phalcon/incubator/2.0.x.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
