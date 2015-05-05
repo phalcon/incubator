@@ -23,6 +23,8 @@ class Twig extends Engine implements EngineInterface
      *
      * @param \Phalcon\Mvc\ViewInterface $view
      * @param \Phalcon\DiInterface $dependencyInjector
+     * @param array $options
+     * @param array $userFunctions
      */
     public function __construct($view, DiInterface $di = null, $options = array(), $userFunctions = array())
     {
