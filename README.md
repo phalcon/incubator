@@ -1,4 +1,4 @@
-[![Latest Version](https://img.shields.io/packagist/v/phalcon/incubator.svg?style=flat-square)](https://github.com/phalcon/incubator/releases)
+[![Latest Version](https://img.shields.io/packagist/vpre/phalcon/incubator.svg?style=flat-square)](https://github.com/phalcon/incubator/releases)
 [![Software License](https://img.shields.io/badge/license-BSD--3-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Total Downloads](https://img.shields.io/packagist/dt/phalcon/incubator.svg?style=flat-square)](https://packagist.org/packages/phalcon/incubator)
 
@@ -82,6 +82,7 @@ $loader->register();
 ### Acl
 * [Phalcon\Acl\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Acl/Adapter) - ACL lists stored in database tables
 * [Phalcon\Acl\Adapter\Mongo](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Acl/Adapter) - ACL lists stored in Mongo collections
+* [Phalcon\Acl\Adapter\Redis](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Acl/Adapter) - ACL lists stored in a Redis cluster
 * [Phalcon\Acl\Factory\Memory](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Acl/Factory) - ACL factory class intended for use with Memory adapter (digitronac)
 
 ### Annotations
