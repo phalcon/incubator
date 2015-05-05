@@ -2,9 +2,9 @@
 
 namespace Phalcon\Mvc\View\Engine;
 
-use Phalcon\DiInterface;
 use Phalcon\Mvc\View\Engine;
 use Phalcon\Mvc\View\EngineInterface;
+use Phalcon\DiInterface;
 
 /**
  * Phalcon\Mvc\View\Engine\Twig
@@ -24,15 +24,15 @@ class Twig extends Engine implements EngineInterface
      * @param \Phalcon\Mvc\ViewInterface $view
      * @param \Phalcon\DiInterface $dependencyInjector
      */
-    public function __construct($view, DiInterface $dependencyInjector = null)
+    public function __construct($view, DiInterface $di = null, $options = array(), $userFunctions = array())
     {
         $loader = new \Twig_Loader_Filesystem($view->getViewsDir());
-        $this->twig = new Twig\Environment($dependencyInjector, $loader);
+        $this->twig = new Twig\Environment($di, $loader);
 
         $this->twig->addExtension(new Twig\CoreExtension());
-        $this->registryFunctions($view, $dependencyInjector);
+        $this->registryFunctions($view, $di);
 
-        parent::__construct($view, $dependencyInjector);
+        parent::__construct($view, $di);
     }
 
     /**
