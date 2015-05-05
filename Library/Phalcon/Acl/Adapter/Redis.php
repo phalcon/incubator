@@ -372,7 +372,7 @@ class Redis extends Adapter implements AdapterInterface
          * Check if the access is valid in the resource
          */
         if ($this->isResourceAccess($resourceName, $accessName)) {
-            if (!$this->setNXAccess)  {
+            if (!$this->setNXAccess) {
                 throw new Exception(
                     "Access '" . $accessName . "' does not exist in resource '" . $resourceName . "' in ACL"
                 );
