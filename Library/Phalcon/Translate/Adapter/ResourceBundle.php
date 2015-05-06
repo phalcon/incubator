@@ -66,7 +66,9 @@ class ResourceBundle extends Base implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param string $index
+     * @param  string  $index
+     *
+     * @return boolean
      */
     public function exists($index)
     {
@@ -80,8 +82,10 @@ class ResourceBundle extends Base implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param string     $index
-     * @param null|array $placeholders
+     * @param  string     $index
+     * @param  null|array $placeholders
+     *
+     * @return string
      */
     public function query($index, $placeholders = null)
     {
@@ -101,8 +105,10 @@ class ResourceBundle extends Base implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param string     $translateKey
-     * @param array|null $placeholders
+     * @param  string     $translateKey
+     * @param  array|null $placeholders
+     *
+     * @return string
      */
     public function t($translateKey, $placeholders = null)
     {
@@ -112,9 +118,9 @@ class ResourceBundle extends Base implements AdapterInterface
     /**
      * Getting a translation
      *
-     * @example               $this->get('labels.form.new')
-     * @param                 $key
-     * @param \ResourceBundle $bundle
+     * @example                $this->get('labels.form.new')
+     * @param                  $key
+     * @param  \ResourceBundle $bundle
      *
      * @return mixed|\ResourceBundle
      */
