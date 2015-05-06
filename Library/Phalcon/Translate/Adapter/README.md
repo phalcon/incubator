@@ -274,3 +274,29 @@ $translate = new Phalcon\Translate\Adapter\Csv([
 echo $translate->_('Hello');
 echo $translate->_('My name is %name%', array('name' => 'John Doe')); //Je m'appelle John Doe
 ```
+
+ResourceBundle
+--------------
+This adapter uses ResourceBundle as translation frontend.
+
+```php
+$translate = new Phalcon\Translate\Adapter\ResourceBundle([
+    'bundle'    => '/path/to/bundle', // required
+    'locale'    => 'en',              // required
+    'fallback'  => false              // optional, default - true
+]);
+
+echo $translate->t('application.title');
+echo $translate->t('application.copyright', ['currentYear' => new \DateTime('now')]);
+```
+
+ResourceBundle source file example
+
+```
+root {
+    application {
+        title { "Hello world" }
+        copyright { "&copy; 2001-{currentYear, date, Y}. Foobar" }
+    }
+}
+```
