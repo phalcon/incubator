@@ -279,6 +279,8 @@ ResourceBundle
 --------------
 This adapter uses ResourceBundle as translation frontend.
 
+The extension [intl](http://php.net/manual/en/book.intl.php) must be installed in PHP.
+
 ```php
 $translate = new Phalcon\Translate\Adapter\ResourceBundle([
     'bundle'    => '/path/to/bundle', // required
