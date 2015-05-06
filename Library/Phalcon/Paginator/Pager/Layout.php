@@ -12,7 +12,6 @@
 namespace Phalcon\Paginator\Pager;
 
 use Phalcon\Paginator\Pager;
-use Phalcon\Paginator\Pager\Range;
 
 /**
  * \Phalcon\Paginator\Pager\Layout
@@ -31,7 +30,7 @@ class Layout
     /**
      * Ranges generator.
      *
-     * @var \Phalcon\Paginator\Range
+     * @var \Phalcon\Paginator\Pager\Range
      */
     protected $range = null;
 

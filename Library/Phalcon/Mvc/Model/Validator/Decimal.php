@@ -1,7 +1,7 @@
 <?php
 namespace Phalcon\Mvc\Model\Validator;
 
-use Phalcon\Mvc\Model\Validator as ModelValidator;
+use Phalcon\Mvc\Model\Validator;
 use Phalcon\Mvc\Model\ValidatorInterface;
 use Phalcon\Mvc\Model\Exception;
 use Phalcon\Mvc\ModelInterface;
@@ -39,7 +39,7 @@ use Phalcon\Mvc\ModelInterface;
  *}
  *</code>
  */
-class Decimal extends ModelValidator implements ValidatorInterface
+class Decimal extends Validator implements ValidatorInterface
 {
     /**
      * {@inheritdoc}
@@ -50,10 +50,6 @@ class Decimal extends ModelValidator implements ValidatorInterface
      */
     public function validate(ModelInterface $record)
     {
-        if (false === is_object($record) || false === $record instanceof ModelInterface) {
-            throw new Exception('Invalid parameter type.');
-        }
-
         $field = $this->getOption('field');
 
         if (false === is_string($field)) {
