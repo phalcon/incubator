@@ -1,78 +1,211 @@
 <?php
+/**
+ * Database adapter for the Phalcon\Logger functionality
+ *
+ */
+
 namespace Phalcon\Logger\Adapter;
 
-use Phalcon\Logger\Exception;
 
-/**
- * Phalcon\Logger\Adapter\Database
- * Adapter to store logs in a database table
- */
-class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\AdapterInterface
+use Phalcon\Db\Adapter\Pdo;
+use Phalcon\Db\Column;
+use Phalcon\Logger\Adapter;
+use Phalcon\Logger\AdapterInterface;
+use Phalcon\Logger\Exception as LoggerException;
+use Phalcon\Logger;
+
+class Database extends Adapter implements AdapterInterface
 {
-
     /**
-     * Name
-     */
-    protected $name;
-
-    /**
-     * Adapter options
-     */
-    protected $options;
-
-    /**
-     * Class constructor.
+     * Database connection
      *
-     * @param  string                    $name
-     * @param  array                     $options
+     * @var \Phalcon\Db\Adapter
+     */
+    protected $db;
+
+    /**
+     * Database table to which log records are stored
+     *
+     * @var string
+     */
+    protected $table;
+
+    /**
+     * Constructor
+     *
+     * @param string $table
+     * @param \Phalcon\Db\Adapter $db
      * @throws \Phalcon\Logger\Exception
      */
-    public function __construct($name, $options = array())
+    public function __construct($table, \Phalcon\Db\Adapter $db = null)
     {
-        if (!isset($options['db'])) {
-            throw new Exception("Parameter 'db' is required");
+        if (!$table) {
+            throw new LoggerException('You must supply a table name to which the log records will be written');
         }
 
-        if (!isset($options['table'])) {
-            throw new Exception("Parameter 'table' is required");
-        }
+        $this->table = $table;
 
-        $this->name = $name;
-        $this->options = $options;
+        $this->db = $db;
     }
 
     /**
-     * {@inheritdoc}
+     * Inserts a log record into the database table
      *
-     * @return \Phalcon\Logger\Formatter\Line
+     * @param string $message
+     * @param int $type
+     * @param int $time
+     * @param null|array $context
+     * @throws \Phalcon\Logger\Exception
+     * @return bool
      */
-    public function getFormatter()
+    public function logInternal($message, $type, $time, $context = null)
     {
-    }
+        if(!$this->db) {
+            throw new LoggerException('You must provide a database adapter for the Logger service');
+        }
 
-    /**
-     * Writes the log to the file itself
-     *
-     * @param string  $message
-     * @param integer $type
-     * @param integer $time
-     * @param array   $context
-     */
-    public function logInternal($message, $type, $time, $context = array())
-    {
-        return $this->options['db']->execute(
-            'INSERT INTO ' . $this->options['table'] . ' VALUES (null, ?, ?, ?, ?)',
-            array($this->name, $type, $message, $time)
+        $context = $this->getContextAsString($context);
+
+        return $this->db->execute('INSERT INTO ' . $this->table . ' VALUES(NULL, ?, ?, ?, ?, ?)',
+            array($this->getTypeString($type),
+                  $type,
+                  $message,
+                  $time,
+                  $context),
+            array(Column::BIND_PARAM_STR,
+                  Column::BIND_PARAM_INT,
+                  Column::BIND_PARAM_STR,
+                  Column::BIND_PARAM_INT,
+                  is_null($context) ? Column::BIND_PARAM_NULL : Column::BIND_PARAM_STR)
         );
     }
 
     /**
-     * {@inheritdoc}
+     * Returns context array as a string
      *
-     * @return boolean
+     * Delimiter ";" between context messages
+     *
+     * @param null|array $context
+     * @return string
+     */
+    protected function getContextAsString($context = null)
+    {
+        if (null !== $context) {
+            $info = '';
+
+            foreach ($context as $name => $moreInfo) {
+                $info .= $name . ': ' . $moreInfo . '; ';
+            }
+
+            $context = rtrim($info);
+        }
+
+        return $context;
+    }
+
+    /**
+     * Returns string representation of a type ('error', 'notice', etc.)
+     *
+     * @param int $type
+     * @return string
+     */
+    protected function getTypeString($type)
+    {
+        switch ($type) {
+            case Logger::EMERGENCE:
+            case Logger::EMERGENCY:
+                return 'emergency';
+            case Logger::CRITICAL:
+                return 'critical';
+            case Logger::ALERT:
+                return 'alert';
+            case Logger::ERROR:
+                return 'error';
+            case Logger::WARNING:
+                return 'warning';
+            case Logger::NOTICE:
+                return 'notice';
+            case Logger::INFO:
+                return 'info';
+            case Logger::CUSTOM:
+                // use CUSTOM for success status
+                return 'success';
+            case Logger::DEBUG:
+            case Logger::SPECIAL:
+            default:
+                return 'debug';
+        }
+    }
+
+    public function getFormatter()
+    {
+
+    }
+
+    /**
+     * Closes database connection
+     *
+     * @return bool|void
      */
     public function close()
     {
-        $this->options['db']->close();
+        $this->db->close();
+    }
+
+    /**
+     * Sets database connection
+     *
+     * @param \Phalcon\Db\Adapter $db
+     * @return $this
+     */
+    public function setDb(\Phalcon\Db\Adapter $db)
+    {
+        $this->db = $db;
+
+        return $this;
+    }
+
+    /**
+     * Shortcut to an Adapter::log function, type SUCCESS.
+     * Gives success type (using Logger::CUSTOM)
+     *
+     * @param string $message
+     * @param null|array $context
+     * @return \Phalcon\Logger\Adapter
+     */
+    public function success($message, $context = null)
+    {
+        return $this->log(Logger::CUSTOM, $message, $context);
+    }
+
+    /**
+     * Begin transaction
+     *
+     * @return Adapter|void
+     */
+    public function begin()
+    {
+        $this->db->begin();
+    }
+
+    /**
+     * Commit transaction
+     *
+     * @return Adapter|void
+     */
+    public function commit()
+    {
+        $this->db->commit();
+    }
+
+    /**
+     * Rollback transaction
+     * (happens automatically if commit never reached)
+     *
+     * @return Adapter|void
+     */
+    public function rollback()
+    {
+        $this->db->rollback();
     }
 }

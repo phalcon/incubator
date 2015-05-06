@@ -9,37 +9,46 @@ Adapter to store logs in a database table:
 
 ```php
 
-$di->set('logger', function() {
+/**
+ * Logger service utilizes Database Adapter for storing logs
+ *
+ */
+$di->set('logger', function () use ($di) {
 
-	$connection = new \Phalcon\Db\Adapter\Pdo\Mysql(array(
-		"host" => "localhost",
-		"username" => "root",
-		"password" => "secret",
-		"dbname" => "audit"
-	));
+    $logger = new \Library\Logger\Adapter\Database('t_log', $di->get('db'));
 
-	$logger = new Phalcon\Logger\Adapter\Database('errors', array(
-		'db' => $connection,
-		'table' => 'logs'
-	));
+    // OR use it like this
+    // $logger = new \Library\Logger\Adapter\Database('t_log');
+    // $logger->setDb($di->get('db'));
 
-	return $logger;
-});
+    return $logger;
+}, true);
 
 ```
 
 The following table is used to store the logs:
 
 ```sql
-CREATE TABLE `logs` (
+CREATE TABLE `t_log` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) DEFAULT NULL,
-  `type` int(3) NOT NULL,
-  `content` text,
-  `created_at` int(18) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
-)
+  `name` varchar(20) NOT NULL COMMENT 'name of the log: notice, error, warning, etc',
+  `type` tinyint(3) unsigned NOT NULL COMMENT 'integer code for the log record generated (Logger abstract class)',
+  `description` varchar(255) NOT NULL COMMENT 'short description of the log generated',
+  `created_at` int(10) NOT NULL COMMENT 'timestamp of the time the log record is generated',
+  `context` text COMMENT 'added information, where, who, why',
+  PRIMARY KEY (`id`),
+  KEY `inx_type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ```
+
+Use it as you would normally use logger service.
+
+```php
+$this->logger->info('This is info message');
+// OR
+$this->logger->warning('This is a warning', ['user' => $user]);
+```
+
 
 Firephp
 -------
