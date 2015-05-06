@@ -44,6 +44,13 @@ class Pager implements \IteratorAggregate, \Countable
     protected $options = array();
 
     /**
+     * Current rows limit (if provided)
+     *
+     * @var int|null
+     */
+    protected $limit = null;
+
+    /**
      * Class constructor.
      *
      * @param \Phalcon\Paginator\AdapterInterface $adapter
@@ -55,7 +62,22 @@ class Pager implements \IteratorAggregate, \Countable
     public function __construct(AdapterInterface $adapter, array $options = array())
     {
         $this->paginateResult = $adapter->getPaginate();
+
+        if (method_exists($adapter, 'getLimit')) {
+            $this->limit = $adapter->getLimit();
+        }
+
         $this->options = $options;
+    }
+
+    /**
+     * Get current rows limit (if provided)
+     *
+     * @return int|null
+     */
+    public function getLimit()
+    {
+        return $this->limit;
     }
 
     /**

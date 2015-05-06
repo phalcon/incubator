@@ -55,11 +55,11 @@ class Serializable
      */
     public function fetch()
     {
-        if (isset($this->data[$this->position])) {
-            return $this->data[$this->position++];
+        if (!isset($this->data[$this->position])) {
+            return false;
         }
 
-        return false;
+        return $this->data[$this->position++];
     }
 
     /**

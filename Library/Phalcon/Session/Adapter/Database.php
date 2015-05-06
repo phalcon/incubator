@@ -41,7 +41,8 @@ class Database extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param  array                      $options
+     * @param  array $options
+     *
      * @throws \Phalcon\Session\Exception
      */
     public function __construct($options = null)
@@ -103,6 +104,7 @@ class Database extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      * @param  string $sessionId
+     *
      * @return string
      */
     public function read($sessionId)
@@ -123,17 +125,18 @@ class Database extends Adapter implements AdapterInterface
             array($sessionId, time())
         );
 
-        if (!empty($row)) {
-            return $row[0];
+        if (empty($row)) {
+            return '';
         }
 
-        return '';
+        return $row[0];
     }
 
     /**
      * {@inheritdoc}
-     * @param  string  $sessionId
-     * @param  string  $data
+     * @param  string $sessionId
+     * @param  string $data
+     *
      * @return boolean
      */
     public function write($sessionId, $data)
@@ -154,7 +157,6 @@ class Database extends Adapter implements AdapterInterface
         );
 
         if (!empty($row) && intval($row[0]) > 0) {
-
             return $options['db']->execute(
                 sprintf(
                     'UPDATE %s SET %s = ?, %s = ? WHERE %s = ?',
@@ -213,6 +215,7 @@ class Database extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      * @param  integer $maxlifetime
+     *
      * @return boolean
      */
     public function gc($maxlifetime)
@@ -221,9 +224,10 @@ class Database extends Adapter implements AdapterInterface
 
         return $options['db']->execute(
             sprintf(
-                'DELETE FROM %s WHERE %s + %d < ?',
+                'DELETE FROM %s WHERE COALESCE(%s, %s) + %d < ?',
                 $options['db']->escapeIdentifier($options['table']),
                 $options['db']->escapeIdentifier($options['column_modified_at']),
+                $options['db']->escapeIdentifier($options['column_created_at']),
                 $maxlifetime
             ),
             array(time())

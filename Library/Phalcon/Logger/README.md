@@ -90,6 +90,7 @@ Note that similar-level logs are logged into the same file. The log level groups
     private function getTypeString($type)
     {
         switch ($type) {
+            case Logger::EMERGENCY:
             case Logger::EMERGENCE:
             case Logger::CRITICAL:
                 // emergence, critical

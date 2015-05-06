@@ -40,26 +40,19 @@ class Document
         }
 
         while ($iterator->valid()) {
-
             $key = $iterator->key();
             $value = $iterator->current();
 
+            if (DbRef::isRef($value)) {
+                $value = new DbRef($this->collection, $value);
+            } elseif (is_array($value)) {
+                $value = $this->extract($iterator->getChildren(), 'stdClass');
+            }
+
             if (is_numeric($key)) {
-                if (DbRef::isRef($value)) {
-                    $container[$key] = new DbRef($this->collection, $value);
-                } elseif (is_array($value)) {
-                    $container[$key] = $this->extract($iterator->getChildren(), 'stdClass');
-                } else {
-                    $container[$key] = $value;
-                }
+                $container[$key] = $value;
             } else {
-                if (DbRef::isRef($value)) {
-                    $container->{$key} = new DbRef($this->collection, $value);
-                } elseif (is_array($value)) {
-                    $container->{$key} = $this->extract($iterator->getChildren(), 'stdClass');
-                } else {
-                    $container->{$key} = $value;
-                }
+                $container->{$key} = $value;
             }
 
             $iterator->next();

@@ -261,23 +261,24 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
         if (!$this->options['checkVersion']) {
             return true;
         }
+
         if (!isset($_SERVER['HTTP_X_FIRELOGGER'])) {
             return false;
-        } else {
-            $this->clientVersion = $_SERVER['HTTP_X_FIRELOGGER'];
-            if ($this->clientVersion != $this->recommendedClientVersion) {
-                error_log(
-                    'FireLogger for PHP (v' . $this->serverVersion .
-                    ') works best with FireLogger extension of version ' . $this->recommendedClientVersion .
-                    '. You are currently using extension v' . $this->clientVersion .
-                    '. Please install matching versions from http://firelogger.binaryage.com/ and ' .
-                    'https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger'
-                );
-
-                return false;
-            }
-
-            return true;
         }
+
+        $this->clientVersion = $_SERVER['HTTP_X_FIRELOGGER'];
+        if ($this->clientVersion != $this->recommendedClientVersion) {
+            error_log(
+                'FireLogger for PHP (v' . $this->serverVersion .
+                ') works best with FireLogger extension of version ' . $this->recommendedClientVersion .
+                '. You are currently using extension v' . $this->clientVersion .
+                '. Please install matching versions from http://firelogger.binaryage.com/ and ' .
+                'https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger'
+            );
+
+            return false;
+        }
+
+        return true;
     }
 }

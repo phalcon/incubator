@@ -77,8 +77,37 @@ $di->set('view', function() {
         array(
             '.twig' => function($view, $di) {
                 //Setting up Twig Environment Options
-                $option = array('cache' => '../cache/');
+                $options = array('cache' => '../cache/');
                 $twig = new \Phalcon\Mvc\View\Engine\Twig($view, $di, $options);
+                return $twig;
+            }));
+
+    return $view;
+});
+```
+
+You can also create your own defined functions to extend Twig parsing capabilities by passing a forth parameter to the Twig constructor that consists of an Array of Twig_SimpleFunction elements. This will allow you to extend Twig, or even override default functions, with your own.
+
+```php
+//Setting up the view component
+$di->set('view', function() {
+
+    $view = new \Phalcon\Mvc\View();
+
+    $view->setViewsDir('../app/views/');
+
+    $view->registerEngines(
+        array(
+            '.twig' => function($view, $di) {
+                //Setting up Twig Environment Options
+                $options = array('cache' => '../cache/');
+                // Adding support for the native PHP chunk_split function
+                $user_functions = array(
+		            new \Twig_SimpleFunction('chunk_split', function ($string, $len = 76, $end = "\r\n") use ($di) {
+		                return chunk_split($string, $len, $end);
+		            }, $options)
+		        );
+                $twig = new \Phalcon\Mvc\View\Engine\Twig($view, $di, $options, $user_functions);
                 return $twig;
             }));
 

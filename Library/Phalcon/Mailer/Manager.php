@@ -20,6 +20,7 @@ use Phalcon\Mvc\View;
 
 /**
  * Class Manager
+ *
  * @package Phalcon\Manager
  */
 class Manager extends Component
@@ -131,11 +132,9 @@ class Manager extends Component
     public function normalizeEmail($email)
     {
         if (preg_match('#[^(\x20-\x7F)]+#', $email)) {
-
             list($user, $domain) = explode('@', $email);
 
             return $user . '@' . $this->punycode($domain);
-
         } else {
             return $email;
         }
@@ -203,7 +202,6 @@ class Manager extends Component
             ->setPort($config['port']);
 
         if (isset($config['encryption'])) {
-
             $transport->setEncryption($config['encryption']);
         }
 
@@ -231,10 +229,9 @@ class Manager extends Component
             } else {
                 return $default;
             }
-
-        } else {
-            return $this->config;
         }
+
+        return $this->config;
     }
 
     /**
@@ -312,9 +309,9 @@ class Manager extends Component
             $view->setViewsDir($viewsDirOld);
 
             return $content;
-        } else {
-            return $view->render($viewPath, $params);
         }
+
+        return $view->render($viewPath, $params);
     }
 
     /**
@@ -324,10 +321,7 @@ class Manager extends Component
      */
     protected function getView()
     {
-        if ($this->view) {
-            return $this->view;
-        } else {
-
+        if (!$this->view) {
             if (!($viewsDir = $this->getConfig('viewsDir'))) {
                 $viewsDir = $this->getDI()->get('view')->getViewsDir();
             }
@@ -336,7 +330,9 @@ class Manager extends Component
             $view = $this->getDI()->get('\Phalcon\Mvc\View\Simple');
             $view->setViewsDir($viewsDir);
 
-            return $this->view = $view;
+            $this->view = $view;
         }
+
+        return $this->view;
     }
 }

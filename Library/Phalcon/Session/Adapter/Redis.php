@@ -36,7 +36,6 @@ class Redis extends Adapter implements AdapterInterface
      */
     public function __construct($options = null)
     {
-
         if (!isset($options['path'])) {
             throw new Exception("The parameter 'save_path' is required");
         }
@@ -54,6 +53,10 @@ class Redis extends Adapter implements AdapterInterface
 
         if (isset($options['cookie_lifetime'])) {
             ini_set('session.cookie_lifetime', $options['cookie_lifetime']);
+        }
+
+        if (isset($options['cookie_secure'])) {
+            ini_set('session.cookie_secure', $options['cookie_secure']);
         }
 
         parent::__construct($options);

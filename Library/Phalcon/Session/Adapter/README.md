@@ -150,4 +150,4 @@ $di->set('session', function() {
 
 ```
 
-The extension handlersocket (http://code.google.com/p/php-handlersocket/) is required to use this adapter.
+The extension handlersocket (https://github.com/kjdev/php-ext-handlersocketi/) is required to use this adapter.

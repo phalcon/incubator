@@ -28,8 +28,10 @@ abstract class ModelTestCase extends UnitTestCase
      *
      * @author Nikos Dimopoulos <nikos@phalconphp.com>
      * @since  2012-09-20
+     *
      * @param  \Phalcon\DiInterface $di
-     * @param  \Phalcon\Config      $config
+     * @param  \Phalcon\Config $config
+     *
      * @return void
      */
     protected function setUp(\Phalcon\DiInterface $di = null, \Phalcon\Config $config = null)
@@ -61,7 +63,9 @@ abstract class ModelTestCase extends UnitTestCase
      *
      * @author Nikos Dimopoulos <nikos@phalconphp.com>
      * @since  2012-09-20
+     *
      * @param  string $dbType Sets the database type for the test
+     *
      * @return void
      */
     protected function setDb($dbType = 'mysql')
@@ -94,6 +98,7 @@ abstract class ModelTestCase extends UnitTestCase
      * Empties a table in the database.
      *
      * @param $table
+     *
      * @return boolean
      * @author Nikos Dimopoulos <nikos@phalconphp.com>
      * @since  2012-11-08
@@ -111,7 +116,7 @@ abstract class ModelTestCase extends UnitTestCase
      * Disables FOREIGN_KEY_CHECKS and truncates database table
      *
      * @param  string $table table name
-     * 
+     *
      * @return bool   result of truncate operation
      */
     public function truncateTable($table)
@@ -131,6 +136,7 @@ abstract class ModelTestCase extends UnitTestCase
      *
      * @param      $table
      * @param null $records
+     *
      * @author Nikos Dimopoulos <nikos@phalconphp.com>
      * @since  2012-11-08
      */

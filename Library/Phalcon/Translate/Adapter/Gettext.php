@@ -22,7 +22,7 @@ use Phalcon\Translate\Adapter;
 use Phalcon\Translate\AdapterInterface;
 use Phalcon\Translate\Exception;
 
-class Gettext extends Adapter implements AdapterInterface
+class Gettext extends Base implements AdapterInterface
 {
 
     /**
@@ -38,13 +38,15 @@ class Gettext extends Adapter implements AdapterInterface
     /**
      * Class constructor.
      *
-     * @param array $options Required options: 
-     *                       (string) locale
-     *                       (string|array) file
-     *                       (string) directory
-     *                       ~ or ~
-     *                       (array) domains (instead of file and directory), where keys are domain names and values
-     *                               their respective directories.
+     * @param array $options         Required options:
+     *                               (string) locale
+     *                               (string|array) file
+     *                               (string) directory
+     *                               ~ or ~
+     *                               (array) domains (instead of file and directory),
+     *                               where keys are domain names and
+     *                               values their respective directories.
+     *
      * @throws \Phalcon\Translate\Exception
      */
     public function __construct($options)
@@ -57,61 +59,86 @@ class Gettext extends Adapter implements AdapterInterface
             throw new Exception('Parameter "locale" is required');
         }
 
-        if (isset($options['domains'])) {
-            unset($options['file']);
-            unset($options['directory']);
-        }
-
-        if (!isset($options['domains']) && !isset($options['file'])) {
-            throw new Exception('Option "file" is required unless "domains" is specified.');
-        }
-
-        if (!isset($options['domains']) && !isset($options['directory'])) {
-            throw new Exception('Option "directory" is required unless "domains" is specified.');
-        }
-
-        if (isset($options['domains']) && !is_array($options['domains'])) {
-            throw new Exception('If the option "domains" is specified it must be an array.');
-        }
-
         putenv("LC_ALL=" . $options['locale']);
         setlocale(LC_ALL, $options['locale']);
 
-        if (isset($options['domains'])) {
-            foreach ($options['domains'] as $domain => $dir) {
-                bindtextdomain($domain, $dir);
-            }
-            // set the first domain as default
-            reset($options['domains']);
-            $this->defaultDomain = key($options['domains']);
-            // save list of domains
-            $this->domains = array_keys($options['domains']);
-            
-        } else {
-            if (is_array($options['file'])) {
-                foreach ($options['file'] as $domain) {
-                    bindtextdomain($domain, $options['directory']);
-                }
-
-                // set the first domain as default
-                $this->defaultDomain = reset($options['file']);
-                $this->domains = $options['file'];
-            } else {
-                bindtextdomain($options['file'], $options['directory']);
-                $this->defaultDomain = $options['file'];
-                $this->domains = array($options['file']);
-            }
-        }
+        $this->prepareOptions($options);
 
         textdomain($this->defaultDomain);
+    }
+
+    /**
+     * Validator for constructor
+     *
+     * @param array $options
+     *
+     */
+    protected function prepareOptions($options)
+    {
+        if (isset($options['domains'])) {
+            $this->prepareOptionsWithDomain($options);
+        } else {
+            $this->prepareOptionsWithoutDomain($options);
+        }
+    }
+
+    /**
+     * Validator for gettext with domains
+     *
+     * @param array $options
+     *
+     * @throws \Phalcon\Translate\Exception
+     */
+    private function prepareOptionsWithDomain($options)
+    {
+        if (!is_array($options['domains'])) {
+            throw new Exception('Parameter "domains" must be an array.');
+        }
+        unset($options['file']);
+        unset($options['directory']);
+
+        foreach ($options['domains'] as $domain => $dir) {
+            bindtextdomain($domain, $dir);
+        }
+        // set the first domain as default
+        reset($options['domains']);
+        $this->defaultDomain = key($options['domains']);
+        // save list of domains
+        $this->domains = array_keys($options['domains']);
+    }
+
+    /**
+     * Validator for gettext without domains
+     *
+     * @param array $options
+     *
+     * @throws \Phalcon\Translate\Exception
+     */
+    private function prepareOptionsWithoutDomain($options)
+    {
+        self::validateOptionsWithoutDomain($options);
+        if (!is_array($options['file'])) {
+            $options['file'] = array($options['file']);
+        }
+
+        foreach ($options['file'] as $domain) {
+            bindtextdomain($domain, $options['directory']);
+        }
+
+        // set the first domain as default
+        $this->defaultDomain = reset($options['file']);
+        $this->domains = $options['file'];
+
+        return $options;
     }
 
     /**
      * {@inheritdoc}
      *
      * @param  string $index
-     * @param  array  $placeholders
+     * @param  array $placeholders
      * @param  string $domain
+     *
      * @return string
      */
     public function query($index, $placeholders = null, $domain = null)
@@ -122,79 +149,69 @@ class Gettext extends Adapter implements AdapterInterface
             $translation = dgettext($domain, $index);
         }
 
-        if (is_array($placeholders)) {
-            foreach ($placeholders as $key => $value) {
-                $translation = str_replace('%' . $key . '%', $value, $translation);
-            }
-        }
-
-        return $translation;
+        return self::setPlaceholders($translation, $placeholders);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @param  string                    $msgid
-     * @param  string                    $msgctxt      Optional. If ommitted or NULL, this method behaves as query().
-     * @param  array                     $placeholders Optional.
-     * @param  string                    $category     Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @param  string $msgid
+     * @param  string $msgctxt     Optional. If ommitted or NULL,
+     *                             this method behaves as query().
+     * @param  array $placeholders Optional.
+     * @param  string $category    Optional. Specify the locale category.
+     *                             Defaults to LC_MESSAGES
+     *
      * @return string
      * @throws \InvalidArgumentException
      */
     public function cquery($msgid, $msgctxt = null, $placeholders = null, $category = LC_MESSAGES, $domain = null)
     {
-        if ($domain !== null && !in_array($domain, $this->domains)) {
-            throw new \InvalidArgumentException($domain . ' is invalid translation domain');
-        }
         if ($msgctxt === null) {
             return $this->query($msgid, $placeholders, $domain);
         }
 
-        if ($domain === null) {
-            $domain = textdomain(null);
-        }
+        $this->setDomain($domain);
 
         $contextString = "{$msgctxt}\004{$msgid}";
-        $translation   = dcgettext($domain, $contextString, $category);
+        $translation = dcgettext($domain, $contextString, $category);
 
         if ($translation == $contextString) {
             $translation = $msgid;
         }
 
-        if (is_array($placeholders)) {
-            foreach ($placeholders as $key => $value) {
-                $translation = str_replace('%' . $key . '%', $value, $translation);
-            }
-        }
-
-        return $translation;
+        return self::setPlaceholders($translation, $placeholders);
     }
 
     /**
      * Returns the translation related to the given key and context (msgctxt).
      * This is an alias to cquery().
      *
-     * @param  string  $msgid
-     * @param  string  $msgctxt      Optional.
-     * @param  array   $placeholders Optional.
-     * @param  integer $category     Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @param  string $msgid
+     * @param  string $msgctxt     Optional.
+     * @param  array $placeholders Optional.
+     * @param  integer $category   Optional. Specify the locale category.
+     *                             Defaults to LC_MESSAGES
+     *
      * @return string
      */
     // @codingStandardsIgnoreStart
     public function __($msgid, $msgctxt = null, $placeholders = null, $category = LC_MESSAGES)
-    // @codingStandardsIgnoreEnd
     {
         return $this->cquery($msgid, $msgctxt, $placeholders, $category);
     }
+    // @codingStandardsIgnoreEnd
 
     /**
-     * Returns the translation related to the given key and context (msgctxt) from a specific domain.
+     * Returns the translation related to the given key
+     * and context (msgctxt) from a specific domain.
      *
-     * @param  string  $domain
-     * @param  string  $msgid
-     * @param  string  $msgctxt      Optional.
-     * @param  array   $placeholders Optional.
-     * @param  integer $category     Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @param  string $domain
+     * @param  string $msgid
+     * @param  string $msgctxt     Optional.
+     * @param  array $placeholders Optional.
+     * @param  integer $category   Optional. Specify the locale category. Defaults to LC_MESSAGES
+     *
      * @return string
      */
     public function dquery($domain, $msgid, $msgctxt = null, $placeholders = null, $category = LC_MESSAGES)
@@ -205,42 +222,37 @@ class Gettext extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param  string  $msgid1
-     * @param  string  $msgid2
+     * @param  string $msgid1
+     * @param  string $msgid2
      * @param  integer $count
-     * @param  array   $placeholders
-     * @param  string  $domain
+     * @param  array $placeholders
+     * @param  string $domain
+     *
      * @return string
      */
     public function nquery($msgid1, $msgid2, $count, $placeholders = null, $domain = null)
     {
-        if (!is_int($count) || $count < 0) {
-            throw new \InvalidArgumentException("Count must be a nonnegative integer. $count given.");
-        }
+        self::validateCount($count);
         if ($domain === null) {
             $translation = ngettext($msgid1, $msgid2, $count);
         } else {
             $translation = dngettext($domain, $msgid1, $msgid2, $count);
         }
 
-        if (is_array($placeholders)) {
-            foreach ($placeholders as $key => $value) {
-                $translation = str_replace('%' . $key . '%', $value, $translation);
-            }
-        }
-
-        return $translation;
+        return self::setPlaceholders($translation, $placeholders);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @param  string                    $msgid1
-     * @param  string                    $msgid2
-     * @param  integer                   $count
-     * @param  string                    $msgctxt      Optional. If ommitted or NULL, this method behaves as nquery().
-     * @param  array                     $placeholders Optional.
-     * @param  string                    $category     Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @param  string $msgid1
+     * @param  string $msgid2
+     * @param  integer $count
+     * @param  string $msgctxt     Optional. If ommitted or NULL, this method behaves as nquery().
+     * @param  array $placeholders Optional.
+     * @param  string $category    Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @param  string $domain      Optional.
+     *
      * @return string
      * @throws \InvalidArgumentException
      */
@@ -253,48 +265,35 @@ class Gettext extends Adapter implements AdapterInterface
         $category = LC_MESSAGES,
         $domain = null
     ) {
-        if (!is_int($count) || $count < 0) {
-            throw new \InvalidArgumentException("Count must be a nonnegative integer. $count given.");
-        }
-        if ($domain !== null && !in_array($domain, $this->domains)) {
-            throw new \InvalidArgumentException($domain . ' is invalid translation domain');
-        }
+        self::validateCount($count);
         if ($msgctxt === null) {
             return $this->nquery($msgid1, $msgid2, $count, $placeholders, $domain);
         }
 
-        if ($domain === null) {
-            $domain = textdomain(null);
+        $this->setDomain($domain);
+
+        $context = "{$msgctxt}\004";
+        $translation = dcngettext($domain, $context . $msgid1, $context . $msgid2, $count, $category);
+
+        if (strpos($translation, $context, 0) === 0) {
+            $translation = substr($translation, strlen($context));
         }
 
-        $contextString1 = "{$msgctxt}\004{$msgid1}";
-        $contextString2 = "{$msgctxt}\004{$msgid2}";
-        $translation   = dcngettext($domain, $contextString1, $contextString2, $count, $category);
-
-        if ($translation == $contextString) {
-            $translation = $msgid;
-        }
-
-        if (is_array($placeholders)) {
-            foreach ($placeholders as $key => $value) {
-                $translation = str_replace('%' . $key . '%', $value, $translation);
-            }
-        }
-
-        return $translation;
+        return self::setPlaceholders($translation, $placeholders);
     }
 
     /**
      * Returns the translation related to the given key and context (msgctxt)
      * from a specific domain with plural form support.
      *
-     * @param  string  $domain
-     * @param  string  $msgid1
-     * @param  string  $msgid2
+     * @param  string $domain
+     * @param  string $msgid1
+     * @param  string $msgid2
      * @param  integer $count
-     * @param  string  $msgctxt      Optional.
-     * @param  array   $placeholders Optional.
-     * @param  integer $category     Optional. Specify the locale category. Defaults to LC_MESSAGES
+     * @param  string $msgctxt     Optional.
+     * @param  array $placeholders Optional.
+     * @param  integer $category   Optional. Specify the locale category. Defaults to LC_MESSAGES
+     *
      * @return string
      */
     public function dnquery(
@@ -306,9 +305,6 @@ class Gettext extends Adapter implements AdapterInterface
         $placeholders = null,
         $category = LC_MESSAGES
     ) {
-        if (!is_int($count) || $count < 0) {
-            throw new \InvalidArgumentException("Count must be a nonnegative integer. $count given.");
-        }
         return $this->cnquery($msgid1, $msgid2, $count, $msgctxt, $placeholders, $category, $domain);
     }
 
@@ -316,7 +312,8 @@ class Gettext extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param  string  $index
+     * @param  string $index
+     *
      * @return boolean
      */
     public function exists($index)
@@ -328,7 +325,8 @@ class Gettext extends Adapter implements AdapterInterface
      * Changes the current domain (i.e. the translation file). The passed domain must be one
      * of those passed to the constructor.
      *
-     * @param  string                    $domain
+     * @param  string $domain
+     *
      * @return string                    Returns the new current domain.
      * @throws \InvalidArgumentException
      */
@@ -352,5 +350,31 @@ class Gettext extends Adapter implements AdapterInterface
     public function resetDomain()
     {
         return textdomain($this->defaultDomain);
+    }
+
+    /**
+     * Count parameter validation
+     *
+     * @access public
+     * @throws \InvalidArgumentException
+     */
+    public static function validateCount($count)
+    {
+        if (!is_int($count) || $count < 0) {
+            throw new \InvalidArgumentException("Count must be a nonnegative integer. $count given.");
+        }
+    }
+
+    /**
+     * Validate required fields in $options
+     *
+     * @access public
+     * @throws \InvalidArgumentException
+     */
+    public static function validateOptionsWithoutDomain($options)
+    {
+        if (!isset($options['file'], $options['directory'])) {
+            throw new  \InvalidArgumentException('Parameters "file" and "directory" are required.');
+        }
     }
 }

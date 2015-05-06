@@ -22,7 +22,7 @@ use Phalcon\Translate\Adapter;
 use Phalcon\Translate\AdapterInterface;
 use Phalcon\Translate\Exception;
 
-class Database extends Adapter implements AdapterInterface
+class Database extends Base implements AdapterInterface
 {
 
     /**
@@ -78,17 +78,7 @@ class Database extends Adapter implements AdapterInterface
             return $index;
         }
 
-        if ($placeholders == null) {
-            return $translation['value'];
-        }
-
-        if (is_array($placeholders)) {
-            foreach ($placeholders as $key => $value) {
-                $translation['value'] = str_replace('%' . $key . '%', $value, $translation['value']);
-            }
-        }
-
-        return $translation['value'];
+        return self::setPlaceholders($translation['value'], $placeholders);
     }
 
     /**

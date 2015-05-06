@@ -633,21 +633,19 @@ class Message
             $result = true;
         }
 
-        if ($result !== false) {
-
-            $this->failedRecipients = [];
-
-            $count = $this->getManager()->getSwift()->send($this->getMessage(), $this->failedRecipients);
-
-            if ($eventManager) {
-                $eventManager->fire('mailer:afterSend', $this, [$count, $this->failedRecipients]);
-            }
-
-            return $count;
-
-        } else {
+        if ($result === false) {
             return false;
         }
+
+        $this->failedRecipients = [];
+
+        $count = $this->getManager()->getSwift()->send($this->getMessage(), $this->failedRecipients);
+
+        if ($eventManager) {
+            $eventManager->fire('mailer:afterSend', $this, [$count, $this->failedRecipients]);
+        }
+
+        return $count;
     }
 
     /**
@@ -701,7 +699,7 @@ class Message
     protected function createAttachmentViaPath($file)
     {
         /** @var $byteStream \Swift_ByteStream_FileByteStream */
-        $byteStream  = $this->getManager()->getDI()->get('\Swift_ByteStream_FileByteStream', [$file]);
+        $byteStream = $this->getManager()->getDI()->get('\Swift_ByteStream_FileByteStream', [$file]);
 
         /** @var $image \Swift_Attachment */
         $attachment = $this->getManager()->getDI()->get('\Swift_Attachment')
@@ -737,7 +735,7 @@ class Message
     protected function createEmbedViaPath($file)
     {
         /** @var $byteStream \Swift_ByteStream_FileByteStream */
-        $byteStream  = $this->getManager()->getDI()->get('\Swift_ByteStream_FileByteStream', [$file]);
+        $byteStream = $this->getManager()->getDI()->get('\Swift_ByteStream_FileByteStream', [$file]);
 
         /** @var $image \Swift_Image */
         $image = $this->getManager()->getDI()->get('\Swift_Image')
@@ -771,7 +769,6 @@ class Message
     protected function normalizeEmail($email)
     {
         if (is_array($email)) {
-
             $emails = [];
 
             foreach ($email as $k => $v) {
@@ -784,7 +781,6 @@ class Message
             }
 
             return $emails;
-
         } else {
             return $this->getManager()->normalizeEmail($email);
         }

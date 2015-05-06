@@ -8,6 +8,7 @@
  * to license@phalconphp.com so we can send you a copy immediately.
  *
  * @author Nikita Vershinin <endeveit@gmail.com>
+ * @author Ilya Gusev <mail@igusev.ru>
  */
 namespace Phalcon\Mvc\Model\MetaData;
 
@@ -37,12 +38,12 @@ class Redis extends Base
      */
     public function __construct($options = null)
     {
-        if (is_array($options)) {
-            if (!isset($options['redis'])) {
-                throw new Exception('Parameter "redis" is required');
-            }
-        } else {
+        if (!is_array($options)) {
             throw new Exception('No configuration given');
+        }
+
+        if (!isset($options['redis'])) {
+            throw new Exception('Parameter "redis" is required');
         }
 
         parent::__construct($options);
@@ -78,13 +79,13 @@ class Redis extends Base
     }
     
     /**
-     * Returns the sessionId with prefix
+     * {@inheritdoc}
      *
-     * @param  string $id
+     * @param  string $key
      * @return string
      */
-    protected function getId($id)
+    protected function prepareKey($key)
     {
-        return str_replace('\\', ':', parent::getId($id));
+        return str_replace('\\', ':', parent::prepareKey($key));
     }
 }

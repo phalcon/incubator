@@ -3,6 +3,7 @@ namespace Phalcon\Mvc\View\Engine;
 
 use Phalcon\Mvc\View\Engine;
 use Phalcon\Mvc\View\EngineInterface;
+use Phalcon\DiInterface;
 
 /**
  * Phalcon\Mvc\View\Engine\Smarty
@@ -22,7 +23,7 @@ class Smarty extends Engine implements EngineInterface
      * @param \Phalcon\Mvc\ViewInterface $view
      * @param \Phalcon\DiInterface       $di
      */
-    public function __construct($view, $di = null)
+    public function __construct($view, DiInterface $di = null)
     {
         $this->smarty               = new \Smarty();
         $this->smarty->template_dir = '.';
@@ -63,5 +64,15 @@ class Smarty extends Engine implements EngineInterface
         foreach ($options as $k => $v) {
             $this->smarty->$k = $v;
         }
+    }
+    
+    /**
+     * Get Smarty object
+     *
+     * @return \Smarty
+     */
+    public function getSmarty()
+    {
+        return $this->smarty;
     }
 }
