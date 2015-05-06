@@ -6,7 +6,7 @@ use Phalcon\Translate\AdapterInterface;
 use Phalcon\Translate\Exception;
 
 /**
- * Класс ResourceBundle
+ * ResourceBundle adapter
  */
 class ResourceBundle extends Base implements AdapterInterface
 {
