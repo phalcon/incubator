@@ -27,7 +27,7 @@ Create the composer.json file as follows:
 ```json
 {
     "require": {
-        "phalcon/incubator": "v1.3.4"
+        "phalcon/incubator": "v1.3.5"
     }
 }
 ```
@@ -54,12 +54,13 @@ Just clone the repository in a common location or inside your project:
 
 ```
 git clone https://github.com/phalcon/incubator.git
+git checkout 1.3.5
 ```
 
-For a specific Git branch (eg 2.0.x) please use:
+For a specific Git branch (eg 1.3.5) please use:
 
 ```
-git clone -b 2.0.x git@github.com:phalcon/incubator.git
+git clone -b 1.3.5 git@github.com:phalcon/incubator.git
 ```
 
 ## Autoloading from the Incubator
@@ -82,7 +83,7 @@ $loader->register();
 
 Incubator is built under Travis CI service. Every commit pushed to this repository will queue a build into the continuous integration service and will run all PHPUnit tests to ensure that everything is going well and the project is stable. The current build status is:
 
-[![Build Status](https://img.shields.io/travis/phalcon/incubator/master.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
+[![Build Status](https://img.shields.io/travis/phalcon/incubator/v1.3.5.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
 
 # Contributing
 

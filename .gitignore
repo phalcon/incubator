@@ -1,6 +1,5 @@
 .DS_Store
-.idea/*
-*.iml
+.idea/
 *.sublime-project
 *.sublime-workspace
 composer.lock
