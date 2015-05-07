@@ -26,7 +26,7 @@ If you are using Phalcon 2.0.x, create a composer.json file as follows:
 ```json
 {
     "require": {
-        "phalcon/incubator": "2.0.*@dev"
+        "phalcon/incubator": "v2.0.1"
     }
 }
 ```
@@ -35,7 +35,7 @@ If you are still using Phalcon 1.3.x, create a composer.json with the following 
 ```json
 {
     "require": {
-        "phalcon/incubator": "v1.3.4"
+        "phalcon/incubator": "v1.3.5"
     }
 }
 ```
@@ -58,7 +58,7 @@ git clone https://github.com/phalcon/incubator.git
 For a specific Git branch (eg 2.0.x) please use:
 
 ```
-git clone -b 2.0.x git@github.com:phalcon/incubator.git
+git clone -b 2.0.1 git@github.com:phalcon/incubator.git
 ```
 
 ## Autoloading from the Incubator
