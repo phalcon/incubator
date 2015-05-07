@@ -78,6 +78,8 @@ class Extended extends ConsoleApp
         $scannedTasksDir = array_diff(scandir($this->tasksDir), array('..', '.'));
 
         $config = $this->getDI()->get('config');
+        $dispatcher = $this->getDI()->getShared('dispatcher');
+        $namespace = $dispatcher->getNamespaceName();
 
         if (isset($config['annotationsAdapter']) && $config['annotationsAdapter']) {
             $adapter = '\Phalcon\Annotations\Adapter\\' . $config['annotationsAdapter'];
@@ -91,8 +93,9 @@ class Extended extends ConsoleApp
         }
 
         foreach ($scannedTasksDir as $taskFile) {
-            $taskClass = str_replace('.php', '', $taskFile);
+            $taskClass = ($namespace ? $namespace . '\\' : '') . str_replace('.php', '', $taskFile);
             $taskName  = strtolower(str_replace('Task', '', $taskClass));
+            $taskName  = trim($taskName, '\\');
 
             $this->documentation[$taskName] = array('description'=>array(''), 'actions'=>array());
 
@@ -119,6 +122,10 @@ class Extended extends ConsoleApp
             }
 
             foreach ($methodAnnotations as $action => $collection) {
+                if ($collection->has('DoNotCover')) {
+                    continue;
+                }
+
                 $actionName = strtolower(str_replace('Action', '', $action));
 
                 $this->documentation[$taskName]['actions'][$actionName]=array();
@@ -154,7 +161,7 @@ class Extended extends ConsoleApp
         echo $helpOutput . PHP_EOL;
         echo PHP_EOL . 'Usage:' . PHP_EOL;
         echo PHP_EOL;
-        echo '           command [<task> [<action> [<param1> <param2> ... <paramN>] ] ]'. PHP_EOL;
+        echo "\t" , 'command [<task> [<action> [<param1> <param2> ... <paramN>] ] ]', PHP_EOL;
         echo PHP_EOL;
         echo PHP_EOL . 'To show task help type:' . PHP_EOL;
         echo PHP_EOL;
@@ -186,7 +193,7 @@ class Extended extends ConsoleApp
         echo $helpOutput . PHP_EOL;
         echo PHP_EOL . 'Usage:' . PHP_EOL;
         echo PHP_EOL;
-        echo '           command [<task> [<action> [<param1> <param2> ... <paramN>] ] ]'. PHP_EOL;
+        echo "\t" , 'command [<task> [<action> [<param1> <param2> ... <paramN>] ] ]', PHP_EOL;
         echo PHP_EOL;
         foreach ($this->documentation as $task => $doc) {
             if ($taskTogetHelp != $task) {
