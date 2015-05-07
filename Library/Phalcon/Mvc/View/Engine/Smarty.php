@@ -43,7 +43,7 @@ class Smarty extends Engine implements EngineInterface
      * @param array   $params
      * @param boolean $mustClean
      */
-    public function render($path, $params, $mustClean = null)
+    public function render($path, $params, $mustClean = false)
     {
         if (!isset($params['content'])) {
             $params['content'] = $this->_view->getContent();
@@ -51,7 +51,13 @@ class Smarty extends Engine implements EngineInterface
         foreach ($params as $key => $value) {
             $this->smarty->assign($key, $value);
         }
-        $this->_view->setContent($this->smarty->fetch($path));
+
+        $content = $this->smarty->fetch($path);
+        if ($mustClean) {
+            $this->_view->setContent($content);
+        } else {
+            echo $content;
+        }
     }
 
     /**
