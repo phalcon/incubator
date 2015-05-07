@@ -34,7 +34,15 @@ class Extended extends ConsoleApp
     private $tasksDir = '';
     private $documentation = array();
 
-    public function handle(array $arguments)
+    /**
+     * Handle the whole command-line tasks
+     *
+     * @param array $arguments Cli arguments
+     *
+     * @return mixed
+     * @throws \Phalcon\Cli\Console\Exception
+     */
+    public function handle(array $arguments = null)
     {
         if (isset($arguments['task']) && in_array($arguments['task'], array('-h','--help','help'))) {
             $this->setTasksDir();
