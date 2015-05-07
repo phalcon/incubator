@@ -1,19 +1,38 @@
 <?php
-namespace Phalcon\CLI\Console;
+
+/*
+ +------------------------------------------------------------------------+
+ | Phalcon Framework                                                      |
+ +------------------------------------------------------------------------+
+ | Copyright (c) 2011-2015 Phalcon Team (http://www.phalconphp.com)       |
+ +------------------------------------------------------------------------+
+ | This source file is subject to the New BSD License that is bundled     |
+ | with this package in the file docs/LICENSE.txt.                        |
+ |                                                                        |
+ | If you did not receive a copy of the license and are unable to         |
+ | obtain it through the world-wide-web, please send an email             |
+ | to license@phalconphp.com so we can send you a copy immediately.       |
+ +------------------------------------------------------------------------+
+ | Authors: Sebastian Arrubia <sarrubia@gmail.com>                        |
+ +------------------------------------------------------------------------+
+ */
+
+namespace Phalcon\Cli\Console;
+
+use Phalcon\Cli\Console as ConsoleApp;
+use Phalcon\Annotations\Adapter\Memory as MemoryAdapter;
 
 /**
  * Phalcon\CLI\Console\Extended
  *
- * @version 0.1
- * @author  Sebastian Arrubia <sarrubia@gmail.com>
+ * Extended Console Application that uses annotations in order to create automatically a help description.
  *
+ * @package Phalcon\Cli\Console
  */
-class Extended extends \Phalcon\CLI\Console
+class Extended extends ConsoleApp
 {
-
     private $tasksDir = '';
     private $documentation = array();
-
 
     public function handle(array $arguments)
     {
@@ -32,12 +51,15 @@ class Extended extends \Phalcon\CLI\Console
         parent::handle($arguments);
     }
 
+    /**
+     * @throws \Phalcon\Cli\Console\Exception
+     */
     private function setTasksDir()
     {
         $config = $this->getDI()->get('config');
 
-        if (!is_dir($config['tasksDir'])) {
-            throw new \Phalcon\CLI\Console\Exception("Invalid provided tasks Dir");
+        if (!isset($config['tasksDir']) || !is_dir($config['tasksDir'])) {
+            throw new Exception("Invalid provided tasks Dir");
         }
 
         $this->tasksDir = $config['tasksDir'];
@@ -49,16 +71,15 @@ class Extended extends \Phalcon\CLI\Console
 
         $config = $this->getDI()->get('config');
 
-        if (isset($config['annotationsAdapter'])) {
-            if ($config['annotationsAdapter'] == 'memory') {
-                $reader = new \Phalcon\Annotations\Adapter\Memory();
-            } elseif ($config['annotationsAdapter'] == 'apc') {
-                $reader = new \Phalcon\Annotations\Adapter\Apc();
+        if (isset($config['annotationsAdapter']) && $config['annotationsAdapter']) {
+            $adapter = '\Phalcon\Annotations\Adapter\\' . $config['annotationsAdapter'];
+            if (class_exists($adapter)) {
+                $reader = new $adapter();
             } else {
-                $reader = new \Phalcon\Annotations\Adapter\Memory();
+                $reader = new MemoryAdapter();
             }
         } else {
-            $reader = new \Phalcon\Annotations\Adapter\Memory();
+            $reader = new MemoryAdapter();
         }
 
         foreach ($scannedTasksDir as $taskFile) {
@@ -75,7 +96,7 @@ class Extended extends \Phalcon\CLI\Console
                 continue;
             }
 
-            //Class Annotations
+            // Class Annotations
             foreach ($annotations as $annotation) {
                 if ($annotation->getName() == 'description') {
                     $this->documentation[$taskName]['description'] = $annotation->getArguments();
@@ -84,7 +105,7 @@ class Extended extends \Phalcon\CLI\Console
 
             $methodAnnotations = $reflector->getMethodsAnnotations();
 
-            //Method Annotations
+            // Method Annotations
             if (!$methodAnnotations) {
                 continue;
             }
