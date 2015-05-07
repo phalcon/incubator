@@ -79,6 +79,7 @@ class Extended extends ConsoleApp
 
         $config = $this->getDI()->get('config');
         $dispatcher = $this->getDI()->getShared('dispatcher');
+        $namespace = $dispatcher->getNamespaceName();
 
         if (isset($config['annotationsAdapter']) && $config['annotationsAdapter']) {
             $adapter = '\Phalcon\Annotations\Adapter\\' . $config['annotationsAdapter'];
@@ -92,7 +93,6 @@ class Extended extends ConsoleApp
         }
 
         foreach ($scannedTasksDir as $taskFile) {
-            $namespace = $dispatcher->getNamespaceName();
             $taskClass = ($namespace ? $namespace . '\\' : '') . str_replace('.php', '', $taskFile);
             $taskName  = strtolower(str_replace('Task', '', $taskClass));
             $taskName  = trim($taskName, '\\');
