@@ -1,9 +1,10 @@
 <?php
 namespace Phalcon\Mvc\View\Engine;
 
+use Phalcon\DiInterface;
 use Phalcon\Mvc\View\Engine;
 use Phalcon\Mvc\View\EngineInterface;
-use Phalcon\DiInterface;
+use Phalcon\Mvc\ViewBaseInterface;
 
 /**
  * Phalcon\Mvc\View\Engine\Smarty
@@ -20,10 +21,10 @@ class Smarty extends Engine implements EngineInterface
     /**
      * {@inheritdoc}
      *
-     * @param \Phalcon\Mvc\ViewInterface $view
-     * @param \Phalcon\DiInterface       $di
+     * @param ViewBaseInterface $view
+     * @param DiInterface       $di
      */
-    public function __construct($view, DiInterface $di = null)
+    public function __construct(ViewBaseInterface $view, DiInterface $di = null)
     {
         $this->smarty               = new \Smarty();
         $this->smarty->template_dir = '.';
