@@ -1,4 +1,5 @@
 <?php
+
 namespace Phalcon\Mvc\View\Engine;
 
 use Phalcon\Mvc\View\Engine;
@@ -21,17 +22,17 @@ class Twig extends Engine implements EngineInterface
      * {@inheritdoc}
      *
      * @param \Phalcon\Mvc\ViewInterface $view
-     * @param \Phalcon\DiInterface       $di
-     * @param array                      $options
-     * @param array                      $userFunctions
+     * @param \Phalcon\DiInterface $dependencyInjector
+     * @param array $options
+     * @param array $userFunctions
      */
     public function __construct($view, DiInterface $di = null, $options = array(), $userFunctions = array())
     {
-        $loader     = new \Twig_Loader_Filesystem($view->getViewsDir());
-        $this->twig = new Twig\Environment($di, $loader, $options);
+        $loader = new \Twig_Loader_Filesystem($view->getViewsDir());
+        $this->twig = new Twig\Environment($di, $loader);
 
         $this->twig->addExtension(new Twig\CoreExtension());
-        $this->registryFunctions($view, $di, $userFunctions);
+        $this->registryFunctions($view, $di);
 
         parent::__construct($view, $di);
     }
@@ -40,8 +41,8 @@ class Twig extends Engine implements EngineInterface
      * Registers common function in Twig
      *
      * @param \Phalcon\Mvc\ViewInterface $view
-     * @param \Phalcon\DiInterface       $di
-     * @param array                      $userFunctions
+     * @param \Phalcon\DiInterface $di
+     * @param array $userFunctions
      */
     protected function registryFunctions($view, DiInterface $di, $userFunctions = array())
     {
@@ -136,8 +137,8 @@ class Twig extends Engine implements EngineInterface
     /**
      * {@inheritdoc}
      *
-     * @param string  $path
-     * @param array   $params
+     * @param string $path
+     * @param array $params
      * @param boolean $mustClean
      */
     public function render($path, $params, $mustClean = false)

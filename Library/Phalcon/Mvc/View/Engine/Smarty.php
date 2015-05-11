@@ -1,9 +1,10 @@
 <?php
+
 namespace Phalcon\Mvc\View\Engine;
 
+use Phalcon\DiInterface;
 use Phalcon\Mvc\View\Engine;
 use Phalcon\Mvc\View\EngineInterface;
-use Phalcon\DiInterface;
 
 /**
  * Phalcon\Mvc\View\Engine\Smarty
@@ -21,26 +22,26 @@ class Smarty extends Engine implements EngineInterface
      * {@inheritdoc}
      *
      * @param \Phalcon\Mvc\ViewInterface $view
-     * @param \Phalcon\DiInterface       $di
+     * @param \Phalcon\DiInterface $di
      */
-    public function __construct($view, DiInterface $di = null)
+    public function __construct($view, DiInterface $dependencyInjector = null)
     {
-        $this->smarty               = new \Smarty();
+        $this->smarty = new \Smarty();
         $this->smarty->template_dir = '.';
-        $this->smarty->compile_dir  = SMARTY_DIR . 'templates_c';
-        $this->smarty->config_dir   = SMARTY_DIR . 'configs';
-        $this->smarty->cache_dir    = SMARTY_DIR . 'cache';
-        $this->smarty->caching      = false;
-        $this->smarty->debugging    = true;
+        $this->smarty->compile_dir = SMARTY_DIR . 'templates_c';
+        $this->smarty->config_dir = SMARTY_DIR . 'configs';
+        $this->smarty->cache_dir = SMARTY_DIR . 'cache';
+        $this->smarty->caching = false;
+        $this->smarty->debugging = true;
 
-        parent::__construct($view, $di);
+        parent::__construct($view, $dependencyInjector);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @param string  $path
-     * @param array   $params
+     * @param string $path
+     * @param array $params
      * @param boolean $mustClean
      */
     public function render($path, $params, $mustClean = false)
@@ -71,7 +72,7 @@ class Smarty extends Engine implements EngineInterface
             $this->smarty->$k = $v;
         }
     }
-    
+
     /**
      * Get Smarty object
      *
