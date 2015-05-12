@@ -3,6 +3,7 @@ namespace Phalcon\Mvc\View\Engine;
 
 use Phalcon\Mvc\View\Engine;
 use Phalcon\Mvc\View\EngineInterface;
+use Phalcon\Mvc\ViewBaseInterface;
 use Phalcon\DiInterface;
 
 /**
@@ -25,7 +26,7 @@ class Twig extends Engine implements EngineInterface
      * @param array                      $options
      * @param array                      $userFunctions
      */
-    public function __construct($view, DiInterface $di = null, $options = array(), $userFunctions = array())
+    public function __construct(ViewBaseInterface $view, DiInterface $di = null, $options = array(), $userFunctions = array())
     {
         $loader     = new \Twig_Loader_Filesystem($view->getViewsDir());
         $this->twig = new Twig\Environment($di, $loader, $options);
