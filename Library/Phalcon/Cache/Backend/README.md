@@ -61,33 +61,6 @@ echo $time;
 
 ```
 
-Redis
------
-This adapter uses a [Redis](http://redis.io) backend to store the cached content and [phpredis](https://github.com/nicolasff/phpredis) extension:
-
-```php
-
-$di->set('cache', function() {
-
-	//Connect to redis
-	$redis = new Redis();
-	$redis->connect('127.0.0.1', 6379);
-
-	//Create a Data frontend and set a default lifetime to 1 hour
-	$frontend = new Phalcon\Cache\Frontend\Data(array(
-	    'lifetime' => 3600
-	));
-
-	//Create the cache passing the connection
-	$cache = new Phalcon\Cache\Backend\Redis($frontend, array(
-		'redis' => $redis
-	));
-
-	return $cache;
-});
-
-```
-
 Memcached
 -----
 This adapter uses a Memcache backend to store the cached content:
