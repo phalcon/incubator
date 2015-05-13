@@ -29,18 +29,6 @@ class Wincache extends Prefixable
 {
 
     /**
-     * Phalcon\Cache\Backend\Wincache constructor
-     *
-     * @param  \Phalcon\Cache\FrontendInterface $frontend
-     * @param  array                            $options
-     * @throws \Phalcon\Cache\Exception
-     */
-    public function __construct($frontend, $options = null)
-    {
-        parent::__construct($frontend, $options);
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @param  string     $keyName
@@ -49,16 +37,15 @@ class Wincache extends Prefixable
      */
     public function get($keyName, $lifetime = null)
     {
-        $value = wincache_ucache_get($keyName, $success);
-        if ($success===false) {
+        $prefixedKey    = $this->getPrefixedIdentifier($keyName);
+        $cachedContent  = wincache_ucache_get($prefixedKey, $success);
+        $this->_lastKey = $prefixedKey;
+
+        if ($success === false) {
             return null;
         }
 
-        $frontend = $this->getFrontend();
-
-        $this->setLastKey($keyName);
-
-        return $frontend->afterRetrieve($value);
+        return $this->_frontend->afterRetrieve($cachedContent);
     }
 
     /**
@@ -72,38 +59,47 @@ class Wincache extends Prefixable
      */
     public function save($keyName = null, $content = null, $lifetime = null, $stopBuffer = true)
     {
-
         if ($keyName === null) {
             $lastKey = $this->_lastKey;
         } else {
-            $lastKey = $keyName;
+            $lastKey = $this->getPrefixedIdentifier($keyName);
         }
 
         if (!$lastKey) {
             throw new Exception('The cache must be started first');
         }
 
+        /** @var \Phalcon\Cache\FrontendInterface $frontend */
         $frontend = $this->getFrontend();
 
         if ($content === null) {
-            $content = $frontend->getContent();
+            $cachedContent = $frontend->getContent();
+        } else {
+            $cachedContent = $content;
         }
 
-        //Get the lifetime from the frontend
+        $preparedContent = $frontend->beforeStore($cachedContent);
+
         if ($lifetime === null) {
-            $lifetime = $frontend->getLifetime();
+            $lifetime = $this->_lastLifetime;
+
+            if ($lifetime === null) {
+                $ttl = $frontend->getLifetime();
+            } else {
+                $ttl = $lifetime;
+            }
+        } else {
+            $ttl = $lifetime;
         }
 
-        wincache_ucache_set($lastKey, $frontend->beforeStore($content), $lifetime);
+        wincache_ucache_set($lastKey, $preparedContent, $ttl);
 
         $isBuffering = $frontend->isBuffering();
 
-        //Stop the buffer, this only applies for Phalcon\Cache\Frontend\Output
         if ($stopBuffer) {
             $frontend->stop();
         }
 
-        //Print the buffer, this only applies for Phalcon\Cache\Frontend\Output
         if ($isBuffering) {
             echo $content;
         }
@@ -119,7 +115,7 @@ class Wincache extends Prefixable
      */
     public function delete($keyName)
     {
-        return wincache_ucache_delete($keyName);
+        return wincache_ucache_delete($this->getPrefixedIdentifier($keyName));
     }
 
     /**
@@ -130,16 +126,17 @@ class Wincache extends Prefixable
      */
     public function queryKeys($prefix = null)
     {
-        $info = wincache_ucache_info();
+        $info    = wincache_ucache_info();
         $entries = array();
+
+        if (!$prefix) {
+            $prefix = $this->_prefix;
+        } else {
+            $prefix = $this->getPrefixedIdentifier($prefix);
+        }
+
         foreach ($info['ucache_entries'] as $entry) {
-            if ($prefix === null) {
-                $entries[] = $entry['key_name'];
-            } else {
-                if (substr($entry['key_name'], 0, strlen($prefix)) === $prefix) {
-                    $entries[] = $entry['key_name'];
-                }
-            }
+            $keys[] = !empty($prefix) ? str_replace($prefix, '', $entry['key_name']) : $entry['key_name'];
         }
 
         return $entries;
@@ -154,7 +151,13 @@ class Wincache extends Prefixable
      */
     public function exists($keyName = null, $lifetime = null)
     {
-        return wincache_ucache_exists($keyName);
+        if ($keyName === null) {
+            $lastKey = $this->_lastKey;
+        } else {
+            $lastKey = $this->getPrefixedIdentifier($keyName);
+        }
+
+        return wincache_ucache_exists($lastKey);
     }
 
     /**

@@ -35,12 +35,6 @@ abstract class Prefixable extends Backend implements BackendInterface
      */
     protected function getPrefixedIdentifier($id)
     {
-        $options = $this->getOptions();
-
-        if (!empty($options['prefix'])) {
-            return $options['prefix'] . $id;
-        }
-
-        return $id;
+        return $this->_prefix . $id;
     }
 }
