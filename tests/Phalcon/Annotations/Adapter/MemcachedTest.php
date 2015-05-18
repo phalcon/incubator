@@ -6,11 +6,17 @@ namespace Phalcon\Annotations\Adapter;
  * \Phalcon\Annotations\Adapter\MemcachedTest
  * Tests for class \Phalcon\Annotations\Adapter\Memcached
  *
- * @category Phalcon
- * @package  Phalcon\Annotations\Adapter
- * @author   Ilya Gusev <mail@igusev.ru>
- * @license  New BSD License
- * @link     http://phalconphp.com/
+ * @copyright (c) 2011-2015 Phalcon Team
+ * @package   Phalcon\Annotations\Adapter
+ * @author    Ilya Gusev <mail@igusev.ru>
+ * @link      http://phalconphp.com/
+ *
+ * The contents of this file are subject to the New BSD License that is
+ * bundled with this package in the file docs/LICENSE.txt
+ *
+ * If you did not receive a copy of the license and are unable to obtain it
+ * through the world-wide-web, please send an email to license@phalconphp.com
+ * so that we can send you a copy immediately.
  */
 class MemcachedTest extends \PHPUnit_Framework_TestCase
 {
