@@ -124,6 +124,22 @@ class PSRTest extends TestCase
         $testClass3 = new \TestLib\Unusable\Underscored_TestClass3();
     }
 
+    public function testShouldRegisterWithUnderscoredNamespace()
+    {
+        $loader = new PsrLoader();
+        $loader->registerNamespaces(
+            array(
+                'TestLib' => $this->currentDir . 'TestLib' . DIRECTORY_SEPARATOR
+            )
+        );
+        $loader->register();
+
+        $loaders = spl_autoload_functions();
+        $this->assertTrue(count($this->loaders) < count($loaders));
+
+        $testClass1 = new \TestLib\Underscored_Namespace\Underscored_Class();
+    }
+
     /**
      * @expectedException ReflectionException
      */
