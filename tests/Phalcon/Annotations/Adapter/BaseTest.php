@@ -9,7 +9,6 @@ use Phalcon\Cache\Frontend\Data as CacheFrontend;
  * \Phalcon\Annotations\Adapter\BaseTest
  * Tests for class \Phalcon\Annotations\Adapter\Base
  *
- * @category Phalcon
  * @package  Phalcon\Annotations\Adapter
  * @author   Ilya Gusev <mail@igusev.ru>
  * @license  New BSD License

@@ -6,7 +6,6 @@ namespace Phalcon\Annotations\Adapter;
  * \Phalcon\Annotations\Adapter\MemcachedTest
  * Tests for class \Phalcon\Annotations\Adapter\Memcached
  *
- * @category Phalcon
  * @package  Phalcon\Annotations\Adapter
  * @author   Ilya Gusev <mail@igusev.ru>
  * @license  New BSD License
