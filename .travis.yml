@@ -2,7 +2,7 @@ language: php
 
 env:
   - PHALCON_VERSION="2.0.x"
-  - PHALCON_VERSION="2.0.0"
+#  - PHALCON_VERSION="2.0.0"
 
 install:
   - tests/memcached.sh
