@@ -19,7 +19,6 @@ namespace Phalcon\Paginator;
  */
 class Pager implements \IteratorAggregate, \Countable
 {
-
     /**
      * Phalcon's paginate result.
      *
@@ -60,10 +59,7 @@ class Pager implements \IteratorAggregate, \Countable
     {
         $this->paginateResult = $adapter->getPaginate();
 
-        if (method_exists($adapter, 'getLimit')) {
-            $this->limit = $adapter->getLimit();
-        }
-
+        $this->limit = $adapter->getLimit();
         $this->options = $options;
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Phalcon\Loader;
+namespace Phalcon\Test\Loader;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionException;
