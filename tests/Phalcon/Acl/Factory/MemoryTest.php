@@ -43,7 +43,9 @@ class MemoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testFactoryShouldThrowExceptionIfActionsKeyIsMissing()
     {
-        //$this->markTestSkipped('Fails due to a bug in Phalcon. See https://github.com/phalcon/cphalcon/pull/10226');
+        if (version_compare(\Phalcon\Version::get(), '2.0.0', '=')) {
+            $this->markTestSkipped('Fails due to a bug in Phalcon. See https://github.com/phalcon/cphalcon/pull/10226');
+        }
 
         $config = new \Phalcon\Config\Adapter\Ini(__DIR__ . '/_fixtures/acl.ini');
         unset($config->acl->resource->index->actions);
