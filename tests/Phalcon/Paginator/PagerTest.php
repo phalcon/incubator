@@ -44,19 +44,28 @@ class PagerTest extends TestCase
         $paginate->current = 5;
         $paginate->last = 20;
 
+        $defaultLimit = null;
+
         $adapter = $this->getMockBuilder(self::BUILDER_CLASS)
             ->disableOriginalConstructor()
-            ->setMethods(array('getPaginate'))
+            ->setMethods(array('getPaginate', 'getLimit'))
             ->getMock();
+
         $adapter->expects($this->once())
             ->method('getPaginate')
             ->will($this->returnValue($paginate));
+
+        $adapter->expects($this->once())
+            ->method('getLimit')
+            ->will($this->returnValue($defaultLimit));
 
         $pager = new Pager($adapter);
         $this->assertEquals(
             array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
             $pager->getPagesInRange()
         );
+
+        $this->assertEquals(null, $pager->getLimit());
     }
 
     public function testCallingGetPagesInRangeMethodWithSliderOnEndShouldReturnExpectedArray()
