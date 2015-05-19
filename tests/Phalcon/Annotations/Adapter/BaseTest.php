@@ -1,6 +1,6 @@
 <?php
 
-namespace Phalcon\Annotations\Adapter;
+namespace Phalcon\Test\Annotations\Adapter;
 
 use Phalcon\Cache\Backend\Memory as CacheBackend;
 use Phalcon\Cache\Frontend\Data as CacheFrontend;
@@ -10,7 +10,7 @@ use Phalcon\Cache\Frontend\Data as CacheFrontend;
  * Tests for class \Phalcon\Annotations\Adapter\Base
  *
  * @copyright (c) 2011-2015 Phalcon Team
- * @package   Phalcon\Annotations\Adapter
+ * @package   Phalcon\Test\Annotations\Adapter
  * @author    Ilya Gusev <mail@igusev.ru>
  * @link      http://phalconphp.com/
  *

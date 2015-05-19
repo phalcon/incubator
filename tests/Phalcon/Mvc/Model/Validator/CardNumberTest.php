@@ -1,7 +1,8 @@
 <?php
 
-namespace Phalcon\Mvc\Model\Validator;
+namespace Phalcon\Test\Mvc\Model\Validator;
 
+use Phalcon\Mvc\Model\Validator\CardNumber;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Di;
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace Phalcon\Utils;
+namespace Phalcon\Test\Utils;
 
+use Phalcon\Utils\Slug;
 use malkusch\phpmock\MockBuilder;
 use malkusch\phpmock\phpunit\MockDelegateFunction;
 use malkusch\phpmock\phpunit\MockDisabler;
@@ -9,7 +10,6 @@ use malkusch\phpmock\phpunit\MockObjectProxy;
 
 class SlugTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @return array
      */
@@ -76,7 +76,7 @@ class SlugTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $functionMockBuilder = new MockBuilder();
-        $functionMockBuilder->setNamespace(__NAMESPACE__)
+        $functionMockBuilder->setNamespace('Phalcon\\Utils')
             ->setName("extension_loaded")
             ->setFunctionProvider(new MockDelegateFunction($mock));
 
@@ -89,7 +89,7 @@ class SlugTest extends \PHPUnit_Framework_TestCase
         $iconv = new MockObjectProxy($mock);
         $iconv->expects($this->once())->willReturn(false);
         Slug::generate('test 233');
-        $iconv->disable();
+        $functionMock->disable();
     }
 
     /**

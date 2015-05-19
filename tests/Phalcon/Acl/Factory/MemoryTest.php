@@ -1,5 +1,6 @@
 <?php
-namespace Phalcon\Acl\Factory;
+
+namespace Phalcon\Test\Acl\Factory;
 
 class MemoryTest extends \PHPUnit_Framework_TestCase
 {
