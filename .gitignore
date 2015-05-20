@@ -12,3 +12,4 @@ composer.phar
 /codeception/unit/CodeGuy.php
 .vagrant
 Vagrantfile
+/build

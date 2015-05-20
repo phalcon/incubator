@@ -1,5 +1,5 @@
 <?php
-namespace Phalcon\Cache\Backend;
+namespace Phalcon\Test\Cache\Backend;
 
 use Phalcon\Cache\Backend\Database as CacheBackend;
 use Phalcon\Cache\Frontend\Data as CacheFrontend;

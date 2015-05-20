@@ -1,11 +1,10 @@
 <?php
 
-namespace Phalcon\Mvc\Model\Validator;
+namespace Phalcon\Test\Mvc\Model\Validator;
 
+use Phalcon\Mvc\Model\Validator\CardNumber;
 use Phalcon\Mvc\Model\Manager;
-use Phalcon\Mvc\Model\Metadata\Files;
-use Phalcon\DI;
-use Phalcon\Mvc\Model\Validator\resources\TestCardNumberModel;
+use Phalcon\Di;
 
 class CardNumberTest extends \PHPUnit_Framework_TestCase
 {

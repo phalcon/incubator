@@ -1,27 +1,50 @@
 <?php
+
 namespace Phalcon\Tests\Paginator;
 
-class PagerTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase as TestCase;
+use Phalcon\Paginator\Pager;
+use stdClass;
+
+/**
+ * \Phalcon\Tests\Paginator\PagerTest
+ * Tests the Phalcon\Paginator\Pager component
+ *
+ * @copyright (c) 2011-2015 Phalcon Team
+ * @link      http://www.phalconphp.com
+ * @author    Nikita Vershinin <endeveit@gmail.com>
+ * @package   Phalcon\Tests\Paginator
+ *
+ * The contents of this file are subject to the New BSD License that is
+ * bundled with this package in the file docs/LICENSE.txt
+ *
+ * If you did not receive a copy of the license and are unable to obtain it
+ * through the world-wide-web, please send an email to license@phalconphp.com
+ * so that we can send you a copy immediately.
+ */
+class PagerTest extends TestCase
 {
+    const BUILDER_CLASS = 'Phalcon\Paginator\Adapter\QueryBuilder';
+
     public function testCreatingPagerObjectWithoutOptionsShouldConstructObject()
     {
-        $adapter = $this->getMockBuilder('Phalcon\Paginator\Adapter\QueryBuilder')
+        $adapter = $this->getMockBuilder(self::BUILDER_CLASS)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $pager = new \Phalcon\Paginator\Pager($adapter);
+        $pager = new Pager($adapter);
         $this->assertInstanceOf('Phalcon\Paginator\Pager', $pager);
     }
 
     public function testCallingGetPagesInRangeMethodWithDefaultOptionsShouldReturnExpectedArray()
     {
         // stub paginate
-        $paginate = new \stdClass();
+        $paginate = new stdClass();
         $paginate->total_pages = 20;
         $paginate->current = 5;
         $paginate->last = 20;
 
-        $adapter = $this->getMockBuilder('Phalcon\Paginator\Adapter\QueryBuilder')
+        $adapter = $this->getMockBuilder(self::BUILDER_CLASS)
             ->disableOriginalConstructor()
             ->setMethods(array('getPaginate'))
             ->getMock();
@@ -29,7 +52,7 @@ class PagerTest extends \PHPUnit_Framework_TestCase
             ->method('getPaginate')
             ->will($this->returnValue($paginate));
 
-        $pager = new \Phalcon\Paginator\Pager($adapter);
+        $pager = new Pager($adapter);
         $this->assertEquals(
             array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
             $pager->getPagesInRange()
@@ -39,12 +62,12 @@ class PagerTest extends \PHPUnit_Framework_TestCase
     public function testCallingGetPagesInRangeMethodWithSliderOnEndShouldReturnExpectedArray()
     {
         // stub paginate
-        $paginate = new \stdClass();
+        $paginate = new stdClass();
         $paginate->total_pages = 20;
         $paginate->current = 20;
         $paginate->last = 20;
 
-        $adapter = $this->getMockBuilder('Phalcon\Paginator\Adapter\QueryBuilder')
+        $adapter = $this->getMockBuilder(self::BUILDER_CLASS)
             ->disableOriginalConstructor()
             ->setMethods(array('getPaginate'))
             ->getMock();
@@ -52,7 +75,7 @@ class PagerTest extends \PHPUnit_Framework_TestCase
             ->method('getPaginate')
             ->will($this->returnValue($paginate));
 
-        $pager = new \Phalcon\Paginator\Pager($adapter, array('rangeLength' => 5));
+        $pager = new Pager($adapter, array('rangeLength' => 5));
         $this->assertEquals(
             array(16, 17, 18, 19, 20),
             $pager->getPagesInRange()
@@ -62,12 +85,12 @@ class PagerTest extends \PHPUnit_Framework_TestCase
     public function testCallingGetPagesInRangeMethodWithSliderOnStartShouldReturnExpectedArray()
     {
         // stub paginate
-        $paginate = new \stdClass();
+        $paginate = new stdClass();
         $paginate->total_pages = 20;
         $paginate->current = 1;
         $paginate->last = 20;
 
-        $adapter = $this->getMockBuilder('Phalcon\Paginator\Adapter\QueryBuilder')
+        $adapter = $this->getMockBuilder(self::BUILDER_CLASS)
             ->disableOriginalConstructor()
             ->setMethods(array('getPaginate'))
             ->getMock();
@@ -75,7 +98,7 @@ class PagerTest extends \PHPUnit_Framework_TestCase
             ->method('getPaginate')
             ->will($this->returnValue($paginate));
 
-        $pager = new \Phalcon\Paginator\Pager($adapter, array('rangeLength' => 5));
+        $pager = new Pager($adapter, array('rangeLength' => 5));
         $this->assertEquals(
             array(1, 2, 3, 4, 5),
             $pager->getPagesInRange()
@@ -85,12 +108,12 @@ class PagerTest extends \PHPUnit_Framework_TestCase
     public function testGetLayoutMethodShouldReturnObjectOfLayoutType()
     {
         // stub paginate
-        $paginate = new \stdClass();
+        $paginate = new stdClass();
         $paginate->total_pages = 20;
         $paginate->current = 1;
         $paginate->last = 20;
 
-        $adapter = $this->getMockBuilder('Phalcon\Paginator\Adapter\QueryBuilder')
+        $adapter = $this->getMockBuilder(self::BUILDER_CLASS)
             ->disableOriginalConstructor()
             ->setMethods(array('getPaginate'))
             ->getMock();
@@ -98,20 +121,21 @@ class PagerTest extends \PHPUnit_Framework_TestCase
             ->method('getPaginate')
             ->will($this->returnValue($paginate));
 
-        $pager = new \Phalcon\Paginator\Pager(
+        $pager = new Pager(
             $adapter,
             array(
                 'rangeLength' => 5,
                 'urlMask' => 'xxx',
             )
         );
+
         $this->assertInstanceOf('Phalcon\Paginator\Pager\Layout', $pager->getLayout());
     }
 
     public function testPagerGetterMethodsShouldReturnExpectedValues()
     {
         // stub paginate
-        $paginate = new \stdClass();
+        $paginate = new stdClass();
         $paginate->total_pages = 20;
         $paginate->current = 10;
         $paginate->last = 20;
@@ -121,7 +145,7 @@ class PagerTest extends \PHPUnit_Framework_TestCase
         $paginate->next = $paginate->current + 1;
         $paginate->items = new \ArrayIterator(array(1, 2, 4, 5));
 
-        $adapter = $this->getMockBuilder('Phalcon\Paginator\Adapter\QueryBuilder')
+        $adapter = $this->getMockBuilder(self::BUILDER_CLASS)
             ->disableOriginalConstructor()
             ->setMethods(array('getPaginate'))
             ->getMock();
@@ -129,7 +153,7 @@ class PagerTest extends \PHPUnit_Framework_TestCase
             ->method('getPaginate')
             ->will($this->returnValue($paginate));
 
-        $pager = new \Phalcon\Paginator\Pager(
+        $pager = new Pager(
             $adapter,
             array(
                 'rangeLength' => 5,
@@ -148,12 +172,12 @@ class PagerTest extends \PHPUnit_Framework_TestCase
     public function testPagerGetIteratorMethodWillCreateIteratorIfArrayIsPassed()
     {
         // stub paginate
-        $paginate = new \stdClass();
+        $paginate = new stdClass();
         $paginate->total_pages = 20;
         $paginate->current = 10;
         $paginate->items = array(1, 2, 4, 5);
 
-        $adapter = $this->getMockBuilder('Phalcon\Paginator\Adapter\QueryBuilder')
+        $adapter = $this->getMockBuilder(self::BUILDER_CLASS)
             ->disableOriginalConstructor()
             ->setMethods(array('getPaginate'))
             ->getMock();
@@ -161,13 +185,14 @@ class PagerTest extends \PHPUnit_Framework_TestCase
             ->method('getPaginate')
             ->will($this->returnValue($paginate));
 
-        $pager = new \Phalcon\Paginator\Pager(
+        $pager = new Pager(
             $adapter,
             array(
                 'rangeLength' => 5,
                 'urlMask' => 'xxx',
             )
         );
+
         $this->assertInstanceOf('Iterator', $pager->getIterator());
     }
 
@@ -178,11 +203,11 @@ class PagerTest extends \PHPUnit_Framework_TestCase
     public function testGetLayoutMethodWithoutUrlMaskOptionShouldThrowException()
     {
         // stub paginate
-        $paginate = new \stdClass();
+        $paginate = new stdClass();
         $paginate->total_pages = 20;
         $paginate->current = 1;
 
-        $adapter = $this->getMockBuilder('Phalcon\Paginator\Adapter\QueryBuilder')
+        $adapter = $this->getMockBuilder(self::BUILDER_CLASS)
             ->disableOriginalConstructor()
             ->setMethods(array('getPaginate'))
             ->getMock();
@@ -190,7 +215,7 @@ class PagerTest extends \PHPUnit_Framework_TestCase
             ->method('getPaginate')
             ->will($this->returnValue($paginate));
 
-        $pager = new \Phalcon\Paginator\Pager(
+        $pager = new Pager(
             $adapter,
             array(
                 'rangeLength' => 5,
@@ -206,11 +231,11 @@ class PagerTest extends \PHPUnit_Framework_TestCase
     public function testGetLayoutMethodShouldWithInvalidRangeClassShouldThrowException()
     {
         // stub paginate
-        $paginate = new \stdClass();
+        $paginate = new stdClass();
         $paginate->total_pages = 20;
         $paginate->current = 1;
 
-        $adapter = $this->getMockBuilder('Phalcon\Paginator\Adapter\QueryBuilder')
+        $adapter = $this->getMockBuilder(self::BUILDER_CLASS)
             ->disableOriginalConstructor()
             ->setMethods(array('getPaginate'))
             ->getMock();
@@ -218,7 +243,7 @@ class PagerTest extends \PHPUnit_Framework_TestCase
             ->method('getPaginate')
             ->will($this->returnValue($paginate));
 
-        $pager = new \Phalcon\Paginator\Pager(
+        $pager = new Pager(
             $adapter,
             array(
                 'rangeLength' => 5,
@@ -226,6 +251,7 @@ class PagerTest extends \PHPUnit_Framework_TestCase
                 'urlMask' => 'xxx',
             )
         );
+
         $pager->getLayout();
     }
 
@@ -236,12 +262,11 @@ class PagerTest extends \PHPUnit_Framework_TestCase
     public function testGetLayoutMethodShouldWithInvalidLayoutClassShouldThrowException()
     {
         // stub paginate
-        $paginate = new \stdClass();
+        $paginate = new stdClass();
         $paginate->total_pages = 20;
         $paginate->current = 1;
 
-
-        $adapter = $this->getMockBuilder('Phalcon\Paginator\Adapter\QueryBuilder')
+        $adapter = $this->getMockBuilder(self::BUILDER_CLASS)
             ->disableOriginalConstructor()
             ->setMethods(array('getPaginate'))
             ->getMock();
@@ -249,7 +274,7 @@ class PagerTest extends \PHPUnit_Framework_TestCase
             ->method('getPaginate')
             ->will($this->returnValue($paginate));
 
-        $pager = new \Phalcon\Paginator\Pager(
+        $pager = new Pager(
             $adapter,
             array(
                 'rangeLength' => 5,

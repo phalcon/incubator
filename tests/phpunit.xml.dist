@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <phpunit bootstrap="./bootstrap.php"
-        colors="true"
+         colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
@@ -10,11 +10,11 @@
     <testsuite name="Phalcon Incubator Test Suite">
         <directory>./</directory>
     </testsuite>
-    
+
     <filter>
        <blacklist>
             <directory suffix=".php">../docs</directory>
-        </blacklist>        
+        </blacklist>
         <whitelist>
             <directory suffix=".php">../Library/Phalcon</directory>
         </whitelist>
