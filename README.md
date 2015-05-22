@@ -1,4 +1,4 @@
-[![Latest Version](https://img.shields.io/packagist/vpre/phalcon/incubator.svg?style=flat-square)](https://github.com/phalcon/incubator/releases)
+[![Latest Version](https://img.shields.io/packagist/v/phalcon/incubator.svg?style=flat-square)](https://github.com/phalcon/incubator/releases)
 [![Software License](https://img.shields.io/badge/license-BSD--3-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Total Downloads](https://img.shields.io/packagist/dt/phalcon/incubator.svg?style=flat-square)](https://packagist.org/packages/phalcon/incubator)
 
@@ -57,10 +57,10 @@ Just clone the repository in a common location or inside your project:
 git clone https://github.com/phalcon/incubator.git
 ```
 
-For a specific Git branch (eg 2.0.x) please use:
+For a specific Git branch (eg 1.3.5) please use:
 
 ```
-git clone -b 2.0.1 git@github.com:phalcon/incubator.git
+git clone -b 1.3.5 git@github.com:phalcon/incubator.git
 ```
 
 ## Autoloading from the Incubator
@@ -83,9 +83,9 @@ $loader->register();
 
 Incubator is built under Travis CI service. Every commit pushed to this repository will queue a build into the continuous integration service and will run all PHPUnit tests to ensure that everything is going well and the project is stable. The current build status is:
 
-[![Build Status](https://img.shields.io/travis/phalcon/incubator/2.0.x.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
+[![Build Status](https://img.shields.io/travis/phalcon/incubator/v2.0.0.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
 
-## Contributing
+# Contributing
 
 See CONTRIBUTING.md
 
@@ -114,6 +114,9 @@ See CONTRIBUTING.md
 
 ### Database
 * [Phalcon\Db\Adapter\Cacheable\Mysql](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Db) - MySQL adapter that agressively caches all the queries executed (phalcon)
+
+### Debug
+* [Phalcon\Debug\Dump](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Debug) - Variable dumper (digitronac)
 
 ### Logger
 * [Phalcon\Logger\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to store logs in a database table (phalcon)
@@ -148,14 +151,16 @@ See CONTRIBUTING.md
 * [Phalcon\Test\UnitTestCase](https://github.com/silverbadge/incubator/tree/master/Library/Phalcon/Test) - Generic test case wrapper (thecodeassassin)
 
 ### Translate
+* [Phalcon\Translate\Adapter\Gettext](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Translate/Adapter) - Translation adapter for Gettext (phalcon)
 * [Phalcon\Translate\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Translate/Adapter) - Translation adapter using relational databases (phalcon)
+* [Phalcon\Translate\Adapter\ResourceBundle](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Translate/Adapter) - Translation adapter using ResourceBundle (phalcon)
 
 ### Session
 * [Phalcon\Session\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - Database adapter for storing sessions (phalcon)
+* [Phalcon\Session\Adapter\Memcache](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - Memcache adapter for storing sessions (meets-ecommerce)
 * [Phalcon\Session\Adapter\Mongo](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - MongoDb adapter for storing sessions (phalcon)
 * [Phalcon\Session\Adapter\Redis](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - Redis adapter for storing sessions (phalcon)
 * [Phalcon\Session\Adapter\HandlerSocket](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - HandlerSocket adapter for storing sessions (Xrymz)
 
 ### Utils
 * [Phalcon\Utils\Slug](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Utils) - Creates a slug for the passed string taking into account international characters. (niden)
-

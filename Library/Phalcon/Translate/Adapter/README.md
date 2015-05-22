@@ -89,3 +89,47 @@ Or, if you wish you can use [Volt](http://docs.phalconphp.com/en/latest/referenc
 ```html+php
 <h1>{{ expression._("IndexPage_Hello_World") }}</h1>
 ```
+
+CSV
+--------
+This adapter uses CSV as translation frontend.
+
+```php
+$translate = new Phalcon\Translate\Adapter\Csv([
+    'file' => 'fr_FR.csv', // required
+    'delimiter' => ',', // optional, default - ;
+    'length' => '4096', // optional, default - 0
+    'enclosure' => '^', // optional, default - "
+]);
+
+echo $translate->_('Hello');
+echo $translate->_('My name is %name%', array('name' => 'John Doe')); //Je m'appelle John Doe
+```
+
+ResourceBundle
+--------------
+This adapter uses ResourceBundle as translation frontend.
+
+The extension [intl](http://php.net/manual/en/book.intl.php) must be installed in PHP.
+
+```php
+$translate = new Phalcon\Translate\Adapter\ResourceBundle([
+    'bundle'    => '/path/to/bundle', // required
+    'locale'    => 'en',              // required
+    'fallback'  => false              // optional, default - true
+]);
+
+echo $translate->t('application.title');
+echo $translate->t('application.copyright', ['currentYear' => new \DateTime('now')]);
+```
+
+ResourceBundle source file example
+
+```
+root {
+    application {
+        title { "Hello world" }
+        copyright { "&copy; 2001-{currentYear, date, Y}. Foobar" }
+    }
+}
+```
