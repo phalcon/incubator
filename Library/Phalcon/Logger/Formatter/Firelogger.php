@@ -89,6 +89,7 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
     public function getTypeString($type)
     {
         switch ($type) {
+            case Logger::EMERGENCY:
             case Logger::EMERGENCE:
             case Logger::CRITICAL:
                 // emergence, critical
