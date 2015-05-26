@@ -83,7 +83,7 @@ $loader->register();
 
 Incubator is built under Travis CI service. Every commit pushed to this repository will queue a build into the continuous integration service and will run all PHPUnit tests to ensure that everything is going well and the project is stable. The current build status is:
 
-[![Build Status](https://img.shields.io/travis/phalcon/incubator/v2.0.0.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
+[![Build Status](https://img.shields.io/travis/phalcon/incubator.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
 
 # Contributing
 
