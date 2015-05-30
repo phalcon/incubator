@@ -10,4 +10,6 @@ composer.phar
 /codeception/acceptance/WebGuy.php
 /codeception/functional/TestGuy.php
 /codeception/unit/CodeGuy.php
+.vagrant
+Vagrantfile
 /build

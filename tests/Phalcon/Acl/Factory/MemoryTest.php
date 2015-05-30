@@ -40,11 +40,13 @@ class MemoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Phalcon\Acl\Exception
-     * @expectedExceptionMessage Key "actions" must exist and must be traversable.
+     * @expectedExceptionMessage Invalid value for accessList
      */
     public function testFactoryShouldThrowExceptionIfActionsKeyIsMissing()
     {
-        $this->markTestSkipped('Fails due to a bug in Phalcon. See https://github.com/phalcon/cphalcon/pull/10226');
+        if (version_compare(\Phalcon\Version::get(), '2.0.0', '=')) {
+            $this->markTestSkipped('Fails due to a bug in Phalcon. See https://github.com/phalcon/cphalcon/pull/10226');
+        }
 
         $config = new \Phalcon\Config\Adapter\Ini(__DIR__ . '/_fixtures/acl.ini');
         unset($config->acl->resource->index->actions);
