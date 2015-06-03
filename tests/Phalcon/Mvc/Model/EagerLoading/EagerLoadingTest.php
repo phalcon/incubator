@@ -19,7 +19,7 @@ class EagerLoadingTest extends \PHPUnit_Framework_TestCase
 {
     protected $previousDependencyInjector;
 
-    public function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
         $this->previousDependencyInjector = DI::getDefault();
 
@@ -51,7 +51,7 @@ class EagerLoadingTest extends \PHPUnit_Framework_TestCase
         spl_autoload_register(array (__CLASS__, 'autoloadModels'), true, true);
     }
 
-    public function tearDownAfterClass()
+    public static function tearDownAfterClass()
     {
         if ($this->previousDependencyInjector instanceof DI) {
             DI::setDefault($this->previousDependencyInjector);

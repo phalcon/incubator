@@ -167,7 +167,7 @@ final class EagerLoad
             $records = array_values($records);
         } else {
             // We expect a single object or a set of it
-            $isSingle = ! $isThrough && (
+            $isSingle = !$isThrough && (
                 $relation->getType() === Relation::HAS_ONE ||
                 $relation->getType() === Relation::BELONGS_TO
             );
@@ -223,7 +223,7 @@ final class EagerLoad
                     } else {
                         $record->{$alias} = null;
                         
-                        if (! $isSingle) {
+                        if (!$isSingle) {
                             $record->{$alias} = array ();
                         }
                     }

@@ -31,7 +31,7 @@ trait EagerLoadingTrait
     {
         $arguments = func_get_args();
 
-        if (! empty ($arguments)) {
+        if (!empty ($arguments)) {
             $numArgs    = count($arguments);
             $lastArg    = $numArgs - 1;
             $parameters = null;
@@ -70,7 +70,7 @@ trait EagerLoadingTrait
     {
         $arguments = func_get_args();
 
-        if (! empty ($arguments)) {
+        if (!empty ($arguments)) {
             $numArgs    = count($arguments);
             $lastArg    = $numArgs - 1;
             $parameters = null;

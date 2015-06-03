@@ -27,9 +27,9 @@ final class Loader
         $error     = false;
         $arguments = array_slice(func_get_args(), 1);
 
-        if (! $from instanceof ModelInterface) {
-            if (! $from instanceof Simple) {
-                if (! is_array($from)) {
+        if (!$from instanceof ModelInterface) {
+            if (!$from instanceof Simple) {
+                if (!is_array($from)) {
                     $error = true;
                 } else {
                     $from = array_filter($from);
@@ -225,14 +225,14 @@ final class Loader
      */
     public function addEagerLoad($relationAlias, $constraints = null)
     {
-        if (! is_string($relationAlias)) {
+        if (!is_string($relationAlias)) {
             throw new \InvalidArgumentException(sprintf(
                 '$relationAlias expects to be a string, `%s` given',
                 gettype($relationAlias)
             ));
         }
 
-        if ($constraints !== null && ! is_callable($constraints)) {
+        if ($constraints !== null && !is_callable($constraints)) {
             throw new \InvalidArgumentException(sprintf(
                 '$constraints expects to be a callable, `%s` given',
                 gettype($constraints)
@@ -281,11 +281,11 @@ final class Loader
                     }
                 }
 
-                if (! isset ($resolvedRelations[$name])) {
+                if (!isset ($resolvedRelations[$name])) {
                     $mM->load($parentClassName);
                     $relation = $mM->getRelationByAlias($parentClassName, $alias);
 
-                    if (! $relation instanceof Relation) {
+                    if (!$relation instanceof Relation) {
                         throw new \RuntimeException(sprintf(
                             'There is no defined relation for the model `%s` using alias `%s`',
                             $parentClassName,
