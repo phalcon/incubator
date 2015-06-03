@@ -20,7 +20,9 @@
 namespace Phalcon\Cache\Backend;
 
 use Phalcon\Cache\Exception;
+use Phalcon\Cache\FrontendInterface;
 use Phalcon\Db;
+use Phalcon\Db\AdapterInterface as DbAdapterInterface;
 
 /**
  * Phalcon\Cache\Backend\Database
@@ -30,21 +32,38 @@ class Database extends Prefixable
 {
 
     /**
+     * @var \Phalcon\Db\AdapterInterface
+     */
+    protected $db = null;
+
+    /**
+     * @var string
+     */
+    protected $table = null;
+
+    /**
      * Class constructor.
      *
      * @param  \Phalcon\Cache\FrontendInterface $frontend
      * @param  array                            $options
      * @throws \Phalcon\Cache\Exception
      */
-    public function __construct($frontend, $options = array())
+    public function __construct(FrontendInterface $frontend, $options = array())
     {
         if (!isset($options['db'])) {
             throw new Exception("Parameter 'db' is required");
         }
 
+        if (!($options['db'] instanceof DbAdapterInterface)) {
+            throw new Exception("Parameter 'db' must implement Phalcon\\Db\\AdapterInterface");
+        }
+
         if (!isset($options['table'])) {
             throw new Exception("Parameter 'table' is required");
         }
+
+        $this->db    = $options['db'];
+        $this->table = $options['table'];
 
         parent::__construct($frontend, $options);
     }
@@ -58,29 +77,24 @@ class Database extends Prefixable
      */
     public function get($keyName, $lifetime = null)
     {
-        $prefixedKey = $this->getPrefixedIdentifier($keyName);
-        $options     = $this->getOptions();
-        $sql         = "SELECT data, lifetime FROM " . $options['table'] . " WHERE key_name = ?";
-        $cache       = $options['db']->fetchOne($sql, Db::FETCH_ASSOC, array($prefixedKey));
+        $prefixedKey    = $this->getPrefixedIdentifier($keyName);
+        $sql            = "SELECT data, lifetime FROM " . $this->table . " WHERE key_name = ?";
+        $cache          = $this->db->fetchOne($sql, Db::FETCH_ASSOC, array($prefixedKey));
+        $this->_lastKey = $prefixedKey;
 
         if (!$cache) {
             return null;
         }
 
+        /** @var \Phalcon\Cache\FrontendInterface $frontend */
         $frontend = $this->getFrontend();
 
-        if ($lifetime === null) {
-            $lifetime = $frontend->getLifetime();
-        }
-
-        //Remove the cache if expired
-        if ($cache['lifetime'] < (time() - $lifetime)) {
-            $options['db']->execute("DELETE FROM " . $options['table'] . " WHERE key_name = ?", array($prefixedKey));
+        // Remove the cache if expired
+        if ($cache['lifetime'] < time()) {
+            $this->db->execute("DELETE FROM " . $this->table . " WHERE key_name = ?", array($prefixedKey));
 
             return null;
         }
-
-        $this->setLastKey($keyName);
 
         return $frontend->afterRetrieve($cache['data']);
     }
@@ -97,50 +111,55 @@ class Database extends Prefixable
     public function save($keyName = null, $content = null, $lifetime = null, $stopBuffer = true)
     {
         if ($keyName === null) {
-            $lastKey = $this->_lastKey;
+            $prefixedKey = $this->_lastKey;
         } else {
-            $lastKey = $keyName;
+            $prefixedKey = $this->getPrefixedIdentifier($keyName);
         }
 
-        if (!$lastKey) {
+        if (!$prefixedKey) {
             throw new Exception('The cache must be started first');
         }
 
-        $options = $this->getOptions();
+        /** @var \Phalcon\Cache\FrontendInterface $frontend */
         $frontend = $this->getFrontend();
 
         if ($content === null) {
-            $content = $frontend->getContent();
+            $cachedContent = $frontend->getContent();
+        } else {
+            $cachedContent = $content;
         }
 
+        if (null === $lifetime) {
+            $lifetime = $frontend->getLifetime();
+        }
+
+        $lifetime = time() + $lifetime;
+
         // Check if the cache already exist
-        $prefixedKey = $this->getPrefixedIdentifier($keyName);
-        $sql         = "SELECT data, lifetime FROM " . $options['table'] . " WHERE key_name = ?";
-        $cache       = $options['db']->fetchOne($sql, Db::FETCH_ASSOC, array($prefixedKey));
+        $sql   = "SELECT data, lifetime FROM " . $this->table . " WHERE key_name = ?";
+        $cache = $this->db->fetchOne($sql, Db::FETCH_ASSOC, array($prefixedKey));
 
         if (!$cache) {
-            $options['db']->execute("INSERT INTO " . $options['table'] . " VALUES (?, ?, ?)", array(
+            $this->db->execute("INSERT INTO " . $this->table . " VALUES (?, ?, ?)", array(
                 $prefixedKey,
-                $frontend->beforeStore($content),
-                time()
+                $frontend->beforeStore($cachedContent),
+                $lifetime
             ));
         } else {
-            $options['db']->execute(
-                "UPDATE " . $options['table'] . " SET data = ?, lifetime = ? WHERE key_name = ?",
+            $this->db->execute(
+                "UPDATE " . $this->table . " SET data = ?, lifetime = ? WHERE key_name = ?",
                 array(
-                    $frontend->beforeStore($content),
-                    time(),
+                    $frontend->beforeStore($cachedContent),
+                    $lifetime,
                     $prefixedKey
                 )
             );
         }
 
-        // Stop the buffer, this only applies for Phalcon\Cache\Frontend\Output
         if ($stopBuffer) {
             $frontend->stop();
         }
 
-        // Print the buffer, this only applies for Phalcon\Cache\Frontend\Output
         if ($frontend->isBuffering()) {
             echo $content;
         }
@@ -157,15 +176,14 @@ class Database extends Prefixable
     public function delete($keyName)
     {
         $prefixedKey = $this->getPrefixedIdentifier($keyName);
-        $options     = $this->getOptions();
-        $sql         = "SELECT COUNT(*) AS rowcount FROM " . $options['table'] . " WHERE key_name = ?";
-        $row         = $options['db']->fetchOne($sql, Db::FETCH_ASSOC, array($prefixedKey));
+        $sql         = "SELECT COUNT(*) AS rowcount FROM " . $this->table . " WHERE key_name = ?";
+        $row         = $this->db->fetchOne($sql, Db::FETCH_ASSOC, array($prefixedKey));
 
         if (!$row['rowcount']) {
             return false;
         }
 
-        return $options['db']->execute("DELETE FROM " . $options['table'] . " WHERE key_name = ?", array($prefixedKey));
+        return $this->db->execute("DELETE FROM " . $this->table . " WHERE key_name = ?", array($prefixedKey));
     }
 
     /**
@@ -176,32 +194,26 @@ class Database extends Prefixable
      */
     public function queryKeys($prefix = null)
     {
-        $options       = $this->getOptions();
-        $optionsPrefix = !empty($options['prefix'])
-            ? $options['prefix']
-            : '';
-
-        if ($prefix != null || !empty($optionsPrefix)) {
-            if ($prefix == null) {
-                $prefix = $this->getPrefixedIdentifier('');
-            } else {
-                $prefix = $this->getPrefixedIdentifier($prefix);
-            }
-
-            $sql    = "SELECT key_name FROM " . $options['table'] . " WHERE key_name LIKE ? ORDER BY lifetime";
-            $caches = $options['db']->query($sql, array($prefix));
+        if (!$prefix) {
+            $prefix = $this->_prefix;
         } else {
-            $sql    = "SELECT key_name FROM " . $options['table'] . " ORDER BY lifetime";
-            $caches = $options['db']->query($sql);
+            $prefix = $this->getPrefixedIdentifier($prefix);
         }
 
-        $caches->setFetchMode(Db::FETCH_ASSOC);
+        if (!empty($prefix)) {
+            $sql = "SELECT key_name FROM " . $this->table . " WHERE key_name LIKE ? ORDER BY lifetime";
+            $rs  = $this->db->query($sql, array($prefix . '%'));
+        } else {
+            $sql = "SELECT key_name FROM " . $this->table . " ORDER BY lifetime";
+            $rs  = $this->db->query($sql);
+        }
+
+        $rs->setFetchMode(Db::FETCH_ASSOC);
 
         $keys = array();
-        while ($row = $caches->fetch()) {
-            $keys[] = !empty($optionsPrefix)
-                ? str_replace($optionsPrefix, '', $row['key_name'])
-                : $row['key_name'];
+
+        while ($row = $rs->fetch()) {
+            $keys[] = !empty($prefix) ? str_replace($prefix, '', $row['key_name']) : $row['key_name'];
         }
 
         return $keys;
@@ -217,21 +229,16 @@ class Database extends Prefixable
     public function exists($keyName = null, $lifetime = null)
     {
         $prefixedKey = $this->getPrefixedIdentifier($keyName);
-        $options     = $this->getOptions();
-        $sql         = "SELECT lifetime FROM " . $options['table'] . " WHERE key_name = ?";
-        $cache       = $options['db']->fetchOne($sql, Db::FETCH_ASSOC, array($prefixedKey));
+        $sql         = "SELECT lifetime FROM " . $this->table . " WHERE key_name = ?";
+        $cache       = $this->db->fetchOne($sql, Db::FETCH_ASSOC, array($prefixedKey));
 
         if (!$cache) {
             return false;
         }
 
-        if ($lifetime === null) {
-            $lifetime = $this->getFrontend()->getLifetime();
-        }
-
-        //Remove the cache if expired
-        if ($cache['lifetime'] < (time() - $lifetime)) {
-            $options['db']->execute("DELETE FROM " . $options['table'] . " WHERE key_name = ?", array($prefixedKey));
+        // Remove the cache if expired
+        if ($cache['lifetime'] < time()) {
+            $this->db->execute("DELETE FROM " . $this->table . " WHERE key_name = ?", array($prefixedKey));
 
             return false;
         }
@@ -246,8 +253,7 @@ class Database extends Prefixable
      */
     public function flush()
     {
-        $options = $this->getOptions();
-        $options['db']->execute('DELETE FROM ' . $options['table']);
+        $this->db->execute('DELETE FROM ' . $this->table);
 
         return true;
     }

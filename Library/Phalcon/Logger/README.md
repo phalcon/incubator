@@ -41,20 +41,6 @@ CREATE TABLE `logs` (
 )
 ```
 
-Firephp
--------
-Adapter to send messages to [Firebug](https://getfirebug.com/). You need
-the [Firephp](http://www.firephp.org/) extension installed in your browser.
-
-```php
-$logger = new Phalcon\Logger\Adapter\Firephp('debug', null);
-
-$logger->log('Plain Message');
-$logger->info('Info Message');
-$logger->warning('Warn Message');
-$logger->error('Error Message');
-```
-
 Firelogger
 ----------
 Adapter to send messages to the [Firelogger](http://firelogger.binaryage.com/) console inside the [Firebug](https://getfirebug.com/) in your browser.
@@ -90,6 +76,7 @@ Note that similar-level logs are logged into the same file. The log level groups
     private function getTypeString($type)
     {
         switch ($type) {
+            case Logger::EMERGENCY:
             case Logger::EMERGENCE:
             case Logger::CRITICAL:
                 // emergence, critical

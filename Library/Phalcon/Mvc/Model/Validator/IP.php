@@ -1,9 +1,10 @@
 <?php
 namespace Phalcon\Mvc\Model\Validator;
 
+use Phalcon\Mvc\Model\Validator;
+use Phalcon\Mvc\Model\ValidatorInterface;
 use Phalcon\Mvc\Model\Exception;
 use Phalcon\Mvc\ModelInterface;
-use Phalcon\Mvc\CollectionInterface;
 
 /**
  * Phalcon\Mvc\Model\Validator\IP
@@ -50,21 +51,13 @@ use Phalcon\Mvc\CollectionInterface;
  *}
  *</code>
  */
-class IP extends \Phalcon\Mvc\Model\Validator
+class IP extends Validator implements ValidatorInterface
 {
     const VERSION_4  = FILTER_FLAG_IPV4;
     const VERSION_6  = FILTER_FLAG_IPV6;
 
-    public function validate($record)
+    public function validate(ModelInterface $record)
     {
-        if (false === is_object($record)) {
-            throw new Exception('Invalid parameter type.');
-        }
-
-        if (false === ($record instanceof ModelInterface || $record instanceof CollectionInterface)) {
-            throw new Exception('Invalid parameter type.');
-        }
-
         $field = $this->getOption('field');
 
         if (false === is_string($field)) {

@@ -5,6 +5,7 @@ namespace Phalcon\Mvc\Model\Behavior;
 use Phalcon\Mvc\Model\Behavior;
 use Phalcon\Mvc\Model\BehaviorInterface;
 use Phalcon\Mvc\Model;
+use Phalcon\Mvc\ModelInterface;
 
 class NestedSet extends Behavior implements BehaviorInterface
 {
@@ -19,7 +20,7 @@ class NestedSet extends Behavior implements BehaviorInterface
 
     private $deleted = false;
 
-    public function __construct($options)
+    public function __construct($options = null)
     {
         if (isset($options['hasManyRoots'])) {
             $this->hasManyRoots = (bool) $options['hasManyRoots'];
@@ -46,7 +47,7 @@ class NestedSet extends Behavior implements BehaviorInterface
         }
     }
 
-    public function notify($eventType, $model)
+    public function notify($eventType, ModelInterface $model)
     {
         $message = 'You should not use this method when NestedSetBehavior attached. Use the methods of behavior.';
         switch ($eventType) {
@@ -60,19 +61,19 @@ class NestedSet extends Behavior implements BehaviorInterface
         }
     }
 
-    public function missingMethod($model, $method, $arguments = null)
+    public function missingMethod(ModelInterface $model, $method, $arguments = null)
     {
-        if (method_exists($this, $method)) {
-            $this->setOwner($model);
-            $result = call_user_func_array(array($this, $method), $arguments);
-            if ($result === null) {
-                return '';
-            }
-
-            return $result;
+        if (!method_exists($this, $method)) {
+            return null;
         }
 
-        return null;
+        $this->setOwner($model);
+        $result = call_user_func_array(array($this, $method), $arguments);
+        if ($result === null) {
+            return '';
+        }
+
+        return $result;
     }
 
     public function getOwner()

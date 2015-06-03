@@ -1,9 +1,10 @@
 <?php
 namespace Phalcon\Mvc\View\Engine;
 
+use Phalcon\DiInterface;
 use Phalcon\Mvc\View\Engine;
 use Phalcon\Mvc\View\EngineInterface;
-use Phalcon\DiInterface;
+use Phalcon\Mvc\ViewBaseInterface;
 
 /**
  * Phalcon\Mvc\View\Engine\Smarty
@@ -20,10 +21,10 @@ class Smarty extends Engine implements EngineInterface
     /**
      * {@inheritdoc}
      *
-     * @param \Phalcon\Mvc\ViewInterface $view
-     * @param \Phalcon\DiInterface       $di
+     * @param ViewBaseInterface $view
+     * @param DiInterface       $di
      */
-    public function __construct($view, DiInterface $di = null)
+    public function __construct(ViewBaseInterface $view, DiInterface $di = null)
     {
         $this->smarty               = new \Smarty();
         $this->smarty->template_dir = '.';
@@ -43,7 +44,7 @@ class Smarty extends Engine implements EngineInterface
      * @param array   $params
      * @param boolean $mustClean
      */
-    public function render($path, $params, $mustClean = null)
+    public function render($path, $params, $mustClean = false)
     {
         if (!isset($params['content'])) {
             $params['content'] = $this->_view->getContent();
@@ -51,7 +52,13 @@ class Smarty extends Engine implements EngineInterface
         foreach ($params as $key => $value) {
             $this->smarty->assign($key, $value);
         }
-        $this->_view->setContent($this->smarty->fetch($path));
+
+        $content = $this->smarty->fetch($path);
+        if ($mustClean) {
+            $this->_view->setContent($content);
+        } else {
+            echo $content;
+        }
     }
 
     /**
@@ -64,5 +71,15 @@ class Smarty extends Engine implements EngineInterface
         foreach ($options as $k => $v) {
             $this->smarty->$k = $v;
         }
+    }
+    
+    /**
+     * Get Smarty object
+     *
+     * @return \Smarty
+     */
+    public function getSmarty()
+    {
+        return $this->smarty;
     }
 }

@@ -51,20 +51,20 @@ class Memcache extends Base
      */
     public function __construct($options = null)
     {
-        if (is_array($options)) {
-            if (!isset($options['host'])) {
-                throw new Exception('No host given in options');
-            }
-
-            if (!isset($options['port'])) {
-                $options['port'] = self::$defaultPort;
-            }
-
-            if (!isset($options['persistent'])) {
-                $options['persistent'] = self::$defaultPersistent;
-            }
-        } else {
+        if (!is_array($options)) {
             throw new Exception('No configuration given');
+        }
+
+        if (!isset($options['host'])) {
+            throw new Exception('No host given in options');
+        }
+
+        if (!isset($options['port'])) {
+            $options['port'] = self::$defaultPort;
+        }
+
+        if (!isset($options['persistent'])) {
+            $options['persistent'] = self::$defaultPersistent;
         }
 
         parent::__construct($options);

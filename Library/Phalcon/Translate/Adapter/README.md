@@ -3,175 +3,6 @@ Phalcon\Translate\Adapter
 
 Usage examples of the adapters available here:
 
-Gettext
--------
-This adapter uses gettext as translation frontend.
-
-The extension [gettext](http://www.php.net/manual/en/book.gettext.php) must be installed in PHP.
-
-Let's pretend your application have the following translation structure:
-
-```bash
-app/
-  lang/
-     en_US/
-         LC_MESSAGES/
-             messages.po
-             messages.mo
-     fr_FR/
-         LC_MESSAGES/
-             messages.po
-             messages.mo
-```
-
-A translation file (fr_FR/LC_MESSAGES/messages.po) contains these definitions:
-
-```gettext
-msgid "Hello"
-msgstr "Bonjour"
-
-msgid "My name is %name%"
-msgstr "Je m'appelle %name%"
-```
-
-A .po file is compiled using msgfmt:
-
-```bash
-msgfmt -o messages.mo messages.po
-```
-
-It may be necessary to restart the web server after compile the .po files
-
-The adapter can be used as follows:
-
-```php
-$translate = new Phalcon\Translate\Adapter\Gettext(array(
-	'locale' => 'fr_FR',
-	'file' => 'messages',
-	'directory' => '../app/lang'
-));
-```
-
-```php
-echo $translate->_('Hello'); //Bonjour
-echo $translate->_('My name is %name%', array('name' => 'Peter')); //Je m'appelle Peter
-```
-
-Alternatively, multiple domains, each with a different directory can be specified:
-
-```php
-$translate = new Phalcon\Translate\Adapter\Gettext(array(
-	'locale' => 'fr_FR',
-    'domains' => array(
-	    'messages' => '../app/lang',
-	    'warnings' => '../app/lang-warnings'
-    )
-));
-```
-
-### Translation contexts
-
-Use the __() (alias to cquery()) method if you have multiple translations of a string in different contexts:
-
-```gettext
-msgid "Hello"
-msgstr "Bonjour"
-
-msgctxt "informal"
-msgid "Hello"
-msgstr "Salut"
-
-msgctxt "evening"
-msgid "Hello"
-msgstr "Bonsoir"
-
-msgid "Hello %name%"
-msgstr "Salut %name%"
-```
-
-```php
-echo $translate->_('Hello');                  //Bonjour
-echo $translate->__('Hello');                 //Bonjour
-echo $translate->__('Hello', 'informal');     //Salut
-echo $translate->__('Hello', 'evening');      //Bonsoir
-echo $translate->cquery('Hello', 'evening');  //Bonsoir
-// placeholders are supported as well
-echo $translate->__('Hello %name%', NULL, array('name' => 'Bob'));   //Salut Bob
-```
-
-### Translation domains
-
-Multiple translations domains are supported by the dquery() method. Let's say you have two files with translations:
-
-```gettext
-# frontend.po
-msgid "Hello"
-msgstr "Hello, visitor"
-```
-Additionally, you have a file named *backend.po*:
-
-```gettext
-# backend.po
-msgid "Hello"
-msgstr "Hello, admin"
-
-msgctxt "evening"
-msgid "Hello"
-msgstr "Bonsoir, admin"
-
-msgid "Hello %name%"
-msgstr "Salut %name%"
-```
-
-```php
-echo $translate->dquery('frontend', 'Hello');             //Hello, visitor
-echo $translate->dquery('backend', 'Hello');              //Hello, admin
-// contexts supported
-echo $translate->dquery('backend', 'Hello', 'evening');   //Bonsoir, admin
-// placeholders are supported as well
-echo $translate->dquery('backend', 'Hello %name%', NULL, array('name' => 'Bob'));   //Salut Bob
-```
-
-### Multiple plural forms
-
-Some languages require multiple plural forms of nouns depending on the object count. In gettext catalogs, plural forms need to be specified as such:
-
-```gettext
-"Plural-Forms: nplurals=3; plural=n>4 ? 2 : n>1 ? 1 : 0;\n"
-
-msgid "banana"
-msgid_plural "bananas"
-msgstr[0] "banán"
-msgstr[1] "banány"
-msgstr[2] "banánov"
-```
-
-We can then leverage the multi-plural form support offered by the Gettext adapter:
-
-```php
-for ($i = 1; $i < 7; $i++) {
-    echo "I have $i " .  $translate->nquery('banana', 'bananas', $i);
-}
-// 1 banán
-// 2 banány
-// 3 banány
-// 4 banány
-// 5 banánov
-// 6 banánov
-```
-
-Method cnquery() is a plural-form counterpart to cquery().
-
-```php
-(string) public function cnquery($msgid1, $msgid2, $count, $msgctxt = null, $placeholders = null, $category = LC_MESSAGES, $domain = null)
-```
-
-Method dnquery() is a plural-form counterpart to dquery().
-
-```php
-(string) public function dnquery($domain, $msgid1, $msgid2, $count, $msgctxt = null, $placeholders = null, $category = LC_MESSAGES)
-```
-
 Database
 --------
 You can use your database to store the translations, too.
@@ -273,4 +104,32 @@ $translate = new Phalcon\Translate\Adapter\Csv([
 
 echo $translate->_('Hello');
 echo $translate->_('My name is %name%', array('name' => 'John Doe')); //Je m'appelle John Doe
+```
+
+ResourceBundle
+--------------
+This adapter uses ResourceBundle as translation frontend.
+
+The extension [intl](http://php.net/manual/en/book.intl.php) must be installed in PHP.
+
+```php
+$translate = new Phalcon\Translate\Adapter\ResourceBundle([
+    'bundle'    => '/path/to/bundle', // required
+    'locale'    => 'en',              // required
+    'fallback'  => false              // optional, default - true
+]);
+
+echo $translate->t('application.title');
+echo $translate->t('application.copyright', ['currentYear' => new \DateTime('now')]);
+```
+
+ResourceBundle source file example
+
+```
+root {
+    application {
+        title { "Hello world" }
+        copyright { "&copy; 2001-{currentYear, date, Y}. Foobar" }
+    }
+}
 ```

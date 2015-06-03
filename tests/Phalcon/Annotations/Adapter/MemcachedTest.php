@@ -1,18 +1,29 @@
 <?php
 
-namespace Phalcon\Annotations\Adapter;
+namespace Phalcon\Test\Annotations\Adapter;
+
+use Phalcon\Annotations\Adapter\Memcached;
+use PHPUnit_Framework_TestCase as TestCase;
+use ReflectionMethod;
+use ReflectionProperty;
 
 /**
- * \Phalcon\Annotations\Adapter\MemcachedTest
- * Tests for class \Phalcon\Annotations\Adapter\Memcached
+ * MemcachedTest
+ * Tests for class Memcached
  *
- * @category Phalcon
- * @package  Phalcon\Annotations\Adapter
- * @author   Ilya Gusev <mail@igusev.ru>
- * @license  New BSD License
- * @link     http://phalconphp.com/
+ * @copyright (c) 2011-2015 Phalcon Team
+ * @package   Phalcon\Test\Annotations\Adapter
+ * @author    Ilya Gusev <mail@igusev.ru>
+ * @link      http://phalconphp.com/
+ *
+ * The contents of this file are subject to the New BSD License that is
+ * bundled with this package in the file docs/LICENSE.txt
+ *
+ * If you did not receive a copy of the license and are unable to obtain it
+ * through the world-wide-web, please send an email to license@phalconphp.com
+ * so that we can send you a copy immediately.
  */
-class MemcachedTest extends \PHPUnit_Framework_TestCase
+class MemcachedTest extends TestCase
 {
 
     public function dataConstructor()
@@ -191,7 +202,7 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructorException2()
     {
-        $object = new \Phalcon\Annotations\Adapter\Memcached(1);
+        $object = new Memcached(1);
     }
 
     /**
@@ -199,8 +210,8 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor($options, $expected)
     {
-        $object = new \Phalcon\Annotations\Adapter\Memcached($options);
-        $reflectedProperty = new \ReflectionProperty(get_class($object), 'options');
+        $object = new Memcached($options);
+        $reflectedProperty = new ReflectionProperty(get_class($object), 'options');
         $reflectedProperty->setAccessible(true);
         $this->assertEquals($expected, $reflectedProperty->getValue($object));
     }
@@ -210,22 +221,22 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
      */
     public function testPrepareKey($key)
     {
-        $object = new \Phalcon\Annotations\Adapter\Memcached(array('host' => '127.0.0.1'));
-        $reflectedMethod = new \ReflectionMethod(get_class($object), 'prepareKey');
+        $object = new Memcached(array('host' => '127.0.0.1'));
+        $reflectedMethod = new ReflectionMethod(get_class($object), 'prepareKey');
         $reflectedMethod->setAccessible(true);
         $this->assertEquals($key, $reflectedMethod->invoke($object, $key));
     }
 
     public function testGetCacheBackend()
     {
-        $object = new \Phalcon\Annotations\Adapter\Memcached(array('host' => '127.0.0.1'));
+        $object = new Memcached(array('host' => '127.0.0.1'));
         $mock = $this->getMock('\Phalcon\Cache\Backend\Libmemcached', array(), array(), '', false);
 
-        $reflectedProperty = new \ReflectionProperty(get_class($object), 'memcached');
+        $reflectedProperty = new ReflectionProperty(get_class($object), 'memcached');
         $reflectedProperty->setAccessible(true);
         $reflectedProperty->setValue($object, $mock);
 
-        $reflectedMethod = new \ReflectionMethod(get_class($object), 'getCacheBackend');
+        $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
         $reflectedMethod->setAccessible(true);
         $this->assertInstanceOf('\Phalcon\Cache\Backend\Libmemcached', $reflectedMethod->invoke($object));
     }
@@ -237,9 +248,9 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCacheBackend2()
     {
-        $object = new \Phalcon\Annotations\Adapter\Memcached(array('host' => '127.0.0.1'));
+        $object = new Memcached(array('host' => '127.0.0.1'));
 
-        $reflectedMethod = new \ReflectionMethod(get_class($object), 'getCacheBackend');
+        $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
         $reflectedMethod->setAccessible(true);
         $this->assertInstanceOf('\Phalcon\Cache\Backend\Libmemcached', $reflectedMethod->invoke($object));
     }
@@ -251,7 +262,7 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
      */
     public function testReadWriteWithoutPrefix($key, $data)
     {
-        $object = new \Phalcon\Annotations\Adapter\Memcached(array('host' => '127.0.0.1'));
+        $object = new Memcached(array('host' => '127.0.0.1'));
 
         $object->write($key, $data);
 
@@ -265,7 +276,7 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
      */
     public function testReadWriteWithPrefix($key, $data)
     {
-        $object = new \Phalcon\Annotations\Adapter\Memcached(array('host' => '127.0.0.1', 'prefix' => 'test_'));
+        $object = new Memcached(array('host' => '127.0.0.1', 'prefix' => 'test_'));
 
         $object->write($key, $data);
 

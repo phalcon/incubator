@@ -61,53 +61,6 @@ echo $time;
 
 ```
 
-Redis
------
-This adapter uses a [Redis](http://redis.io) backend to store the cached content and [phpredis](https://github.com/nicolasff/phpredis) extension:
-
-```php
-
-$di->set('cache', function() {
-
-	//Connect to redis
-	$redis = new Redis();
-	$redis->connect('127.0.0.1', 6379);
-
-	//Create a Data frontend and set a default lifetime to 1 hour
-	$frontend = new Phalcon\Cache\Frontend\Data(array(
-	    'lifetime' => 3600
-	));
-
-	//Create the cache passing the connection
-	$cache = new Phalcon\Cache\Backend\Redis($frontend, array(
-		'redis' => $redis
-	));
-
-	return $cache;
-});
-
-```
-
-Memcached
------
-This adapter uses a Memcache backend to store the cached content:
-
-```php
-
-$di->set('cache', function() {
-
-	//Create a Data frontend and set a default lifetime to 1 hour
-	$frontend = new Phalcon\Cache\Frontend\Data(array(
-	    'lifetime' => 3600
-	));
-
-	// Set up Memcached and use tracking to be able to clean it later.
-	// You should not use tracking if you're going to store a lot of keys!
-    $cache = new Memcached($frontend, array(
-        'tracking' => true
-    ));
-
-	return $cache;
-});
-
-```
+Wincache
+--------
+This adapter uses [windows cache extension](http://pecl.php.net/package/wincache) for PHP
