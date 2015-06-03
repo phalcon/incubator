@@ -15,11 +15,13 @@ use Phalcon\Db\Adapter\Pdo\Mysql as MysqlAdapter;
 use Phalcon\Mvc\Model\Resultset\Simple as SimpleResultset;
 use Phalcon\Mvc\Model\EagerLoading\Loader;
 
+EagerLoadingTest::setUpBeforeClassAndDataProviders();
+
 class EagerLoadingTest extends \PHPUnit_Framework_TestCase
 {
     protected static $previousDependencyInjector;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClassAndDataProviders()
     {
         self::$previousDependencyInjector = DI::getDefault();
 
