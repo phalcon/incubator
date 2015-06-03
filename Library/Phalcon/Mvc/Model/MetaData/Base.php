@@ -29,7 +29,7 @@ use Phalcon\Mvc\Model\MetaData;
  * @license  New BSD License
  * @link     http://phalconphp.com/
  */
-abstract class Base extends MetaData
+abstract class Base extends MetaData implements \Phalcon\Mvc\Model\MetaDataInterface
 {
     /**
      * Default options for cache backend.
