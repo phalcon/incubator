@@ -64,7 +64,7 @@ class EagerLoadingTest extends \PHPUnit_Framework_TestCase
 
     public static function autoloadModels($class)
     {
-        $len = strlen($prefix);
+        $len = strlen('EagerLoadingTestModel\\');
         
         if (strpos($class, 'EagerLoadingTestModel\\') === 0) {
             $class = substr($class, strlen('EagerLoadingTestModel\\'));
@@ -235,7 +235,7 @@ class EagerLoadingTest extends \PHPUnit_Framework_TestCase
     public function testShouldThrowBadMethodCallExceptionIfArgumentsWereNotProvided($method)
     {
         $this->setExpectedException('BadMethodCallException');
-        call_user_func(array ('Robot', $method));
+        call_user_func(array ('EagerLoadingTestModel\Robot', $method));
     }
 
     public function dp1()
@@ -250,7 +250,7 @@ class EagerLoadingTest extends \PHPUnit_Framework_TestCase
     public function testShouldThrowLogicExceptionIfTheEntityWillBeIncomplete($method, $args)
     {
         $this->setExpectedException('LogicException');
-        call_user_func_array(array ('Robot', $method), $args);
+        call_user_func_array(array ('EagerLoadingTestModel\Robot', $method), $args);
     }
 
     public function dp2()
