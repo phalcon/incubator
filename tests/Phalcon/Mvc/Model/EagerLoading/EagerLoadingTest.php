@@ -17,11 +17,11 @@ use Phalcon\Mvc\Model\EagerLoading\Loader;
 
 class EagerLoadingTest extends \PHPUnit_Framework_TestCase
 {
-    protected $previousDependencyInjector;
+    protected static $previousDependencyInjector;
 
     public static function setUpBeforeClass()
     {
-        $this->previousDependencyInjector = DI::getDefault();
+        self::$previousDependencyInjector = DI::getDefault();
 
         $di = new DI;
 
@@ -44,7 +44,7 @@ class EagerLoadingTest extends \PHPUnit_Framework_TestCase
             ));
         }, true);
 
-        if ($this->previousDependencyInjector instanceof DI) {
+        if (self::$previousDependencyInjector instanceof DI) {
             DI::setDefault($di);
         }
 
@@ -53,8 +53,8 @@ class EagerLoadingTest extends \PHPUnit_Framework_TestCase
 
     public static function tearDownAfterClass()
     {
-        if ($this->previousDependencyInjector instanceof DI) {
-            DI::setDefault($this->previousDependencyInjector);
+        if (self::$previousDependencyInjector instanceof DI) {
+            DI::setDefault(self::$previousDependencyInjector);
         }
 
         spl_autoload_unregister(array (__CLASS__, 'autoloadModels'));
