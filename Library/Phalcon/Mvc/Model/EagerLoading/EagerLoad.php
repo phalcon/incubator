@@ -72,7 +72,7 @@ final class EagerLoad
             $relReferencedModel = ltrim($relReferencedModel, '\\');
         }
 
-        $bindValues = [];
+        $bindValues = array ();
 
         foreach ($this->parent->getSubject() as $record) {
             $bindValues[$record->readAttribute($relField)] = true;
