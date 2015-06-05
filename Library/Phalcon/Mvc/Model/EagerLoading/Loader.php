@@ -6,7 +6,9 @@ use Phalcon\Mvc\Model\Resultset\Simple;
 
 final class Loader
 {
-    const E_INVALID_SUBJECT = 'Expected value of `subject` is either a ModelInterface object, a Simple object or an array of ModelInterface objects';
+    const E_INVALID_SUBJECT = <<<'MSG'
+Expected value of `subject` is either a ModelInterface object, a Simple object or an array of ModelInterface objects
+MSG;
 
     /** @var ModelInterface[] */
     protected $subject;
