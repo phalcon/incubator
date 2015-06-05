@@ -1,11 +1,10 @@
 <?php
 
-namespace Phalcon\Mvc\Model\Validator;
+namespace Phalcon\Test\Mvc\Model\Validator;
 
+use Phalcon\Mvc\Model\Validator\CardNumber;
 use Phalcon\Mvc\Model\Manager;
-use Phalcon\Mvc\Model\Metadata\Files;
-use Phalcon\DI;
-use Phalcon\Mvc\Model\Validator\resources\TestCardNumberModel;
+use Phalcon\Di;
 
 class CardNumberTest extends \PHPUnit_Framework_TestCase
 {
@@ -141,46 +140,9 @@ class CardNumberTest extends \PHPUnit_Framework_TestCase
         $obj = new \TestCardNumberModel();
 
         $this->assertInstanceOf('Phalcon\Mvc\ModelInterface', $obj);
-        $this->assertNotInstanceOf('Phalcon\Mvc\CollectionInterface', $obj);
     }
 
 
-    public function testValidateInstanceOfCollection()
-    {
-        $di = New DI();
-        $di->set('collectionManager', function () {
-            return new \Phalcon\Mvc\Collection\Manager();
-        });
-
-        require_once(__DIR__ . '/resources/TestCardNumberCollection.php');
-
-        $obj = new \TestCardNumberCollection($di);
-
-        $obj->type = CardNumber::MASTERCARD;
-        $obj->cardnumber = 1270338206812535;
-
-        $this->assertInstanceOf('Phalcon\Mvc\CollectionInterface', $obj);
-        $this->assertNotInstanceOf('Phalcon\Mvc\ModelInterface', $obj);
-        $obj->validation();
-    }
-
-    /**
-     * @expectedException           \Phalcon\Mvc\Model\Exception
-     * @expectedExceptionMessage    Invalid parameter type.
-     */
-    public function testValidateOtherInstance()
-    {
-        require_once(__DIR__ . '/resources/TestCardNumberFail.php');
-
-        $obj = new \TestCardNumberFail();
-
-        $obj->type = CardNumber::MASTERCARD;
-        $obj->cardnumber = 1270338206812535;
-
-        $this->assertNotInstanceOf('Phalcon\Mvc\CollectionInterface', $obj);
-        $this->assertNotInstanceOf('Phalcon\Mvc\ModelInterface', $obj);
-        $obj->validation();
-    }
 
     /**
      * @expectedException           \Phalcon\Mvc\Model\Exception
