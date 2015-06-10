@@ -2,6 +2,7 @@ language: php
 
 env:
   - PHALCON_VERSION="2.0.x"
+  - PHALCON_VERSION="phalcon-v2.0.3"
   - PHALCON_VERSION="phalcon-v2.0.2"
   - PHALCON_VERSION="phalcon-v2.0.1"
   - PHALCON_VERSION="phalcon-v2.0.0"
@@ -14,6 +15,8 @@ before_script:
   - php -r 'echo \Phalcon\Version::get()."\n";'
   - composer self-update
   - composer update
+  - mysql -e 'create database eager_loading_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;'
+  - mysql -uroot eager_loading_tests < tests/Phalcon/Mvc/Model/EagerLoading/resources/schema.sql
 
 php:
   - 5.3
