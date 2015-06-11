@@ -48,10 +48,10 @@ class Slug
         $string = preg_replace("#[^\\pL\d]+#u", '-', $string);
 
         // Trim trailing -
-        $string = trim($string,'-');
+        $string = trim($string, '-');
 
         // Better to replace given $replace array as index => value
-        // Example $replace('ı' => 'i', 'İ' => 'i');
+        // Example $replace['ı' => 'i', 'İ' => 'i'];
         if (!empty($replace) && is_array($replace)) {
             $string = str_replace(array_keys($replace), array_values($replace), $string);
         }
