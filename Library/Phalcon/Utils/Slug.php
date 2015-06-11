@@ -44,17 +44,17 @@ class Slug
         $oldLocale = setlocale(LC_ALL, '0');
         setlocale(LC_ALL, 'en_US.UTF-8');
 
-        // replace non letter or non digits by -
-        $string = preg_replace("#[^\\pL\d]+#u", '-', $string);
-
-        // Trim trailing -
-        $string = trim($string, '-');
-
         // Better to replace given $replace array as index => value
         // Example $replace['ı' => 'i', 'İ' => 'i'];
         if (!empty($replace) && is_array($replace)) {
             $string = str_replace(array_keys($replace), array_values($replace), $string);
         }
+
+        // replace non letter or non digits by -
+        $string = preg_replace("#[^\\pL\d]+#u", '-', $string);
+
+        // Trim trailing -
+        $string = trim($string, '-');
 
         $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
 
