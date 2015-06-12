@@ -34,3 +34,4 @@ after_script:
 
 services:
   - memcached
+  - mysql
