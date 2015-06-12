@@ -19,7 +19,6 @@ before_script:
   - mysql -uroot eager_loading_tests < tests/Phalcon/Mvc/Model/EagerLoading/resources/schema.sql
 
 php:
-  - 5.3
   - 5.4
   - 5.5
   - 5.6
