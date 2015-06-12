@@ -14,7 +14,7 @@ before_script:
   - ./tests/install-php-extension.sh ${PHALCON_VERSION}
   - php -r 'echo \Phalcon\Version::get()."\n";'
   - composer self-update
-  - composer update
+  - travis_wait composer update
   - mysql -e 'create database eager_loading_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;'
   - mysql -uroot eager_loading_tests < tests/Phalcon/Mvc/Model/EagerLoading/resources/schema.sql
 
