@@ -28,20 +28,21 @@ MSG;
     public function __construct($from)
     {
         $error     = false;
+        $className = null;
         $arguments = array_slice(func_get_args(), 1);
 
         if (!$from instanceof ModelInterface) {
             if (!$from instanceof Simple) {
-                if (!is_array($from)) {
-                    $error = true;
+                if (($fromType = gettype($from)) !== 'array') {
+                    if (null !== $from && $fromType !== 'boolean') {
+                        $error = true;
+                    }
                 } else {
                     $from = array_filter($from);
 
-                    if (empty($from)) {
-                        $error = true;
+                    if (empty ($from)) {
+                        $error = null;
                     } else {
-                        $className = null;
-
                         foreach ($from as $el) {
                             if ($el instanceof ModelInterface) {
                                 if ($className === null) {
@@ -67,8 +68,8 @@ MSG;
                     $from[] = $record;
                 }
 
-                if (empty($from)) {
-                    $error = true;
+                if (empty ($from)) {
+                    $error = null;
                 } else {
                     $className = get_class($record);
                 }
@@ -88,7 +89,7 @@ MSG;
 
         $this->subject          = $from;
         $this->subjectClassName = $className;
-        $this->eagerLoads       = empty($arguments) ? [] : static::parseArguments($arguments);
+        $this->eagerLoads = ($from === null || empty ($arguments)) ? array () : static::parseArguments($arguments);
     }
 
     /**
