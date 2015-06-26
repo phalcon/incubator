@@ -35,12 +35,14 @@ MSG;
                 if (($fromType = gettype($from)) !== 'array') {
                     if (null !== $from && $fromType !== 'boolean') {
                         $error = true;
+                    } else {
+                        $from = null;
                     }
                 } else {
                     $from = array_filter($from);
 
                     if (empty ($from)) {
-                        $error = null;
+                        $from = null;
                     } else {
                         foreach ($from as $el) {
                             if ($el instanceof ModelInterface) {
@@ -68,7 +70,7 @@ MSG;
                 }
 
                 if (empty ($from)) {
-                    $error = null;
+                    $from = null;
                 } else {
                     $className = get_class($record);
                 }
