@@ -17,11 +17,10 @@ class SlugTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(
-                "Mess'd up --text-- just (to) stress/test/ ?our! " .
-                "`little` \\clean\\ url fun.ction!?-->",
+                "Mess'd up --text-- just (to) stress/test/ ?our! " . "`little` \\clean\\ url fun.ction!?-->",
                 array(),
                 "-",
-                'messd-up-text-just-to-stress-test-our-little-clean-url-function'
+                'mess-d-up-text-just-to-stress-test-our-little-clean-url-fun-ction'
             ),
             array(
                 "Perchè l'erba è verde?",
@@ -41,7 +40,7 @@ class SlugTest extends \PHPUnit_Framework_TestCase
                 "Tänk efter nu – förr'n vi föser dig bort",
                 "-",
                 "-",
-                'tank-efter-nu-forrn-vi-foser-dig-bort'
+                'tank-efter-nu-forr-n-vi-foser-dig-bort'
             ), // Swedish
             array(
                 "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝßàáâãäåæçèéêëìíîïñòóôõöùúûüýÿ",
@@ -51,16 +50,22 @@ class SlugTest extends \PHPUnit_Framework_TestCase
             ),
             array(
                 "Custom`delimiter*example",
-                array('*', '`'),
+                array('*' => " replace "),
                 "-",
-                'custom-delimiter-example'
+                'custom-delimiter-replace-example'
             ),
             array(
                 "My+Last_Crazy|delimiter/example",
                 '',
                 ' ',
                 'my last crazy delimiter example'
-            )
+            ),
+            array(
+                "What does it mean yapılır in Turkish",
+                array('ı' => 'i'),
+                "-",
+                "what-does-it-mean-yapilir-in-turkish"
+            ) // Turkish
         );
     }
 
