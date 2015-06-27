@@ -42,7 +42,7 @@ MSG;
                 } else {
                     $from = array_filter($from);
 
-                    if (empty ($from)) {
+                    if (empty($from)) {
                         $from = null;
                     } else {
                         foreach ($from as $el) {
@@ -70,7 +70,7 @@ MSG;
                     $from[] = $record;
                 }
 
-                if (empty ($from)) {
+                if (empty($from)) {
                     $from = null;
                 } else {
                     $className = get_class($record);
@@ -89,9 +89,9 @@ MSG;
             throw new \InvalidArgumentException(static::E_INVALID_SUBJECT);
         }
 
-        $this->subject          = $from;
+        $this->subject = $from;
         $this->subjectClassName = $className;
-        $this->eagerLoads = ($from === null || empty ($arguments)) ? array () : static::parseArguments($arguments);
+        $this->eagerLoads = ($from === null || empty($arguments)) ? array () : static::parseArguments($arguments);
     }
 
     /**

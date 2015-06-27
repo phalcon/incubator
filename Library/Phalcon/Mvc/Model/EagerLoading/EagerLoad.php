@@ -57,7 +57,7 @@ final class EagerLoad
      */
     public function load()
     {
-        if (empty ($this->parent->getSubject())) {
+        if (empty($this->parent->getSubject())) {
             return $this;
         }
         
