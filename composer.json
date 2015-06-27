@@ -4,7 +4,7 @@
     "description": "Adapters, prototypes or functionality that can be potentially incorporated to the C-framework.",
     "keywords": ["framework", "phalcon", "incubator"],
     "homepage": "http://phalconphp.com",
-    "license": "BSD-3",
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Phalcon Team",
@@ -14,7 +14,7 @@
     "require": {
         "php": ">=5.3.21",
         "ext-phalcon": "~2.0",
-        "swiftmailer/swiftmailer": ">=5.2"
+        "swiftmailer/swiftmailer": "~5.2"
     },
     "require-dev": {
         "phpunit/phpunit": "4.6.*",

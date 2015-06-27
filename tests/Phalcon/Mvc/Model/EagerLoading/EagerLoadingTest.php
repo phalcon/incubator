@@ -41,7 +41,7 @@ class EagerLoadingTest extends \PHPUnit_Framework_TestCase
                 'port'     => '3306',
                 'username' => 'root',
                 'password' => '',
-                'dbname'   => 'eager_loading_tests',
+                'dbname'   => 'incubator_tests',
                 'charset'  => 'utf8mb4',
             ));
         }, true);
@@ -65,7 +65,7 @@ class EagerLoadingTest extends \PHPUnit_Framework_TestCase
     public static function autoloadModels($class)
     {
         $len = strlen('EagerLoadingTestModel\\');
-        
+
         if (strpos($class, 'EagerLoadingTestModel\\') === 0) {
             $class = substr($class, strlen('EagerLoadingTestModel\\'));
 
@@ -302,7 +302,7 @@ class EagerLoadingTest extends \PHPUnit_Framework_TestCase
             array (array (Robot::findFirst(), 'NonexistentRelation')),
         );
     }
-    
+
     /**
      * @requires PHP 5.4
      */
@@ -361,7 +361,7 @@ class EagerLoadingTest extends \PHPUnit_Framework_TestCase
         );
 
         $robots = array ();
-        
+
         foreach ($manufacturers as $m) {
             $robots = array_merge($robots, $m->robots);
         }

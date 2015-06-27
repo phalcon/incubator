@@ -1,7 +1,6 @@
 language: php
 
 env:
-  - PHALCON_VERSION="2.0.x"
   - PHALCON_VERSION="phalcon-v2.0.3"
   - PHALCON_VERSION="phalcon-v2.0.2"
   - PHALCON_VERSION="phalcon-v2.0.1"
@@ -11,12 +10,14 @@ install:
   - tests/memcached.sh
 
 before_script:
+  - export HTTPS_PROXY_REQUEST_FULLURI=false
+  - export HTTP_PROXY_REQUEST_FULLURI=true
+  - composer self-update
   - ./tests/install-php-extension.sh ${PHALCON_VERSION}
   - php -r 'echo \Phalcon\Version::get()."\n";'
-  - composer self-update
   - travis_wait composer update
-  - mysql -e 'create database eager_loading_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;'
-  - mysql -uroot eager_loading_tests < tests/Phalcon/Mvc/Model/EagerLoading/resources/schema.sql
+  - mysql -e 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;'
+  - mysql -uroot incubator_tests < tests/travis/db_schema.sql
 
 php:
   - 5.4
@@ -30,6 +31,7 @@ script:
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+  - mysql -e 'DROP DATABASE incubator_tests;' -uroot
 
 services:
   - memcached
