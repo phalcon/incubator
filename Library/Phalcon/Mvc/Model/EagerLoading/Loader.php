@@ -1,5 +1,6 @@
 <?php namespace Phalcon\Mvc\Model\EagerLoading;
 
+use Phalcon\Di;
 use Phalcon\Mvc\ModelInterface;
 use Phalcon\Mvc\Model\Relation;
 use Phalcon\Mvc\Model\Resultset\Simple;
@@ -36,7 +37,7 @@ MSG;
                 } else {
                     $from = array_filter($from);
 
-                    if (empty ($from)) {
+                    if (empty($from)) {
                         $error = true;
                     } else {
                         $className = null;
@@ -60,13 +61,13 @@ MSG;
                 }
             } else {
                 $prev = $from;
-                $from = array ();
+                $from = [];
 
                 foreach ($prev as $record) {
                     $from[] = $record;
                 }
 
-                if (empty ($from)) {
+                if (empty($from)) {
                     $error = true;
                 } else {
                     $className = get_class($record);
@@ -76,7 +77,7 @@ MSG;
             $this->mustReturnAModel = false;
         } else {
             $className = get_class($from);
-            $from      = array ($from);
+            $from      = [$from];
 
             $this->mustReturnAModel = true;
         }
@@ -87,7 +88,7 @@ MSG;
 
         $this->subject          = $from;
         $this->subjectClassName = $className;
-        $this->eagerLoads       = empty ($arguments) ? array () : static::parseArguments($arguments);
+        $this->eagerLoads       = empty($arguments) ? [] : static::parseArguments($arguments);
     }
 
     /**
@@ -124,7 +125,7 @@ MSG;
     {
         $reflection = new \ReflectionClass(__CLASS__);
         $instance   = $reflection->newInstanceArgs(func_get_args());
-        
+
         return $instance->execute()->get();
     }
 
@@ -139,7 +140,7 @@ MSG;
     {
         $reflection = new \ReflectionClass(__CLASS__);
         $instance   = $reflection->newInstanceArgs(func_get_args());
-        
+
         return $instance->execute()->get();
     }
 
@@ -154,7 +155,7 @@ MSG;
     {
         $reflection = new \ReflectionClass(__CLASS__);
         $instance   = $reflection->newInstanceArgs(func_get_args());
-        
+
         return $instance->execute()->get();
     }
 
@@ -189,13 +190,13 @@ MSG;
      */
     private static function parseArguments(array $arguments)
     {
-        if (empty ($arguments)) {
+        if (empty($arguments)) {
             throw new \InvalidArgumentException('Arguments can not be empty');
         }
 
-        $relations = array ();
+        $relations = [];
 
-        if (count($arguments) === 1 && isset ($arguments[0]) && is_array($arguments[0])) {
+        if (count($arguments) === 1 && isset($arguments[0]) && is_array($arguments[0])) {
             foreach ($arguments[0] as $relationAlias => $queryConstraints) {
                 if (is_string($relationAlias)) {
                     $relations[$relationAlias] = is_callable($queryConstraints) ? $queryConstraints : null;
@@ -213,7 +214,7 @@ MSG;
             }
         }
 
-        if (empty ($relations)) {
+        if (empty($relations)) {
             throw new \InvalidArgumentException;
         }
 
@@ -256,10 +257,10 @@ MSG;
     {
         uksort($this->eagerLoads, 'strcmp');
 
-        $di = \Phalcon\DI::getDefault();
+        $di = DI::getDefault();
         $mM = $di['modelsManager'];
 
-        $eagerLoads = $resolvedRelations = array ();
+        $eagerLoads = $resolvedRelations = [];
 
         foreach ($this->eagerLoads as $relationAliases => $queryConstraints) {
             $nestingLevel    = 0;
@@ -270,7 +271,7 @@ MSG;
                 do {
                     $alias = $relationAliases[$nestingLevel];
                     $name  = join('.', array_slice($relationAliases, 0, $nestingLevel + 1));
-                } while (isset ($eagerLoads[$name]) && ++$nestingLevel);
+                } while (isset($eagerLoads[$name]) && ++$nestingLevel);
 
                 if ($nestingLevel === 0) {
                     $parentClassName = $this->subjectClassName;
@@ -283,7 +284,7 @@ MSG;
                     }
                 }
 
-                if (!isset ($resolvedRelations[$name])) {
+                if (!isset($resolvedRelations[$name])) {
                     $mM->load($parentClassName);
                     $relation = $mM->getRelationByAlias($parentClassName, $alias);
 
@@ -316,7 +317,7 @@ MSG;
 
                 $parent      = $nestingLevel > 0 ? $eagerLoads[$parentName] : $this;
                 $constraints = $nestingLevel + 1 === $nestingLevels ? $queryConstraints : null;
-                
+
                 $eagerLoads[$name] = new EagerLoad($relation, $constraints, $parent);
             } while (++$nestingLevel < $nestingLevels);
         }
