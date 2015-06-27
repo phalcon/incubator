@@ -57,7 +57,9 @@ final class EagerLoad
      */
     public function load()
     {
-        if (empty($this->parent->getSubject())) {
+        $parentSubject = $this->parent->getSubject();
+
+        if (empty($parentSubject)) {
             return $this;
         }
         
@@ -79,13 +81,13 @@ final class EagerLoad
 
         $bindValues = [];
 
-        foreach ($this->parent->getSubject() as $record) {
+        foreach ($parentSubject as $record) {
             $bindValues[$record->readAttribute($relField)] = true;
         }
 
         $bindValues = array_keys($bindValues);
 
-        $subjectSize         = count($this->parent->getSubject());
+        $subjectSize         = count($parentSubject);
         $isManyToManyForMany = false;
 
         $builder = new QueryBuilder;
@@ -147,7 +149,7 @@ final class EagerLoad
                 $records[$record->readAttribute($relReferencedField)] = $record;
             }
 
-            foreach ($this->parent->getSubject() as $record) {
+            foreach ($parentSubject as $record) {
                 $referencedFieldValue = $record->readAttribute($relField);
 
                 if (isset($modelReferencedModelValues[$referencedFieldValue])) {
@@ -183,8 +185,7 @@ final class EagerLoad
                     $records[] = $record;
                 }
 
-                $record = $this->parent->getSubject();
-                $record = $record[0];
+                $record = $parentSubject[0];
 
                 if ($isSingle) {
                     $record->{$alias} = empty($records) ? null : $records[0];
@@ -215,7 +216,7 @@ final class EagerLoad
                     }
                 }
 
-                foreach ($this->parent->getSubject() as $record) {
+                foreach ($parentSubject as $record) {
                     $referencedFieldValue = $record->readAttribute($relField);
 
                     if (isset($indexedRecords[$referencedFieldValue])) {
