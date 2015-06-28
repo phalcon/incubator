@@ -2,7 +2,6 @@
 
 use Phalcon\Mvc\Model\Relation;
 use Phalcon\Mvc\Model\Resultset;
-use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Version;
 
 /**
