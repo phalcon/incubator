@@ -277,11 +277,8 @@ class EagerLoadingTest extends \PHPUnit_Framework_TestCase
     public function dp3()
     {
         return array (
-            array (null),
-            array (array ()),
             array (range(0, 5)),
-            array (array (Robot::findFirstById(1), Bug::findFirstById(1))),
-            array (Robot::find('id > 1000'))
+            array (array (Robot::findFirstById(1), Bug::findFirstById(1)))
         );
     }
 
@@ -372,6 +369,17 @@ class EagerLoadingTest extends \PHPUnit_Framework_TestCase
             }, $robots)),
             0
         );
+    }
+
+    /**
+     * At original repo
+     */
+    public function testIssue4()
+    {
+        // Has many -> Belongs to
+        // Should be the same for Has many -> Has one
+        $loader = new Loader(Robot::findFirstById(1), 'Bugs.Robot');
+        $this->assertEquals($loader->execute()->get()->bugs, array ());
     }
 
     protected function resultSetToEagerLoadingEquivalent($val)

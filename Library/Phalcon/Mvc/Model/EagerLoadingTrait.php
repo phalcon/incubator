@@ -51,7 +51,7 @@ trait EagerLoadingTrait
 
         $ret = static::find($parameters);
 
-        if ($ret[0]) {
+        if ($ret->count()) {
             array_unshift($arguments, $ret);
 
             $ret = call_user_func_array('Phalcon\Mvc\Model\EagerLoading\Loader::fromResultset', $arguments);
