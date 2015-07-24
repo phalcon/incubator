@@ -8,6 +8,12 @@ use Phalcon\Di;
 
 class CardNumberTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        if (!class_exists('\Phalcon\Mvc\EntityInterface', false)) {
+            $this->markTestSkipped('Current implementation of \Phalcon\Mvc\Model\Validator\Between is not compatible with Phalcon < 2.0.4');
+        }
+    }
 
     public function dataCards()
     {
