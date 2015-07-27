@@ -73,7 +73,7 @@ to load classes from the incubator repository:
 $loader = new Phalcon\Loader();
 
 $loader->registerNamespaces(array(
-	'Phalcon' => '/path/to/incubator/Library/Phalcon/'
+    'Phalcon' => '/path/to/incubator/Library/Phalcon/'
 ));
 
 $loader->register();
@@ -133,7 +133,7 @@ See CONTRIBUTING.md
 
 ### ORM Validators
 * [Phalcon\Mvc\Model\Validator\ConfirmationOf](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Allows to validate if a field has a confirmation field with the same value (suxxes)
-* [Phalcon\Mvc\Model\Validator\CardNumber](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Allows to validate credit cadrd number using Luhn algorithm (parshikov)
+* [Phalcon\Mvc\Model\Validator\CardNumber](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Allows to validate credit card number using Luhn algorithm (parshikov)
 * [Phalcon\Mvc\Model\Validator\Decimal](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Allows to validate if a field has a valid number in proper decimal format (negative and decimal numbers allowed) (sergeyklay) 
 * [Phalcon\Mvc\Model\Validator\Between](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Validates that a value is between a range of two values (sergeyklay)
 
