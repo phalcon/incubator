@@ -20,10 +20,6 @@ env:
   - PHALCON_VERSION="2.0.6"
   - PHALCON_VERSION="2.0.5"
   - PHALCON_VERSION="2.0.4"
-  - PHALCON_VERSION="2.0.3"
-  - PHALCON_VERSION="2.0.2"
-  - PHALCON_VERSION="2.0.1"
-  - PHALCON_VERSION="2.0.0"
 
 install:
   - composer self-update
