@@ -1,10 +1,10 @@
 <?php
 namespace Phalcon\Mvc\Model\Validator;
 
+use Phalcon\Mvc\EntityInterface;
 use Phalcon\Mvc\Model\Validator;
 use Phalcon\Mvc\Model\ValidatorInterface;
 use Phalcon\Mvc\Model\Exception;
-use Phalcon\Mvc\ModelInterface;
 
 /**
  * Phalcon\Mvc\Model\Validator\CardNumber
@@ -19,11 +19,11 @@ use Phalcon\Mvc\ModelInterface;
  *
  *  public function validation()
  *  {
- *      $this->validate(new CardNumber(array(
- *          'field' => 'cardnumber',
- *          'type'   => CardNumber::VISA, // Any if not specified
- *          'message' => 'Card number must be valid',
- *      )));
+ *      $this->validate(new CardNumber([
+ *          'field'   => 'cardnumber',
+ *          'type'    => CardNumber::VISA, // Any if not specified
+ *          'message' => 'Card number must be valid'
+ *      ]));
  *
  *      if ($this->validationHasFailed() == true) {
  *          return false;
@@ -39,7 +39,21 @@ class CardNumber extends Validator implements ValidatorInterface
     const MASTERCARD        = 1; // 51-55
     const VISA              = 2; // 4
 
-    public function validate(ModelInterface $record)
+    /**
+     * {@inheritdoc}
+     *
+     * <strong>NOTE:</strong>
+     * for Phalcon < 2.0.4 replace
+     * <code>\Phalcon\Mvc\EntityInterface</code>
+     * by
+     * <code>\Phalcon\Mvc\ModelInterface</code>
+     *
+     * @param EntityInterface $record
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function validate(EntityInterface $record)
     {
         $field = $this->getOption('field');
 
@@ -53,16 +67,14 @@ class CardNumber extends Validator implements ValidatorInterface
         if ($this->isSetOption('type')) {
             $type = $this->getOption('type');
 
-            $result = true;
-
             switch ($type) {
                 case CardNumber::AMERICAN_EXPRESS:
                     $issuer = substr($value, 0, 2);
-                    $result = (true === in_array($issuer, array(34, 37)));
+                    $result = (true === in_array($issuer, [34, 37]));
                     break;
                 case CardNumber::MASTERCARD:
                     $issuer = substr($value, 0, 2);
-                    $result = (true === in_array($issuer, array(51, 52, 53, 54, 55)));
+                    $result = (true === in_array($issuer, [51, 52, 53, 54, 55]));
                     break;
                 case CardNumber::VISA:
                     $issuer = $value[0];
@@ -94,8 +106,6 @@ class CardNumber extends Validator implements ValidatorInterface
             }
             $checkSum += $temp;
         }
-
-        
 
         if (($checkSum % 10) != 0) {
             $message = $this->getOption('message') ?: 'Credit card number is invalid';

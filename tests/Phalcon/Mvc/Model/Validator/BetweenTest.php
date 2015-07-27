@@ -3,44 +3,19 @@
 namespace Phalcon\Test\Mvc\Model\Validator;
 
 use Phalcon\Mvc\Model\Manager;
-use Phalcon\DI;
+use Phalcon\Di;
 
 class BetweenTest extends \PHPUnit_Framework_TestCase
 {
     public function dataBetween()
     {
-        return array(
-            array(
-                1,
-                10,
-                3,
-                true
-            ),
-            array(
-                1,
-                10,
-                4,
-                true
-            ),
-            array(
-                1,
-                10,
-                -1,
-                false
-            ),
-            array(
-                1,
-                10,
-                0,
-                false
-            ),
-            array(
-                -1,
-                1,
-                0,
-                true
-            ),
-        );
+        return [
+            [1, 10, 3, true],
+            [1, 10, 4, true],
+            [1, 10, -1, false],
+            [1, 10, 0, false],
+            [-1, 1, 0, true],
+        ];
     }
 
     /**
@@ -48,7 +23,7 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidate($min, $max, $position, $willReturn)
     {
-        $di = New DI();
+        $di = new Di();
         $di->set('modelsManager', new Manager());
 
         require_once(__DIR__ . '/resources/TestBetweenModel.php');
@@ -76,7 +51,7 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateIncorrectFieldType()
     {
-        $di = New DI();
+        $di = new Di();
         $di->set('modelsManager', new Manager());
 
         require_once(__DIR__ . '/resources/TestBetweenIncorrectField.php');
@@ -88,7 +63,7 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateIsEmpty()
     {
-        $di = New DI();
+        $di = new Di();
         $di->set('modelsManager', new Manager());
 
         require_once(__DIR__ . '/resources/TestBetweenModel.php');
@@ -102,7 +77,7 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateIsEmptyWithFlag()
     {
-        $di = New DI();
+        $di = new Di();
         $di->set('modelsManager', new Manager());
 
         require_once(__DIR__ . '/resources/TestBetweenModel.php');
@@ -121,7 +96,7 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateWithoutMin()
     {
-        $di = New DI();
+        $di = new Di();
         $di->set('modelsManager', new Manager());
 
         require_once(__DIR__ . '/resources/TestBetweenModel.php');
@@ -138,7 +113,7 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateWithoutMaxAndMin()
     {
-        $di = New DI();
+        $di = new Di();
         $di->set('modelsManager', new Manager());
 
         require_once(__DIR__ . '/resources/TestBetweenModel.php');
@@ -154,7 +129,7 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateWithoutMax()
     {
-        $di = New DI();
+        $di = new Di();
         $di->set('modelsManager', new Manager());
 
         require_once(__DIR__ . '/resources/TestBetweenModel.php');
@@ -168,7 +143,7 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateDefaultMessage()
     {
-        $di = New DI();
+        $di = new Di();
         $di->set('modelsManager', new Manager());
 
         require_once(__DIR__ . '/resources/TestBetweenModel.php');
@@ -189,7 +164,7 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateCustomMessage()
     {
-        $di = New DI();
+        $di = new Di();
         $di->set('modelsManager', new Manager());
 
         require_once(__DIR__ . '/resources/TestBetweenModel.php');
