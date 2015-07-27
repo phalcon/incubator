@@ -1,10 +1,10 @@
 <?php
 namespace Phalcon\Mvc\Model\Validator;
 
+use Phalcon\Mvc\EntityInterface;
 use Phalcon\Mvc\Model\Validator;
 use Phalcon\Mvc\Model\ValidatorInterface;
 use Phalcon\Mvc\Model\Exception;
-use Phalcon\Mvc\ModelInterface;
 
 /**
  * Phalcon\Mvc\Model\Validator\Between
@@ -19,12 +19,12 @@ use Phalcon\Mvc\ModelInterface;
  *
  *    public function validation()
  *    {
- *        $this->validate(new Between(array(
- *            'field' => 'position',
- *            'max' => 50,
- *            'min' => 2,
+ *        $this->validate(new Between([
+ *            'field'   => 'position',
+ *            'max'     => 50,
+ *            'min'     => 2,
  *            'message' => 'Position is not between a valid range',
- *        )));
+ *        ]));
  *
  *        if ($this->validationHasFailed() == true) {
  *            return false;
@@ -39,12 +39,18 @@ class Between extends Validator implements ValidatorInterface
     /**
      * {@inheritdoc}
      *
-     * @param $record
+     * <strong>NOTE:</strong>
+     * for Phalcon < 2.0.4 replace
+     * <code>\Phalcon\Mvc\EntityInterface</code>
+     * by
+     * <code>\Phalcon\Mvc\ModelInterface</code>
+     *
+     * @param EntityInterface $record
      *
      * @return boolean
      * @throws Exception
      */
-    public function validate(ModelInterface $record)
+    public function validate(EntityInterface $record)
     {
         $field = $this->getOption('field');
 

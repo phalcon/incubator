@@ -111,7 +111,7 @@ Add in your the code
 	$viewPath = 'email/example_message';
 
 	// Set variables to views (OPTIONAL)
-	$params [ 
+	$params = [ 
 		'var1' => 'VAR VALUE 1',
 		'var2' => 'VAR VALUE 2',
 		...

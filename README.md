@@ -73,7 +73,7 @@ to load classes from the incubator repository:
 $loader = new Phalcon\Loader();
 
 $loader->registerNamespaces(array(
-	'Phalcon' => '/path/to/incubator/Library/Phalcon/'
+    'Phalcon' => '/path/to/incubator/Library/Phalcon/'
 ));
 
 $loader->register();
@@ -83,7 +83,7 @@ $loader->register();
 
 Incubator is built under Travis CI service. Every commit pushed to this repository will queue a build into the continuous integration service and will run all PHPUnit tests to ensure that everything is going well and the project is stable. The current build status is:
 
-[![Build Status](https://img.shields.io/travis/phalcon/incubator.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
+[![Build Status](https://img.shields.io/travis/phalcon/incubator/master.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
 
 # Contributing
 
@@ -133,8 +133,7 @@ See CONTRIBUTING.md
 
 ### ORM Validators
 * [Phalcon\Mvc\Model\Validator\ConfirmationOf](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Allows to validate if a field has a confirmation field with the same value (suxxes)
-* [Phalcon\Mvc\Model\Validator\CardNumber](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Allows to validate credit cadrd number using Luhn algorithm (parshikov)
-* [Phalcon\Mvc\Model\Validator\IP](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Validates that a value is ip (v4 or v6) address in valid range (parshikov)
+* [Phalcon\Mvc\Model\Validator\CardNumber](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Allows to validate credit card number using Luhn algorithm (parshikov)
 * [Phalcon\Mvc\Model\Validator\Decimal](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Allows to validate if a field has a valid number in proper decimal format (negative and decimal numbers allowed) (sergeyklay) 
 * [Phalcon\Mvc\Model\Validator\Between](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Mvc/Model/Validator) - Validates that a value is between a range of two values (sergeyklay)
 
@@ -159,7 +158,6 @@ See CONTRIBUTING.md
 * [Phalcon\Session\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - Database adapter for storing sessions (phalcon)
 * [Phalcon\Session\Adapter\Memcache](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - Memcache adapter for storing sessions (meets-ecommerce)
 * [Phalcon\Session\Adapter\Mongo](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - MongoDb adapter for storing sessions (phalcon)
-* [Phalcon\Session\Adapter\Redis](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - Redis adapter for storing sessions (phalcon)
 * [Phalcon\Session\Adapter\HandlerSocket](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Session/Adapter) - HandlerSocket adapter for storing sessions (Xrymz)
 
 ### Utils

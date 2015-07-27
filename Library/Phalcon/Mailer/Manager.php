@@ -322,13 +322,20 @@ class Manager extends Component
     protected function getView()
     {
         if (!$this->view) {
+            /** @var $viewApp \Phalcon\Mvc\View */
+            $viewApp = $this->getDI()->get('view');
+
             if (!($viewsDir = $this->getConfig('viewsDir'))) {
-                $viewsDir = $this->getDI()->get('view')->getViewsDir();
+                $viewsDir = $viewApp->getViewsDir();
             }
 
             /** @var $view \Phalcon\Mvc\View\Simple */
             $view = $this->getDI()->get('\Phalcon\Mvc\View\Simple');
             $view->setViewsDir($viewsDir);
+
+            if ($engines = $viewApp->getRegisteredEngines()) {
+                $view->registerEngines($engines);
+            }
 
             $this->view = $view;
         }

@@ -6,6 +6,10 @@ use Phalcon\Validation\ValidatorInterface;
 use Phalcon\Validation\Message;
 use Phalcon\Db\Adapter\Pdo as DbConnection;
 use Phalcon\Validation\Exception as ValidationException;
+use Phalcon\DiInterface;
+use Phalcon\Di;
+use Phalcon\Db;
+use Phalcon\Validation;
 
 /**
  * Phalcon\Validation\Validator\Db\Uniqueness
@@ -23,8 +27,8 @@ use Phalcon\Validation\Exception as ValidationException;
  * );
  * </code>
  *
- * If second parameter will be null (ommited) than validator will try to get database
- * connection from default DI instance with \Phalcon\DI::getDefault()->get('db');
+ * If second parameter will be null (omitted) than validator will try to get database
+ * connection from default DI instance with \Phalcon\Di::getDefault()->get('db');
  */
 
 class Uniqueness extends Validator implements ValidatorInterface
@@ -48,9 +52,9 @@ class Uniqueness extends Validator implements ValidatorInterface
 
         if (null === $db) {
             // try to get db instance from default Dependency Injection
-            $di = \Phalcon\DI::getDefault();
+            $di = Di::getDefault();
 
-            if ($di instanceof \Phalcon\DiInterface && $di->has('db')) {
+            if ($di instanceof DiInterface && $di->has('db')) {
                 $db = $di->get('db');
             }
         }
@@ -77,14 +81,14 @@ class Uniqueness extends Validator implements ValidatorInterface
      * @param  string              $attribute
      * @return boolean
      */
-    public function validate(\Phalcon\Validation $validator, $attribute)
+    public function validate(Validation $validator, $attribute)
     {
         $table = $this->getOption('table');
         $column = $this->getOption('column');
 
         $result = $this->db->fetchOne(
             sprintf('SELECT COUNT(*) as count FROM %s WHERE %s = ?', $table, $column),
-            \Phalcon\Db::FETCH_ASSOC,
+            Db::FETCH_ASSOC,
             array($validator->getValue($attribute))
         );
 

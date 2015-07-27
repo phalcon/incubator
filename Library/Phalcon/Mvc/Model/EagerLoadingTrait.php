@@ -25,23 +25,23 @@ trait EagerLoadingTrait
      * </code>
      *
      * @param mixed ...$arguments
-     * @return Phalcon\Mvc\ModelInterface[]
+     * @return \Phalcon\Mvc\ModelInterface[]
      */
     public static function with()
     {
         $arguments = func_get_args();
 
-        if (!empty ($arguments)) {
+        if (!empty($arguments)) {
             $numArgs    = count($arguments);
             $lastArg    = $numArgs - 1;
             $parameters = null;
 
             if ($numArgs >= 2 && is_array($arguments[$lastArg])) {
                 $parameters = $arguments[$lastArg];
-                
-                unset ($arguments[$lastArg]);
 
-                if (isset ($parameters['columns'])) {
+                unset($arguments[$lastArg]);
+
+                if (isset($parameters['columns'])) {
                     throw new \LogicException('Results from database must be full models, do not use `columns` key');
                 }
             }
@@ -51,7 +51,7 @@ trait EagerLoadingTrait
 
         $ret = static::find($parameters);
 
-        if ($ret[0]) {
+        if ($ret->count()) {
             array_unshift($arguments, $ret);
 
             $ret = call_user_func_array('Phalcon\Mvc\Model\EagerLoading\Loader::fromResultset', $arguments);
@@ -64,23 +64,23 @@ trait EagerLoadingTrait
      * Same as EagerLoadingTrait::with() for a single record
      *
      * @param mixed ...$arguments
-     * @return false|Phalcon\Mvc\ModelInterface
+     * @return false|\Phalcon\Mvc\ModelInterface
      */
     public static function findFirstWith()
     {
         $arguments = func_get_args();
 
-        if (!empty ($arguments)) {
+        if (!empty($arguments)) {
             $numArgs    = count($arguments);
             $lastArg    = $numArgs - 1;
             $parameters = null;
 
             if ($numArgs >= 2 && is_array($arguments[$lastArg])) {
                 $parameters = $arguments[$lastArg];
-                
-                unset ($arguments[$lastArg]);
 
-                if (isset ($parameters['columns'])) {
+                unset($arguments[$lastArg]);
+
+                if (isset($parameters['columns'])) {
                     throw new \LogicException('Results from database must be full models, do not use `columns` key');
                 }
             }

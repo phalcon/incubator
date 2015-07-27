@@ -20,48 +20,45 @@
 
 namespace Phalcon\Db\Dialect;
 
+use Phalcon\Db\Dialect\Mysql;
+
 /**
  * Phalcon\Db\Adapter\Dialect\MysqlExtended
  *
  * Every query executed via this adapter is automatically cached
  */
-class MysqlExtended extends \Phalcon\Db\Dialect\Mysql
+class MysqlExtended extends Mysql
 {
 
     /**
      * Transforms an intermediate representation for a expression into a database system valid expression
      *
-     * @param array  expression
-     * @param string escapeChar
+     * @param array  $expression
+     * @param string $escapeChar
      *
      * @return string
+     * @throws \Exception
      */
     public function getSqlExpression(array $expression, $escapeChar = null)
     {
         if ($expression["type"] == 'functionCall') {
             switch ($expression["name"]) {
-
                 case 'DATE_INTERVAL':
-
                     if (count($expression["arguments"]) != 2) {
                         throw new \Exception('DATE_INTERVAL requires 2 parameters');
                     }
 
                     switch ($expression["arguments"][1]['value']) {
-
                         case "'DAY'":
                             return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' DAY';
-
                         case "'MONTH'":
                             return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' MONTH';
-
                         case "'YEAR'":
                             return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' YEAR';
                     }
                     break;
 
                 case 'FULLTEXT_MATCH':
-
                     if (count($expression["arguments"]) < 2) {
                         throw new \Exception('FULLTEXT_MATCH requires 2 parameters');
                     }
@@ -76,7 +73,6 @@ class MysqlExtended extends \Phalcon\Db\Dialect\Mysql
                     $this->getSqlExpression($expression["arguments"][$length]) . ')';
 
                 case 'FULLTEXT_MATCH_BMODE':
-
                     if (count($expression["arguments"]) < 2) {
                         throw new \Exception('FULLTEXT_MATCH requires 2 parameters');
                     }

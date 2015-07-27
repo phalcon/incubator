@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <phpunit bootstrap="./bootstrap.php"
+         backupGlobals="false"
+         backupStaticAttributes="false"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          stopOnFailure="false"
-         syntaxCheck="true"
-         testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader">
+         syntaxCheck="false"
+>
+
     <testsuite name="Phalcon Incubator Test Suite">
         <directory>./</directory>
     </testsuite>

@@ -17,6 +17,7 @@
   +------------------------------------------------------------------------+
   | Authors: Andres Gutierrez <andres@phalconphp.com>                      |
   |          Nikolaos Dimopoulos <nikos@niden.net>                         |
+  |          Ilgıt Yıldırım <ilgityildirim@gmail.com>                      |
   +------------------------------------------------------------------------+
 */
 namespace Phalcon\Utils;
@@ -43,11 +44,19 @@ class Slug
         $oldLocale = setlocale(LC_ALL, '0');
         setlocale(LC_ALL, 'en_US.UTF-8');
 
-        $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
-
-        if (!empty($replace)) {
-            $clean = str_replace((array) $replace, ' ', $clean);
+        // Better to replace given $replace array as index => value
+        // Example $replace['ı' => 'i', 'İ' => 'i'];
+        if (!empty($replace) && is_array($replace)) {
+            $string = str_replace(array_keys($replace), array_values($replace), $string);
         }
+
+        // replace non letter or non digits by -
+        $string = preg_replace("#[^\\pL\d]+#u", '-', $string);
+
+        // Trim trailing -
+        $string = trim($string, '-');
+
+        $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
 
         $clean = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $clean);
         $clean = strtolower($clean);
