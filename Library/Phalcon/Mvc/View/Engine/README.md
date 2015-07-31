@@ -170,6 +170,35 @@ $di->set('view', function() {
 });
 ```
 
+Smarty's equivalent to Phalcon's "setVar($key, $value)" function is "assign($key, $value, $nocache = false)" which has a third optional argument. This third argument, when set to true, marks the variable as exempt from caching. This is an essential Smarty feature that other template engines lack, being useful for pages that have portions that are often changing such as the current user who is logged in. If you want to utilize this additional argument, use the incubator SmartyView instead of View which extends View to include this functionality.
+
+```php
+//Setting up the view component
+use Phalcon\Mvc\View\SmartyView;
+$di->set('view', function() {
+
+    $view = new SmartyView();
+
+    $view->setViewsDir('../app/views/');
+
+    $view->registerEngines(
+		array(".tpl" => 'Phalcon\Mvc\View\Engine\Smarty')
+	);
+
+    return $view;
+});
+```
+
+You may now use the setVar function you are familiar with in Phalcon with the third, optional argument:
+
+```php
+// This variable is exempt from caching
+$this->view->setVar($key, $value, true);
+
+// This variable can be cached, as $nocache is false by default
+$this->view->setVar($key, $value);
+```
+
 Smarty can be configured to alter its default behavior, the following example explain how to do that:
 
 ```php
