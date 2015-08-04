@@ -161,6 +161,7 @@ class Gettext extends Base implements AdapterInterface
      * @param  array $placeholders Optional.
      * @param  string $category    Optional. Specify the locale category.
      *                             Defaults to LC_MESSAGES
+     * @param  string $domain
      *
      * @return string
      * @throws \InvalidArgumentException
@@ -332,7 +333,7 @@ class Gettext extends Base implements AdapterInterface
      */
     public function setDomain($domain)
     {
-        if (!in_array($domain, $this->domains)) {
+        if ($domain !== null && !in_array($domain, $this->domains)) {
             throw new \InvalidArgumentException($domain . ' is invalid translation domain');
         }
 
