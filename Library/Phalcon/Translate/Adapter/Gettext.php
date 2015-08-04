@@ -333,7 +333,7 @@ class Gettext extends Base implements AdapterInterface
      */
     public function setDomain($domain)
     {
-        if ($domain !== NULL && !in_array($domain, $this->domains)) {
+        if ($domain !== null && !in_array($domain, $this->domains)) {
             throw new \InvalidArgumentException($domain . ' is invalid translation domain');
         }
 
