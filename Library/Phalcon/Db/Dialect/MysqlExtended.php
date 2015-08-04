@@ -40,15 +40,12 @@ class MysqlExtended extends \Phalcon\Db\Dialect\Mysql
     {
         if ($expression["type"] == 'functionCall') {
             switch ($expression["name"]) {
-
                 case 'DATE_INTERVAL':
-
                     if (count($expression["arguments"]) != 2) {
                         throw new \Exception('DATE_INTERVAL requires 2 parameters');
                     }
 
                     switch ($expression["arguments"][1]['value']) {
-
                         case "'DAY'":
                             return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' DAY';
 
@@ -61,7 +58,6 @@ class MysqlExtended extends \Phalcon\Db\Dialect\Mysql
                     break;
 
                 case 'FULLTEXT_MATCH':
-
                     if (count($expression["arguments"]) < 2) {
                         throw new \Exception('FULLTEXT_MATCH requires 2 parameters');
                     }
@@ -76,7 +72,6 @@ class MysqlExtended extends \Phalcon\Db\Dialect\Mysql
                     $this->getSqlExpression($expression["arguments"][$length]) . ')';
 
                 case 'FULLTEXT_MATCH_BMODE':
-
                     if (count($expression["arguments"]) < 2) {
                         throw new \Exception('FULLTEXT_MATCH requires 2 parameters');
                     }
