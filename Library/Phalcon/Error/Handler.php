@@ -3,7 +3,7 @@
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2012 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2015 Phalcon Team (http://www.phalconphp.com)       |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
   | with this package in the file docs/LICENSE.txt.                        |
@@ -15,15 +15,16 @@
   | Authors: Andres Gutierrez <andres@phalconphp.com>                      |
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
   |          Nikita Vershinin <endeveit@gmail.com>                         |
+  |          Serghei Iakovlev <sadhooklay@gmail.com>                       |
   +------------------------------------------------------------------------+
 */
 namespace Phalcon\Error;
 
-use Phalcon\DI;
+use Phalcon\Di;
+use Phalcon\Logger\Formatter;
 
 class Handler
 {
-
     /**
      * Registers itself as error and exception handler.
      *
@@ -50,26 +51,26 @@ class Handler
                 return;
             }
 
-            $options = array(
+            $options = [
                 'type'    => $errno,
                 'message' => $errstr,
                 'file'    => $errfile,
                 'line'    => $errline,
                 'isError' => true,
-            );
+            ];
 
             static::handle(new Error($options));
         });
 
         set_exception_handler(function (\Exception $e) {
-            $options = array(
+            $options = [
                 'type'        => $e->getCode(),
                 'message'     => $e->getMessage(),
                 'file'        => $e->getFile(),
                 'line'        => $e->getLine(),
                 'isException' => true,
                 'exception'   => $e,
-            );
+            ];
 
             static::handle(new Error($options));
         });
@@ -89,12 +90,16 @@ class Handler
      */
     public static function handle(Error $error)
     {
-        $di = DI::getDefault();
-        $config = $di->getShared('config');
+        $di = Di::getDefault();
+        $config = $di->getShared('config')->error;
         $type = static::getErrorType($error->type());
         $message = "$type: {$error->message()} in {$error->file()} on line {$error->line()}";
 
-        $config->error->logger->log($message);
+        if (isset($config->formatter) && $config->formatter instanceof Formatter) {
+            $config->logger->setFormatter($config->formatter);
+        }
+
+        $config->logger->log($message);
 
         switch ($error->type()) {
             case E_WARNING:
@@ -119,13 +124,13 @@ class Handler
                 $view = $di->getShared('view');
                 $response = $di->getShared('response');
 
-                $dispatcher->setControllerName($config->error->controller);
-                $dispatcher->setActionName($config->error->action);
-                $dispatcher->setParams(array('error' => $error));
+                $dispatcher->setControllerName($config->controller);
+                $dispatcher->setActionName($config->action);
+                $dispatcher->setParams(['error' => $error]);
 
                 $view->start();
                 $dispatcher->dispatch();
-                $view->render($config->error->controller, $config->error->action, $dispatcher->getParams());
+                $view->render($config->controller, $config->action, $dispatcher->getParams());
                 $view->finish();
 
                 return $response->setContent($view->getContent())->send();

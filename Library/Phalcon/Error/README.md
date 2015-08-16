@@ -8,14 +8,14 @@ Configuration
 -------------
 
 For the error handler to work properly, following section has to be created
-in the configuration file (in this case php array). All options are mandatory:
+in the configuration file (in this case php array). The `logger`, `controller`, `action` options are mandatory:
 
 ```php
-
 <?php
 return [
 	'error' => [
 		'logger' => new \Phalcon\Logger\Adapter\File(ROOT_PATH . '/log/' . APPLICATION_ENV . '.log'),
+		'formatter' => new \Phalcon\Logger\Formatter\Line('[%date%][%type%] %message%', 'Y-m-d H:i:s O'),
 		'controller' => 'error',
 		'action' => 'index',
 	]
@@ -25,6 +25,7 @@ return [
 
 * `logger` defines an object used for logging. It has to implement `log` method in order for
 error handler to work properly.
+* `formatter` sets the message formatter.
 * `controller` is the name of error controller, which will be dispatched, when an exception or error
 occurs.
 * `action` is the name of action in the error controller, which will be called, when an exception or error
@@ -34,7 +35,6 @@ In the Application file (please take a look at \Phalcon\Error\Application for re
 error handler has to be registered. Application must also define constants for application environments:
 
 ```php
-
 <?php
 class Application extends \Phalcon\Mvc\Application
 {
@@ -55,7 +55,6 @@ class Application extends \Phalcon\Mvc\Application
 In the error controller \Phalcon\Error\Error can be retrieved through the dispatcher:
 
 ```php
-
 public function indexAction()
 {
 	$error = $this->dispatcher->getParam('error');
