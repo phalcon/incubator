@@ -17,6 +17,7 @@ cache:
     - $HOME/.composer/cache
 
 env:
+  - PHALCON_VERSION="2.0.7"
   - PHALCON_VERSION="2.0.6"
   - PHALCON_VERSION="2.0.5"
   - PHALCON_VERSION="2.0.4"
