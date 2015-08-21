@@ -13,7 +13,6 @@ use Phalcon\Queue\Beanstalk\Extended as BeanstalkExtended;
 
 class IndexController extends Controller
 {
-
     /**
      * Large video upload form.
      */
@@ -60,12 +59,14 @@ Now handle the queues in console script (e.g.: php app/bin/video.php):
 use Phalcon\Queue\Beanstalk\Extended as BeanstalkExtended;
 use Phalcon\Queue\Beanstalk\Job;
 
+$host = '192.168.0.21';
+
 $beanstalk = new BeanstalkExtended(array(
-    'host'   => '192.168.0.21',
+    'host'   => $host,
     'prefix' => 'project-name',
 ));
 
-$beanstalk->addWorker('processVideo', function (Job $job) {
+$beanstalk->addWorker($host.'processVideo', function (Job $job) {
     // Here we should collect the meta information, make the screenshots, convert the video to the FLV etc.
     $videoId = $job->getBody();
 
@@ -73,7 +74,7 @@ $beanstalk->addWorker('processVideo', function (Job $job) {
     exit(0);
 });
 
-$beanstalk->addWorker('deleteVideo', function (Job $job) {
+$beanstalk->addWorker($host.'deleteVideo', function (Job $job) {
     // Here we should collect the meta information, make the screenshots, convert the video to the FLV etc.
     $videoId = $job->getBody();
 
