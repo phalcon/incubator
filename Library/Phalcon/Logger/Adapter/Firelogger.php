@@ -14,7 +14,6 @@ use Phalcon\Logger\Formatter\Firelogger as FireloggerFormatter;
  */
 class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\AdapterInterface
 {
-
     /**
      * Name
      *

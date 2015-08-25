@@ -22,7 +22,6 @@ use Phalcon\Paginator\Pager\Range;
  */
 class Jumping extends Range
 {
-
     /**
      * {@inheritdoc}
      *

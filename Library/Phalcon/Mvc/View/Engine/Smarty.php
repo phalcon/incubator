@@ -12,7 +12,6 @@ use Phalcon\Mvc\ViewBaseInterface;
  */
 class Smarty extends Engine implements EngineInterface
 {
-
     /**
      * @var \Smarty
      */

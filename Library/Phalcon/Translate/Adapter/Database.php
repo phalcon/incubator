@@ -24,7 +24,6 @@ use Phalcon\Translate\Exception;
 
 class Database extends Base implements AdapterInterface
 {
-
     /**
      * @var array
      */

@@ -23,7 +23,6 @@ use Phalcon\Mvc\Application as PhApplication;
 
 abstract class FunctionalTestCase extends ModelTestCase
 {
-
     protected $application;
 
     /**
@@ -60,7 +59,6 @@ abstract class FunctionalTestCase extends ModelTestCase
         if ($this->di instanceof \Phalcon\DiInterface) {
             $this->application = new PhApplication($this->di);
         }
-
     }
 
     /**

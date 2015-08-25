@@ -24,7 +24,6 @@ use Phalcon\Mvc\View\Engine\Twig\Nodes\Assets as Node;
  */
 class Assets extends \Twig_TokenParser
 {
-
     /**
      * {@inheritdoc}
      *

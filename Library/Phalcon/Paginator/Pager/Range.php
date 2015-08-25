@@ -19,7 +19,6 @@ use Phalcon\Paginator\Pager;
  */
 abstract class Range
 {
-
     /**
      * Pager object.
      *

@@ -16,7 +16,6 @@ use Phalcon\Acl\Role;
  */
 class Redis extends Adapter implements AdapterInterface
 {
-
     /** @var bool  */
     protected $setNXAccess = true;
 

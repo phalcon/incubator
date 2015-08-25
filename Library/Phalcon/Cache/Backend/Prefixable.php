@@ -26,7 +26,6 @@ use Phalcon\Cache\BackendInterface;
  */
 abstract class Prefixable extends Backend implements BackendInterface
 {
-
     /**
      * Returns prefixed identifier.
      *

@@ -31,7 +31,6 @@ use Phalcon\Acl\Role;
  */
 class Mongo extends Adapter implements AdapterInterface
 {
-
     /**
      * @var array
      */

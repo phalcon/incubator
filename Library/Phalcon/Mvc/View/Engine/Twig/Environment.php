@@ -19,7 +19,6 @@ use Phalcon\DiInterface;
  */
 class Environment extends \Twig_Environment
 {
-
     /**
      * Internal dependency injector.
      *

@@ -11,7 +11,6 @@ use Phalcon\Config\Exception;
  */
 class ExtendedYaml extends Config implements \ArrayAccess
 {
-
     /**
      * Class constructor.
      *

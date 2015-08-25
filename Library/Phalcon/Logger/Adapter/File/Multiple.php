@@ -17,7 +17,6 @@ use Phalcon\Logger as Logger;
  */
 class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\AdapterInterface
 {
-
     /**
      * Path to the directory where log files will be saved. No trailing slash.
      *

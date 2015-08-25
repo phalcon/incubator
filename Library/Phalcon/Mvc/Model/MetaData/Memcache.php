@@ -21,7 +21,6 @@ use Phalcon\Mvc\Model\Exception;
  */
 class Memcache extends Base
 {
-
     /**
      * Default option for memcache port.
      *

@@ -29,7 +29,6 @@ use Phalcon\Db\Dialect\Mysql;
  */
 class MysqlExtended extends Mysql
 {
-
     /**
      * Transforms an intermediate representation for a expression into a database system valid expression
      *

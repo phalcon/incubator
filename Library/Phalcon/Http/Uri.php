@@ -49,7 +49,6 @@ class Uri
 
             return;
         }
-
     }
 
     public function __toString()
