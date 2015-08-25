@@ -115,19 +115,22 @@ class Extended extends Base
 
     /**
      * Runs the main worker cycle.
+     *
+     * @param boolean $ignoreErrors
      */
-    public function doWork()
+    public function doWork($ignoreErrors = false)
     {
         declare (ticks = 1);
         set_time_limit(0);
 
         $fork = new Fork();
+        $fork->ignoreErrors = $ignoreErrors;
 
         foreach ($this->workers as $tube => $worker) {
             $that = clone $this;
 
             // Run the worker in separate process.
-            $fork->call(function () use ($tube, $worker, $that, $fork) {
+            $fork->call(function () use ($tube, $worker, $that, $fork, $ignoreErrors) {
                 $that->connect();
 
                 do {
@@ -138,25 +141,32 @@ class Extended extends Base
                             call_user_func($worker, $job);
                         });
 
-                        $result = $fork->wait();
+                        try {
+                            $fork->wait();
 
-                        if ($result != 0) {
-                            // Something goes wrong
-                            return false;
-                        } else {
-                            // If everything is OK, delete the job from queue
-                            if (null !== $job) {
-                                try {
-                                    $job->delete();
-                                } catch (\Exception $e) {
-                                    if (null !== $this->logger) {
-                                        $this->logger->warning(sprintf(
-                                            'Exception thrown when trying to delete job: %d — %s',
-                                            $e->getCode(),
-                                            $e->getMessage()
-                                        ));
-                                    }
+                            try {
+                                $job->delete();
+                            } catch (\Exception $e) {
+                                if (null !== $this->logger) {
+                                    $this->logger->warning(sprintf(
+                                        'Exception thrown while deleting the job: %d — %s',
+                                        $e->getCode(),
+                                        $e->getMessage()
+                                    ));
                                 }
+                            }
+                        } catch (\Exception $e) {
+                            if (null !== $this->logger) {
+                                $this->logger->warning(sprintf(
+                                    'Exception thrown while handling job #%s: %d — %s',
+                                    $job->getId(),
+                                    $e->getCode(),
+                                    $e->getMessage()
+                                ));
+                            }
+
+                            if (!$ignoreErrors) {
+                                return;
                             }
                         }
                     } else {
@@ -230,7 +240,7 @@ class Extended extends Base
             foreach ($lines as $line) {
                 $line = ltrim($line, '- ');
                 if (empty($this->tubePrefix) || (0 === strpos($line, $this->tubePrefix))) {
-                    $result[] = $line;
+                    $result[] = !empty($this->tubePrefix) ? substr($line, strlen($this->tubePrefix)) : $line;
                 }
             }
         }

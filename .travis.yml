@@ -9,7 +9,8 @@ services:
   - memcached
   - mysql
 
-sudo: false
+env:
+  - TEST_BS_HOST=127.0.0.1 TEST_BS_PORT=11301
 
 cache:
   directories:
@@ -21,6 +22,11 @@ env:
   - PHALCON_VERSION="2.0.6"
   - PHALCON_VERSION="2.0.5"
   - PHALCON_VERSION="2.0.4"
+
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y beanstalkd
+  - sudo beanstalkd -d -l ${TEST_BS_HOST} -p ${TEST_BS_PORT}
 
 install:
   - composer self-update
