@@ -22,7 +22,6 @@ use Phalcon\Mvc\Model\Metadata\Memory as PhMetadataMemory;
 
 abstract class ModelTestCase extends UnitTestCase
 {
-
     /**
      * Sets the test up by loading the DI container and other stuff
      *

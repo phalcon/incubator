@@ -22,7 +22,6 @@ use Phalcon\Mvc\Model\Exception;
  */
 class Redis extends Base
 {
-
     /**
      * Redis backend instance.
      *

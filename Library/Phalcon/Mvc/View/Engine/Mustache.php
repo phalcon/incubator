@@ -12,7 +12,6 @@ use Phalcon\Mvc\ViewBaseInterface;
  */
 class Mustache extends Engine implements EngineInterface
 {
-
     /**
      * @var \Mustache_Engine
      */

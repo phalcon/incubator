@@ -27,7 +27,6 @@ use Phalcon\Cache\Exception;
  */
 class Wincache extends Prefixable
 {
-
     /**
      * {@inheritdoc}
      *

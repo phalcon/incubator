@@ -12,7 +12,6 @@ use Phalcon\Mvc\ModelInterface;
  */
 class ConfirmationOf extends Validator implements ValidatorInterface
 {
-
     /**
      * {@inheritdoc}
      *

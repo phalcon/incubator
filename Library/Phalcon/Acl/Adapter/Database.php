@@ -32,7 +32,6 @@ use Phalcon\Acl\Role;
  */
 class Database extends Adapter implements AdapterInterface
 {
-
     /**
      * @var array
      */

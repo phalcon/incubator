@@ -31,7 +31,6 @@ use Phalcon\Mvc\Url;
  */
 abstract class DBUnitTestCase extends \PHPUnit_Extensions_Database_TestCase
 {
-
     /**
      * Holds the configuration variables and other stuff
      * I can use the DI container but for tests like the Translate

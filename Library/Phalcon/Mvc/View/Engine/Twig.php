@@ -12,7 +12,6 @@ use Phalcon\Mvc\ViewBaseInterface;
  */
 class Twig extends Engine implements EngineInterface
 {
-
     /**
      * @var \Phalcon\Mvc\View\Engine\Twig\Environment
      */

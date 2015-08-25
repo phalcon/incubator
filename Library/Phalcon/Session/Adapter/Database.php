@@ -30,7 +30,6 @@ use Phalcon\Session\Exception;
  */
 class Database extends Adapter implements AdapterInterface
 {
-
     /**
      * Flag to check if session is destroyed.
      *

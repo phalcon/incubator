@@ -9,7 +9,6 @@ use Phalcon\Logger\Exception;
  */
 class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\AdapterInterface
 {
-
     /**
      * Name
      */

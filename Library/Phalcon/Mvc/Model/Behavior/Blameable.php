@@ -10,7 +10,6 @@ use Phalcon\Mvc\ModelInterface;
  */
 class Blameable extends Behavior implements BehaviorInterface
 {
-
     /**
      * {@inheritdoc}
      *

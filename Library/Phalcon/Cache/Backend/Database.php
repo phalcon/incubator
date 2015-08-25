@@ -30,7 +30,6 @@ use Phalcon\Db\AdapterInterface as DbAdapterInterface;
  */
 class Database extends Prefixable
 {
-
     /**
      * @var \Phalcon\Db\AdapterInterface
      */

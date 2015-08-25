@@ -22,7 +22,6 @@ use Phalcon\Queue\Beanstalk\Job;
  */
 class Extended extends Base
 {
-
     /**
      * Seconds to wait before putting the job in the ready queue.
      * The job will be in the "delayed" state during this time.
@@ -125,7 +124,7 @@ class Extended extends Base
             throw new \RuntimeException('The pcntl extension is required for workers');
         }
 
-        declare(ticks = 1);
+        declare (ticks = 1);
         set_time_limit(0);
 
         $tubes = array_keys($this->workers);

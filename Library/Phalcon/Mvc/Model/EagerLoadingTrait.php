@@ -4,7 +4,6 @@ use Phalcon\Mvc\Model\EagerLoading\Loader;
 
 trait EagerLoadingTrait
 {
-
     /**
      * <code>
      * <?php
