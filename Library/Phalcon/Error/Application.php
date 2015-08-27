@@ -21,6 +21,7 @@ namespace Phalcon\Error;
 
 use Phalcon\Config;
 use Phalcon\DI\FactoryDefault;
+use Phalcon\DiInterface;
 use Phalcon\Error\Handler as ErrorHandler;
 use Phalcon\Loader;
 use Phalcon\Mvc\Dispatcher;
@@ -37,13 +38,16 @@ class Application extends \Phalcon\Mvc\Application
      * Class constructor registers autoloading and error
      * handler.
      *
+     * @param mixed $dependencyInjector
      * @return \Phalcon\Error\Application
      */
-    public function __construct()
+    public function __construct(DiInterface $dependencyInjector = null)
     {
         $this->registerAutoloaders();
 
         ErrorHandler::register();
+
+        parent::__construct($dependencyInjector);
     }
 
     /**
