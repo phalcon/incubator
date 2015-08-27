@@ -19,6 +19,18 @@
 */
 namespace Phalcon\Error;
 
+/**
+ * Class Error
+ * @package Phalcon\Error
+ *
+ * @method int type()
+ * @method string message()
+ * @method string file()
+ * @method string line()
+ * @method \Exception exception()
+ * @method bool isException()
+ * @method bool isError()
+ */
 class Error
 {
     /**
