@@ -12,7 +12,7 @@ use PHPUnit_Framework_TestCase as TestCase;
  * @copyright (c) 2011-2015 Phalcon Team
  * @link      http://www.phalconphp.com
  * @author    Nikita Vershinin <endeveit@gmail.com>
- * @package   Phalcon\Queue\Beanstalk\Extended
+ * @package   Phalcon\Queue\Beanstalk
  *
  * The contents of this file are subject to the New BSD License that is
  * bundled with this package in the file docs/LICENSE.txt
