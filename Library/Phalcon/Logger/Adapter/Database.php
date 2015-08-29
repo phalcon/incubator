@@ -2,31 +2,36 @@
 namespace Phalcon\Logger\Adapter;
 
 use Phalcon\Logger\Exception;
+use Phalcon\Logger\Formatter\Line as LineFormatter;
+use Phalcon\Logger\Adapter as LoggerAdapter;
+use Phalcon\Logger\AdapterInterface;
 
 /**
  * Phalcon\Logger\Adapter\Database
  * Adapter to store logs in a database table
  */
-class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\AdapterInterface
+class Database extends LoggerAdapter implements AdapterInterface
 {
     /**
      * Name
+     * @var string
      */
-    protected $name;
+    protected $name = 'phalcon';
 
     /**
      * Adapter options
+     * @var array
      */
-    protected $options;
+    protected $options = [];
 
     /**
      * Class constructor.
      *
-     * @param  string                    $name
-     * @param  array                     $options
+     * @param  string $name
+     * @param  array  $options
      * @throws \Phalcon\Logger\Exception
      */
-    public function __construct($name, $options = array())
+    public function __construct($name = 'phalcon', array $options = [])
     {
         if (!isset($options['db'])) {
             throw new Exception("Parameter 'db' is required");
@@ -36,7 +41,10 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
             throw new Exception("Parameter 'table' is required");
         }
 
-        $this->name = $name;
+        if ($name) {
+            $this->name = $name;
+        }
+
         $this->options = $options;
     }
 
@@ -47,6 +55,11 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
      */
     public function getFormatter()
     {
+        if (!is_object($this->_formatter)) {
+            $this->_formatter = new LineFormatter($this->name);
+        }
+
+        return $this->_formatter;
     }
 
     /**
@@ -57,11 +70,11 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
      * @param integer $time
      * @param array   $context
      */
-    public function logInternal($message, $type, $time, $context = array())
+    public function logInternal($message, $type, $time, $context = [])
     {
         return $this->options['db']->execute(
             'INSERT INTO ' . $this->options['table'] . ' VALUES (null, ?, ?, ?, ?)',
-            array($this->name, $type, $message, $time)
+            [$this->name, $type, $message, $time]
         );
     }
 
@@ -73,5 +86,7 @@ class Database extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adapte
     public function close()
     {
         $this->options['db']->close();
+
+        return true;
     }
 }

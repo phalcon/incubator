@@ -2,6 +2,8 @@
 namespace Phalcon\Logger\Adapter;
 
 use Phalcon\Logger\Formatter\Firelogger as FireloggerFormatter;
+use Phalcon\Logger\Adapter as LoggerAdapter;
+use Phalcon\Logger\AdapterInterface;
 
 /**
  * Phalcon\Logger\Adapter\Firelogger
@@ -12,14 +14,14 @@ use Phalcon\Logger\Formatter\Firelogger as FireloggerFormatter;
  * @author  Richard Laffers <rlaffers@gmail.com>
  * @license The BSD 3-Clause License {@link http://opensource.org/licenses/BSD-3-Clause}
  */
-class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\AdapterInterface
+class Firelogger extends LoggerAdapter implements AdapterInterface
 {
     /**
      * Name
      *
      * @var string
      */
-    protected $name;
+    protected $name = 'phalcon';
 
     /**
      * Adapter options
@@ -31,7 +33,7 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
      *
      * @var array
      */
-    protected $options;
+    protected $options = [];
 
     /**
      * @var boolean
@@ -64,7 +66,7 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
      *
      * @var array
      */
-    protected $logs = array();
+    protected $logs = [];
 
     /**
      * Denotes if there is a transaction started.
@@ -79,27 +81,30 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
      * @param string $name
      * @param array  $options
      */
-    public function __construct($name = 'phalcon', $options = array())
+    public function __construct($name = 'phalcon', array $options = [])
     {
-        $defaults = array(
+        $defaults = [
             'password'     => null,
             'checkVersion' => true,
-            'traceable'    => false,
-        );
+            'traceable'    => false
+        ];
 
-        $this->name = $name;
+        if ($name) {
+            $this->name = $name;
+        }
+
         $this->options = array_merge($defaults, $options);
         $this->enabled = $this->checkPassword();
         $this->checkVersion();
 
-        register_shutdown_function(array($this, 'commit'));
+        register_shutdown_function([$this, 'commit']);
     }
 
     /**
-     * Setter for _name
+     * Setter for name
      *
-     * @param  string                             $name
-     * @return \Phalcon\Logger\Adapter\Firelogger
+     * @param  string $name
+     * @return $this
      */
     public function setName($name)
     {
@@ -127,12 +132,11 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
      *
      * @param mixed $message Stuff to log. Can be of any type castable into a string (i.e. anything except for
      *                       objects without __toString() implementation).
-     *
      * @param integer $type
      * @param integer $time
      * @param array   $context
      */
-    public function logInternal($message, $type, $time, $context = array())
+    public function logInternal($message, $type, $time, $context = [])
     {
         if (!$this->enabled) {
             return;
@@ -157,6 +161,7 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
      */
     public function close()
     {
+        return true;
     }
 
     /**
@@ -206,14 +211,14 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
 
         // final encoding
         $id = dechex(mt_rand(0, 0xFFFF)) . dechex(mt_rand(0, 0xFFFF)); // mt_rand is not working with 0xFFFFFFFF
-        $json = json_encode(array('logs' => $logs));
+        $json = json_encode(['logs' => $logs]);
         $res = str_split(base64_encode($json), 76); // RFC 2045
 
         foreach ($res as $k => $v) {
             header("FireLogger-$id-$k:$v");
         }
 
-        $this->logs = array();
+        $this->logs = [];
     }
 
     /**

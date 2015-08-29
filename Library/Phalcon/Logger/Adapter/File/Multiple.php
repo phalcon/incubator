@@ -1,8 +1,11 @@
 <?php
+
 namespace Phalcon\Logger\Adapter\File;
 
 use Phalcon\Logger\Exception as LoggerException;
 use Phalcon\Logger as Logger;
+use Phalcon\Logger\Adapter\File as FileLogger;
+use Phalcon\Logger\AdapterInterface;
 
 /**
  * Phalcon\Logger\Adapter\File\Multiple
@@ -15,7 +18,7 @@ use Phalcon\Logger as Logger;
  * @author Richard Laffers <richard.laffers@movys.sk>
  * @license The BSD 3-Clause License {@link http://opensource.org/licenses/BSD-3-Clause}
  */
-class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\AdapterInterface
+class Multiple extends FileLogger implements AdapterInterface
 {
     /**
      * Path to the directory where log files will be saved. No trailing slash.
@@ -29,18 +32,18 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
      *
      * @var array
      */
-    protected $options;
+    protected $options = [];
 
     /**
      * Class constructor.
      *
-     * @param  string                    $path    Directory path for saving the log files.
-     * @param  array                     $options The following options are available:
-     *                                            - extension   (string) Extension for all log files.
-     *                                            - prefix      (string) Name prefix for all log files
+     * @param  string $path    Directory path for saving the log files.
+     * @param  array  $options The following options are available:
+     *                         - extension (string) Extension for all log files.
+     *                         - prefix    (string) Name prefix for all log files
      * @throws \Phalcon\Logger\Exception
      */
-    public function __construct($path, $options = array())
+    public function __construct($path, array $options = [])
     {
         $path = rtrim($path, ' ' . \DIRECTORY_SEPARATOR);
         if (!file_exists($path) || !is_dir($path)) {
@@ -53,10 +56,10 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
 
         $this->path = $path;
 
-        $defaults = array(
+        $defaults = [
             'extension' => 'log',
-            'prefix' => '',
-        );
+            'prefix' => ''
+        ];
 
         $this->options = array_merge($defaults, $options);
     }
@@ -64,13 +67,13 @@ class Multiple extends \Phalcon\Logger\Adapter\File implements \Phalcon\Logger\A
     /**
      * Writes the log to the file itself
      *
-     * @param  string                    $message
-     * @param  integer                   $type
-     * @param  integer                   $time
-     * @param  array                     $context
+     * @param  string  $message
+     * @param  integer $type
+     * @param  integer $time
+     * @param  array   $context
      * @throws \Phalcon\Logger\Exception
      */
-    public function logInternal($message, $type, $time, $context = array())
+    public function logInternal($message, $type, $time, array $context = [])
     {
         $filename = $this->path .
             \DIRECTORY_SEPARATOR .
