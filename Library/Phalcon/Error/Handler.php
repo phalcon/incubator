@@ -15,7 +15,7 @@
   | Authors: Andres Gutierrez <andres@phalconphp.com>                      |
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
   |          Nikita Vershinin <endeveit@gmail.com>                         |
-  |          Serghei Iakovlev <sadhooklay@gmail.com>                       |
+  |          Serghei Iakovlev <serghei@phalconphp.com>                     |
   +------------------------------------------------------------------------+
 */
 namespace Phalcon\Error;
