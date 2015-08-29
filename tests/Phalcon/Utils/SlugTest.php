@@ -3,98 +3,90 @@
 namespace Phalcon\Test\Utils;
 
 use Phalcon\Utils\Slug;
-use malkusch\phpmock\MockBuilder;
-use malkusch\phpmock\phpunit\MockDelegateFunction;
-use malkusch\phpmock\phpunit\MockDisabler;
-use malkusch\phpmock\phpunit\MockObjectProxy;
+use PHPUnit_Framework_TestCase as TestCase;
 
-class SlugTest extends \PHPUnit_Framework_TestCase
+/**
+ * \Phalcon\Test\Utils\SlugTest
+ * Tests for Phalcon\Utils\Slug component
+ *
+ * @copyright (c) 2011-2015 Phalcon Team
+ * @link      http://www.phalconphp.com
+ * @author    Ilya Gusev <mail@igusev.ru>
+ * @package   Phalcon\Test\Utils
+ *
+ * The contents of this file are subject to the New BSD License that is
+ * bundled with this package in the file docs/LICENSE.txt
+ *
+ * If you did not receive a copy of the license and are unable to obtain it
+ * through the world-wide-web, please send an email to license@phalconphp.com
+ * so that we can send you a copy immediately.
+ */
+class SlugTest extends TestCase
 {
+    protected function setUp()
+    {
+        if (!extension_loaded('iconv')) {
+            $this->markTestSkipped(
+                'The iconv module is not available.'
+            );
+        }
+    }
+
     /**
      * @return array
      */
     public function dataStrings()
     {
-        return array(
-            array(
+        return [
+            [
                 "Mess'd up --text-- just (to) stress/test/ ?our! " . "`little` \\clean\\ url fun.ction!?-->",
-                array(),
+                [],
                 "-",
                 'mess-d-up-text-just-to-stress-test-our-little-clean-url-fun-ction'
-            ),
-            array(
+            ],
+            [
                 "Perchè l'erba è verde?",
                 "'",
                 "-",
                 'perche-l-erba-e-verde'
-            ), // Italian
-
-            array(
+            ], // Italian
+            [
                 "Peux-tu m'aider s'il te plaît?",
                 "'",
                 "-",
                 'peux-tu-m-aider-s-il-te-plait'
-            ), // French
-
-            array(
+            ], // French
+            [
                 "Tänk efter nu – förr'n vi föser dig bort",
                 "-",
                 "-",
                 'tank-efter-nu-forr-n-vi-foser-dig-bort'
-            ), // Swedish
-            array(
+            ], // Swedish
+            [
                 "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝßàáâãäåæçèéêëìíîïñòóôõöùúûüýÿ",
-                array(),
+                [],
                 '-',
                 'aaaaaaaeceeeeiiiinooooouuuuyssaaaaaaaeceeeeiiiinooooouuuuyy'
-            ),
-            array(
+            ],
+            [
                 "Custom`delimiter*example",
-                array('*' => " replace "),
+                ['*' => " replace "],
                 "-",
                 'custom-delimiter-replace-example'
-            ),
-            array(
+            ],
+            [
                 "My+Last_Crazy|delimiter/example",
                 '',
                 ' ',
                 'my last crazy delimiter example'
-            ),
-            array(
+            ],
+            [
                 "What does it mean yapılır in Turkish",
-                array('ı' => 'i'),
+                ['ı' => 'i'],
                 "-",
                 "what-does-it-mean-yapilir-in-turkish"
-            ) // Turkish
-        );
-    }
-
-    /**
-     * @requires PHP 5.4
-     *
-     * @expectedException           \Phalcon\Exception
-     * @expectedExceptionMessage    iconv module not loaded
-     */
-    public function testExtensionNotLoaded()
-    {
-        $mock = $this->getMockBuilder('\malkusch\phpmock\phpunit\MockDelegate')
-            ->getMock();
-
-        $functionMockBuilder = new MockBuilder();
-        $functionMockBuilder->setNamespace('Phalcon\\Utils')
-            ->setName("extension_loaded")
-            ->setFunctionProvider(new MockDelegateFunction($mock));
-
-        $functionMock = $functionMockBuilder->build();
-        $functionMock->enable();
-
-        $result = $this->getTestResultObject();
-        $result->addListener(new MockDisabler($functionMock));
-
-        $iconv = new MockObjectProxy($mock);
-        $iconv->expects($this->once())->willReturn(false);
-        Slug::generate('test 233');
-        $functionMock->disable();
+            ] // Turkish
+        ];
     }
 
     /**
