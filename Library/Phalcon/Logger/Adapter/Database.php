@@ -51,12 +51,12 @@ class Database extends LoggerAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Logger\Formatter\Line
+     * @return \Phalcon\Logger\FormatterInterface
      */
     public function getFormatter()
     {
         if (!is_object($this->_formatter)) {
-            $this->_formatter = new LineFormatter($this->name);
+            $this->_formatter = new LineFormatter();
         }
 
         return $this->_formatter;
