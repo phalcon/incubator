@@ -116,7 +116,7 @@ class Firelogger extends LoggerAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Logger\Formatter\Line
+     * @return \Phalcon\Logger\FormatterInterface
      */
     public function getFormatter()
     {
