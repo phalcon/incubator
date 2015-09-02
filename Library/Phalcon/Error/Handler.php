@@ -120,20 +120,24 @@ class Handler
             case E_COMPILE_ERROR:
             case E_USER_ERROR:
             case E_RECOVERABLE_ERROR:
-                $dispatcher = $di->getShared('dispatcher');
-                $view = $di->getShared('view');
-                $response = $di->getShared('response');
+                if ($di->has('view')) {
+                    $dispatcher = $di->getShared('dispatcher');
+                    $view = $di->getShared('view');
+                    $response = $di->getShared('response');
 
-                $dispatcher->setControllerName($config->controller);
-                $dispatcher->setActionName($config->action);
-                $dispatcher->setParams(['error' => $error]);
+                    $dispatcher->setControllerName($config->controller);
+                    $dispatcher->setActionName($config->action);
+                    $dispatcher->setParams(['error' => $error]);
 
-                $view->start();
-                $dispatcher->dispatch();
-                $view->render($config->controller, $config->action, $dispatcher->getParams());
-                $view->finish();
+                    $view->start();
+                    $dispatcher->dispatch();
+                    $view->render($config->controller, $config->action, $dispatcher->getParams());
+                    $view->finish();
 
-                return $response->setContent($view->getContent())->send();
+                    return $response->setContent($view->getContent())->send();
+                } else {
+                    echo sprintf('%s in %s:%s', $error->message(), $error->file(), $error->line());
+                }
         }
     }
 
