@@ -22,6 +22,7 @@ namespace Phalcon\Error;
 
 use Phalcon\Di;
 use Phalcon\Logger\Formatter;
+use Phalcon\Logger;
 
 class Handler
 {
@@ -99,7 +100,7 @@ class Handler
             $config->logger->setFormatter($config->formatter);
         }
 
-        $config->logger->log($message);
+        $config->logger->log(static::getLogType($error->type()), $message);
 
         switch ($error->type()) {
             case E_WARNING:
@@ -136,7 +137,7 @@ class Handler
 
                     return $response->setContent($view->getContent())->send();
                 } else {
-                    echo sprintf('%s in %s:%s', $error->message(), $error->file(), $error->line());
+                    echo $message;
                 }
         }
     }
@@ -185,5 +186,38 @@ class Handler
         }
 
         return $code;
+    }
+
+    /**
+     * Maps error code to a log type.
+     *
+     * @param  integer $code
+     * @return integer
+     */
+    public static function getLogType($code)
+    {
+        switch ($code) {
+            case E_ERROR:
+            case E_RECOVERABLE_ERROR:
+            case E_CORE_ERROR:
+            case E_COMPILE_ERROR:
+            case E_USER_ERROR:
+            case E_PARSE:
+                return Logger::ERROR;
+            case E_WARNING:
+            case E_USER_WARNING:
+            case E_CORE_WARNING:
+            case E_COMPILE_WARNING:
+                return Logger::WARNING;
+            case E_NOTICE:
+            case E_USER_NOTICE:
+                return Logger::NOTICE;
+            case E_STRICT:
+            case E_DEPRECATED:
+            case E_USER_DEPRECATED:
+                return Logger::INFO;
+        }
+
+        return Logger::ERROR;
     }
 }
