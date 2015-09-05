@@ -71,7 +71,7 @@ public function indexAction()
 			$code = 500;
 	}
 
-	$this->getDi()->getShared('response')->resetHeaders()->setStatusCode($code, null);
+	$this->response->resetHeaders()->setStatusCode($code, null);
 
 	$this->view->setVars([
 		'error' => $error,
