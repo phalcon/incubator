@@ -1,13 +1,12 @@
-Phalcon\Config\Adapter
-======================
+# Phalcon\Config\Adapter
 
 Usage examples of the adapters available here:
 
-Yaml
-----
-Reads yaml markup files and convert it to Phalcon\Config objects. Given the next configuration file:
+## Yaml
 
-```
+Reads yaml markup files and convert it to `Phalcon\Config` objects. Given the next configuration file:
+
+```yaml
 
 database:
   adapter:  Mysql
@@ -28,16 +27,15 @@ You can read it as follows:
 ```php
 
 define('APPROOT', dirname(__DIR__));
-define('CONFKEY', 'secret');
 
-$config = new Phalcon\Config\Adapter\Yaml('path/config.yml', array(
+$config = new Phalcon\Config\Adapter\ExtendedYaml('path/config.yml', [
 	'!decrypt' => function($value) {
-		return (new Phalcon\Crypt)->setCipher('blowfish')->decryptBase64($value, CONFKEY);
+		return (new Phalcon\Crypt)->setCipher('blowfish')->decryptBase64($value, getenv('CONFKEY'));
 	},
 	'!approot' => function($value) {
 		return APPROOT . $value;
 	}
-));
+]);
 
 echo $config->phalcon->controllersDir;
 echo $config->database->username;
