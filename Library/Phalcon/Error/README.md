@@ -47,7 +47,6 @@ class Application extends \Phalcon\Mvc\Application
 		parent::__construct($dependencyInjector);
 	}
 }
-
 ```
 
 In the error controller `\Phalcon\Error\Error` can be retrieved through the dispatcher:
@@ -55,27 +54,41 @@ In the error controller `\Phalcon\Error\Error` can be retrieved through the disp
 ```php
 public function indexAction()
 {
+	/** @var \Phalcon\Error\Error $error */
 	$error = $this->dispatcher->getParam('error');
 
-	switch ($error->code()) {
+	switch ($error->type()) {
 		case 404:
 			$code = 404;
+			break;
+		case 403:
+			$code = 403;
+			break;
+		case 401:
+			$code = 401;
 			break;
 		default:
 			$code = 500;
 	}
 
 	$this->getDi()->getShared('response')->resetHeaders()->setStatusCode($code, null);
-	$this->view->setVar('error', $error);
-}
 
+	$this->view->setVars([
+		'error' => $error,
+		'code'  => $code,
+		'dev'   => APPLICATION_ENV != \Phalcon\Error\Application::ENV_PRODUCTION
+	]);
+}
 ```
 
 Error message could be displayed to the user this way:
 
 ```php
+
+<h1>Error <?php echo $code ?></h1>
+
 <?php echo $error->message(); ?>
-<?php if (APPLICATION_ENV != \Phalcon\Error\Application::ENV_PRODUCTION): ?>
+<?php if ($dev): ?>
 	<br>in <?php echo $error->file(); ?> on line <?php echo $error->line(); ?><br>
 	<?php if ($error->isException()) { ?>
 		<pre><?php echo $error->exception()->getTraceAsString(); ?></pre>
