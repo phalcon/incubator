@@ -95,7 +95,7 @@ class Handler
     public static function handle(Error $error)
     {
         $di = Di::getDefault();
-        $config = $di->getShared('config')->error->toArray();;
+        $config = $di->getShared('config')->error->toArray();
 
         $logger = $config['logger'];
         if (!$logger instanceof AdapterInterface) {
