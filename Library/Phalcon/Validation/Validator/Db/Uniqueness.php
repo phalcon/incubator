@@ -1,8 +1,24 @@
 <?php
+/*
+  +------------------------------------------------------------------------+
+  | Phalcon Framework                                                      |
+  +------------------------------------------------------------------------+
+  | Copyright (c) 2011-2015 Phalcon Team (http://www.phalconphp.com)       |
+  +------------------------------------------------------------------------+
+  | This source file is subject to the New BSD License that is bundled     |
+  | with this package in the file docs/LICENSE.txt.                        |
+  |                                                                        |
+  | If you did not receive a copy of the license and are unable to         |
+  | obtain it through the world-wide-web, please send an email             |
+  | to license@phalconphp.com so we can send you a copy immediately.       |
+  +------------------------------------------------------------------------+
+  | Authors: Tomasz Ślązok <tomek@sabaki.pl>                               |
+  +------------------------------------------------------------------------+
+*/
+
 namespace Phalcon\Validation\Validator\Db;
 
 use Phalcon\Validation\Validator;
-use Phalcon\Validation\ValidatorInterface;
 use Phalcon\Validation\Message;
 use Phalcon\Db\Adapter\Pdo as DbConnection;
 use Phalcon\Validation\Exception as ValidationException;
@@ -18,11 +34,11 @@ use Phalcon\Validation;
  *
  * <code>
  * $uniqueness = new Uniqueness(
- *     array(
- *         'table' => 'users',
- *         'column' => 'login',
+ *     [
+ *         'table'   => 'users',
+ *         'column'  => 'login',
  *         'message' => 'already taken',
- *     ),
+ *     ],
  *     $di->get('db');
  * );
  * </code>
@@ -31,7 +47,7 @@ use Phalcon\Validation;
  * connection from default DI instance with \Phalcon\Di::getDefault()->get('db');
  */
 
-class Uniqueness extends Validator implements ValidatorInterface
+class Uniqueness extends Validator
 {
     /**
      * Database connection
@@ -42,11 +58,11 @@ class Uniqueness extends Validator implements ValidatorInterface
     /**
      * Class constructor.
      *
-     * @param  array               $options
-     * @param  DbConnection        $db
+     * @param  array $options
+     * @param  DbConnection  $db
      * @throws ValidationException
      */
-    public function __construct(array $options = array(), $db = null)
+    public function __construct(array $options = [], $db = null)
     {
         parent::__construct($options);
 
@@ -63,11 +79,11 @@ class Uniqueness extends Validator implements ValidatorInterface
             throw new ValidationException('Validator Uniquness require connection to database');
         }
 
-        if (false === $this->isSetOption('table')) {
+        if (false === $this->hasOption('table')) {
             throw new ValidationException('Validator require table option to be set');
         }
 
-        if (false === $this->isSetOption('column')) {
+        if (false === $this->hasOption('column')) {
             throw new ValidationException('Validator require column option to be set');
         }
 
@@ -78,7 +94,7 @@ class Uniqueness extends Validator implements ValidatorInterface
      * Executes the uniqueness validation
      *
      * @param  \Phalcon\Validation $validator
-     * @param  string              $attribute
+     * @param  string $attribute
      * @return boolean
      */
     public function validate(Validation $validator, $attribute)
@@ -89,7 +105,7 @@ class Uniqueness extends Validator implements ValidatorInterface
         $result = $this->db->fetchOne(
             sprintf('SELECT COUNT(*) as count FROM %s WHERE %s = ?', $table, $column),
             Db::FETCH_ASSOC,
-            array($validator->getValue($attribute))
+            [$validator->getValue($attribute)]
         );
 
         if ($result['count']) {
