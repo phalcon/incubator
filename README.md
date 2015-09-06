@@ -108,14 +108,8 @@ See CONTRIBUTING.md
 * [Phalcon\Cache\Backend\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Database backend for caching data (phalcon)
 * [Phalcon\Cache\Backend\Wincache](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Wincache backend for caching data (nazwa)
 
-### Config
-* [Phalcon\Config\Adapter\ExtendedYaml](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Config/Adapter) - Extended YAML adapter (freekzy)
-
 ### Database
 * [Phalcon\Db\Adapter\Cacheable\Mysql](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Db) - MySQL adapter that agressively caches all the queries executed (phalcon)
-
-### Debug
-* [Phalcon\Debug\Dump](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Debug) - Variable dumper (digitronac)
 
 ### Logger
 * [Phalcon\Logger\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to store logs in a database table (phalcon)
