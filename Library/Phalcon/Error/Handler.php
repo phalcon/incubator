@@ -23,6 +23,9 @@ namespace Phalcon\Error;
 use Phalcon\Di;
 use Phalcon\Logger\Formatter;
 use Phalcon\Logger;
+use Phalcon\Logger\AdapterInterface;
+use Phalcon\Logger\Adapter\File as FileLogger;
+use Phalcon\Logger\Formatter\Line as FormatterLine;
 
 class Handler
 {
@@ -92,15 +95,46 @@ class Handler
     public static function handle(Error $error)
     {
         $di = Di::getDefault();
-        $config = $di->getShared('config')->error;
+        $config = $di->getShared('config')->error->toArray();;
+
+        $logger = $config['logger'];
+        if (!$logger instanceof AdapterInterface) {
+            $logger = new FileLogger($logger);
+        }
+
         $type = static::getErrorType($error->type());
         $message = "$type: {$error->message()} in {$error->file()} on line {$error->line()}";
 
-        if (isset($config->formatter) && $config->formatter instanceof Formatter) {
-            $config->logger->setFormatter($config->formatter);
+        if (isset($config['formatter'])) {
+            $formatter = null;
+
+            if ($config['formatter'] instanceof Formatter) {
+                $formatter = $config['formatter'];
+            } elseif (is_array($config['formatter'])) {
+                $format = null;
+                $dateFormat = null;
+
+                if (isset($config['formatter']['format'])) {
+                    $format = $config['formatter']['format'];
+                }
+
+                if (isset($config['formatter']['dateFormat'])) {
+                    $dateFormat = $config['formatter']['dateFormat'];
+                } elseif (isset($config['formatter']['date_format'])) {
+                    $dateFormat = $config['formatter']['date_format'];
+                } elseif (isset($config['formatter']['date'])) {
+                    $dateFormat = $config['formatter']['date'];
+                }
+
+                $formatter = new FormatterLine($format, $dateFormat);
+            }
+
+            if ($formatter) {
+                $logger->setFormatter($formatter);
+            }
         }
 
-        $config->logger->log(static::getLogType($error->type()), $message);
+        $logger->log(static::getLogType($error->type()), $message);
 
         switch ($error->type()) {
             case E_WARNING:
@@ -126,13 +160,13 @@ class Handler
                     $view = $di->getShared('view');
                     $response = $di->getShared('response');
 
-                    $dispatcher->setControllerName($config->controller);
-                    $dispatcher->setActionName($config->action);
+                    $dispatcher->setControllerName($config['controller']);
+                    $dispatcher->setActionName($config['action']);
                     $dispatcher->setParams(['error' => $error]);
 
                     $view->start();
                     $dispatcher->dispatch();
-                    $view->render($config->controller, $config->action, $dispatcher->getParams());
+                    $view->render($config['controller'], $config['action'], $dispatcher->getParams());
                     $view->finish();
 
                     return $response->setContent($view->getContent())->send();
