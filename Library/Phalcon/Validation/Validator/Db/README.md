@@ -1,20 +1,18 @@
-Phalcon\Validation\Validator\Db
-===============================
+# Phalcon\Validation\Validator\Db
 
 Usage examples of db validators available here:
 
-Uniqueness
-----------
+## Uniqueness
 
 ```php
-$connection = new \Phalcon\Db\Adapter\Pdo\Sqlite(array("dbname" => "sample.db"));
+$connection = new \Phalcon\Db\Adapter\Pdo\Sqlite(['dbname' => 'sample.db']);
 
 $uniqueness = new \Phalcon\Validation\Validator\Db\Uniqueness(
-    array(
-        'table' => 'users',
-        'column' => 'login',
+    [
+        'table'   => 'users',
+        'column'  => 'login',
         'message' => 'already taken',
-    ),
+    ],
     $connection;
 );
 ```

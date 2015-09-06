@@ -29,7 +29,7 @@ use Phalcon\Config\Exception;
  *
  * @package Phalcon\Config\Adapter
  */
-class ExtendedYaml extends Config implements \ArrayAccess
+class ExtendedYaml extends Config
 {
     /**
      * Class constructor.
