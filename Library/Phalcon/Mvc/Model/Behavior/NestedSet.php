@@ -6,9 +6,14 @@ use Phalcon\Mvc\Model\Behavior;
 use Phalcon\Mvc\Model\BehaviorInterface;
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\ModelInterface;
+use Phalcon\Db\Adapter as DBAdapter;
 
 class NestedSet extends Behavior implements BehaviorInterface
 {
+    /**
+     * @var DbAdapter|null
+     */
+    private $db;
     private $owner;
     private $hasManyRoots = false;
     private $rootAttribute = 'root';
@@ -22,6 +27,10 @@ class NestedSet extends Behavior implements BehaviorInterface
 
     public function __construct($options = null)
     {
+        if (isset($options['db']) && $options['db'] instanceof dbAdapter) {
+            $this->db = $options['db'];
+        }
+
         if (isset($options['hasManyRoots'])) {
             $this->hasManyRoots = (bool) $options['hasManyRoots'];
         }
@@ -61,10 +70,21 @@ class NestedSet extends Behavior implements BehaviorInterface
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function missingMethod(ModelInterface $model, $method, $arguments = null)
     {
         if (!method_exists($this, $method)) {
             return null;
+        }
+
+        if (!$this->db) {
+            if ($model->getDi()->has('db')) {
+                $this->db = $model->getDi()->get('db');
+            } else {
+                throw new \Exception('Undefined database handler.');
+            }
         }
 
         $this->setOwner($model);
@@ -441,7 +461,7 @@ class NestedSet extends Behavior implements BehaviorInterface
             throw new \Phalcon\Mvc\Model\Exception('The node already is root node.');
         }
 
-        $owner->getDI()->getDb()->begin();
+        $this->db->begin();
 
         $left = $owner->{$this->leftAttribute};
         $right = $owner->{$this->rightAttribute};
@@ -461,7 +481,7 @@ class NestedSet extends Behavior implements BehaviorInterface
                 $this->rootAttribute => $owner->{$this->primaryKey}
             );
             if ($i->update($arr) == false) {
-                $owner->getDI()->getDb()->rollback();
+                $this->db->rollback();
                 $this->ignoreEvent = false;
 
                 return false;
@@ -471,7 +491,7 @@ class NestedSet extends Behavior implements BehaviorInterface
 
         $this->shiftLeftRight($right + 1, $left - $right - 1);
 
-        $owner->getDI()->getDb()->commit();
+        $this->db->commit();
 
         return true;
     }
@@ -516,12 +536,12 @@ class NestedSet extends Behavior implements BehaviorInterface
             throw new \Phalcon\Mvc\Model\Exception('The node cannot be deleted because it is already deleted.');
         }
 
-        $owner->getDI()->getDb()->begin();
+        $this->db->begin();
 
         if ($owner->isLeaf()) {
             $this->ignoreEvent = true;
             if ($owner->delete() == false) {
-                $owner->getDI()->getDb()->rollback();
+                $this->db->rollback();
                 $this->ignoreEvent = false;
 
                 return false;
@@ -538,7 +558,7 @@ class NestedSet extends Behavior implements BehaviorInterface
             $this->ignoreEvent = true;
             foreach ($owner::find($condition) as $i) {
                 if ($i->delete() == false) {
-                    $owner->getDI()->getDb()->rollback();
+                    $this->db->rollback();
                     $this->ignoreEvent = false;
 
                     return false;
@@ -551,7 +571,7 @@ class NestedSet extends Behavior implements BehaviorInterface
         $delta = $owner->{$this->leftAttribute} - $owner->{$this->rightAttribute} - 1;
         $this->shiftLeftRight($key, $delta);
 
-        $owner->getDI()->getDb()->commit();
+        $this->db->commit();
 
         return true;
     }
@@ -596,7 +616,7 @@ class NestedSet extends Behavior implements BehaviorInterface
             throw new \Phalcon\Mvc\Model\Exception('The target node should not be root.');
         }
 
-        $owner->getDI()->getDb()->begin();
+        $this->db->begin();
 
         $left = $owner->{$this->leftAttribute};
         $right = $owner->{$this->rightAttribute};
@@ -609,7 +629,7 @@ class NestedSet extends Behavior implements BehaviorInterface
                     . ' AND ' . $this->rootAttribute . '=' . $target->{$this->rootAttribute};
                 foreach ($owner::find($condition) as $i) {
                     if ($i->update(array($attribute => $i->{$attribute} + $right - $left + 1)) == false) {
-                        $owner->getDI()->getDb()->rollback();
+                        $this->db->rollback();
                         $this->ignoreEvent = false;
 
                         return false;
@@ -630,7 +650,7 @@ class NestedSet extends Behavior implements BehaviorInterface
                     $this->rootAttribute => $target->{$this->rootAttribute}
                 );
                 if ($i->update($arr) == false) {
-                    $owner->getDI()->getDb()->rollback();
+                    $this->db->rollback();
                     $this->ignoreEvent = false;
 
                     return false;
@@ -640,7 +660,7 @@ class NestedSet extends Behavior implements BehaviorInterface
 
             $this->shiftLeftRight($right + 1, $left - $right - 1);
 
-            $owner->getDI()->getDb()->commit();
+            $this->db->commit();
         } else {
             $delta = $right - $left + 1;
             $this->shiftLeftRight($key, $delta);
@@ -659,7 +679,7 @@ class NestedSet extends Behavior implements BehaviorInterface
             $this->ignoreEvent = true;
             foreach ($owner::find($condition) as $i) {
                 if ($i->update(array($this->levelAttribute => $i->{$this->levelAttribute} + $levelDelta)) == false) {
-                    $owner->getDI()->getDb()->rollback();
+                    $this->db->rollback();
                     $this->ignoreEvent = false;
 
                     return false;
@@ -675,7 +695,7 @@ class NestedSet extends Behavior implements BehaviorInterface
 
                 foreach ($owner::find($condition) as $i) {
                     if ($i->update(array($attribute => $i->{$attribute} + $key - $left)) == false) {
-                        $owner->getDI()->getDb()->rollback();
+                        $this->db->rollback();
                         $this->ignoreEvent = false;
 
                         return false;
@@ -686,7 +706,7 @@ class NestedSet extends Behavior implements BehaviorInterface
 
             $this->shiftLeftRight($right + 1, -$delta);
 
-            $owner->getDI()->getDb()->commit();
+            $this->db->commit();
         }
 
         return true;
@@ -787,10 +807,10 @@ class NestedSet extends Behavior implements BehaviorInterface
         $owner->{$this->levelAttribute} = 1;
 
         if ($this->hasManyRoots) {
-            $owner->getDI()->getDb()->begin();
+            $this->db->begin();
             $this->ignoreEvent = true;
             if ($owner->create($attributes, $whiteList) == false) {
-                $owner->getDI()->getDb()->rollback();
+                $this->db->rollback();
                 $this->ignoreEvent = false;
 
                 return false;
@@ -800,7 +820,7 @@ class NestedSet extends Behavior implements BehaviorInterface
             $owner::findFirst($pk)->update(array($this->rootAttribute => $pk));
             $this->ignoreEvent = false;
 
-            $owner->getDI()->getDb()->commit();
+            $this->db->commit();
         } else {
             if (count($owner->roots())) {
                 throw new \Phalcon\Mvc\Model\Exception('Cannot create more than one root in single root mode.');
