@@ -176,17 +176,18 @@ class NestedSet extends Behavior implements BehaviorInterface
     /**
      * Named scope. Gets descendants for node.
      *
-     * @param  int $depth the depth.
+     * @param int $depth the depth.
+     * @param boolean $addSelf If TRUE - parent node will be added to result set.
      *
      * @return \Phalcon\Mvc\Model\ResultsetInterface
      */
-    public function descendants($depth = null)
+    public function descendants($depth = null, $addSelf = false)
     {
         $owner = $this->getOwner();
 
         $query = $owner::query()
-            ->where($this->leftAttribute . '>' . $owner->{$this->leftAttribute})
-            ->andWhere($this->rightAttribute . '<' . $owner->{$this->rightAttribute})
+            ->where($this->leftAttribute . '>' . ($addSelf ? '=' : null) . $owner->{$this->leftAttribute})
+            ->andWhere($this->rightAttribute . '<' . ($addSelf ? '=' : null) . $owner->{$this->rightAttribute})
             ->orderBy($this->leftAttribute);
 
         if ($depth !== null) {
