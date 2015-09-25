@@ -3,7 +3,7 @@
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2014 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2015 Phalcon Team (http://www.phalconphp.com)       |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
   | with this package in the file docs/LICENSE.txt.                        |
@@ -16,6 +16,7 @@
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
   +------------------------------------------------------------------------+
 */
+
 namespace Phalcon\Acl\Adapter;
 
 use Phalcon\Db;
@@ -32,7 +33,6 @@ use Phalcon\Acl\Role;
  */
 class Database extends Adapter implements AdapterInterface
 {
-
     /**
      * @var array
      */
@@ -381,7 +381,7 @@ class Database extends Adapter implements AdapterInterface
             // get only one...
             'LIMIT 1'
         ));
-        
+
         // fetch one entry...
         $allowed = $this->options['db']->fetchOne($sql, Db::FETCH_NUM, array($role, $role, $resource, $access));
         if (is_array($allowed)) {

@@ -12,8 +12,9 @@
         }
     ],
     "require": {
-        "php": ">=5.3.21",
+        "php": ">=5.4",
         "ext-phalcon": ">=2.0.4",
+        "duncan3dc/fork-helper": "@stable",
         "swiftmailer/swiftmailer": "~5.2"
     },
     "require-dev": {
@@ -21,11 +22,12 @@
         "squizlabs/php_codesniffer": "2.*",
         "codeception/codeception": "2.0.14",
         "mockery/mockery": "*",
-        "php-mock/php-mock": "<0.6"
+        "php-mock/php-mock": "*"
     },
     "autoload": {
-        "psr-0": {
-            "Phalcon": "Library/"
-        }
+        "psr-4": { "Phalcon\\": "Library/Phalcon/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Phalcon\\Test\\": "tests/Phalcon/" }
     }
 }

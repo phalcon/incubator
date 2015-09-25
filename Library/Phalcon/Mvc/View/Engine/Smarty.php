@@ -12,7 +12,6 @@ use Phalcon\Mvc\ViewBaseInterface;
  */
 class Smarty extends Engine implements EngineInterface
 {
-
     /**
      * @var \Smarty
      */
@@ -50,7 +49,7 @@ class Smarty extends Engine implements EngineInterface
             $params['content'] = $this->_view->getContent();
         }
         foreach ($params as $key => $value) {
-            if ($params['_' . $key] === true) {
+            if (isset($params['_' . $key]) && $params['_' . $key] === true) {
                 $this->smarty->assign($key, $value, true);
             } else {
                 $this->smarty->assign($key, $value);

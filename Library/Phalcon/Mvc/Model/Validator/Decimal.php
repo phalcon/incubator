@@ -70,7 +70,7 @@ class Decimal extends Validator implements ValidatorInterface
 
         if ($this->isSetOption('digits')) {
             // Specific number of digits
-            $digits = '{'.( (int) $this->getOption('digits')).'}';
+            $digits = '{'.((int) $this->getOption('digits')).'}';
         } else {
             // Any number of digits
             $digits = '+';

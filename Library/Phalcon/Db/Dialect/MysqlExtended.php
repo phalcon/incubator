@@ -4,7 +4,7 @@
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2014 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2015 Phalcon Team (http://www.phalconphp.com)       |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
   | with this package in the file docs/LICENSE.txt.                        |
@@ -20,8 +20,6 @@
 
 namespace Phalcon\Db\Dialect;
 
-use Phalcon\Db\Dialect\Mysql;
-
 /**
  * Phalcon\Db\Adapter\Dialect\MysqlExtended
  *
@@ -29,7 +27,6 @@ use Phalcon\Db\Dialect\Mysql;
  */
 class MysqlExtended extends Mysql
 {
-
     /**
      * Transforms an intermediate representation for a expression into a database system valid expression
      *

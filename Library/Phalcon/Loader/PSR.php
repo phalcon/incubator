@@ -13,7 +13,7 @@
   | to license@phalconphp.com so we can send you a copy immediately.       |
   +------------------------------------------------------------------------+
   | Authors: Piyush Rajesh <mba.piyushgupta@gmail.com>                     |
-  |          Serghei Iakovlev <sadhooklay@gmail.com>                       |
+  |          Serghei Iakovlev <serghei@phalconphp.com>                     |
   +------------------------------------------------------------------------+
 */
 

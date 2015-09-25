@@ -18,7 +18,6 @@ namespace Phalcon\Mvc\View\Engine\Twig;
  */
 class CoreExtension extends \Twig_Extension
 {
-
     /**
      * {@inheritdoc}
      *

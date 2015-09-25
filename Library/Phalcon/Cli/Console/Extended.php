@@ -44,12 +44,12 @@ class Extended extends ConsoleApp
      */
     public function handle(array $arguments = null)
     {
-        if (isset($arguments['task']) && in_array($arguments['task'], array('-h','--help','help'))) {
+        if (isset($arguments['task']) && in_array($arguments['task'], array('-h', '--help', 'help'))) {
             $this->setTasksDir();
             $this->createHelp();
             $this->showHelp();
             return;
-        } elseif (isset($arguments['action']) && in_array($arguments['action'], array('-h','--help','help'))) {
+        } elseif (isset($arguments['action']) && in_array($arguments['action'], array('-h', '--help', 'help'))) {
             $this->setTasksDir();
             $this->createHelp();
             $this->showTaskHelp($arguments['task']);
