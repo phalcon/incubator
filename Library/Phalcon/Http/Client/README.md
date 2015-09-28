@@ -13,7 +13,7 @@ use Phalcon\Http\Client\Request;
 
 $provider  = Request::getProvider(); // get available provider Curl or Stream
 
-$provider->setBaseUri('http://example.com/api');
+$provider->setBaseUri('http://example.com/api/');
 
 $provider->header->set('Accept', 'application/json');
 
