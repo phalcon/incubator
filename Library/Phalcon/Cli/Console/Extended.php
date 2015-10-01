@@ -93,9 +93,9 @@ class Extended extends ConsoleApp
         }
 
         foreach ($scannedTasksDir as $taskFile) {
-            $taskClass = ($namespace ? $namespace . '\\' : '') . str_replace('.php', '', $taskFile);
-            $taskName  = strtolower(str_replace('Task', '', $taskClass));
-            $taskName  = trim($taskName, '\\');
+            $taskFileInfo = pathinfo($taskFile);
+            $taskClass = ($namespace ? $namespace . '\\' : '') . $taskFileInfo["filename"];
+            $taskName  = strtolower(str_replace('Task', '', $taskFileInfo["filename"]));
 
             $this->documentation[$taskName] = array('description'=>array(''), 'actions'=>array());
 
