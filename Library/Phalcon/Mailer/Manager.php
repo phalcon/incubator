@@ -80,7 +80,7 @@ class Manager extends Component
         }
 
         if ($eventsManager) {
-            $eventsManager->fire('mailer:afterCreateMessage', $this, [$message]);
+            $eventsManager->fire('mailer:afterCreateMessage', $this, $message);
         }
 
         return $message;
