@@ -94,8 +94,7 @@ class Firelogger extends LoggerAdapter implements AdapterInterface
         }
 
         $this->options = array_merge($defaults, $options);
-        $this->enabled = $this->checkPassword();
-        $this->checkVersion();
+        $this->enabled = $this->checkPassword() && $this->checkVersion();
 
         register_shutdown_function([$this, 'commit']);
     }
@@ -263,10 +262,12 @@ class Firelogger extends LoggerAdapter implements AdapterInterface
     private function checkVersion()
     {
         if (!$this->options['checkVersion']) {
+            $this->enabled = true;
             return true;
         }
 
         if (!isset($_SERVER['HTTP_X_FIRELOGGER'])) {
+            $this->enabled = false;
             return false;
         }
 
@@ -280,9 +281,11 @@ class Firelogger extends LoggerAdapter implements AdapterInterface
                 'https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger'
             );
 
+            $this->enabled = false;
             return false;
         }
 
+        $this->enabled = true;
         return true;
     }
 }
