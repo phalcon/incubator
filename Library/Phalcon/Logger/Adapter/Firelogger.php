@@ -241,7 +241,7 @@ class Firelogger extends LoggerAdapter implements AdapterInterface
             if ($clientHash !== $serverHash) { // passwords do not match
                 $this->enabled = false;
                 
-                if($this->options['triggerError']) {
+                if ($this->options['triggerError']) {
                     trigger_error(
                         "FireLogger passwords do not match. Have you specified correct password FireLogger extension?"
                     );
