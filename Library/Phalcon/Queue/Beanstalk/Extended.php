@@ -188,7 +188,6 @@ class Extended extends Base
      * @param string $tube
      * @param string $data
      * @param array  $options
-     * @return boolean|string job id or false
      */
     public function putInTube($tube, $data, $options = null)
     {
@@ -210,7 +209,7 @@ class Extended extends Base
 
         $this->choose($this->getTubeName($tube));
 
-        return parent::put($data, $options);
+        parent::put($data, $options);
     }
 
     /**
