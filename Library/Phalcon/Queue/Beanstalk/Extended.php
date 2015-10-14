@@ -209,7 +209,7 @@ class Extended extends Base
 
         $this->choose($this->getTubeName($tube));
 
-        parent::put($data, $options);
+        return parent::put($data, $options);
     }
 
     /**
