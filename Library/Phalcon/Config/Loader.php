@@ -7,7 +7,8 @@
  */
 namespace Phalcon\Config;
 
-class Loader {
+class Loader
+{
 
     /**
      * Load config from file extension dynamical
@@ -15,7 +16,8 @@ class Loader {
      * @param string $filePath
      * @throws Exception
      */
-    public static function load($filePath) {
+    public static function load($filePath)
+    {
         if (!is_file($filePath)) {
             throw new Exception('Config file not found');
         }
