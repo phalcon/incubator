@@ -23,7 +23,7 @@ class Factory
             throw new Exception('Adapter option must be required');
         }
         $namespace = __NAMESPACE__ . '\\' . 'Pdo' . '\\';
-        $className = $namespace . ucfirst($config['adapter']);
+        $className = $namespace . ucfirst(strtolower($config['adapter']));
         if (!class_exists($className)) {
             throw new Exception('Database adapter '  . $config['adapter'] . ' is not supported');
         }
