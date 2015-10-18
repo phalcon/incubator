@@ -108,6 +108,9 @@ See CONTRIBUTING.md
 * [Phalcon\Cache\Backend\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Database backend for caching data (phalcon)
 * [Phalcon\Cache\Backend\Wincache](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Cache/Backend) - Wincache backend for caching data (nazwa)
 
+### Config
+* [Phalcon\Config\Loader](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Config) - Dynamic config loader by file extension (Kachit)
+
 ### Database
 * [Phalcon\Db\Adapter\Cacheable\Mysql](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Db) - MySQL adapter that agressively caches all the queries executed (phalcon)
 
