@@ -111,6 +111,7 @@ See CONTRIBUTING.md
 
 ### Config
 * [Phalcon\Config\Adapter\ExtendedYaml](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Config/Adapter) - YAML adapter (freekzy)
+* [Phalcon\Config\Loader](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Config) - Dynamic config loader by file extension (Kachit)
 
 ### Database
 * [Phalcon\Db\Adapter\Cacheable\Mysql](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Db) - MySQL adapter that agressively caches all the queries executed (phalcon)
