@@ -156,3 +156,6 @@ See CONTRIBUTING.md
 
 ### Utils
 * [Phalcon\Utils\Slug](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Utils) - Creates a slug for the passed string taking into account international characters. (niden)
+
+### Validators
+* [Phalcon\Validation\Validator\MongoId](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Validation/Validator) - Validate MongoId value (Kachit)
