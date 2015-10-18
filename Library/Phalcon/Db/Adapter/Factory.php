@@ -1,4 +1,20 @@
 <?php
+/*
+  +------------------------------------------------------------------------+
+  | Phalcon Framework                                                      |
+  +------------------------------------------------------------------------+
+  | Copyright (c) 2011-2015 Phalcon Team (http://www.phalconphp.com)       |
+  +------------------------------------------------------------------------+
+  | This source file is subject to the New BSD License that is bundled     |
+  | with this package in the file docs/LICENSE.txt.                        |
+  |                                                                        |
+  | If you did not receive a copy of the license and are unable to         |
+  | obtain it through the world-wide-web, please send an email             |
+  | to license@phalconphp.com so we can send you a copy immediately.       |
+  +------------------------------------------------------------------------+
+  | Authors: Anton Kornilov <kachit@yandex.ru>                             |
+  +------------------------------------------------------------------------+
+*/
 /**
  * Phalcon DB adapters factory
  *
@@ -23,9 +39,10 @@ class Factory
             throw new Exception('Adapter option must be required');
         }
         $namespace = __NAMESPACE__ . '\\' . 'Pdo' . '\\';
-        $className = $namespace . ucfirst(strtolower($config['adapter']));
+        $adapter = ucfirst(strtolower($config['adapter']));
+        $className = $namespace . $adapter;
         if (!class_exists($className)) {
-            throw new Exception('Database adapter '  . $config['adapter'] . ' is not supported');
+            throw new Exception('Database adapter '  . $adapter . ' is not supported');
         }
         return new $className($config);
     }

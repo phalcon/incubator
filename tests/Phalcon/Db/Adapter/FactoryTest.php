@@ -55,7 +55,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @expectedException \Phalcon\Db\Exception
-     * @expectedExceptionMessage Database adapter drizzle is not supported
+     * @expectedExceptionMessage Database adapter Drizzle is not supported
      */
     public function testLoadUnsupportedAdapter() {
         $this->testable['adapter'] = 'drizzle';
