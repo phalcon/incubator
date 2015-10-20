@@ -19,7 +19,7 @@ class StatusCode
     /**
      * @var array
      */
-    public static $messages = [
+    protected static $messages = [
         // Informational 1xx
         self::CONTINUES => 'Continue',
         self::SWITCHING_PROTOCOLS => 'Switching Protocols',
@@ -72,4 +72,15 @@ class StatusCode
         505 => 'HTTP Version Not Supported',
         509 => 'Bandwidth Limit Exceeded'
     ];
+
+    /**
+     * Get response message
+     *
+     * @param int $code
+     * @return string
+     */
+    public function message($code)
+    {
+        return (isset(self::$messages[$code])) ? self::$messages[$code] : '';
+    }
 }
