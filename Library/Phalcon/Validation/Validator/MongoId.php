@@ -16,51 +16,40 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Phalcon\Config;
-
-use Phalcon\Config\Adapter\Ini;
-use Phalcon\Config\Adapter\Json;
-use Phalcon\Config\Adapter\Php;
-use Phalcon\Config\Adapter\Yaml;
-use Phalcon\Config;
-
 /**
- * Phalcon config loader
+ * MongoId validator
  *
- * @package Phalcon\Config
+ * @package Phalcon\Validation\Validator
  */
-class Loader
+namespace Phalcon\Validation\Validator;
+
+use Phalcon\Validation;
+use Phalcon\Validation\Validator;
+use Phalcon\Validation\Message;
+use Phalcon\Validation\Exception;
+
+class MongoId extends Validator
 {
     /**
-     * Load config from file extension dynamical
-     *
-     * @param string $filePath
-     *
-     * @return Config
+     * @param Validation $validation
+     * @param string $attribute
+     * @return bool
      * @throws Exception
      */
-    public static function load($filePath)
+    public function validate(Validation $validation, $attribute)
     {
-        if (!is_file($filePath)) {
-            throw new Exception('Config file not found');
+        if (!extension_loaded('mongo')) {
+            throw new Exception('Mongo extension is not available');
         }
 
-        $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+        $value = $validation->getValue($attribute);
+        $allowEmpty = $this->hasOption('allowEmpty');
+        $result = ($allowEmpty && empty($value)) ? true : \MongoId::isValid($value);
 
-        switch ($extension) {
-            case 'ini':
-                return new Ini($filePath);
-            case 'json':
-                return new Json($filePath);
-            case 'php':
-            case 'php5':
-            case 'inc':
-                return new Php($filePath);
-            case 'yml':
-            case 'yaml':
-                return new Yaml($filePath);
-            default:
-                throw new Exception('Config adapter for .'  . $extension . ' files is not support');
+        if (!$result) {
+            $message = ($this->hasOption('message')) ? $this->getOption('message') : 'MongoId is not valid';
+            $validation->appendMessage(new Message($message, $attribute, 'MongoId'));
         }
+        return $result;
     }
 }

@@ -2,12 +2,18 @@
 
 namespace Phalcon\Test\Acl\Factory;
 
+use Phalcon\Acl;
+use Phalcon\Acl\Adapter\Memory as MemoryAdapter;
+use Phalcon\Acl\Factory\Memory as MemoryFactory;
+use Phalcon\Config\Adapter\Ini;
+use Phalcon\Config;
+
 class MemoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactoryShouldCreateMemoryAclObjectFromAclConfigurationWithAllOptions()
     {
-        $config = new \Phalcon\Config\Adapter\Ini(__DIR__ . '/_fixtures/acl.ini');
-        $factory = new \Phalcon\Acl\Factory\Memory();
+        $config = new Ini(__DIR__ . '/_fixtures/acl.ini');
+        $factory = new MemoryFactory();
         $acl = $factory->create($config->get('acl'));
         $this->assertInstanceOf('Phalcon\Acl\Adapter\Memory', $acl);
         $this->assertAclIsConfiguredAsExpected($acl, $config);
@@ -20,9 +26,9 @@ class MemoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testFactoryShouldThrowExceptionIfDefaultActionIsMissing()
     {
-        $config = new \Phalcon\Config\Adapter\Ini(__DIR__ . '/_fixtures/acl.ini');
+        $config = new Ini(__DIR__ . '/_fixtures/acl.ini');
         unset($config->acl->defaultAction);
-        $factory = new \Phalcon\Acl\Factory\Memory();
+        $factory = new MemoryFactory();
         $acl = $factory->create($config->get('acl'));
     }
 
@@ -32,9 +38,9 @@ class MemoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testFactoryShouldThrowExceptionIfResourceOptionIsMissing()
     {
-        $config = new \Phalcon\Config\Adapter\Ini(__DIR__ . '/_fixtures/acl.ini');
+        $config = new Ini(__DIR__ . '/_fixtures/acl.ini');
         unset($config->acl->resource);
-        $factory = new \Phalcon\Acl\Factory\Memory();
+        $factory = new MemoryFactory();
         $acl = $factory->create($config->get('acl'));
     }
 
@@ -44,14 +50,10 @@ class MemoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testFactoryShouldThrowExceptionIfActionsKeyIsMissing()
     {
-        if (version_compare(\Phalcon\Version::get(), '2.0.0', '=')) {
-            $this->markTestSkipped('Fails due to a bug in Phalcon. See https://github.com/phalcon/cphalcon/pull/10226');
-        }
-
-        $config = new \Phalcon\Config\Adapter\Ini(__DIR__ . '/_fixtures/acl.ini');
+        $config = new Ini(__DIR__ . '/_fixtures/acl.ini');
         unset($config->acl->resource->index->actions);
         unset($config->acl->role->guest->allow->index->actions[0]);
-        $factory = new \Phalcon\Acl\Factory\Memory();
+        $factory = new MemoryFactory();
         $acl = $factory->create($config->get('acl'));
     }
 
@@ -61,9 +63,9 @@ class MemoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testFactoryShouldThrowExceptionIfRoleKeyIsMissing()
     {
-        $config = new \Phalcon\Config\Adapter\Ini(__DIR__ . '/_fixtures/acl.ini');
+        $config = new Ini(__DIR__ . '/_fixtures/acl.ini');
         unset($config->acl->role);
-        $factory = new \Phalcon\Acl\Factory\Memory();
+        $factory = new MemoryFactory();
         $acl = $factory->create($config->get('acl'));
     }
 
@@ -73,41 +75,41 @@ class MemoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testFactoryShouldThrowExceptionIfWrongMethodIsSet()
     {
-        $config = new \Phalcon\Config\Adapter\Ini(__DIR__ . '/_fixtures/acl.ini');
-        $config->acl->role->user->wrongmethod = new \Phalcon\Config(array(
+        $config = new Ini(__DIR__ . '/_fixtures/acl.ini');
+        $config->acl->role->user->wrongmethod = new Config(array(
             'test' => array(
                 'actions' => array(
                     'test',
                 ),
             )
         ));
-        $factory = new \Phalcon\Acl\Factory\Memory();
+        $factory = new MemoryFactory();
         $acl = $factory->create($config->get('acl'));
     }
 
     /**
      * @expectedException \Phalcon\Acl\Exception
      * @expectedExceptionMessage Role "user" cannot inherit non-existent role "nonexistentrole".
-    Either such role does not exist or it is set to be inherited before it is actually defined.
+     * Either such role does not exist or it is set to be inherited before it is actually defined.
      */
     public function testFactoryShouldThrowExceptionIfNonExistentInheritRoleIsSet()
     {
-        $config = new \Phalcon\Config\Adapter\Ini(__DIR__ . '/_fixtures/acl.ini');
+        $config = new Ini(__DIR__ . '/_fixtures/acl.ini');
         $config->acl->role->user->inherit = 'nonexistentrole';
-        $factory = new \Phalcon\Acl\Factory\Memory();
+        $factory = new MemoryFactory();
         $acl = $factory->create($config->get('acl'));
     }
 
     public function testFactoryShouldWorkIfCreatedFromConfigPHPArray()
     {
-        $factory = new \Phalcon\Acl\Factory\Memory();
-        $acl = $factory->create(new \Phalcon\Config(include __DIR__ . '/_fixtures/acl.php'));
+        $factory = new MemoryFactory();
+        $acl = $factory->create(new Config(include __DIR__ . '/_fixtures/acl.php'));
     }
 
-    protected function assertAclIsConfiguredAsExpected(\Phalcon\Acl\Adapter\Memory $acl, \Phalcon\Config $config)
+    protected function assertAclIsConfiguredAsExpected(MemoryAdapter $acl, Config $config)
     {
         // assert default action
-        $this->assertEquals(\Phalcon\Acl::DENY, $acl->getDefaultAction());
+        $this->assertEquals(Acl::DENY, $acl->getDefaultAction());
 
         // assert resources
         $resources = $acl->getResources();

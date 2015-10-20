@@ -11,6 +11,7 @@ sudo:
 services:
   - memcached
   - mysql
+  - mongodb
 
 env:
   - TEST_BS_HOST=127.0.0.1 TEST_BS_PORT=11301
@@ -30,6 +31,8 @@ env:
 before_install:
   - pecl channel-update pecl.php.net
   - (CFLAGS="-O1 -g3 -fno-strict-aliasing"; pecl install yaml < /dev/null &)
+  - phpenv config-add "tests/travis/mongo.ini"
+  - php -m
 
 install:
   - composer self-update
@@ -46,7 +49,7 @@ before_script:
 
 script:
   - php vendor/bin/phpcs --standard=PSR2 --encoding=utf-8 Library/
-  - php vendor/bin/phpunit --configuration tests/phpunit.xml.dist --coverage-clover=coverage.clover
+  - php vendor/bin/phpunit --configuration tests/phpunit.xml.dist --coverage-clover=coverage.clover --coverage-text
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
