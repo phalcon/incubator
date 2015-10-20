@@ -112,7 +112,7 @@ See CONTRIBUTING.md
 * [Phalcon\Config\Loader](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Config) - Dynamic config loader by file extension (Kachit)
 
 ### Database
-* [Phalcon\Db\Adapter\Cacheable\Mysql](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Db) - MySQL adapter that agressively caches all the queries executed (phalcon)
+* [Phalcon\Db\Adapter\Cacheable\Mysql](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Db) - MySQL adapter that aggressively caches all the queries executed (phalcon)
 
 ### Logger
 * [Phalcon\Logger\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to store logs in a database table (phalcon)
@@ -156,3 +156,6 @@ See CONTRIBUTING.md
 
 ### Utils
 * [Phalcon\Utils\Slug](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Utils) - Creates a slug for the passed string taking into account international characters. (niden)
+
+### Validators
+* [Phalcon\Validation\Validator\MongoId](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Validation/Validator) - Validate MongoId value (Kachit)
