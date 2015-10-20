@@ -7,9 +7,11 @@ use Phalcon\Config\Loader as ConfigLoader;
  *
  * @author Kachit
  */
-class LoaderTest extends \PHPUnit_Framework_TestCase {
+class LoaderTest extends \PHPUnit_Framework_TestCase
+{
 
-    public function testLoadPhpFileConfig() {
+    public function testLoadPhpFileConfig()
+    {
         $file = __DIR__ . '/_fixtures/config.php';
         $config = ConfigLoader::load($file);
         $this->assertTrue(is_object($config));
@@ -18,7 +20,8 @@ class LoaderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('bar', $config->phalcon->foo);
     }
 
-    public function testLoadIniFileConfig() {
+    public function testLoadIniFileConfig()
+    {
         $file = __DIR__ . '/_fixtures/config.ini';
         $config = ConfigLoader::load($file);
         $this->assertTrue(is_object($config));
@@ -27,7 +30,8 @@ class LoaderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('bar', $config->phalcon->foo);
     }
 
-    public function testLoadJsonFileConfig() {
+    public function testLoadJsonFileConfig()
+    {
         $file = __DIR__ . '/_fixtures/config.json';
         $config = ConfigLoader::load($file);
         $this->assertTrue(is_object($config));
@@ -36,11 +40,22 @@ class LoaderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('bar', $config->phalcon->foo);
     }
 
+    public function testLoadYamlFileConfig()
+    {
+        $file = __DIR__ . '/_fixtures/config.yaml';
+        $config = ConfigLoader::load($file);
+        $this->assertTrue(is_object($config));
+        $this->assertInstanceOf('Phalcon\Config\Adapter\Yaml', $config);
+        $this->assertInstanceOf('Phalcon\Config', $config);
+        $this->assertEquals('bar', $config->phalcon->foo);
+    }
+
     /**
      * @expectedException \Phalcon\Config\Exception
      * @expectedExceptionMessage Config file not found
      */
-    public function testLoadWrongFilePath() {
+    public function testLoadWrongFilePath()
+    {
         $file = __DIR__ . '/_fixtures/config.jason';
         ConfigLoader::load($file);
     }
@@ -49,7 +64,8 @@ class LoaderTest extends \PHPUnit_Framework_TestCase {
      * @expectedException \Phalcon\Config\Exception
      * @expectedExceptionMessage Config adapter for .txt files is not support
      */
-    public function testLoadUnsupportedConfigFile() {
+    public function testLoadUnsupportedConfigFile()
+    {
         $file = __DIR__ . '/_fixtures/config.txt';
         ConfigLoader::load($file);
     }
