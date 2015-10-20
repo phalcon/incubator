@@ -21,7 +21,7 @@ use Phalcon\Http\Client\Exception as HttpException;
 use Phalcon\Http\Client\Provider\Exception as ProviderException;
 use Phalcon\Http\Client\Request;
 use Phalcon\Http\Client\Response;
-use Phalcon\Http\Method;
+use Phalcon\Http\Request\Method;
 
 class Curl extends Request
 {
