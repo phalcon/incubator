@@ -21,6 +21,7 @@ use Phalcon\Http\Client\Exception as HttpException;
 use Phalcon\Http\Client\Provider\Exception as ProviderException;
 use Phalcon\Http\Client\Request;
 use Phalcon\Http\Client\Response;
+use Phalcon\Http\Method;
 
 class Curl extends Request
 {
@@ -180,7 +181,7 @@ class Curl extends Request
         $this->setOptions(array(
             CURLOPT_URL           => $uri->build(),
             CURLOPT_HTTPGET       => true,
-            CURLOPT_CUSTOMREQUEST => 'GET'
+            CURLOPT_CUSTOMREQUEST => Method::GET,
         ));
 
         return $this->send($customHeader, $fullResponse);
@@ -197,7 +198,7 @@ class Curl extends Request
         $this->setOptions(array(
             CURLOPT_URL           => $uri->build(),
             CURLOPT_HTTPGET       => true,
-            CURLOPT_CUSTOMREQUEST => 'HEAD'
+            CURLOPT_CUSTOMREQUEST => Method::HEAD,
         ));
 
         return $this->send($customHeader, $fullResponse);
@@ -214,7 +215,7 @@ class Curl extends Request
         $this->setOptions(array(
             CURLOPT_URL           => $uri->build(),
             CURLOPT_HTTPGET       => true,
-            CURLOPT_CUSTOMREQUEST => 'DELETE'
+            CURLOPT_CUSTOMREQUEST => Method::DELETE,
         ));
 
         return $this->send($customHeader, $fullResponse);
@@ -225,7 +226,7 @@ class Curl extends Request
         $this->setOptions(array(
             CURLOPT_URL           => $this->resolveUri($uri),
             CURLOPT_POST          => true,
-            CURLOPT_CUSTOMREQUEST => 'POST'
+            CURLOPT_CUSTOMREQUEST => Method::POST,
         ));
 
         $this->initPostFields($params, $useEncoding);
@@ -238,10 +239,10 @@ class Curl extends Request
         $this->setOptions(array(
             CURLOPT_URL           => $this->resolveUri($uri),
             CURLOPT_POST          => true,
-            CURLOPT_CUSTOMREQUEST => 'PUT'
+            CURLOPT_CUSTOMREQUEST => Method::PUT,
         ));
 
-        $this->initPostFields($params, $useEncoding, $customHeader);
+        $this->initPostFields($params, $useEncoding);
 
         return $this->send($customHeader, $fullResponse);
     }
