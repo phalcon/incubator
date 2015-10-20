@@ -11,6 +11,7 @@ sudo:
 services:
   - memcached
   - mysql
+  - mongodb
 
 env:
   - TEST_BS_HOST=127.0.0.1 TEST_BS_PORT=11301
@@ -30,6 +31,7 @@ env:
 before_install:
   - pecl channel-update pecl.php.net
   - (CFLAGS="-O1 -g3 -fno-strict-aliasing"; pecl install yaml < /dev/null &)
+  - phpenv config-add "tests/travis/mongo.ini"
 
 install:
   - composer self-update
