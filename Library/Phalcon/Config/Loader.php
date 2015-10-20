@@ -16,15 +16,19 @@
   +------------------------------------------------------------------------+
 */
 
+namespace Phalcon\Config;
+
+use Phalcon\Config\Adapter\Ini;
+use Phalcon\Config\Adapter\Json;
+use Phalcon\Config\Adapter\Php;
+use Phalcon\Config\Adapter\Yaml;
+use Phalcon\Config;
+
 /**
  * Phalcon config loader
  *
  * @package Phalcon\Config
  */
-namespace Phalcon\Config;
-
-use Phalcon\Config;
-
 class Loader
 {
     /**
@@ -41,14 +45,22 @@ class Loader
             throw new Exception('Config file not found');
         }
 
-        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-        $namespace = __NAMESPACE__ . '\\' . 'Adapter' . '\\';
-        $className = $namespace . ucfirst(strtolower($extension));
+        $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
 
-        if (!class_exists($className)) {
-            throw new Exception('Config adapter for .'  . $extension . ' files is not support');
+        switch ($extension) {
+            case 'ini':
+                return new Ini($filePath);
+            case 'json':
+                return new Json($filePath);
+            case 'php':
+            case 'php5':
+            case 'inc':
+                return new Php($filePath);
+            case 'yml':
+            case 'yaml':
+                return new Yaml($filePath);
+            default:
+                throw new Exception('Config adapter for .'  . $extension . ' files is not support');
         }
-
-        return new $className($filePath);
     }
 }

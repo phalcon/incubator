@@ -20,6 +20,26 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $config->phalcon->foo);
     }
 
+    public function testLoadPhp5FileConfig()
+    {
+        $file = __DIR__ . '/_fixtures/config.php5';
+        $config = ConfigLoader::load($file);
+        $this->assertTrue(is_object($config));
+        $this->assertInstanceOf('Phalcon\Config\Adapter\Php', $config);
+        $this->assertInstanceOf('Phalcon\Config', $config);
+        $this->assertEquals('bar', $config->phalcon->foo);
+    }
+
+    public function testLoadIncFileConfig()
+    {
+        $file = __DIR__ . '/_fixtures/config.inc';
+        $config = ConfigLoader::load($file);
+        $this->assertTrue(is_object($config));
+        $this->assertInstanceOf('Phalcon\Config\Adapter\Php', $config);
+        $this->assertInstanceOf('Phalcon\Config', $config);
+        $this->assertEquals('bar', $config->phalcon->foo);
+    }
+
     public function testLoadIniFileConfig()
     {
         $file = __DIR__ . '/_fixtures/config.ini';
@@ -30,6 +50,9 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $config->phalcon->foo);
     }
 
+    /**
+     * @requires extension json
+     */
     public function testLoadJsonFileConfig()
     {
         $file = __DIR__ . '/_fixtures/config.json';
@@ -40,9 +63,25 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $config->phalcon->foo);
     }
 
+    /**
+     * @requires extension yaml
+     */
     public function testLoadYamlFileConfig()
     {
         $file = __DIR__ . '/_fixtures/config.yaml';
+        $config = ConfigLoader::load($file);
+        $this->assertTrue(is_object($config));
+        $this->assertInstanceOf('Phalcon\Config\Adapter\Yaml', $config);
+        $this->assertInstanceOf('Phalcon\Config', $config);
+        $this->assertEquals('bar', $config->phalcon->foo);
+    }
+
+    /**
+     * @requires extension yaml
+     */
+    public function testLoadYmlFileConfig()
+    {
+        $file = __DIR__ . '/_fixtures/config.yml';
         $config = ConfigLoader::load($file);
         $this->assertTrue(is_object($config));
         $this->assertInstanceOf('Phalcon\Config\Adapter\Yaml', $config);
