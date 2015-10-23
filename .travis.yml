@@ -14,7 +14,7 @@ services:
   - mongodb
 
 env:
-  - TEST_BT_HOST=127.0.0.1 TEST_BT_HOST=11300
+  - TEST_BT_HOST=127.0.0.1 TEST_BT_PORT=11301
 
 env:
   - PHALCON_VERSION="2.0.8"
@@ -24,11 +24,9 @@ env:
   - PHALCON_VERSION="2.0.4"
 
 before_install:
-  - curl -L https://github.com/kr/beanstalkd/archive/v1.10.tar.gz | tar xz -C /tmp
-  - cd /tmp/beanstalkd-1.10/
-  - make
-  - ./beanstalkd -v
-  - ./beanstalkd -l ${TEST_BS_HOST} -p ${TEST_BS_PORT} -V & # start queue listener
+  - bash tests/_ci/setup_beanstalkd.sh
+  - beanstalkd -v
+  - beanstalkd -l ${TEST_BT_HOST} -p ${TEST_BT_PORT} -V & # start queue listener
   - sleep 5 # give server some time to boot
   - cd $TRAVIS_BUILD_DIR
   - pecl channel-update pecl.php.net

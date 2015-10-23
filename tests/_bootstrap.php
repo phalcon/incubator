@@ -33,18 +33,10 @@ if (!file_exists(__DIR__ . '/../vendor/autoload.php')) {
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$host = getenv('TEST_BT_HOST');
-$port = getenv('TEST_BT_HOST');
-
 // Beanstalk
-defined('TEST_BT_HOST') || define('TEST_BT_HOST', $host ?: '127.0.0.1');
-defined('TEST_BT_PORT') || define('TEST_BT_PORT', $port ?: 11300);
-
-$host = getenv('TEST_MC_HOST');
-$port = getenv('TEST_MC_PORT');
+defined('TEST_BT_HOST') || define('TEST_BT_HOST', getenv('TEST_BT_HOST') ?: '127.0.0.1');
+defined('TEST_BT_PORT') || define('TEST_BT_PORT', getenv('TEST_BT_PORT') ?: 11301);
 
 // Memcached
-defined('TEST_MC_HOST') || define('TEST_MC_HOST', $host ?: '127.0.0.1');
-defined('TEST_MC_PORT') || define('TEST_MC_PORT', $port ?: 11211);
-
-unset($host, $port);
+defined('TEST_MC_HOST') || define('TEST_MC_HOST', getenv('TEST_MC_HOST') ?: '127.0.0.1');
+defined('TEST_MC_PORT') || define('TEST_MC_PORT', getenv('TEST_MC_PORT') ?: 11211);

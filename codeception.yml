@@ -26,6 +26,7 @@ coverage:
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
+
 # Global modules configuration.
 modules:
     config:

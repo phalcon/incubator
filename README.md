@@ -1,3 +1,4 @@
+[![Build Status](https://img.shields.io/travis/phalcon/incubator/master.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
 [![Latest Version](https://img.shields.io/packagist/v/phalcon/incubator.svg?style=flat-square)](https://github.com/phalcon/incubator/releases)
 [![Software License](https://img.shields.io/badge/license-BSD--3-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Total Downloads](https://img.shields.io/packagist/dt/phalcon/incubator.svg?style=flat-square)](https://packagist.org/packages/phalcon/incubator)
@@ -81,7 +82,7 @@ $loader->register();
 
 ## Tests
 
-Incubator use [Codeception](http://codeception.com/) unit tests.
+Incubator uses [Codeception](http://codeception.com/) unit tests.
 
 First you need to re-generate base classes for all suites:
 
@@ -89,7 +90,7 @@ First you need to re-generate base classes for all suites:
 $ vendor/bin/codecept build
 ```
 
-Execute all test with `run` command:
+You can execute all test with `run` command:
 
 ```sh
 $ vendor/bin/codecept run
@@ -97,7 +98,7 @@ $ vendor/bin/codecept run
 $ vendor/bin/codecept run --debug # Detailed output
 ```
 
-Execute grouped test with `run -g <group_name>` command.
+Execute test groups with `run -g <group_name>` command.
 
 Available groups:
 * `Acl`
@@ -117,23 +118,38 @@ Read more about the installation and configuration of Codeception:
 * [Codeception Introduction](http://codeception.com/docs/01-Introduction)
 * [Codeception Console Commands](http://codeception.com/docs/reference/Commands)
 
-Some tests require a connection to the database. For them you need to create a test database using MySQL:
+Some tests require a connection to the database. For those you need to create a test database using MySQL:
 ```sh
 $ echo 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;' | mysql -u root
 ```
 
 For these tests we use the user `root` without a password. You may need to change this in `codeception.yml` file.
-Obviously, Beanstalk-tests uses Beanstalk and Memcached-tests uses Memcached.
 
-## Current Build Status
+Obviously, Beanstalk-tests use Beanstalk and Memcached-tests use Memcached.
 
-Incubator is built under Travis CI service. Every commit pushed to this repository will queue a build into the continuous integration service and will run all PHPUnit tests to ensure that everything is going well and the project is stable. The current build status is:
+We use the following settings of these services:
+**Beanstalk**
++ Host: `127.0.0.1`
++ Port: `11301`
 
-[![Build Status](https://img.shields.io/travis/phalcon/incubator/master.svg?style=flat-square)](https://travis-ci.org/phalcon/incubator)
+**Memcached**
++ Host: `127.0.0.1`
++ Port: `11211`
+
+You can change the connection settings of these services by using `tests/_bootstrap.php` file.
+
+
+If you cannot run the tests, please refer to the `.travis.yml` file for more instructions how we test Incubator.
+
+## The testing process
+
+Incubator is built under [Travis CI](https://travis-ci.org/) service.
+Every commit pushed to this repository will queue a build into the continuous integration service and will run all tests
+to ensure that everything is going well and the project is stable.
 
 # Contributing
 
-See CONTRIBUTING.md
+See [CONTRIBUTING.md](https://github.com/phalcon/incubator/blob/master/CONTRIBUTING.md)
 
 ## Contributions Index
 
@@ -205,3 +221,7 @@ See CONTRIBUTING.md
 
 ### Validators
 * [Phalcon\Validation\Validator\MongoId](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Validation/Validator) - Validate MongoId value (Kachit)
+
+## License
+
+Incubator is open-sourced software licensed under the [New BSD License](https://github.com/phalcon/incubator/blob/master/docs/LICENSE.md). © Phalcon Framework Team and contributors
