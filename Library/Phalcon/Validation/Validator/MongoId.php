@@ -23,6 +23,8 @@
  */
 namespace Phalcon\Validation\Validator;
 
+use ReflectionExtension;
+use MongoId as Id;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator;
 use Phalcon\Validation\Message;
@@ -44,7 +46,7 @@ class MongoId extends Validator
 
         $value = $validation->getValue($attribute);
         $allowEmpty = $this->hasOption('allowEmpty');
-        $result = ($allowEmpty && empty($value)) ? true : \MongoId::isValid($value);
+        $result = ($allowEmpty && empty($value)) ? true : Id::isValid($value);
 
         if (!$result) {
             $message = ($this->hasOption('message')) ? $this->getOption('message') : 'MongoId is not valid';
