@@ -22,7 +22,8 @@ coverage:
     enabled: true
     whitelist:
         include:
-            - Library/*
+            - Library/*.php
+
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
