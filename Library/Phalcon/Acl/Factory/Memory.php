@@ -59,10 +59,10 @@ class Memory
         $this->acl = new \Phalcon\Acl\Adapter\Memory();
         $this->config = $config;
 
-        if (!is_numeric($this->config->get('defaultAction'))) {
+        if (!is_int($this->config->get('defaultAction')) && !ctype_digit($this->config->get('defaultAction'))) {
             throw new \Phalcon\Acl\Exception('Key "defaultAction" must exist and must be of numeric value.');
         }
-        $this->acl->setDefaultAction((int) $this->config->defaultAction);
+        $this->acl->setDefaultAction((int) $this->config->get('defaultAction'));
         $this->addResources();
         $this->addRoles();
         return $this->acl;
