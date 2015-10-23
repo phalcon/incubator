@@ -72,12 +72,58 @@ to load classes from the incubator repository:
 
 $loader = new Phalcon\Loader();
 
-$loader->registerNamespaces(array(
+$loader->registerNamespaces([
     'Phalcon' => '/path/to/incubator/Library/Phalcon/'
-));
+]);
 
 $loader->register();
 ```
+
+## Tests
+
+Incubator use [Codeception](http://codeception.com/) unit tests.
+
+First you need to re-generate base classes for all suites:
+
+```sh
+$ vendor/bin/codecept build
+```
+
+Execute all test with `run` command:
+
+```sh
+$ vendor/bin/codecept run
+# OR
+$ vendor/bin/codecept run --debug # Detailed output
+```
+
+Execute grouped test with `run -g <group_name>` command.
+
+Available groups:
+* `Acl`
+* `Annotation`
+* `Cache`
+* `Config`
+* `Loader`
+* `DbValidation`
+* `MetaData`
+* `EagerLoading`
+* `Paginator`
+* `Beanstalk`
+* `Utils`
+* `Validation`
+
+Read more about the installation and configuration of Codeception:
+* [Codeception Introduction](http://codeception.com/docs/01-Introduction)
+* [Codeception Console Commands](http://codeception.com/docs/reference/Commands)
+
+Some tests require a connection to the database. For them you need to create a test database using MySQL:
+```sh
+$ echo 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;' | mysql -u root
+```
+
+For these tests we use the user `root` without a password. You may need to change this in `codeception.yml` file.
+Obviously, Beanstalk-tests uses Beanstalk and Memcached-tests uses Memcached.
 
 ## Current Build Status
 

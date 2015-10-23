@@ -61,8 +61,8 @@ class MemcachedTest extends Test
     }
 
     /**
-     * @expectedException           \Phalcon\Mvc\Model\Exception
-     * @expectedExceptionMessage    No configuration given
+     * @expectedException        \Phalcon\Mvc\Model\Exception
+     * @expectedExceptionMessage No configuration given
      */
     public function testShouldCatchExceptionWhenNoConfigurationGiven()
     {
