@@ -128,6 +128,7 @@ For these tests we use the user `root` without a password. You may need to chang
 Obviously, Beanstalk-tests use Beanstalk and Memcached-tests use Memcached.
 
 We use the following settings of these services:
+
 **Beanstalk**
 + Host: `127.0.0.1`
 + Port: `11300`
@@ -136,7 +137,8 @@ We use the following settings of these services:
 + Host: `127.0.0.1`
 + Port: `11211`
 
-You can change the connection settings of these services by using [environment variables](https://wiki.archlinux.org/index.php/Environment_variables):
+You can change the connection settings of these services **before** running tests
+by using [environment variables](https://wiki.archlinux.org/index.php/Environment_variables):
 ```sh
 # Beanstalk
 export TEST_BT_HOST="127.0.0.1"
@@ -148,6 +150,7 @@ export TEST_MC_PORT="11211"
 ```
 
 If you cannot run the tests, please refer to the `.travis.yml` file for more instructions how we test Incubator.
+For detailed information on our testing environment setting refer to `tests/_bootstrap.php` file.
 
 ## The testing process
 
