@@ -49,24 +49,17 @@ class ExtendedTest extends Test
      */
     protected function _before()
     {
-        $host = getenv('TEST_BS_HOST');
-        $port = getenv('TEST_BS_PORT');
-
-        if (empty($host) || empty($port)) {
-            $this->markTestSkipped('TEST_BS_HOST and/or TEST_BS_PORT env variables are not defined');
-        }
-
         $this->client = new Extended([
-            'host'   => $host,
-            'port'   => $port,
+            'host'   => TEST_BT_HOST,
+            'port'   => TEST_BT_PORT,
             'prefix' => 'PHPUnit_',
         ]);
 
         if (!$this->client->connect()) {
             $this->markTestSkipped(sprintf(
                 'Need a running beanstalkd server at %s:%d',
-                $host,
-                $port
+                TEST_BT_HOST,
+                TEST_BT_PORT
             ));
         }
 

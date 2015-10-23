@@ -14,7 +14,7 @@ services:
   - mongodb
 
 env:
-  - TEST_BS_HOST=127.0.0.1 TEST_BS_PORT=11301
+  - TEST_BT_HOST=127.0.0.1 TEST_BT_HOST=11300
 
 env:
   - PHALCON_VERSION="2.0.8"
