@@ -1,11 +1,40 @@
+# can be changed while bootstrapping project
+actor: Tester
 paths:
-    tests: codeception
-    log: codeception/_log
-    data: codeception/_data
-    helpers: codeception/_helpers
+    # where the modules stored
+    tests: tests
+    log: tests/_output
+    # directory for fixture data
+    data: tests/_data
+    # directory for custom modules (helpers)
+    support: tests/_support
+    envs: tests/_envs
 settings:
+    # name of bootstrap that will be used
+    # each bootstrap file should be
+    # inside a suite directory.
     bootstrap: _bootstrap.php
-    suite_class: \PHPUnit_Framework_TestSuite
     colors: true
+    # Tests (especially functional) can take a lot of memory
+    # We set a high limit for them by default.
     memory_limit: 1024M
-    log: true
+coverage:
+    enabled: true
+    whitelist:
+        include:
+            - Library/*
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed
+# Global modules configuration.
+modules:
+    config:
+        Db:
+            dsn: 'mysql:host=localhost;dbname=incubator_tests'
+            user: 'root'
+            password: ''
+            dump: tests/_data/dump.sql
+            populate: true
+            cleanup: false
+
+error_level: "E_ALL | E_STRICT"

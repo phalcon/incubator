@@ -23,6 +23,8 @@
  */
 namespace Phalcon\Validation\Validator;
 
+use ReflectionExtension;
+use MongoId as Id;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator;
 use Phalcon\Validation\Message;
@@ -30,6 +32,8 @@ use Phalcon\Validation\Exception;
 
 class MongoId extends Validator
 {
+    const MIN_PECL_VERSION = '1.5.2';
+
     /**
      * @param Validation $validation
      * @param string $attribute
@@ -42,9 +46,20 @@ class MongoId extends Validator
             throw new Exception('Mongo extension is not available');
         }
 
+        $ext = new ReflectionExtension('mongo');
+
+        if (!version_compare($ext->getVersion(), self::MIN_PECL_VERSION, '>=')) {
+            throw new Exception(
+                sprintf(
+                    "Your mongo extension version isn't compatible with Incubator, download the latest at: %s",
+                    'https://docs.mongodb.org/ecosystem/drivers/php/'
+                )
+            );
+        }
+
         $value = $validation->getValue($attribute);
         $allowEmpty = $this->hasOption('allowEmpty');
-        $result = ($allowEmpty && empty($value)) ? true : \MongoId::isValid($value);
+        $result = ($allowEmpty && empty($value)) ? true : Id::isValid($value);
 
         if (!$result) {
             $message = ($this->hasOption('message')) ? $this->getOption('message') : 'MongoId is not valid';
