@@ -187,6 +187,10 @@ See [CONTRIBUTING.md](https://github.com/phalcon/incubator/blob/master/CONTRIBUT
 ### Database
 * [Phalcon\Db\Adapter\Cacheable\Mysql](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Db) - MySQL adapter that aggressively caches all the queries executed (phalcon)
 
+### Loader
+* [Phalcon\Loader\Extended](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Loader/Extended.php) - This component extends `Phalcon\Loader` and added ability to set multiple directories per namespace (sergeyklay)
+* [Phalcon\Loader\PSR](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Loader/PSR.php) - Implements PSR-0 autoloader for your apps (Piyush)
+
 ### Logger
 * [Phalcon\Logger\Adapter\Database](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to store logs in a database table (phalcon)
 * [Phalcon\Logger\Adapter\Firelogger](https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger) - Adapter to log messages in the Firelogger console in Firebug (phalcon)
