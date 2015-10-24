@@ -14,24 +14,25 @@ services:
   - mongodb
 
 env:
-  - TEST_BS_HOST=127.0.0.1 TEST_BS_PORT=11301
-
-cache:
-  directories:
-    - vendor
-    - $HOME/.composer/cache
-
-env:
-  - PHALCON_VERSION="2.0.8"
-  - PHALCON_VERSION="2.0.7"
-  - PHALCON_VERSION="2.0.6"
-  - PHALCON_VERSION="2.0.5"
-  - PHALCON_VERSION="2.0.4"
+  global:
+    - TEST_BT_HOST=127.0.0.1 TEST_BT_PORT=11300 TEST_MC_HOST=127.0.0.1 TEST_MC_PORT=11211
+  matrix:
+    - PHALCON_VERSION="2.0.8"
+    - PHALCON_VERSION="2.0.7"
+    - PHALCON_VERSION="2.0.6"
+    - PHALCON_VERSION="2.0.5"
+    - PHALCON_VERSION="2.0.4"
 
 before_install:
+  - bash tests/_ci/setup_beanstalkd.sh
+  - beanstalkd -v
+  - beanstalkd -l ${TEST_BT_HOST} -p ${TEST_BT_PORT} -V & # start queue listener
+  - sleep 5 # give server some time to boot
+  - cd $TRAVIS_BUILD_DIR
   - pecl channel-update pecl.php.net
   - (CFLAGS="-O1 -g3 -fno-strict-aliasing"; pecl install yaml < /dev/null &)
-  - phpenv config-add "tests/travis/mongo.ini"
+  - pecl install mongo < /dev/null &
+  - phpenv config-add tests/_ci/memcached.ini
   - php -m
 
 install:
@@ -40,25 +41,24 @@ install:
   - (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j4 > /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null)
   - php -r 'echo \Phalcon\Version::get()."\n";'
   - travis_retry composer install --prefer-source --no-interaction
+  - travis_retry composer require "duncan3dc/fork-helper":"*"
 
 before_script:
-  - beanstalkd -l ${TEST_BS_HOST} -p ${TEST_BS_PORT} & # start queue listener
   - mysql -e 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;'
-  - cat tests/travis/db_schema.sql | mysql incubator_tests
-  - sleep 5 # give server some time to boot
 
 script:
-  - php vendor/bin/phpcs --standard=PSR2 --encoding=utf-8 Library/
-  - php vendor/bin/phpunit --configuration tests/phpunit.xml.dist --coverage-clover=coverage.clover --coverage-text
-
-after_script:
-  - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
-  - mysql -e 'DROP DATABASE incubator_tests;'
+  - vendor/bin/phpcs --standard=PSR2 --encoding=utf-8 Library/
+  - vendor/bin/codecept build
+  - vendor/bin/codecept run --coverage-text
 
 addons:
   apt:
     packages:
       - libyaml-dev
-    sources:
-      - beanstalkd
+
+notifications:
+  email:
+    recipients:
+      - serghei@phalconphp.com
+    on_success: change
+    on_failure: always
