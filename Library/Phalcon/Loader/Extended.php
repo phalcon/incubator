@@ -23,8 +23,8 @@ use Phalcon\Loader;
 /**
  * Phalcon\Loader\Extended
  *
- * This component extends Phalcon\Loader and added ability to
- * set multiple directories per namespace.
+ * This component extends Phalcon\Loader and adds ability to
+ * set multiple directories a namespace.
  *
  * <code>
  * use Phalcon\Loader\Extended as Loader;
