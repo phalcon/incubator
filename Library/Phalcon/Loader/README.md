@@ -2,8 +2,8 @@
 
 ## Phalcon\Loader\Extended
 
-This component extends [Phalcon\Loader][1] and added ability to
-set multiple directories per namespace.
+This component extends [Phalcon\Loader][1] and adds ability to
+set multiple directories a namespace.
 
 ```php
 use Phalcon\Loader\Extended as Loader;
