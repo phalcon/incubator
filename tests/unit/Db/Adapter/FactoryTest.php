@@ -50,7 +50,7 @@ class FactoryTest extends Test {
     public function testLoadSqliteAdapter()
     {
         $this->testable['adapter'] = 'sqlite';
-        $this->testable['dbname'] = INCUBATOR_FIXTURES . '/Db/sqlite.db';
+        $this->testable['dbname'] = INCUBATOR_FIXTURES . 'Db/sqlite.db';
         $adapter = AdaptersFactory::load($this->testable);
         $this->assertTrue(is_object($adapter));
         $this->assertInstanceOf('Phalcon\Db\Adapter\Pdo\Sqlite', $adapter);
