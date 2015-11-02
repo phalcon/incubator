@@ -35,7 +35,7 @@ class Factory
      */
     public static function load(array $config)
     {
-        if (!isset($config['adapter'])) {
+        if (!isset($config['adapter']) || empty($config['adapter'])) {
             throw new Exception('Adapter option must be required');
         }
         $namespace = __NAMESPACE__ . '\\' . 'Pdo' . '\\';
