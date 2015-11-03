@@ -50,6 +50,7 @@ class Factory
             throw new Exception("Database adapter {$adapter} is not supported");
         }
 
+        unset($config['adapter']);
         return new $className($config);
     }
 }
