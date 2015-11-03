@@ -1188,3 +1188,40 @@ INSERT INTO `robot_part` (`robot_id`,`part_id`) VALUES (1,14),
   (200,18),
   (200,20),
   (200,83);
+
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE `roles` (
+  `name` VARCHAR(32) NOT NULL,
+  `description` TEXT,
+  PRIMARY KEY(`name`)
+);
+
+DROP TABLE IF EXISTS `access_list`;
+CREATE TABLE `access_list` (
+  `roles_name` VARCHAR(32) NOT NULL,
+  `resources_name` VARCHAR(32) NOT NULL,
+  `access_name` VARCHAR(32) NOT NULL,
+  `allowed` INT(3) NOT NULL,
+  PRIMARY KEY(`roles_name`, `resources_name`, `access_name`)
+);
+
+DROP TABLE IF EXISTS `resources`;
+CREATE TABLE `resources` (
+  `name` VARCHAR(32) NOT NULL,
+  `description` TEXT,
+  PRIMARY KEY(`name`)
+);
+
+DROP TABLE IF EXISTS `resources_accesses`;
+CREATE TABLE `resources_accesses` (
+  `resources_name` VARCHAR(32) NOT NULL,
+  `access_name` VARCHAR(32) NOT NULL,
+  PRIMARY KEY(`resources_name`, `access_name`)
+);
+
+DROP TABLE IF EXISTS `roles_inherits`;
+CREATE TABLE `roles_inherits` (
+  `roles_name` VARCHAR(32) NOT NULL,
+  `roles_inherit` VARCHAR(32) NOT NULL,
+  PRIMARY KEY(roles_name, roles_inherit)
+);
