@@ -39,5 +39,4 @@ class BetweenModel extends Model
 
         return $this->validationHasFailed() != true;
     }
-
 }

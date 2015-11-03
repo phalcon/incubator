@@ -8,7 +8,6 @@ use stdClass;
 use Codeception\TestCase\Test;
 use UnitTester;
 
-
 /**
  * \Phalcon\Tests\Paginator\PagerTest
  * Tests the Phalcon\Paginator\Pager component

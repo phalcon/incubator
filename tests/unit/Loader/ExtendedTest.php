@@ -180,7 +180,11 @@ class ExtendedTest extends Test
             [''],
             [new \stdClass()],
             [[]],
-            [function () { return 'foo'; }],
+            [
+                function () {
+                    return 'foo';
+                }
+            ],
         ];
     }
 }

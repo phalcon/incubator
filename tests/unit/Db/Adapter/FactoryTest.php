@@ -1,8 +1,11 @@
 <?php
+
 namespace Phalcon\Test\Db\Adapter;
 
 use Phalcon\Db\Adapter\Factory as AdaptersFactory;
 use Codeception\TestCase\Test;
+use UnitTester;
+
 /**
  * \Phalcon\Test\Db\Adapter\Factory
  * Tests for Phalcon\Db\Adapter\Factory component
@@ -20,7 +23,13 @@ use Codeception\TestCase\Test;
  * through the world-wide-web, please send an email to license@phalconphp.com
  * so that we can send you a copy immediately.
  */
-class FactoryTest extends Test {
+class FactoryTest extends Test
+{
+    /**
+     * UnitTester Object
+     * @var UnitTester
+     */
+    protected $tester;
 
     /**
      * @var array
@@ -72,7 +81,7 @@ class FactoryTest extends Test {
 
     /**
      * @expectedException \Phalcon\Db\Exception
-     * @expectedExceptionMessage Adapter option must be required
+     * @expectedExceptionMessage A database 'adapter' option is required and must be a nonempty string.
      */
     public function testMissingConfigKeyAdapter()
     {
@@ -82,7 +91,7 @@ class FactoryTest extends Test {
 
     /**
      * @expectedException \Phalcon\Db\Exception
-     * @expectedExceptionMessage Adapter option must be required
+     * @expectedExceptionMessage A database 'adapter' option is required and must be a nonempty string.
      */
     public function testEmptyConfigKeyAdapter()
     {

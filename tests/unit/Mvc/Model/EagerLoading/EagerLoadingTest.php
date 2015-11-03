@@ -349,7 +349,7 @@ class EagerLoadingTest extends Test
         }, true));
 
         $getIds = function ($obj) {
-            return property_exists($obj, 'robot') && isset ($obj->robot) ? $obj->robot->readAttribute('id') : null;
+            return property_exists($obj, 'robot') && isset($obj->robot) ? $obj->robot->readAttribute('id') : null;
         };
 
         $this->assertEquals(array_map($getIds, $rawly), array_map($getIds, $eagerly));

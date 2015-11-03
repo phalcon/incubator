@@ -41,7 +41,7 @@ class Database extends Adapter implements AdapterInterface
     /**
      * Class constructor.
      *
-     * @param  array                  $options
+     * @param  array $options Adapter
      * @throws \Phalcon\Acl\Exception
      */
     public function __construct(array $options)
