@@ -20,5 +20,4 @@ class BetweenIncorrectField extends Model
 
         return $this->validationHasFailed() != true;
     }
-
 }
