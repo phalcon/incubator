@@ -3,6 +3,8 @@
 namespace Helper;
 
 use Codeception\Module;
+use Codeception\TestCase;
+use Mockery;
 
 /**
  * Unit Helper
@@ -14,4 +16,28 @@ use Codeception\Module;
  */
 class Unit extends Module
 {
+    /**
+     * @var \Codeception\TestCase
+     */
+    protected $test;
+
+    /**
+     * Executed before each test.
+     *
+     * @param \Codeception\TestCase $test
+     */
+    public function _before(TestCase $test)
+    {
+        $this->test = $test;
+    }
+
+    /**
+     * Executed after each test.
+     *
+     * @param \Codeception\TestCase $test
+     */
+    public function _after(TestCase $test)
+    {
+        Mockery::close();
+    }
 }
