@@ -1,20 +1,21 @@
 <?php
-/**
- * ModelTestCase.php
- * Phalcon_Test_ModelTestCase
- * Model Test Helper
- * PhalconPHP Framework
- *
- * @copyright (c) 2011-2012 Phalcon Team
- * @link          http://www.phalconphp.com
- * @author        Andres Gutierrez <andres@phalconphp.com>
- * @author        Nikolaos Dimopoulos <nikos@phalconphp.com>
- *                The contents of this file are subject to the New BSD License that is
- *                bundled with this package in the file docs/LICENSE.txt
- *                If you did not receive a copy of the license and are unable to obtain it
- *                through the world-wide-web, please send an email to license@phalconphp.com
- *                so that we can send you a copy immediately.
- */
+/*
+  +------------------------------------------------------------------------+
+  | Phalcon Framework                                                      |
+  +------------------------------------------------------------------------+
+  | Copyright (c) 2011-2015 Phalcon Team (http://www.phalconphp.com)       |
+  +------------------------------------------------------------------------+
+  | This source file is subject to the New BSD License that is bundled     |
+  | with this package in the file docs/LICENSE.txt.                        |
+  |                                                                        |
+  | If you did not receive a copy of the license and are unable to         |
+  | obtain it through the world-wide-web, please send an email             |
+  | to license@phalconphp.com so we can send you a copy immediately.       |
+  +------------------------------------------------------------------------+
+  | Authors: Stephen Hoogendijk <stephen@tca0.nl>                          |
+  +------------------------------------------------------------------------+
+*/
+
 namespace Phalcon\Test;
 
 use Phalcon\Mvc\Model\Manager as PhModelManager;
@@ -23,19 +24,11 @@ use Phalcon\Mvc\Model\Metadata\Memory as PhMetadataMemory;
 abstract class ModelTestCase extends UnitTestCase
 {
     /**
-     * Sets the test up by loading the DI container and other stuff
-     *
-     * @author Nikos Dimopoulos <nikos@phalconphp.com>
-     * @since  2012-09-20
-     *
-     * @param  \Phalcon\DiInterface $di
-     * @param  \Phalcon\Config $config
-     *
-     * @return void
+     * This method is called before a test is executed.
      */
-    protected function setUp(\Phalcon\DiInterface $di = null, \Phalcon\Config $config = null)
+    protected function setUp()
     {
-        parent::setUp($di, $config);
+        parent::setUp();
 
         // Set Models manager
         $this->di->set(
@@ -60,11 +53,7 @@ abstract class ModelTestCase extends UnitTestCase
     /**
      * Sets the database adapter in the DI container
      *
-     * @author Nikos Dimopoulos <nikos@phalconphp.com>
-     * @since  2012-09-20
-     *
      * @param  string $dbType Sets the database type for the test
-     *
      * @return void
      */
     protected function setDb($dbType = 'mysql')
@@ -96,11 +85,8 @@ abstract class ModelTestCase extends UnitTestCase
     /**
      * Empties a table in the database.
      *
-     * @param $table
-     *
+     * @param string $table
      * @return boolean
-     * @author Nikos Dimopoulos <nikos@phalconphp.com>
-     * @since  2012-11-08
      */
     public function emptyTable($table)
     {
@@ -115,7 +101,6 @@ abstract class ModelTestCase extends UnitTestCase
      * Disables FOREIGN_KEY_CHECKS and truncates database table
      *
      * @param  string $table table name
-     *
      * @return bool   result of truncate operation
      */
     public function truncateTable($table)
@@ -133,11 +118,8 @@ abstract class ModelTestCase extends UnitTestCase
     /**
      * Populates a table with default data
      *
-     * @param      $table
-     * @param null $records
-     *
-     * @author Nikos Dimopoulos <nikos@phalconphp.com>
-     * @since  2012-11-08
+     * @param string $table
+     * @param null   $records
      */
     public function populateTable($table, $records = null)
     {
