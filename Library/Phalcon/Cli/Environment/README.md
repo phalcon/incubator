@@ -20,7 +20,7 @@ This component provides functionality that helps writing CLI oriented code that 
 
 ## Integration
 
-Firstly you need to create an environment aware Console Application.
+Firstly you need to create an environment aware Console Application and implement `Phalcon\Cli\Environment\EnvironmentAwareInterface`:
 
 ```php
 namespace MyAwesomeApplication;
@@ -65,5 +65,9 @@ $application = new Console;
 
 $application->setEnvironment(new Environment);
 ```
+
+## Implementing your own Environment
+
+The `Phalcon\Cli\Environment` interface must be implemented to create your own Environment replacing the one provided by `Phalcon\Cli\Environment` component or extend the current one.
 
 [1]: http://vt100.net/annarbor/aaa-ug/section13.html

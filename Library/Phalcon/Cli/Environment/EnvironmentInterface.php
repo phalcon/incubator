@@ -20,26 +20,59 @@
 namespace Phalcon\Cli\Environment;
 
 /**
- * The Environment Aware Interface
- *
- * This interface must be implemented in those classes that uses Environment object
+ * Environment Interface
  *
  * @package Phalcon\Cli\Environment
  */
-interface EnvironmentAwareInterface
+interface EnvironmentInterface
 {
-    /**
-     * Sets the Environment object
-     *
-     * @param EnvironmentInterface $environment Environment
-     * @return $this
-     */
-    public function setEnvironment(EnvironmentInterface $environment);
+    const STDIN  = 0;
+    const STDOUT = 1;
+    const STDERR = 2;
+
+    const WIDTH  = 80;
+    const HEIGHT = 25;
 
     /**
-     * Gets the Environment object
+     * Checks if currently running under MS Windows.
      *
-     * @return EnvironmentInterface
+     * @return bool
      */
-    public function getEnvironment();
+    public function isWindows();
+
+    /**
+     * Checks if running in a console environment (CLI).
+     *
+     * @return bool
+     */
+    public function isConsole();
+
+    /**
+     * Checks if the file descriptor is an interactive terminal.
+     *
+     * @param int|resource $fd File descriptor, must be either a file resource or an integer [Optional]
+     * @return bool
+     */
+    public function isInteractive($fd = self::STDOUT);
+
+    /**
+     * Checks the supports of colorization.
+     *
+     * @return bool
+     */
+    public function hasColorSupport();
+
+    /**
+     * Gets the number of columns of the terminal.
+     *
+     * @return int
+     */
+    public function getNumberOfColumns();
+
+    /**
+     * Gets the number of rows of the terminal.
+     *
+     * @return int
+     */
+    public function getNumberOfRows();
 }

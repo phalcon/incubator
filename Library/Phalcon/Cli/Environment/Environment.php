@@ -24,15 +24,8 @@ namespace Phalcon\Cli\Environment;
  *
  * @package Phalcon\Cli\Environment
  */
-class Environment
+class Environment implements EnvironmentInterface
 {
-    const STDIN  = 0;
-    const STDOUT = 1;
-    const STDERR = 2;
-
-    const WIDTH  = 80;
-    const HEIGHT = 25;
-
     /**
      * Terminal dimensions
      * @var array
@@ -40,7 +33,7 @@ class Environment
     protected $dimensions = null;
 
     /**
-     * Checks if currently running under MS Windows.
+     * {@inheritdoc}
      *
      * @return bool
      */
@@ -62,7 +55,7 @@ class Environment
     }
 
     /**
-     * Checks if running in a console environment (CLI).
+     * {@inheritdoc}
      *
      * @return bool
      */
@@ -72,18 +65,18 @@ class Environment
     }
 
     /**
-     * Checks if the file descriptor is an interactive terminal.
+     * {@inheritdoc}
      *
      * @param int|resource $fd File descriptor, must be either a file resource or an integer [Optional]
      * @return bool
      */
-    public function isInteractive($fd = self::STDOUT)
+    public function isInteractive($fd = EnvironmentInterface::STDOUT)
     {
         return function_exists('posix_isatty') && @posix_isatty($fd);
     }
 
     /**
-     * Checks the supports of colorization.
+     * {@inheritdoc}
      *
      * @return bool
      */
@@ -125,7 +118,7 @@ class Environment
             return [(int) $match[1], (int) $match[2]];
         }
 
-        return [self::WIDTH, self::HEIGHT];
+        return [EnvironmentInterface::WIDTH, EnvironmentInterface::HEIGHT];
     }
 
     /**
@@ -229,7 +222,7 @@ class Environment
     }
 
     /**
-     * Gets the number of columns of the terminal.
+     * {@inheritdoc}
      *
      * @return int
      */
@@ -241,7 +234,7 @@ class Environment
     }
 
     /**
-     * Gets the number of rows of the terminal.
+     * {@inheritdoc}
      *
      * @return int
      */
