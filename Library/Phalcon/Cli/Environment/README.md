@@ -26,6 +26,7 @@ Firstly you need to create an environment aware Console Application and implemen
 ```php
 namespace MyAwesomeApplication;
 
+use Phalcon\Cli\Environment\EnvironmentInterface;
 use Phalcon\Cli\Environment\EnvironmentAwareInterface;
 use Phalcon\Di\FactoryDefault\Cli as CliDi;
 use Phalcon\Cli\Console as PhConsole;
@@ -42,7 +43,7 @@ class Console extends PhConsole implements EnvironmentAwareInterface
         parent::__construct($di);
     }
     
-    public function setEnvironment(Environment $environment)
+    public function setEnvironment(EnvironmentInterface $environment)
     {
         $this->environment = $environment;
         
