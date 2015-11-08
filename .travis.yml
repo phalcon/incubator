@@ -26,7 +26,7 @@ env:
 before_install:
   - bash tests/_ci/setup_beanstalkd.sh
   - beanstalkd -v
-  - beanstalkd -l ${TEST_BT_HOST} -p ${TEST_BT_PORT} -V & # start queue listener
+  - beanstalkd -l ${TEST_BT_HOST} -p ${TEST_BT_PORT} & # start queue listener
   - sleep 5 # give server some time to boot
   - cd $TRAVIS_BUILD_DIR
   - pecl channel-update pecl.php.net
