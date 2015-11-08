@@ -13,14 +13,15 @@ This component provides functionality that helps writing CLI oriented code that 
 * `Environment::hasColorSupport` - Checks the supports of colorization
 * `Environment::getDimensions` - Gets the terminal dimensions based on the current environment
 * `Environment::setDimensions` - Sets terminal dimensions
-* `Environment::getModeCon` - Runs and parses Microsoft DOS `MODE CON` command if it's available (suppressing any error output)
+* `Environment::getModeCon` - Runs and parses Microsoft DOS [`MODE CON` command][2] if it's available (suppressing any error output)
 * `Environment::getSttySize` - Runs and parses `stty size` command if it's available (suppressing any error output)
 * `Environment::getNumberOfColumns` - Gets the number of columns of the terminal
 * `Environment::getNumberOfRows` - Gets the number of rows of the terminal
 
 ## Integration
 
-Firstly you need to create an environment aware Console Application and implement `Phalcon\Cli\Environment\EnvironmentAwareInterface`:
+Firstly you need to create an environment aware Console Application and implement
+`Phalcon\Cli\Environment\EnvironmentAwareInterface`:
 
 ```php
 namespace MyAwesomeApplication;
@@ -68,6 +69,8 @@ $application->setEnvironment(new Environment);
 
 ## Implementing your own Environment
 
-The `Phalcon\Cli\Environment` interface must be implemented to create your own Environment replacing the one provided by `Phalcon\Cli\Environment` component or extend the current one.
+The `Phalcon\Cli\Environment\EnvironmentInterface` interface must be implemented to create your own Environment
+replacing the one provided by `Phalcon\Cli\Environment` component or extend the current one.
 
 [1]: http://vt100.net/annarbor/aaa-ug/section13.html
+[2]: https://technet.microsoft.com/en-us/library/bb490932.aspx

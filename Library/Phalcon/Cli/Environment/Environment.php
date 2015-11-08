@@ -118,6 +118,7 @@ class Environment implements EnvironmentInterface
             return [(int) $match[1], (int) $match[2]];
         }
 
+        // fallback mode
         return [EnvironmentInterface::WIDTH, EnvironmentInterface::HEIGHT];
     }
 

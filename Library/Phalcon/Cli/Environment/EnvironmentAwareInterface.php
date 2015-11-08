@@ -22,7 +22,7 @@ namespace Phalcon\Cli\Environment;
 /**
  * The Environment Aware Interface
  *
- * This interface must be implemented in those classes that uses Environment object
+ * This interface must be implemented in those classes that uses EnvironmentInterface interface
  *
  * @package Phalcon\Cli\Environment
  */
