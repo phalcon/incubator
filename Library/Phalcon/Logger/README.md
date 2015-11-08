@@ -38,8 +38,8 @@ CREATE TABLE `logs` (
   `type` int(3) NOT NULL,
   `content` text,
   `created_at` int(18) unsigned NOT NULL,
-  PRIMARY KEY (`id`) ENGINE=InnoDB DEFAULT CHARSET=utf8
-)
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ```
 
 ## Firelogger
