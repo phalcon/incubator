@@ -118,7 +118,7 @@ interface OptionInterface extends ParameterInterface
     public function setValueMode($mode);
 
     /**
-     * gets the Option value mode (one of the VALUE_* constants).
+     * Gets the Option value mode (one of the VALUE_* constants).
      *
      * @return int
      */
