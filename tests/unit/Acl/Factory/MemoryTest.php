@@ -125,15 +125,37 @@ class MemoryTest extends Test
     public function testFactoryShouldThrowExceptionIfWrongMethodIsSet()
     {
         $config = new Ini(INCUBATOR_FIXTURES . 'Acl/acl.ini');
-        $config->acl->role->user->wrongmethod = new Config(array(
-            'test' => array(
-                'actions' => array(
-                    'test',
-                ),
-            )
-        ));
+        $config->acl->role->user->wrongmethod = new Config(['test' => ['actions' => ['test']]]);
         $factory = new MemoryFactory();
         $factory->create($config->get('acl'));
+    }
+
+    /**
+     * @dataProvider invalidActionProvider
+     *
+     * @expectedException \Phalcon\Acl\Exception
+     * @expectedExceptionMessage Key "actions" must exist and must be traversable.
+     *
+     * @param mixed $action
+     */
+    public function testFactoryShouldThrowExceptionIfWrongNoActionIsSet($action)
+    {
+        $config = new Ini(INCUBATOR_FIXTURES . 'Acl/acl.ini');
+        $config->acl->role->user->wrongmethod = new Config(['test' => ['actions' => $action]]);
+        $factory = new MemoryFactory();
+        $factory->create($config->get('acl'));
+    }
+
+    public function invalidActionProvider()
+    {
+        return [
+            'int'      => [PHP_INT_MAX],
+            'float'    => [microtime(true)],
+            'null'     => [null],
+            'bool'     => [false],
+            'object'   => [new \stdClass],
+            'callable' => [function () {}],
+        ];
     }
 
     /**
