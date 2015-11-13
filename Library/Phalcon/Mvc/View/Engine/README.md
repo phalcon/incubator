@@ -233,3 +233,31 @@ $di->set('view', function() use ($config) {
 	return $view;
 });
 ```
+
+VoltMinifier
+------------
+This adapter extends the Volt adapter and compiler to enable html-minification. The minification is done on the compiled template before saving it to the cache, so it will not affect the performance after the first rendering. The minifier will not affect templates contining ```<script>```, ```<code>```, ```<pre>```, ```<textarea>``` or tags containing ```value="...."```. This should make it safe to use with javascript in templates, as long as it's surrounded with the proper tags. Minification can also selectively be disabled for .volt-files by adding the comment ```{# no-minify #}``` anywhere in the template. 
+
+Register the adapter in the view component:
+```php
+//Setting up the view component
+$di->set('view', function() use ($di) {
+
+	$view = new \Phalcon\Mvc\View();
+
+	$view->setViewsDir('../app/views/');
+
+	$volt = new \Phalcon\Mvc\View\Engine\VoltMinifyer($view, $di);
+	$options = [
+		'compiledPath' => __DIR__ . '/cache/',
+		'compiledSeparator' => '_'
+	];
+	$volt->setOptions($options);
+
+	$view->registerEngines(array(
+		'.volt' => $volt
+	));
+
+	return $view;
+});
+```
