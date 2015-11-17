@@ -109,20 +109,20 @@ class Database extends Adapter implements AdapterInterface
         }
 
         $exists = $this->connection->fetchOne(
-            'SELECT COUNT(*) FROM ' . $this->roles . ' WHERE name = ?',
+            "SELECT COUNT(*) FROM {$this->roles} WHERE name = ?",
             null,
-            array($role->getName())
+            [$role->getName()]
         );
 
         if (!$exists[0]) {
             $this->connection->execute(
-                'INSERT INTO ' . $this->roles . ' VALUES (?, ?)',
-                array($role->getName(), $role->getDescription())
+                "INSERT INTO {$this->roles} VALUES (?, ?)",
+                [$role->getName(), $role->getDescription()]
             );
 
             $this->connection->execute(
-                'INSERT INTO ' . $this->accessList . ' VALUES (?, ?, ?, ?)',
-                array($role->getName(), '*', '*', $this->_defaultAccess)
+                "INSERT INTO {$this->accessList} VALUES (?, ?, ?, ?)",
+                [$role->getName(), '*', '*', $this->_defaultAccess]
             );
         }
 
@@ -142,22 +142,22 @@ class Database extends Adapter implements AdapterInterface
      */
     public function addInherit($roleName, $roleToInherit)
     {
-        $sql = 'SELECT COUNT(*) FROM ' . $this->roles . ' WHERE name = ?';
-        $exists = $this->connection->fetchOne($sql, null, array($roleName));
+        $sql = "SELECT COUNT(*) FROM {$this->roles} WHERE name = ?";
+        $exists = $this->connection->fetchOne($sql, null, [$roleName]);
         if (!$exists[0]) {
-            throw new Exception("Role '" . $roleName . "' does not exist in the role list");
+            throw new Exception("Role '{$roleName}' does not exist in the role list");
         }
 
         $exists = $this->connection->fetchOne(
-            'SELECT COUNT(*) FROM ' . $this->rolesInherits . ' WHERE roles_name = ? AND roles_inherit = ?',
+            "SELECT COUNT(*) FROM {$this->rolesInherits} WHERE roles_name = ? AND roles_inherit = ?",
             null,
-            array($roleName, $roleToInherit)
+            [$roleName, $roleToInherit]
         );
 
         if (!$exists[0]) {
             $this->connection->execute(
-                'INSERT INTO ' . $this->rolesInherits . ' VALUES (?, ?)',
-                array($roleName, $roleToInherit)
+                "INSERT INTO {$this->rolesInherits} VALUES (?, ?)",
+                [$roleName, $roleToInherit]
             );
         }
     }
@@ -171,9 +171,9 @@ class Database extends Adapter implements AdapterInterface
     public function isRole($roleName)
     {
         $exists = $this->connection->fetchOne(
-            'SELECT COUNT(*) FROM ' . $this->roles . ' WHERE name = ?',
+            "SELECT COUNT(*) FROM {$this->roles} WHERE name = ?",
             null,
-            array($roleName)
+            [$roleName]
         );
 
         return (bool) $exists[0];
@@ -188,9 +188,9 @@ class Database extends Adapter implements AdapterInterface
     public function isResource($resourceName)
     {
         $exists = $this->connection->fetchOne(
-            'SELECT COUNT(*) FROM ' . $this->resources . ' WHERE name = ?',
+            "SELECT COUNT(*) FROM {$this->resources} WHERE name = ?",
             null,
-            array($resourceName)
+            [$resourceName]
         );
 
         return (bool) $exists[0];
@@ -204,8 +204,8 @@ class Database extends Adapter implements AdapterInterface
      * $acl->addResource(new Phalcon\Acl\Resource('customers'), 'search');
      * $acl->addResource('customers', 'search');
      * //Add a resource  with an access list
-     * $acl->addResource(new Phalcon\Acl\Resource('customers'), array('create', 'search'));
-     * $acl->addResource('customers', array('create', 'search'));
+     * $acl->addResource(new Phalcon\Acl\Resource('customers'), ['create', 'search']);
+     * $acl->addResource('customers', ['create', 'search']);
      * </code>
      *
      * @param  \Phalcon\Acl\Resource|string $resource
@@ -219,15 +219,15 @@ class Database extends Adapter implements AdapterInterface
         }
 
         $exists = $this->connection->fetchOne(
-            'SELECT COUNT(*) FROM ' . $this->resources . ' WHERE name = ?',
+            "SELECT COUNT(*) FROM {$this->resources} WHERE name = ?",
             null,
-            array($resource->getName())
+            [$resource->getName()]
         );
 
         if (!$exists[0]) {
             $this->connection->execute(
-                'INSERT INTO ' . $this->resources . ' VALUES (?, ?)',
-                array($resource->getName(), $resource->getDescription())
+                "INSERT INTO {$this->resources} VALUES (?, ?)",
+                [$resource->getName(), $resource->getDescription()]
             );
         }
 
@@ -249,23 +249,21 @@ class Database extends Adapter implements AdapterInterface
     public function addResourceAccess($resourceName, $accessList)
     {
         if (!$this->isResource($resourceName)) {
-            throw new Exception("Resource '" . $resourceName . "' does not exist in ACL");
+            throw new Exception("Resource '{$resourceName}' does not exist in ACL");
         }
 
-        $sql = 'SELECT COUNT(*) FROM ' .
-            $this->resourcesAccesses .
-            ' WHERE resources_name = ? AND access_name = ?';
+        $sql = "SELECT COUNT(*) FROM {$this->resourcesAccesses} WHERE resources_name = ? AND access_name = ?";
 
         if (!is_array($accessList)) {
-            $accessList = array($accessList);
+            $accessList = [$accessList];
         }
 
         foreach ($accessList as $accessName) {
-            $exists = $this->connection->fetchOne($sql, null, array($resourceName, $accessName));
+            $exists = $this->connection->fetchOne($sql, null, [$resourceName, $accessName]);
             if (!$exists[0]) {
                 $this->connection->execute(
                     'INSERT INTO ' . $this->resourcesAccesses . ' VALUES (?, ?)',
-                    array($resourceName, $accessName)
+                    [$resourceName, $accessName]
                 );
             }
         }
@@ -281,7 +279,7 @@ class Database extends Adapter implements AdapterInterface
     public function getResources()
     {
         $resources = [];
-        $sql       = 'SELECT * FROM ' . $this->resources;
+        $sql       = "SELECT * FROM {$this->resources}";
 
         foreach ($this->connection->fetchAll($sql, Db::FETCH_ASSOC) as $row) {
             $resources[] = new Resource($row['name'], $row['description']);
@@ -297,8 +295,8 @@ class Database extends Adapter implements AdapterInterface
      */
     public function getRoles()
     {
-        $roles = array();
-        $sql   = 'SELECT * FROM ' . $this->roles;
+        $roles = [];
+        $sql   = "SELECT * FROM {$this->roles}";
 
         foreach ($this->connection->fetchAll($sql, Db::FETCH_ASSOC) as $row) {
             $roles[] = new Role($row['name'], $row['description']);
@@ -325,7 +323,7 @@ class Database extends Adapter implements AdapterInterface
      * //Allow access to guests to search on customers
      * $acl->allow('guests', 'customers', 'search');
      * //Allow access to guests to search or create on customers
-     * $acl->allow('guests', 'customers', array('search', 'create'));
+     * $acl->allow('guests', 'customers', ['search', 'create']);
      * //Allow access to any role to browse on products
      * $acl->allow('*', 'products', 'browse');
      * //Allow access to any role to browse on any resource
@@ -349,7 +347,7 @@ class Database extends Adapter implements AdapterInterface
      * //Deny access to guests to search on customers
      * $acl->deny('guests', 'customers', 'search');
      * //Deny access to guests to search or create on customers
-     * $acl->deny('guests', 'customers', array('search', 'create'));
+     * $acl->deny('guests', 'customers', ['search', 'create']);
      * //Deny access to any role to browse on products
      * $acl->deny('*', 'products', 'browse');
      * //Deny access to any role to browse on any resource
@@ -384,14 +382,14 @@ class Database extends Adapter implements AdapterInterface
      */
     public function isAllowed($role, $resource, $access)
     {
-        $sql = implode(' ', array(
-            'SELECT allowed FROM', $this->accessList, 'AS a',
+        $sql = implode(' ', [
+            "SELECT 'allowed' FROM {$this->accessList} AS a",
             // role_name in:
             'WHERE roles_name IN (',
                 // given 'role'-parameter
                 'SELECT ? ',
                 // inherited role_names
-                'UNION SELECT roles_inherit FROM', $this->rolesInherits, 'WHERE roles_name = ?',
+                "UNION SELECT roles_inherit FROM {$this->rolesInherits} WHERE roles_name = ?",
                 // or 'any'
                 "UNION SELECT '*'",
             ')',
@@ -403,10 +401,10 @@ class Database extends Adapter implements AdapterInterface
             "ORDER BY (roles_name != '*')+(resources_name != '*')+(access_name != '*') DESC",
             // get only one...
             'LIMIT 1'
-        ));
+        ]);
 
         // fetch one entry...
-        $allowed = $this->connection->fetchOne($sql, Db::FETCH_NUM, array($role, $role, $resource, $access));
+        $allowed = $this->connection->fetchOne($sql, Db::FETCH_NUM, [$role, $role, $resource, $access]);
         if (is_array($allowed)) {
             return (bool) $allowed[0];
         }
@@ -433,31 +431,27 @@ class Database extends Adapter implements AdapterInterface
         /**
          * Check if the access is valid in the resource
          */
-        $sql = 'SELECT COUNT(*) FROM ' .
-            $this->resourcesAccesses .
-            ' WHERE resources_name = ? AND access_name = ?';
-        $exists = $this->connection->fetchOne($sql, null, array($resourceName, $accessName));
+        $sql = "SELECT COUNT(*) FROM {$this->resourcesAccesses} WHERE resources_name = ? AND access_name = ?";
+        $exists = $this->connection->fetchOne($sql, null, [$resourceName, $accessName]);
         if (!$exists[0]) {
             throw new Exception(
-                "Access '" . $accessName . "' does not exist in resource '" . $resourceName . "' in ACL"
+                "Access '{$accessName}' does not exist in resource '{$resourceName}' in ACL"
             );
         }
 
         /**
          * Update the access in access_list
          */
-        $sql = 'SELECT COUNT(*) FROM ' .
-            $this->accessList .
-            ' WHERE roles_name = ? AND resources_name = ? AND access_name = ?';
-        $exists = $this->connection->fetchOne($sql, null, array($roleName, $resourceName, $accessName));
+        $sql = "SELECT COUNT(*) FROM {$this->accessList} "
+            . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
+        $exists = $this->connection->fetchOne($sql, null, [$roleName, $resourceName, $accessName]);
         if (!$exists[0]) {
-            $sql = 'INSERT INTO ' . $this->accessList . ' VALUES (?, ?, ?, ?)';
-            $params = array($roleName, $resourceName, $accessName, $action);
+            $sql = "INSERT INTO {$this->accessList} VALUES (?, ?, ?, ?)";
+            $params = [$roleName, $resourceName, $accessName, $action];
         } else {
-            $sql = 'UPDATE ' .
-                $this->accessList .
-                ' SET allowed = ? WHERE roles_name = ? AND resources_name = ? AND access_name = ?';
-            $params = array($action, $roleName, $resourceName, $accessName);
+            $sql = "UPDATE {$this->accessList} SET allowed = ? " .
+                "WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
+            $params = [$action, $roleName, $resourceName, $accessName];
         }
 
         $this->connection->execute($sql, $params);
@@ -465,13 +459,12 @@ class Database extends Adapter implements AdapterInterface
         /**
          * Update the access '*' in access_list
          */
-        $sql = 'SELECT COUNT(*) FROM ' .
-            $this->accessList .
-            ' WHERE roles_name = ? AND resources_name = ? AND access_name = ?';
-        $exists = $this->connection->fetchOne($sql, null, array($roleName, $resourceName, '*'));
+        $sql = "SELECT COUNT(*) FROM {$this->accessList} " .
+            "WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
+        $exists = $this->connection->fetchOne($sql, null, [$roleName, $resourceName, '*']);
         if (!$exists[0]) {
-            $sql = 'INSERT INTO ' . $this->accessList . ' VALUES (?, ?, ?, ?)';
-            $this->connection->execute($sql, array($roleName, $resourceName, '*', $this->_defaultAccess));
+            $sql = "INSERT INTO {$this->accessList} VALUES (?, ?, ?, ?)";
+            $this->connection->execute($sql, [$roleName, $resourceName, '*', $this->_defaultAccess]);
         }
 
         return true;
@@ -489,11 +482,11 @@ class Database extends Adapter implements AdapterInterface
     protected function allowOrDeny($roleName, $resourceName, $access, $action)
     {
         if (!$this->isRole($roleName)) {
-            throw new Exception('Role "' . $roleName . '" does not exist in the list');
+            throw new Exception("Role '{$roleName}' does not exist in the list");
         }
 
         if (!is_array($access)) {
-            $access = array($access);
+            $access = [$access];
         }
 
         foreach ($access as $accessName) {
