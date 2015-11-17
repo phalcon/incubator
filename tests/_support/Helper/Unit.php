@@ -40,4 +40,14 @@ class Unit extends Module
     {
         Mockery::close();
     }
+
+    /**
+     * @param mixed  $exceptionName
+     * @param string $exceptionMessage
+     * @param int    $exceptionCode
+     */
+    public function setExpectedException($exceptionName, $exceptionMessage = '', $exceptionCode = null)
+    {
+        $this->test->setExpectedException($exceptionName, $exceptionMessage, $exceptionCode);
+    }
 }
