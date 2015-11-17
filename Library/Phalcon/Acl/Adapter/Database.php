@@ -78,14 +78,16 @@ class Database extends Adapter implements AdapterInterface
     public function __construct(array $options)
     {
         if (!isset($options['db']) || !$options['db'] instanceof DbAdapter) {
-            throw new Exception('Parameter "db" is required and it must be instance of Phalcon\Acl\AdapterInterface');
+            throw new Exception(
+                'Parameter "db" is required and it must be an instance of Phalcon\Acl\AdapterInterface'
+            );
         }
 
         $this->connection = $options['db'];
 
         foreach (['roles', 'resources', 'resourcesAccesses', 'accessList', 'rolesInherits'] as $table) {
             if (!isset($options[$table]) || empty($options[$table]) || !is_string($options[$table])) {
-                throw new Exception("Parameter '{$table}' is required and it must be non empty string");
+                throw new Exception("Parameter '{$table}' is required and it must be a non empty string");
             }
 
             $this->{$table} = $this->connection->escapeIdentifier($options[$table]);
