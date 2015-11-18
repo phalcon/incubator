@@ -9,6 +9,8 @@ Users must register their email addresses with Gravatar before their avatars wil
 
 ### Getting Started
 
+#### Setup through setters
+
 ```php
 use Phalcon\Avatar\Gravatar;
 
@@ -20,6 +22,28 @@ $di->setShared('gravatar', function () {
     $gravatar->setDefaultImage('retro')
              ->setSize(220)
              ->setRating(Gravatar::RATING_PG);
+
+    return $gravatar;
+});
+```
+
+#### Setup through config
+
+```php
+use Phalcon\Avatar\Gravatar;
+
+// Config must be either an array or \Phalcon\Config instance
+$config = [
+    'default_image' => 'mm',
+    'rating'        => 'x',
+    'size'          => 110,
+    'use_https'     => true,
+];
+
+
+$di->setShared('gravatar', function () use ($config) {
+    // Get Gravatar instance
+    $gravatar = new Gravatar($config);
 
     return $gravatar;
 });
@@ -112,7 +136,7 @@ $gravatar->enableSecureURL();
 $gravatar->disableSecureURL();
 ```
 
-To check to see if you are using "secure images" mode, call the method `Gravatar::useSecureURL()`,
+To check to see if you are using "secure images" mode, call the method `Gravatar::isUseSecureURL()`,
 which will return a boolean value regarding whether or not secure images mode is enabled.
 
 #### Gravatar Rating

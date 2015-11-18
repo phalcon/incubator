@@ -20,6 +20,7 @@
 namespace Phalcon\Avatar;
 
 use InvalidArgumentException;
+use Phalcon\Config;
 
 /**
  * Phalcon Gravatar.
@@ -49,13 +50,13 @@ class Gravatar implements Avatarable
     const HTTPS_URL = 'https://secure.gravatar.com/avatar/';
 
     /**
-     * Minimum size of requested avatar
+     * The minimum size allowed for the Gravatar
      * @type int
      */
     const MIN_AVATAR_SIZE = 0;
 
     /**
-     * Maximum size of requested avatar
+     * The maximum size allowed for the Gravatar
      * @type int
      */
     const MAX_AVATAR_SIZE = 2048;
@@ -140,6 +141,33 @@ class Gravatar implements Avatarable
      * @var bool
      */
     private $forceDefault = false;
+
+    public function __construct($config)
+    {
+        if ($config instanceof Config) {
+            $config = $config->toArray();
+        }
+
+        if (!is_array($config)) {
+            throw new InvalidArgumentException('Config must be either an array or \Phalcon\Config instance');
+        }
+
+        if (isset($config['default_image'])) {
+            $this->setDefaultImage($config['default_image']);
+        }
+
+        if (isset($config['rating'])) {
+            $this->setRating($config['rating']);
+        }
+
+        if (isset($config['size'])) {
+            $this->setSize($config['size']);
+        }
+
+        if (isset($config['use_https']) && $config['use_https']) {
+            $this->enableSecureURL();
+        }
+    }
 
     /**
      * {@inheritdoc}
@@ -275,7 +303,7 @@ class Gravatar implements Avatarable
      *
      * @return bool
      */
-    public function useSecureURL()
+    public function isUseSecureURL()
     {
         return $this->secureURL;
     }
@@ -370,7 +398,7 @@ class Gravatar implements Avatarable
     {
         $url = static::HTTP_URL;
 
-        if ($this->useSecureURL()) {
+        if ($this->secureURL) {
             $url = static::HTTPS_URL;
         }
 
