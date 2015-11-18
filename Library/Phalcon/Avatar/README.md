@@ -176,6 +176,6 @@ $gravatar->disableForceDefault();
 ```
 
 To check to see if you are using "Force Default" mode,
-call the method `Gravatar::useForceDefault()`, which will return a boolean value.
+call the method `Gravatar::isUseForceDefault()`, which will return a boolean value.
 
 [1]: http://gravatar.com/

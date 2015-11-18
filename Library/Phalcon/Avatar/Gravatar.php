@@ -372,7 +372,7 @@ class Gravatar implements Avatarable
      *
      * @return bool
      */
-    public function useForceDefault()
+    public function isUseForceDefault()
     {
         return $this->forceDefault;
     }
@@ -409,11 +409,11 @@ class Gravatar implements Avatarable
             'r' => $this->getRating()
         ];
 
-        if ($this->getDefaultImage()) {
-            $query = array_merge($query, ['d' => $this->getDefaultImage()]);
+        if ($this->defaultImage) {
+            $query = array_merge($query, ['d' => $this->defaultImage]);
         }
 
-        if ($this->useForceDefault()) {
+        if ($this->forceDefault) {
             $query = array_merge($query, ['f' => 'y']);
         }
 
