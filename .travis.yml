@@ -47,7 +47,7 @@ before_script:
   - mysql -e 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;'
 
 script:
-  - vendor/bin/phpcs --standard=PSR2 --encoding=utf-8 Library/
+  - vendor/bin/phpcs --standard=PSR2 --colors --extensions=php --encoding=utf-8 Library/
   - vendor/bin/codecept build
   - vendor/bin/codecept run --coverage-text
 
