@@ -118,7 +118,7 @@ class ExtendedTest extends Test
 
         foreach ($expected as $tube => $value) {
             $this->client->addWorker($tube, function (Job $job) {
-                // Store string «test-tube-%JOB_BODY%» in shared memory
+                // Store string "test-tube-%JOB_BODY%" in shared memory
                 $memory  = shmop_open($this->shmKey, 'c', 0644, $this->shmLimit);
                 $output  = trim(shmop_read($memory, 0, $this->shmLimit));
                 $output .= sprintf("\ntest-tube-%s", $job->getBody());

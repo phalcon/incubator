@@ -18,6 +18,12 @@
 
 namespace Phalcon\Acl\Factory;
 
+use Phalcon\Config;
+use Phalcon\Acl\Adapter\Memory as MemoryAdapter;
+use Phalcon\Acl\Exception;
+use Phalcon\Acl\Resource;
+use Phalcon\Acl\Role;
+
 /**
  * Class Memory
  *
@@ -29,42 +35,43 @@ namespace Phalcon\Acl\Factory;
 class Memory
 {
     /**
-     * @var \Phalcon\Config
+     * @var Config
      */
     private $config;
 
     /**
-     * @var \Phalcon\Acl\Adapter\Memory
+     * @var MemoryAdapter
      */
     private $acl;
 
     /**
      * Array of defined role objects.
      *
-     * @var \Phalcon\Acl\Role[]
+     * @var Role[]
      */
-    private $roles = array();
+    private $roles = [];
 
     /**
      * Creates configured instance of acl.
      *
-     * @param \Phalcon\Config $config config
-     *
-     * @return \Phalcon\Acl\Adapter\Memory acl
-     *
-     * @throws \Phalcon\Acl\Exception      If configuration is wrong
+     * @param Config $config config
+     * @return MemoryAdapter acl
+     * @throws Exception If configuration is wrong
      */
-    public function create(\Phalcon\Config $config)
+    public function create(Config $config)
     {
-        $this->acl = new \Phalcon\Acl\Adapter\Memory();
+        $this->acl = new MemoryAdapter();
         $this->config = $config;
+        $defaultAction = $this->config->get('defaultAction');
 
-        if (!is_int($this->config->get('defaultAction')) && !ctype_digit($this->config->get('defaultAction'))) {
-            throw new \Phalcon\Acl\Exception('Key "defaultAction" must exist and must be of numeric value.');
+        if (!is_int($defaultAction) && !ctype_digit($defaultAction)) {
+            throw new Exception('Key "defaultAction" must exist and must be of numeric value.');
         }
-        $this->acl->setDefaultAction((int) $this->config->get('defaultAction'));
+
+        $this->acl->setDefaultAction((int) $defaultAction);
         $this->addResources();
         $this->addRoles();
+
         return $this->acl;
     }
 
@@ -72,16 +79,16 @@ class Memory
      * Adds resources from config to acl object.
      *
      * @return $this
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
     protected function addResources()
     {
         if (!(array)$this->config->get('resource')) {
-            throw new \Phalcon\Acl\Exception('Key "resource" must exist and must be traversable.');
+            throw new Exception('Key "resource" must exist and must be traversable.');
         }
 
         // resources
-        foreach ($this->config->resource as $name => $resource) {
+        foreach ($this->config->get('resource') as $name => $resource) {
             $actions = (array) $resource->get('actions');
             if (!$actions) {
                 $actions = null;
@@ -99,15 +106,15 @@ class Memory
      * Adds role from config to acl object.
      *
      * @return $this
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
     protected function addRoles()
     {
         if (!(array)$this->config->get('role')) {
-            throw new \Phalcon\Acl\Exception('Key "role" must exist and must be traversable.');
+            throw new Exception('Key "role" must exist and must be traversable.');
         }
 
-        foreach ($this->config->role as $role => $rules) {
+        foreach ($this->config->get('role') as $role => $rules) {
             $this->roles[$role] = $this->makeRole($role, $rules->get('description'));
             $this->addRole($role, $rules);
             $this->addAccessRulesToRole($role, $rules);
@@ -119,34 +126,31 @@ class Memory
     /**
      * Adds access rules to role.
      *
-     * @param string          $role  role
-     * @param \Phalcon\Config $rules rules
+     * @param string $role  role
+     * @param Config $rules rules
      *
      * @return $this
      *
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
-    protected function addAccessRulesToRole($role, \Phalcon\Config $rules)
+    protected function addAccessRulesToRole($role, Config $rules)
     {
         foreach ($rules as $method => $rules) {
             // skip not wanted rules
-            if (in_array($method, array('inherit', 'description'))) {
+            if (in_array($method, ['inherit', 'description'])) {
                 continue;
             }
 
             foreach ($rules as $controller => $actionRules) {
-                $actions = (array) $actionRules->get('actions');
-                if (!$actions) {
-                    throw new \Phalcon\Acl\Exception(
-                        'Key "actions" must exist and must be traversable.'
-                    );
-                }
-                if (!in_array($method, array('allow', 'deny'))) {
-                    throw new \Phalcon\Acl\Exception(sprintf(
+                $actions = $this->castAction($actionRules->get('actions'));
+
+                if (!in_array($method, ['allow', 'deny'])) {
+                    throw new Exception(sprintf(
                         'Wrong access method given. Expected "allow" or "deny" but "%s" was set.',
                         $method
                     ));
                 }
+
                 $this->acl->{$method}($role, $controller, $actions);
             }
         }
@@ -155,22 +159,46 @@ class Memory
     }
 
     /**
+     * Cast actions
+     *
+     * @param mixed $actions Actions
+     * @return array|null
+     * @throws Exception
+     */
+    protected function castAction($actions)
+    {
+        if ($actions instanceof Config) {
+            $actions = $actions->toArray();
+        } elseif (is_string($actions)) {
+            $actions = [$actions];
+        }
+
+        if (!is_array($actions)) {
+            throw new Exception(
+                'Key "actions" must exist and must be traversable.'
+            );
+        }
+
+        return $actions;
+    }
+
+    /**
      * Add role to acl.
      *
-     * @param string          $role  role
-     * @param \Phalcon\Config $rules rules
+     * @param string $role  role
+     * @param Config $rules rules
      *
      * @return $this
      *
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
-    protected function addRole($role, \Phalcon\Config $rules)
+    protected function addRole($role, Config $rules)
     {
         // role has inheritance ?
         if ($rules->get('inherit')) {
             // role exists?
             if (!array_key_exists($rules->inherit, $this->roles)) {
-                throw new \Phalcon\Acl\Exception(sprintf(
+                throw new Exception(sprintf(
                     'Role "%s" cannot inherit non-existent role "%s".
                      Either such role does not exist or it is set to be inherited before it is actually defined.',
                     $role,
@@ -188,29 +216,26 @@ class Memory
     /**
      * Creates acl resource.
      *
-     * @param string      $name        resource name
-     * @param string|null $description optional, resource description
+     * @param string      $name        Resource name
+     * @param string|null $description Resource description [Optional]
      *
-     * @return \Phalcon\Acl\Resource
+     * @return Resource
      */
     protected function makeResource($name, $description = null)
     {
-        return new \Phalcon\Acl\Resource(
-            $name,
-            $description
-        );
+        return new Resource($name, $description);
     }
 
     /**
      * Creates acl role.
      *
-     * @param string      $role        role name
-     * @param string|null $description optional, description
+     * @param string      $role        Role name
+     * @param string|null $description Description [Optional]
      *
-     * @return \Phalcon\Acl\Role
+     * @return Role
      */
     protected function makeRole($role, $description = null)
     {
-        return new \Phalcon\Acl\Role($role, $description);
+        return new Role($role, $description);
     }
 }

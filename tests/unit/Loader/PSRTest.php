@@ -36,11 +36,15 @@ class PSRTest extends Test
     protected $loaders;
     protected $includePath;
 
+    protected $baseDir;
+
     /**
      * executed before each test
      */
     protected function _before()
     {
+        $this->baseDir =  dirname(__FILE__) . DIRECTORY_SEPARATOR . 'TestLib' . DIRECTORY_SEPARATOR;
+
         // Store original autoloaders
         $this->loaders = spl_autoload_functions();
 
@@ -81,7 +85,7 @@ class PSRTest extends Test
         $loader = new PsrLoader();
         $loader->registerNamespaces(
             [
-                'TestLib' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'TestLib' . DIRECTORY_SEPARATOR
+                'TestLib' => $this->baseDir
             ]
         );
         $loader->register();
@@ -91,7 +95,7 @@ class PSRTest extends Test
         $this->assertTrue(class_exists('\TestLib\Unusable\NamespacedClass'));
 
         list($actualObject, $actualMethod) = array_pop($loaders);
-        $this->assertSame($loader,    $actualObject);
+        $this->assertSame($loader, $actualObject);
         $this->assertSame('autoLoad', $actualMethod);
 
         $loader->unregister();
@@ -104,7 +108,7 @@ class PSRTest extends Test
         $loader = new PsrLoader();
         $loader->registerNamespaces(
             [
-                'TestLib\Parent' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'TestLib' . DIRECTORY_SEPARATOR . 'Parent',
+                'TestLib\Parent' => $this->baseDir . 'Parent',
             ]
         );
         $loader->register();
@@ -120,7 +124,7 @@ class PSRTest extends Test
         $loader = new PsrLoader();
         $loader->registerNamespaces(
             [
-                'TestLib' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'TestLib' . DIRECTORY_SEPARATOR
+                'TestLib' => $this->baseDir
             ]
         );
         $loader->setExtensions(['php', 'php5', 'inc']);
@@ -139,7 +143,7 @@ class PSRTest extends Test
         $loader = new PsrLoader();
         $loader->registerNamespaces(
             [
-                'TestLib' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'TestLib' . DIRECTORY_SEPARATOR
+                'TestLib' => $this->baseDir
             ]
         );
         $loader->register();
@@ -157,7 +161,7 @@ class PSRTest extends Test
         $loader = new PsrLoader();
         $loader->registerNamespaces(
             [
-                'TestLib' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'TestLib' . DIRECTORY_SEPARATOR . 'Parent',
+                'TestLib' => $this->baseDir . 'Parent',
             ]
         );
         $loader->register();

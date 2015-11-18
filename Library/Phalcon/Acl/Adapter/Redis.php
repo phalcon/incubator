@@ -36,9 +36,8 @@ class Redis extends Adapter implements AdapterInterface
     /** @var bool  */
     protected $setNXAccess = true;
 
-    /** @var \Redis|\Predis\Client */
+    /** @var \Redis */
     protected $redis;
-
 
     public function __construct($redis = null)
     {
