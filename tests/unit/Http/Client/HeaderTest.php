@@ -1,14 +1,27 @@
 <?php
 
-namespace Phalcon\Tests\Http;
+namespace Phalcon\Tests\Http\Client;
 
 use Codeception\TestCase\Test;
 use Phalcon\Http\Client\Header;
 use UnitTester;
 
 /**
- * Class HeaderTest
- * @package Phalcon\Tests\Http
+ * \Phalcon\Tests\Http\Client\HeaderTest
+ * Tests for Phalcon\Http\Client\Header
+ *
+ * @copyright (c) 2011-2015 Phalcon Team
+ * @link      http://www.phalconphp.com
+ * @author    Ruslan Khaibullin
+ * @package   Phalcon\Http\Client\Header
+ * @group     Http
+ *
+ * The contents of this file are subject to the New BSD License that is
+ * bundled with this package in the file docs/LICENSE.txt
+ *
+ * If you did not receive a copy of the license and are unable to obtain it
+ * through the world-wide-web, please send an email to license@phalconphp.com
+ * so that we can send you a copy immediately.
  */
 class HeaderTest extends Test
 {

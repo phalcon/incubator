@@ -10,7 +10,7 @@ use Codeception\TestCase\Test;
 use UnitTester;
 
 /**
- * \Phalcon\Annotations\Adapter\MemcachedTest
+ * \Phalcon\Test\Annotations\Adapter\MemcachedTest
  * Tests for Phalcon\Annotations\Adapter\Memcached component
  *
  * @copyright (c) 2011-2015 Phalcon Team
