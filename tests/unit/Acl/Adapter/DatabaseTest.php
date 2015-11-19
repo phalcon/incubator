@@ -9,6 +9,23 @@ use Codeception\TestCase\Test;
 use UnitTester;
 use ReflectionProperty;
 
+/**
+ * \Phalcon\Test\Acl\Adapter\DatabaseTest
+ * Tests for Phalcon\Acl\Adapter\Database component
+ *
+ * @copyright (c) 2011-2015 Phalcon Team
+ * @link      http://www.phalconphp.com
+ * @author    Serghei Iakovlev <serghei@phalconphp.com>
+ * @package   Phalcon\Test\Acl\Adapter
+ * @group     Acl
+ *
+ * The contents of this file are subject to the New BSD License that is
+ * bundled with this package in the file docs/LICENSE.txt
+ *
+ * If you did not receive a copy of the license and are unable to obtain it
+ * through the world-wide-web, please send an email to license@phalconphp.com
+ * so that we can send you a copy immediately.
+ */
 class DatabaseTest extends Test
 {
     const ADAPTER_CLASS = 'Phalcon\Acl\Adapter\Database';

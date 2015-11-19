@@ -104,14 +104,16 @@ Execute test groups with `run -g <group_name>` command.
 Available groups:
 * `Acl`
 * `Annotation`
+* `Avatar`
+* `Beanstalk`
 * `Cache`
 * `Config`
-* `Loader`
 * `DbValidation`
-* `MetaData`
 * `EagerLoading`
+* `Http`
+* `Loader`
+* `MetaData`
 * `Paginator`
-* `Beanstalk`
 * `Utils`
 * `Validation`
 
