@@ -244,7 +244,7 @@ class Gravatar implements Avatarable
             ));
         }
 
-        $this->size = $size;
+        $this->size = (int) $size;
 
         return $this;
     }
