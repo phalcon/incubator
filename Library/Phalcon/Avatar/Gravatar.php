@@ -79,7 +79,7 @@ class Gravatar implements Avatarable
     /**
      * @type string
      */
-    const RATING_X = 'r';
+    const RATING_X = 'x';
 
     /**
      * The default image.
@@ -273,8 +273,9 @@ class Gravatar implements Avatarable
 
 
         if (!isset($this->validRatings[$rating])) {
-            $allowed = implode(', ', array_keys($this->validRatings));
+            $allowed = array_keys($this->validRatings);
             $last    = array_pop($allowed);
+            $allowed = join(',', $allowed);
 
             throw new InvalidArgumentException(
                 sprintf("Invalid rating '%s' specified. Available for use only: %s or %s", $rating, $allowed, $last)
