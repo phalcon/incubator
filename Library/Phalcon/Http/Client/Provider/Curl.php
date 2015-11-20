@@ -21,6 +21,7 @@ use Phalcon\Http\Client\Exception as HttpException;
 use Phalcon\Http\Client\Provider\Exception as ProviderException;
 use Phalcon\Http\Client\Request;
 use Phalcon\Http\Client\Response;
+use Phalcon\Http\Request\Method;
 
 class Curl extends Request
 {
@@ -64,9 +65,7 @@ class Curl extends Request
         $this->setOptions(array(
             CURLOPT_RETURNTRANSFER  => true,
             CURLOPT_AUTOREFERER     => true,
-            //CURLOPT_FOLLOWLOCATION  => true,
             CURLOPT_MAXREDIRS       => 20,
-            //CURLOPT_HEADER          => true,
             CURLOPT_PROTOCOLS       => CURLPROTO_HTTP | CURLPROTO_HTTPS,
             CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
             CURLOPT_USERAGENT       => 'Phalcon HTTP/'.self::VERSION.' (Curl)',
@@ -118,8 +117,6 @@ class Curl extends Request
             throw new HttpException(curl_error($this->handle), $errno);
         }
 
-        //$headerSize = curl_getinfo($this->handle, CURLINFO_HEADER_SIZE);
-
         $response = new Response();
         $response->header->parse($this->responseHeader);
 
@@ -135,8 +132,9 @@ class Curl extends Request
     /**
      * Header reader function for CURL
      *
-     * @param  resource $curl
-     * @param  string   $header
+     * @param resource $curl
+     * @param string   $header
+     *
      * @return int
      */
     public function readHeader($curl, $header)
@@ -238,7 +236,7 @@ class Curl extends Request
         $this->setOptions(array(
             CURLOPT_URL           => $uri->build(),
             CURLOPT_HTTPGET       => true,
-            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_CUSTOMREQUEST => Method::GET,
         ));
 
         return $this->send($customHeader, $fullResponse);
@@ -255,7 +253,7 @@ class Curl extends Request
         $this->setOptions(array(
             CURLOPT_URL           => $uri->build(),
             CURLOPT_HTTPGET       => true,
-            CURLOPT_CUSTOMREQUEST => 'HEAD',
+            CURLOPT_CUSTOMREQUEST => Method::HEAD,
         ));
 
         return $this->send($customHeader, $fullResponse);
@@ -272,7 +270,7 @@ class Curl extends Request
         $this->setOptions(array(
             CURLOPT_URL           => $uri->build(),
             CURLOPT_HTTPGET       => true,
-            CURLOPT_CUSTOMREQUEST => 'DELETE',
+            CURLOPT_CUSTOMREQUEST => Method::DELETE,
         ));
 
         return $this->send($customHeader, $fullResponse);
@@ -283,7 +281,7 @@ class Curl extends Request
         $this->setOptions(array(
             CURLOPT_URL           => $this->resolveUri($uri),
             CURLOPT_POST          => true,
-            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_CUSTOMREQUEST => Method::POST,
         ));
 
         $this->initPostFields($params, $useEncoding);
@@ -296,10 +294,10 @@ class Curl extends Request
         $this->setOptions(array(
             CURLOPT_URL           => $this->resolveUri($uri),
             CURLOPT_POST          => true,
-            CURLOPT_CUSTOMREQUEST => 'PUT',
+            CURLOPT_CUSTOMREQUEST => Method::PUT,
         ));
 
-        $this->initPostFields($params, $useEncoding, $customHeader);
+        $this->initPostFields($params, $useEncoding);
 
         return $this->send($customHeader, $fullResponse);
     }
