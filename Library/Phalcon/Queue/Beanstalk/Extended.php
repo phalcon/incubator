@@ -1,14 +1,22 @@
 <?php
-/**
- * Phalcon Framework
- * This source file is subject to the New BSD License that is bundled
- * with this package in the file docs/LICENSE.txt.
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@phalconphp.com so we can send you a copy immediately.
- *
- * @author Nikita Vershinin <endeveit@gmail.com>
+
+/*
+ +------------------------------------------------------------------------+
+ | Phalcon Framework                                                      |
+ +------------------------------------------------------------------------+
+ | Copyright (c) 2011-2015 Phalcon Team (http://www.phalconphp.com)       |
+ +------------------------------------------------------------------------+
+ | This source file is subject to the New BSD License that is bundled     |
+ | with this package in the file docs/LICENSE.txt.                        |
+ |                                                                        |
+ | If you did not receive a copy of the license and are unable to         |
+ | obtain it through the world-wide-web, please send an email             |
+ | to license@phalconphp.com so we can send you a copy immediately.       |
+ +------------------------------------------------------------------------+
+ | Authors: Nikita Vershinin <endeveit@gmail.com>                         |
+ +------------------------------------------------------------------------+
  */
+
 namespace Phalcon\Queue\Beanstalk;
 
 use duncan3dc\Helpers\Fork;
@@ -17,8 +25,11 @@ use Phalcon\Queue\Beanstalk as Base;
 
 /**
  * \Phalcon\Queue\Beanstalk\Extended
+ *
  * Extended class to access the beanstalk queue service.
  * Supports tubes prefixes, pcntl-workers and tubes stats.
+ *
+ * @package Phalcon\Queue\Beanstalk
  */
 class Extended extends Base
 {
@@ -65,7 +76,7 @@ class Extended extends Base
      *
      * @var array
      */
-    protected $workers = array();
+    protected $workers = [];
 
     /**
      * {@inheritdoc}
@@ -188,11 +199,12 @@ class Extended extends Base
      * @param string $tube
      * @param string $data
      * @param array  $options
+     * @return boolean|string job id or false
      */
     public function putInTube($tube, $data, $options = null)
     {
         if (null === $options) {
-            $options = array();
+            $options = [];
         }
 
         if (!array_key_exists('delay', $options)) {
@@ -209,7 +221,7 @@ class Extended extends Base
 
         $this->choose($this->getTubeName($tube));
 
-        parent::put($data, $options);
+        return parent::put($data, $options);
     }
 
     /**
@@ -300,7 +312,7 @@ class Extended extends Base
 
     /**
      * Returns the number of tube watched by current session.
-     * Example return array: array('WATCHED' => 1)
+     * Example return array: ['WATCHED' => 1]
      * Added on 10-Jan-2014 20:04 IST by Tapan Kumar Thapa @ tapan.thapa@yahoo.com
      *
      * @param  string     $tube
@@ -353,7 +365,7 @@ class Extended extends Base
         $this->write(trim($cmd));
 
         $response = $this->read();
-        $matches  = array();
+        $matches  = [];
 
         if (!preg_match('#^(OK (\d+))#mi', $response, $matches)) {
             throw new \RuntimeException(sprintf(
@@ -387,7 +399,7 @@ class Extended extends Base
 
         if ($nbBytes && ($nbBytes > 0)) {
             $response = $this->read($nbBytes);
-            $matches  = array();
+            $matches  = [];
 
             if (!preg_match('#^WATCHING (\d+).*?#', $response, $matches)) {
                 throw new \RuntimeException(sprintf(
