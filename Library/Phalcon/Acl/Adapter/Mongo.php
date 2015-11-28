@@ -20,7 +20,6 @@
 namespace Phalcon\Acl\Adapter;
 
 use Phalcon\Acl\Adapter;
-use Phalcon\Acl\AdapterInterface;
 use Phalcon\Acl\Exception;
 use Phalcon\Acl\Resource;
 use Phalcon\Acl;
@@ -30,7 +29,7 @@ use Phalcon\Acl\Role;
  * Phalcon\Acl\Adapter\Mongo
  * Manages ACL lists using Mongo Collections
  */
-class Mongo extends Adapter implements AdapterInterface
+class Mongo extends Adapter
 {
     /**
      * @var array

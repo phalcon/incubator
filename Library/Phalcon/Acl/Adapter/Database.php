@@ -22,7 +22,6 @@ namespace Phalcon\Acl\Adapter;
 use Phalcon\Db;
 use Phalcon\Db\AdapterInterface as DbAdapter;
 use Phalcon\Acl\Adapter;
-use Phalcon\Acl\AdapterInterface;
 use Phalcon\Acl\Exception;
 use Phalcon\Acl\Resource;
 use Phalcon\Acl;
@@ -32,7 +31,7 @@ use Phalcon\Acl\Role;
  * Phalcon\Acl\Adapter\Database
  * Manages ACL lists in memory
  */
-class Database extends Adapter implements AdapterInterface
+class Database extends Adapter
 {
     /**
      * @var DbAdapter
