@@ -26,6 +26,7 @@ use Phalcon\Acl\Exception;
 use Phalcon\Acl\Resource;
 use Phalcon\Acl;
 use Phalcon\Acl\Role;
+use Phalcon\Acl\RoleInterface;
 
 /**
  * Phalcon\Acl\Adapter\Database
@@ -95,6 +96,7 @@ class Database extends Adapter
 
     /**
      * {@inheritdoc}
+     *
      * Example:
      * <code>$acl->addRole(new Phalcon\Acl\Role('administrator'), 'consultor');</code>
      * <code>$acl->addRole('administrator', 'consultor');</code>
@@ -102,11 +104,16 @@ class Database extends Adapter
      * @param  \Phalcon\Acl\Role|string $role
      * @param  string                   $accessInherits
      * @return boolean
+     * @throws \Phalcon\Acl\Exception
      */
     public function addRole($role, $accessInherits = null)
     {
-        if (!is_object($role)) {
-            $role = new Role($role);
+        if (is_string($role)) {
+            $role = new Role($role, ucwords($role) . ' Role');
+        }
+
+        if (!$role instanceof RoleInterface) {
+            throw new Exception('Role must be either an string or implement RoleInterface');
         }
 
         $exists = $this->connection->fetchOne(
