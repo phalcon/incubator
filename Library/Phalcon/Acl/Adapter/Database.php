@@ -29,7 +29,7 @@ use Phalcon\Acl\Role;
 
 /**
  * Phalcon\Acl\Adapter\Database
- * Manages ACL lists in memory
+ * Manages ACL lists in database tables
  */
 class Database extends Adapter
 {
@@ -137,8 +137,8 @@ class Database extends Adapter
     /**
      * {@inheritdoc}
      *
-     * @param  string                 $roleName
-     * @param  string                 $roleToInherit
+     * @param  string $roleName
+     * @param  string $roleToInherit
      * @throws \Phalcon\Acl\Exception
      */
     public function addInherit($roleName, $roleToInherit)
@@ -242,8 +242,8 @@ class Database extends Adapter
     /**
      * {@inheritdoc}
      *
-     * @param  string                 $resourceName
-     * @param  array|string           $accessList
+     * @param  string       $resourceName
+     * @param  array|string $accessList
      * @return boolean
      * @throws \Phalcon\Acl\Exception
      */
@@ -420,10 +420,10 @@ class Database extends Adapter
     /**
      * Inserts/Updates a permission in the access list
      *
-     * @param  string                 $roleName
-     * @param  string                 $resourceName
-     * @param  string                 $accessName
-     * @param  integer                $action
+     * @param  string  $roleName
+     * @param  string  $resourceName
+     * @param  string  $accessName
+     * @param  integer $action
      * @return boolean
      * @throws \Phalcon\Acl\Exception
      */
@@ -474,10 +474,10 @@ class Database extends Adapter
     /**
      * Inserts/Updates a permission in the access list
      *
-     * @param  string                 $roleName
-     * @param  string                 $resourceName
-     * @param  array|string           $access
-     * @param  integer                $action
+     * @param  string       $roleName
+     * @param  string       $resourceName
+     * @param  array|string $access
+     * @param  integer      $action
      * @throws \Phalcon\Acl\Exception
      */
     protected function allowOrDeny($roleName, $resourceName, $access, $action)
