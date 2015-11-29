@@ -96,9 +96,12 @@ class Redis extends Adapter
      */
     public function addInherit($roleName, $roleToInherit)
     {
-        $exists = $this->redis->hGet("roles", $roleName);
+        $exists = $this->redis->hGet('roles', $roleName);
+
         if (!$exists) {
-            throw new Exception("Role '" . $roleName . "' does not exist in the role list");
+            throw new Exception(
+                sprintf("Role '%s' does not exist in the role list", $roleName)
+            );
         }
 
         $this->redis->sAdd("rolesInherits:$roleName", $roleToInherit);
@@ -202,7 +205,7 @@ class Redis extends Adapter
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Acl\Role[]
+     * @return RoleInterface[]
      */
     public function getRoles()
     {

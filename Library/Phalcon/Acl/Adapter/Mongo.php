@@ -121,8 +121,8 @@ class Mongo extends Adapter
     /**
      * {@inheritdoc}
      *
-     * @param  string                 $roleName
-     * @param  string                 $roleToInherit
+     * @param  string $roleName
+     * @param  string $roleToInherit
      * @throws \BadMethodCallException
      */
     public function addInherit($roleName, $roleToInherit)
@@ -247,7 +247,7 @@ class Mongo extends Adapter
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Acl\Role[]
+     * @return RoleInterface[]
      */
     public function getRoles()
     {
@@ -268,6 +268,7 @@ class Mongo extends Adapter
      */
     public function dropResourceAccess($resourceName, $accessList)
     {
+        throw new \BadMethodCallException('Not implemented yet.');
     }
 
     /**

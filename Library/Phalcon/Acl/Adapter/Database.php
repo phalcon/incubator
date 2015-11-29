@@ -299,7 +299,7 @@ class Database extends Adapter
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Acl\Role[]
+     * @return RoleInterface[]
      */
     public function getRoles()
     {
@@ -321,6 +321,7 @@ class Database extends Adapter
      */
     public function dropResourceAccess($resourceName, $accessList)
     {
+        throw new \BadMethodCallException('Not implemented yet.');
     }
 
     /**
