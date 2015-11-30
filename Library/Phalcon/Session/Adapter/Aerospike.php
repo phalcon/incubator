@@ -104,8 +104,6 @@ class Aerospike extends Adapter implements AdapterInterface
 
         if (isset($options['prefix'])) {
             $this->prefix = $options['persistent'];
-        } else {
-            $this->prefix = substr(hash('sha256', uniqid(time(), true)), 0, 5);
         }
 
         if (isset($options['lifetime'])) {
@@ -168,7 +166,6 @@ class Aerospike extends Adapter implements AdapterInterface
         $status = $this->db->get($key, $record);
 
         if ($status != AerospikeDb::OK) {
-            error_log(sprintf('%s:%s:%s - %s', __CLASS__, __METHOD__, __LINE__, ''));
             return '';
         }
 
