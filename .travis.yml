@@ -6,7 +6,7 @@ php:
   - 5.6
 
 sudo:
-  false
+  required
 
 services:
   - memcached
@@ -15,7 +15,7 @@ services:
 
 env:
   global:
-    - TEST_BT_HOST=127.0.0.1 TEST_BT_PORT=11300 TEST_MC_HOST=127.0.0.1 TEST_MC_PORT=11211
+    - TEST_BT_HOST=127.0.0.1 TEST_BT_PORT=11300 TEST_MC_HOST=127.0.0.1 TEST_MC_PORT=11211 TEST_AS_HOST=127.0.0.1 TEST_AS_PORT=3000
   matrix:
     - PHALCON_VERSION="2.0.9"
     - PHALCON_VERSION="2.0.8"
@@ -34,7 +34,17 @@ before_install:
   - (CFLAGS="-O1 -g3 -fno-strict-aliasing"; pecl install yaml < /dev/null &)
   - pecl install mongo < /dev/null &
   - phpenv config-add tests/_ci/memcached.ini
-  - php -m
+  - wget -O aerospike-server.tgz http://aerospike.com/download/server/latest/artifact/tgz
+  - tar xvzf aerospike-server.tgz
+  - cp -f tests/_ci/aerospike.conf ./aerospike-server/share/etc
+  - cd aerospike-server
+  - mkdir instance1
+  - ./bin/aerospike init --home instance1 --instance 1 --service-port ${TEST_AS_PORT}
+  - cd instance1
+  - sudo ./bin/aerospike start
+  - ./bin/aerospike status
+  - cd ../..
+  - sleep 3 # give server some time to boot
 
 install:
   - composer self-update
@@ -42,6 +52,14 @@ install:
   - (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j4 > /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null)
   - php -r 'echo \Phalcon\Version::get()."\n";'
   - travis_retry composer install --prefer-source --no-interaction
+  - travis_retry composer require aerospike/aerospike-client-php "*"
+  - find vendor/aerospike/aerospike-client-php/ -name "*.sh" -exec chmod +x {} \;
+  - cd vendor/aerospike/aerospike-client-php
+  - sudo $(which composer) run-script post-install-cmd
+  - cd ../../..
+  - echo "extension=${TRAVIS_BUILD_DIR}/vendor/aerospike/aerospike-client-php/src/aerospike/modules/aerospike.so" | tee -a tests/_ci/aerospike.ini
+  - phpenv config-add tests/_ci/aerospike.ini
+  - php -m
 
 before_script:
   - mysql -e 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;'
@@ -55,6 +73,8 @@ addons:
   apt:
     packages:
       - libyaml-dev
+      - libssl-dev
+      - autoconf
 
 notifications:
   email:

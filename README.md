@@ -129,7 +129,7 @@ $ echo 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_
 
 For these tests we use the user `root` without a password. You may need to change this in `codeception.yml` file.
 
-Obviously, Beanstalk-tests use Beanstalk and Memcached-tests use Memcached.
+Obviously, Beanstalk-tests use Beanstalk, Memcached-tests use Memcached, Aerospike-tests use Aerospike, etc.
 
 We use the following settings of these services:
 
@@ -141,6 +141,10 @@ We use the following settings of these services:
 + Host: `127.0.0.1`
 + Port: `11211`
 
+**Aerospike**
++ Host: `127.0.0.1`
++ Port: `3000`
+
 You can change the connection settings of these services **before** running tests
 by using [environment variables](https://wiki.archlinux.org/index.php/Environment_variables):
 ```sh
@@ -151,6 +155,10 @@ export TEST_BT_PORT="11300"
 # Memcached
 export TEST_MC_HOST="127.0.0.1"
 export TEST_MC_PORT="11211"
+
+# Aerospike
+export TEST_AS_HOST="127.0.0.1"
+export TEST_AS_PORT="3000"
 ```
 
 If you cannot run the tests, please refer to the `.travis.yml` file for more instructions how we test Incubator.

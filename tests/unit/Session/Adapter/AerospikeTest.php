@@ -49,7 +49,7 @@ class AerospikeTest extends \PHPUnit_Framework_TestCase
 
                 $session = new SessionHandler([
                     'hosts' => [
-                        ['addr' => '127.0.0.1', 'port' => 3000]
+                        ['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]
                     ],
                     'persistent' => true,
                     'namespace'  => 'test',
@@ -85,7 +85,7 @@ class AerospikeTest extends \PHPUnit_Framework_TestCase
 
                 $session = new SessionHandler([
                     'hosts' => [
-                        ['addr' => '127.0.0.1', 'port' => 3000]
+                        ['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]
                     ],
                     'persistent' => true,
                     'namespace'  => 'test',

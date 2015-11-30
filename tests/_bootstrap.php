@@ -40,3 +40,7 @@ define('TEST_MC_PORT', getenv('TEST_MC_PORT') ?: 11211);
 // Beanstalk
 define('TEST_BT_HOST', getenv('TEST_BT_HOST') ?: '127.0.0.1');
 define('TEST_BT_PORT', getenv('TEST_BT_PORT') ?: 11300);
+
+// Aerospike
+define('TEST_AS_HOST', getenv('TEST_AS_HOST') ?: '127.0.0.1');
+define('TEST_AS_PORT', getenv('TEST_AS_PORT') ?: 3000);
