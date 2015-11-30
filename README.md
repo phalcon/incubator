@@ -114,6 +114,7 @@ Available groups:
 * `Loader`
 * `MetaData`
 * `Paginator`
+* `Session`
 * `Utils`
 * `Validation`
 
@@ -235,6 +236,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 * [Phalcon\Translate\Adapter\ResourceBundle](Library/Phalcon/Translate/Adapter) - Translation adapter using ResourceBundle (@phalcon)
 
 ### Session
+* [Phalcon\Session\Adapter\Aerospike](Library/Phalcon/Session/Adapter) - Aerospike adapter for storing sessions (@sergeyklay)
 * [Phalcon\Session\Adapter\Database](Library/Phalcon/Session/Adapter) - Database adapter for storing sessions (@phalcon)
 * [Phalcon\Session\Adapter\Mongo](Library/Phalcon/Session/Adapter) - MongoDb adapter for storing sessions (@phalcon)
 * [Phalcon\Session\Adapter\HandlerSocket](Library/Phalcon/Session/Adapter) - HandlerSocket adapter for storing sessions (@Xrymz)
