@@ -18,13 +18,13 @@ The code in this repository is written in PHP.
 
 ### Installing via Composer
 
-Install composer in a common location or in your project:
+Install Composer in a common location or in your project:
 
 ```bash
 curl -s http://getcomposer.org/installer | php
 ```
 
-Create the composer.json file as follows:
+Create the `composer.json` file as follows:
 
 ```json
 {
@@ -34,12 +34,12 @@ Create the composer.json file as follows:
 }
 ```
 
-If you are still using Phalcon 1.3.x, create a composer.json with the following instead:
+If you are still using Phalcon 1.3.x, create a `composer.json` with the following instead:
 
 ```json
 {
     "require": {
-        "phalcon/incubator": "v1.3.5"
+        "phalcon/incubator": "^1.3"
     }
 }
 ```
@@ -48,7 +48,7 @@ If you are still using Phalcon 1.3.x, create a composer.json with the following 
 Run the composer installer:
 
 ```bash
-php composer.phar install
+$ php composer.phar install
 ```
 
 ### Installing via GitHub
@@ -114,6 +114,7 @@ Available groups:
 * `Loader`
 * `MetaData`
 * `Paginator`
+* `Session`
 * `Utils`
 * `Validation`
 
@@ -128,7 +129,7 @@ $ echo 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_
 
 For these tests we use the user `root` without a password. You may need to change this in `codeception.yml` file.
 
-Obviously, Beanstalk-tests use Beanstalk and Memcached-tests use Memcached.
+Obviously, Beanstalk-tests use Beanstalk, Memcached-tests use Memcached, Aerospike-tests use Aerospike, etc.
 
 We use the following settings of these services:
 
@@ -140,6 +141,10 @@ We use the following settings of these services:
 + Host: `127.0.0.1`
 + Port: `11211`
 
+**Aerospike**
++ Host: `127.0.0.1`
++ Port: `3000`
+
 You can change the connection settings of these services **before** running tests
 by using [environment variables](https://wiki.archlinux.org/index.php/Environment_variables):
 ```sh
@@ -150,6 +155,10 @@ export TEST_BT_PORT="11300"
 # Memcached
 export TEST_MC_HOST="127.0.0.1"
 export TEST_MC_PORT="11211"
+
+# Aerospike
+export TEST_AS_HOST="127.0.0.1"
+export TEST_AS_PORT="3000"
 ```
 
 If you cannot run the tests, please refer to the `.travis.yml` file for more instructions how we test Incubator.
@@ -235,6 +244,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 * [Phalcon\Translate\Adapter\ResourceBundle](Library/Phalcon/Translate/Adapter) - Translation adapter using ResourceBundle (@phalcon)
 
 ### Session
+* [Phalcon\Session\Adapter\Aerospike](Library/Phalcon/Session/Adapter) - Aerospike adapter for storing sessions (@sergeyklay)
 * [Phalcon\Session\Adapter\Database](Library/Phalcon/Session/Adapter) - Database adapter for storing sessions (@phalcon)
 * [Phalcon\Session\Adapter\Mongo](Library/Phalcon/Session/Adapter) - MongoDb adapter for storing sessions (@phalcon)
 * [Phalcon\Session\Adapter\HandlerSocket](Library/Phalcon/Session/Adapter) - HandlerSocket adapter for storing sessions (@Xrymz)
