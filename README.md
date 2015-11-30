@@ -18,13 +18,13 @@ The code in this repository is written in PHP.
 
 ### Installing via Composer
 
-Install composer in a common location or in your project:
+Install Composer in a common location or in your project:
 
 ```bash
 curl -s http://getcomposer.org/installer | php
 ```
 
-Create the composer.json file as follows:
+Create the `composer.json` file as follows:
 
 ```json
 {
@@ -34,12 +34,12 @@ Create the composer.json file as follows:
 }
 ```
 
-If you are still using Phalcon 1.3.x, create a composer.json with the following instead:
+If you are still using Phalcon 1.3.x, create a `composer.json` with the following instead:
 
 ```json
 {
     "require": {
-        "phalcon/incubator": "v1.3.5"
+        "phalcon/incubator": "^1.3"
     }
 }
 ```
@@ -48,7 +48,7 @@ If you are still using Phalcon 1.3.x, create a composer.json with the following 
 Run the composer installer:
 
 ```bash
-php composer.phar install
+$ php composer.phar install
 ```
 
 ### Installing via GitHub
