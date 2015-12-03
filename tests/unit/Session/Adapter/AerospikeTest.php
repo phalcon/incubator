@@ -3,7 +3,8 @@
 namespace Phalcon\Test\Session\Adapter;
 
 use Phalcon\Session\Adapter\Aerospike as SessionHandler;
-use Codeception\Specify;
+use Codeception\TestCase\Test;
+use UnitTester;
 
 /**
  * \Phalcon\Test\Session\Adapter\AerospikeTest
@@ -22,94 +23,90 @@ use Codeception\Specify;
  * through the world-wide-web, please send an email to license@phalconphp.com
  * so that we can send you a copy immediately.
  */
-class AerospikeTest extends \PHPUnit_Framework_TestCase
+class AerospikeTest extends Test
 {
-    use Specify;
+    /**
+     * UnitTester Object
+     * @var UnitTester
+     */
+    protected $tester;
 
     /**
-     * {@inheritdoc}
+     * executed before each test
      */
-    public function setUp()
+    protected function _before()
     {
         if (!extension_loaded('aerospike')) {
             $this->markTestSkipped(
                 'The aerospike module is not available.'
             );
         }
-
-        parent::setUp();
     }
 
     public function testShouldReadAndWriteSession()
     {
-        $this->specify(
-            'The session cannot be read or written from',
-            function () {
-                $sessionId = 'abcdef123456';
+        $sessionId = 'abcdef123458';
+        $options = [
+            'hosts' => [
+                ['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]
+            ],
+            'persistent' => false,
+            'namespace'  => 'test',
+            'prefix'     => 'session_',
+            'lifetime'   => 10,
+            'uniqueId'   => 'some-unique-id1',
+            'options' => [
+                \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
+                \Aerospike::OPT_WRITE_TIMEOUT => 1500
+            ]
+        ];
 
-                $session = new SessionHandler([
-                    'hosts' => [
-                        ['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]
-                    ],
-                    'persistent' => true,
-                    'namespace'  => 'test',
-                    'prefix'     => 'session_',
-                    'lifetime'   => 8600,
-                    'uniqueId'   => 'some-unique-id',
-                    'options'    => [
-                        \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
-                        \Aerospike::OPT_WRITE_TIMEOUT   => 1500
-                    ]
-                ]);
+        $session = new SessionHandler($options);
 
-                $data = serialize(
-                    [
-                        'abc' => 123,
-                        'def' => '678',
-                        'xyz' => 'zyx'
-                    ]
-                );
-
-                $session->write($sessionId, $data);
-                expect($session->read($sessionId))->equals($data);
-            }
+        $data = serialize(
+            [
+                321   => microtime(true),
+                'def' => '678',
+                'xyz' => 'zyx'
+            ]
         );
+
+        $session->write($sessionId, $data);
+        $expected = $session->read($sessionId);
+
+        $this->assertEquals($data, $expected);
     }
 
     public function testShouldDestroySession()
     {
-        $this->specify(
-            'The session cannot be destroyed',
-            function () {
-                $sessionId = 'abcdef123456';
+        $sessionId = 'abcdef123457';
 
-                $session = new SessionHandler([
-                    'hosts' => [
-                        ['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]
-                    ],
-                    'persistent' => true,
-                    'namespace'  => 'test',
-                    'prefix'     => 'session_',
-                    'lifetime'   => 8600,
-                    'uniqueId'   => 'some-unique-id',
-                    'options'    => [
-                        \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
-                        \Aerospike::OPT_WRITE_TIMEOUT   => 1500
-                    ]
-                ]);
+        $session = new SessionHandler([
+            'hosts' => [
+                ['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]
+            ],
+            'persistent' => false,
+            'namespace'  => 'test',
+            'prefix'     => 'session_',
+            'lifetime'   => 10,
+            'uniqueId'   => 'some-unique-id2',
+            'options'    => [
+                \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
+                \Aerospike::OPT_WRITE_TIMEOUT   => 1500
+            ]
+        ]);
 
-                $data = serialize(
-                    [
-                        'abc' => 123,
-                        'def' => '678',
-                        'xyz' => 'zyx'
-                    ]
-                );
-
-                $session->write($sessionId, $data);
-                $session->destroy($sessionId);
-                expect($session->read($sessionId))->equals(null);
-            }
+        $data = serialize(
+            [
+                'abc' => 345,
+                'def' => ['foo' => 'bar'],
+                'zyx' => 'xyz'
+            ]
         );
+
+        $session->write($sessionId, $data);
+        $session->destroy($sessionId);
+
+        $this->assertFalse($session->read($sessionId));
     }
 }

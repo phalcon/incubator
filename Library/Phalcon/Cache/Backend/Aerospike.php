@@ -114,7 +114,7 @@ class Aerospike extends Prefixable
 
         if (!$this->db->isConnected()) {
             throw new Exception(
-                sprintf("Aerospike failed to connect[%s]: %s", $this->db->errorno(), $this->db->error())
+                sprintf("Aerospike failed to connect [%s]: %s", $this->db->errorno(), $this->db->error())
             );
         }
 

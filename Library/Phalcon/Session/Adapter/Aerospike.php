@@ -122,6 +122,12 @@ class Aerospike extends Adapter implements AdapterInterface
 
         $this->db = new AerospikeDb(['hosts' => $options['hosts']], $persistent, $opts);
 
+        if (!$this->db->isConnected()) {
+            throw new Exception(
+                sprintf("Aerospike failed to connect [%s]: %s", $this->db->errorno(), $this->db->error())
+            );
+        }
+
         parent::__construct($options);
 
         session_set_save_handler(
@@ -132,6 +138,16 @@ class Aerospike extends Adapter implements AdapterInterface
             [$this, 'destroy'],
             [$this, 'gc']
         );
+    }
+
+    /**
+     * Gets the Aerospike instance.
+     *
+     * @return AerospikeDb
+     */
+    public function getDb()
+    {
+        return $this->db;
     }
 
     /**
@@ -166,7 +182,7 @@ class Aerospike extends Adapter implements AdapterInterface
         $status = $this->db->get($key, $record);
 
         if ($status != AerospikeDb::OK) {
-            return '';
+            return false;
         }
 
         return base64_decode($record['bins']['value']);
