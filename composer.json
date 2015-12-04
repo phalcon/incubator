@@ -34,6 +34,9 @@
         "psr-4": { "Phalcon\\": "Library/Phalcon/" }
     },
     "autoload-dev": {
-        "psr-4": { "Phalcon\\Test\\": "tests/unit/" }
+        "psr-4": {
+            "Phalcon\\Test\\": "tests/unit/",
+            "Codeception\\Module": "tests/_support/Module/"
+        }
     }
 }
