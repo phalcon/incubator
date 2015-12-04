@@ -122,6 +122,16 @@ class Aerospike extends Prefixable
     }
 
     /**
+     * Gets the Aerospike instance.
+     *
+     * @return AerospikeDb
+     */
+    public function getDb()
+    {
+        return $this->db;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @param int|string $keyName
