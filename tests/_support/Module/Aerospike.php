@@ -150,14 +150,47 @@ class Aerospike extends CodeceptionModule
      * @param $key
      * @param mixed $value
      */
-    public function dontSeeInMemcached($key, $value = false)
+    public function dontSeeInAerospike($key, $value = false)
     {
         $key = $this->buildKey($key);
         $this->aerospike->get($key, $actual);
 
-
         $this->debugSection('Value', $actual['bins']['value']);
         $this->assertNotEquals($value, $actual['bins']['value']);
+    }
+
+    /**
+     * Inserts data into Aerospike database.
+     *
+     * This data will be erased after the test.
+     *
+     * ```php
+     * <?php
+     * $I->haveInAerospike('users', ['name' => 'miles', 'email' => 'miles@davis.com']);
+     * ?>
+     * ```
+     *
+     * @param string $key
+     * @param mixed $value
+     * @param int $ttl
+     *
+     * @return array
+     */
+    public function haveInAerospike($key, $value, $ttl = 0)
+    {
+        $key = $this->buildKey($key);
+        $bins = ['value' => $value];
+
+        $status = $this->aerospike->put($key, $bins, $ttl);
+
+        if (\Aerospike::OK != $status) {
+            return null;
+        }
+
+        $this->keys[] = $key;
+        $this->debugSection('Aerospike', json_encode([$key, $value]));
+
+        return $key;
     }
 
     /**
@@ -183,7 +216,7 @@ class Aerospike extends CodeceptionModule
     }
 
     /**
-     * Generates a unique key used for storing cache data in Aerospike DB.
+     * Generates a unique key used for storing cache in Aerospike DB.
      *
      * @param string $key Cache key
      * @return array
