@@ -215,9 +215,14 @@ class Aerospike extends Prefixable
         }
 
         $keys = [];
+        $globalPrefix = $this->_prefix;
 
-        $this->db->scan($this->namespace, $this->set, function ($record) use (&$keys, $prefix) {
-            $keys[] = str_replace($prefix, '', $record['key']['key']);
+        $this->db->scan($this->namespace, $this->set, function ($record) use (&$keys, $prefix, $globalPrefix) {
+            $key = $record['key']['key'];
+
+            if (empty($prefix) || 0 === strpos($key, $prefix)) {
+                $keys[] = preg_replace(sprintf('#^%s(.+)#u', preg_quote($globalPrefix)), '$1', $key);
+            }
         });
 
         return $keys;

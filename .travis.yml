@@ -61,7 +61,7 @@ install:
   - php -m
 
 before_script:
-  - stty cols 250
+  - stty cols 160
   - mysql -e 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;'
 
 script:
