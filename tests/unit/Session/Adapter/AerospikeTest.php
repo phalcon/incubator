@@ -43,10 +43,16 @@ class AerospikeTest extends Test
         }
     }
 
-    public function testShouldReadAndWriteSession()
+    /**
+     * executed after each test
+     */
+    protected function _after()
     {
-        $sessionId = 'abcdef123458';
-        $options = [
+    }
+
+    private function getConfig()
+    {
+        return [
             'hosts' => [
                 ['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]
             ],
@@ -54,14 +60,18 @@ class AerospikeTest extends Test
             'namespace'  => 'test',
             'prefix'     => 'session_',
             'lifetime'   => 10,
-            'uniqueId'   => 'some-unique-id1',
+            'uniqueId'   => 'some-unique-id',
             'options' => [
                 \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
                 \Aerospike::OPT_WRITE_TIMEOUT => 1500
             ]
         ];
+    }
 
-        $session = new SessionHandler($options);
+    public function testShouldReadAndWriteSession()
+    {
+        $sessionId = 'abcdef123458';
+        $session = new SessionHandler($this->getConfig());
 
         $data = serialize(
             [
@@ -80,21 +90,7 @@ class AerospikeTest extends Test
     public function testShouldDestroySession()
     {
         $sessionId = 'abcdef123457';
-
-        $session = new SessionHandler([
-            'hosts' => [
-                ['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]
-            ],
-            'persistent' => false,
-            'namespace'  => 'test',
-            'prefix'     => 'session_',
-            'lifetime'   => 10,
-            'uniqueId'   => 'some-unique-id2',
-            'options'    => [
-                \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
-                \Aerospike::OPT_WRITE_TIMEOUT   => 1500
-            ]
-        ]);
+        $session = new SessionHandler($this->getConfig());
 
         $data = serialize(
             [
