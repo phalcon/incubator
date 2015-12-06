@@ -8,4 +8,5 @@ modules:
     enabled:
         - Asserts
         - Db
+        - Mockery
         - \Helper\Unit
