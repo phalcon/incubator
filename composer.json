@@ -25,8 +25,6 @@
     "require-dev": {
         "squizlabs/php_codesniffer": "2.*",
         "codeception/codeception": "2.*",
-        "codeception/specify": "^0.4",
-        "codeception/verify": "^0.3",
         "mockery/mockery": "*"
     },
     "suggest": {
@@ -36,6 +34,9 @@
         "psr-4": { "Phalcon\\": "Library/Phalcon/" }
     },
     "autoload-dev": {
-        "psr-4": { "Phalcon\\Test\\": "tests/unit/" }
+        "psr-4": {
+            "Phalcon\\Test\\": "tests/unit/",
+            "Codeception\\Module\\": "tests/_support/Module/"
+        }
     }
 }

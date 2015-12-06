@@ -5,8 +5,9 @@ php:
   - 5.5
   - 5.6
 
-sudo:
-  required
+sudo: required
+dist: precise
+group: edge
 
 services:
   - memcached
@@ -28,25 +29,23 @@ before_install:
   - bash tests/_ci/setup_beanstalkd.sh
   - beanstalkd -v
   - beanstalkd -l ${TEST_BT_HOST} -p ${TEST_BT_PORT} & # start queue listener
-  - sleep 5 # give server some time to boot
+  - sleep 5
   - cd $TRAVIS_BUILD_DIR
   - pecl channel-update pecl.php.net
   - (CFLAGS="-O1 -g3 -fno-strict-aliasing"; pecl install yaml < /dev/null &)
   - pecl install mongo < /dev/null &
   - phpenv config-add tests/_ci/memcached.ini
-  - wget -O aerospike-server.tgz http://aerospike.com/download/server/latest/artifact/tgz
-  - tar xvzf aerospike-server.tgz
-  - cp -f tests/_ci/aerospike.conf ./aerospike-server/share/etc
-  - cd aerospike-server
-  - mkdir instance1
-  - ./bin/aerospike init --home instance1 --instance 1 --service-port ${TEST_AS_PORT}
-  - cd instance1
-  - sudo ./bin/aerospike start
-  - ./bin/aerospike status
-  - cd ../..
-  - sleep 3 # give server some time to boot
+  - wget -O aerospike.tgz 'http://aerospike.com/download/server/latest/artifact/ubuntu12'
+  - tar -xvf aerospike.tgz
+  - cd aerospike-server-community-*-ubuntu12*
+  - sudo ./asinstall
+  - sudo service aerospike start
+  - sudo service aerospike status
+  - sleep 5
+  - cd $TRAVIS_BUILD_DIR
 
 install:
+  - phpenv config-rm xdebug.ini
   - composer self-update
   - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b phalcon-v${PHALCON_VERSION}
   - (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j4 > /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null)
@@ -56,18 +55,19 @@ install:
   - find vendor/aerospike/aerospike-client-php/ -name "*.sh" -exec chmod +x {} \;
   - cd vendor/aerospike/aerospike-client-php
   - sudo $(which composer) run-script post-install-cmd
-  - cd ../../..
+  - cd $TRAVIS_BUILD_DIR
   - echo "extension=${TRAVIS_BUILD_DIR}/vendor/aerospike/aerospike-client-php/src/aerospike/modules/aerospike.so" | tee -a tests/_ci/aerospike.ini
   - phpenv config-add tests/_ci/aerospike.ini
   - php -m
 
 before_script:
+  - stty cols 160
   - mysql -e 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;'
 
 script:
   - vendor/bin/phpcs --standard=PSR2 --colors --extensions=php --encoding=utf-8 Library/
   - vendor/bin/codecept build
-  - vendor/bin/codecept run --coverage-text
+  - vendor/bin/codecept run
 
 addons:
   apt:
