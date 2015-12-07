@@ -25,18 +25,18 @@
     "require-dev": {
         "squizlabs/php_codesniffer": "2.*",
         "codeception/codeception": "2.*",
-        "codeception/mockery-module": "*"
+        "codeception/mockery-module": "*",
+        "codeception/aerospike-module": "*"
     },
     "suggest": {
-        "ext-aerospike": "^3.5"
+        "ext-aerospike": "*"
     },
     "autoload": {
         "psr-4": { "Phalcon\\": "Library/Phalcon/" }
     },
     "autoload-dev": {
         "psr-4": {
-            "Phalcon\\Test\\": "tests/unit/",
-            "Codeception\\Module\\": "tests/_support/Module/"
+            "Phalcon\\Test\\": "tests/unit/"
         }
     }
 }
