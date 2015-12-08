@@ -17,7 +17,7 @@ use Aerospike;
  * @link      http://www.phalconphp.com
  * @author    Serghei Iakovlev <serghei@phalconphp.com>
  * @package   Phalcon\Test\Cache\Backend
- * @group     Cache
+ * @group     aerospike
  *
  * The contents of this file are subject to the New BSD License that is
  * bundled with this package in the file docs/LICENSE.txt
@@ -47,6 +47,8 @@ class AerospikeTest extends Test
             $this->markTestSkipped(
                 'The aerospike module is not available.'
             );
+        } else {
+            $this->getModule('Aerospike')->_reconfigure(['set' => 'cache']);
         }
     }
 
@@ -61,9 +63,7 @@ class AerospikeTest extends Test
     public function testShouldIncrementValue()
     {
         $cache = $this->getAdapter();
-
-        $cache->save('increment', 1);
-        $this->keys[] = 'increment';
+        $this->tester->haveInAerospike(self::PREFIX.'increment', 1);
 
         $this->assertEquals(2, $cache->increment('increment'));
         $this->assertEquals(4, $cache->increment('increment', 2));
@@ -73,9 +73,7 @@ class AerospikeTest extends Test
     public function testShouldDecrementValue()
     {
         $cache = $this->getAdapter();
-
-        $cache->save('decrement', 100);
-        $this->keys[] = 'decrement';
+        $this->tester->haveInAerospike(self::PREFIX.'decrement', 100);
 
         $this->assertEquals(99, $cache->decrement('decrement'));
         $this->assertEquals(97, $cache->decrement('decrement', 2));
@@ -105,31 +103,27 @@ class AerospikeTest extends Test
     public function testShouldSaveData()
     {
         $cache = $this->getAdapter();
+        $this->keys[] = 'test-data';
 
         $data = [1, 2, 3, 4, 5];
-        $this->keys[] = 'test-data';
         $cache->save('test-data', $data);
-
-        $cachedContent = $cache->get('test-data');
-        $this->assertEquals($data, $cachedContent);
+        $this->tester->seeInAerospike(self::PREFIX.'test-data', serialize($data));
 
         $data = "sure, nothing interesting";
         $cache->save('test-data', $data);
-
-        $cachedContent = $cache->get('test-data');
-        $this->assertEquals($data, $cachedContent);
+        $this->tester->seeInAerospike(self::PREFIX.'test-data', serialize($data));
     }
 
     public function testShouldDeleteData()
     {
         $cache = $this->getAdapter();
-
-        $data = rand(0, 99);
-        $cache->save('test-data', $data);
         $this->keys[] = 'test-data';
 
+        $data = rand(0, 99);
+        $this->tester->haveInAerospike(self::PREFIX.'test-data', $data);
+
         $this->assertTrue($cache->delete('test-data'));
-        $this->assertNull($cache->get('test-data'));
+        $this->tester->dontSeeInAerospike(self::PREFIX.'test-data');
     }
 
     public function testShouldUseOutputFrontend()
@@ -193,8 +187,9 @@ class AerospikeTest extends Test
     {
         $aerospike = new Aerospike(['hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]]], false);
 
-        foreach ($this->keys as $key) {
+        foreach ($this->keys as $i => $key) {
             $aerospike->remove($this->buildKey($aerospike, $key));
+            unset($this->keys[$i]);
         }
     }
 
