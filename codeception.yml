@@ -1,5 +1,6 @@
 # can be changed while bootstrapping project
 actor: Tester
+
 paths:
     # where the modules stored
     tests: tests
@@ -9,6 +10,7 @@ paths:
     # directory for custom modules (helpers)
     support: tests/_support
     envs: tests/_envs
+
 settings:
     # name of bootstrap that will be used
     # each bootstrap file should be
@@ -18,6 +20,7 @@ settings:
     # Tests (especially functional) can take a lot of memory
     # We set a high limit for them by default.
     memory_limit: 1024M
+
 coverage:
     enabled: true
     whitelist:
@@ -27,16 +30,3 @@ coverage:
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
-
-# Global modules configuration.
-modules:
-    config:
-        Db:
-            dsn: 'mysql:host=localhost;dbname=incubator_tests'
-            user: 'root'
-            password: ''
-            dump: tests/_data/dump.sql
-            populate: true
-            cleanup: false
-
-error_level: "E_ALL | E_STRICT"
