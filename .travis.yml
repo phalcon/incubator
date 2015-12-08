@@ -50,7 +50,6 @@ install:
   - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b phalcon-v${PHALCON_VERSION}
   - (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j4 > /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null)
   - php -r 'echo \Phalcon\Version::get()."\n";'
-  - travis_retry composer install --prefer-source --no-interaction
   - travis_retry composer require aerospike/aerospike-client-php "*"
   - find vendor/aerospike/aerospike-client-php/ -name "*.sh" -exec chmod +x {} \;
   - cd vendor/aerospike/aerospike-client-php
@@ -59,6 +58,7 @@ install:
   - echo "extension=${TRAVIS_BUILD_DIR}/vendor/aerospike/aerospike-client-php/src/aerospike/modules/aerospike.so" | tee -a tests/_ci/aerospike.ini
   - phpenv config-add tests/_ci/aerospike.ini
   - php -m
+  - travis_retry composer install --prefer-source --no-interaction
 
 before_script:
   - stty cols 160
