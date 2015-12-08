@@ -103,6 +103,7 @@ Execute test groups with `run -g <group_name>` command.
 
 Available groups:
 * `Acl`
+* `aerospike`
 * `Annotation`
 * `Avatar`
 * `Beanstalk`
