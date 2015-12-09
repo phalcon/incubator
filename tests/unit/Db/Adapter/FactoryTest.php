@@ -14,7 +14,7 @@ use UnitTester;
  * @link      http://www.phalconphp.com
  * @author    Anton Kornilov <kachit@yandex.ru>
  * @package   Phalcon\Test\Db\Adapter
- * @group     Db
+ * @group     db
  *
  * The contents of this file are subject to the New BSD License that is
  * bundled with this package in the file docs/LICENSE.txt
@@ -43,11 +43,11 @@ class FactoryTest extends Test
     {
         $this->testable = [
             'adapter'  => null,
-            'host'     => 'localhost',
-            'username' => 'root',
-            'password' => '',
-            'dbname'   => 'incubator_tests',
-            'charset'  => 'utf8',
+            'host'     => TEST_DB_HOST,
+            'username' => TEST_DB_USER,
+            'password' => TEST_DB_PASSWD,
+            'dbname'   => TEST_DB_NAME,
+            'charset'  => TEST_DB_CHARSET,
         ];
     }
 
