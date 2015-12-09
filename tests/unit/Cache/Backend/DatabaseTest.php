@@ -50,6 +50,31 @@ class DatabaseTest extends Test
     {
     }
 
+    /**
+     * @dataProvider incorrectDbProvider
+     * @expectedException \Phalcon\Cache\Exception
+     * @expectedExceptionMessage Parameter "db" is required and it must be an instance of Phalcon\Acl\AdapterInterface
+     * @param array $options
+     */
+    public function testShouldThrowExceptionIfDbIsMissingOrInvalid($options)
+    {
+        new CacheBackend(new CacheFrontend, $options);
+    }
+
+    public function incorrectDbProvider()
+    {
+        return [
+            [['abc' => '']],
+            [['db'  => null]],
+            [['db'  => true]],
+            [['db'  => __CLASS__]],
+            [['db'  => new \stdClass()]],
+            [['db'  => []]],
+            [['db'  => microtime(true)]],
+            [['db'  => PHP_INT_MAX]],
+        ];
+    }
+
     public function testPrefixed()
     {
         $backend = $this->getBackend('pre_');
