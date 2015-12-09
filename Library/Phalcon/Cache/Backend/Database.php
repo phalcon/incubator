@@ -24,13 +24,21 @@ use Phalcon\Cache\Exception;
 use Phalcon\Cache\FrontendInterface;
 use Phalcon\Db;
 use Phalcon\Db\AdapterInterface as DbAdapterInterface;
+use Phalcon\Cache\Backend;
+use Phalcon\Cache\BackendInterface;
 
 /**
  * Phalcon\Cache\Backend\Database
+ *
  * This backend uses a database as cache backend
+ *
+ * @package Phalcon\Cache\Backend
+ * @property \Phalcon\Cache\FrontendInterface _frontend
  */
-class Database extends Prefixable
+class Database extends Backend implements BackendInterface
 {
+    use Prefixable;
+
     /**
      * @var \Phalcon\Db\AdapterInterface
      */

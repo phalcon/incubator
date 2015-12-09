@@ -22,6 +22,8 @@ namespace Phalcon\Cache\Backend;
 use Aerospike as AerospikeDb;
 use Phalcon\Cache\FrontendInterface;
 use Phalcon\Cache\Exception;
+use Phalcon\Cache\Backend;
+use Phalcon\Cache\BackendInterface;
 
 /**
  * Phalcon\Cache\Backend\Aerospike
@@ -59,8 +61,10 @@ use Phalcon\Cache\Exception;
  * @package Phalcon\Cache\Backend
  * @property \Phalcon\Cache\FrontendInterface _frontend
  */
-class Aerospike extends Prefixable
+class Aerospike extends Backend implements BackendInterface
 {
+    use Prefixable;
+
     /**
      * The Aerospike DB
      * @var AerospikeDb
