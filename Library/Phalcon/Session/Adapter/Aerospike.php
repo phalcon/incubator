@@ -239,7 +239,7 @@ class Aerospike extends Adapter implements AdapterInterface
         return $this->db->initKey(
             $this->namespace,
             $this->set,
-            $this->prefix . md5(json_encode([__CLASS__, $sessionId]))
+            $this->prefix . $sessionId
         );
     }
 }
