@@ -5,6 +5,7 @@ namespace Phalcon\Test\Session\Adapter;
 use Phalcon\Session\Adapter\Aerospike as SessionHandler;
 use Codeception\TestCase\Test;
 use UnitTester;
+use Aerospike;
 
 /**
  * \Phalcon\Test\Session\Adapter\AerospikeTest
@@ -31,6 +32,8 @@ class AerospikeTest extends Test
      */
     protected $tester;
 
+    protected $keys = [];
+
     /**
      * executed before each test
      */
@@ -40,6 +43,8 @@ class AerospikeTest extends Test
             $this->markTestSkipped(
                 'The aerospike module is not available.'
             );
+        } else {
+            $this->getModule('Aerospike')->_reconfigure(['set' => 'session']);
         }
     }
 
@@ -48,6 +53,7 @@ class AerospikeTest extends Test
      */
     protected function _after()
     {
+        $this->cleanup();
     }
 
     private function getConfig()
@@ -58,7 +64,7 @@ class AerospikeTest extends Test
             ],
             'persistent' => false,
             'namespace'  => 'test',
-            'prefix'     => 'session_',
+            'prefix'     => '',
             'lifetime'   => 10,
             'uniqueId'   => 'some-unique-id',
             'options' => [
@@ -68,7 +74,7 @@ class AerospikeTest extends Test
         ];
     }
 
-    public function testShouldReadAndWriteSession()
+    public function testShouldWriteSession()
     {
         $sessionId = 'abcdef123458';
         $session = new SessionHandler($this->getConfig());
@@ -82,8 +88,26 @@ class AerospikeTest extends Test
         );
 
         $session->write($sessionId, $data);
-        $expected = $session->read($sessionId);
+        $this->tester->seeInAerospike($sessionId, base64_encode($data));
+    }
 
+    public function testShouldReadSession()
+    {
+        $sessionId = 'abcdef123458';
+        $session = new SessionHandler($this->getConfig());
+
+        $data = serialize(
+            [
+                321   => microtime(true),
+                'def' => '678',
+                'xyz' => 'zyx'
+            ]
+        );
+
+        $this->tester->haveInAerospike($sessionId, base64_encode($data));
+        $this->keys[] = $sessionId;
+
+        $expected = $session->read($sessionId);
         $this->assertEquals($data, $expected);
     }
 
@@ -100,9 +124,27 @@ class AerospikeTest extends Test
             ]
         );
 
-        $session->write($sessionId, $data);
+        $this->tester->haveInAerospike($sessionId, base64_encode($data));
         $session->destroy($sessionId);
+        $this->tester->dontSeeInAerospike($sessionId);
+    }
 
-        $this->assertFalse($session->read($sessionId));
+    private function cleanup()
+    {
+        $aerospike = new Aerospike(['hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]]], false);
+
+        foreach ($this->keys as $i => $key) {
+            $aerospike->remove($this->buildKey($aerospike, $key));
+            unset($this->keys[$i]);
+        }
+    }
+
+    private function buildKey(Aerospike $aerospike, $key)
+    {
+        return $aerospike->initKey(
+            'test',
+            'cache',
+            $key
+        );
     }
 }
