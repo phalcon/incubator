@@ -28,8 +28,6 @@ use Aerospike;
  */
 class AerospikeTest extends Test
 {
-    const PREFIX = 'test_cache_';
-
     /**
      * UnitTester Object
      * @var UnitTester
@@ -63,7 +61,7 @@ class AerospikeTest extends Test
     public function testShouldIncrementValue()
     {
         $cache = $this->getAdapter();
-        $this->tester->haveInAerospike(self::PREFIX.'increment', 1);
+        $this->tester->haveInAerospike('increment', 1);
 
         $this->assertEquals(2, $cache->increment('increment'));
         $this->assertEquals(4, $cache->increment('increment', 2));
@@ -73,7 +71,7 @@ class AerospikeTest extends Test
     public function testShouldDecrementValue()
     {
         $cache = $this->getAdapter();
-        $this->tester->haveInAerospike(self::PREFIX.'decrement', 100);
+        $this->tester->haveInAerospike('decrement', 100);
 
         $this->assertEquals(99, $cache->decrement('decrement'));
         $this->assertEquals(97, $cache->decrement('decrement', 2));
@@ -107,11 +105,11 @@ class AerospikeTest extends Test
 
         $data = [1, 2, 3, 4, 5];
         $cache->save('test-data', $data);
-        $this->tester->seeInAerospike(self::PREFIX.'test-data', serialize($data));
+        $this->tester->seeInAerospike('test-data', serialize($data));
 
         $data = "sure, nothing interesting";
         $cache->save('test-data', $data);
-        $this->tester->seeInAerospike(self::PREFIX.'test-data', serialize($data));
+        $this->tester->seeInAerospike('test-data', serialize($data));
     }
 
     public function testShouldDeleteData()
@@ -120,10 +118,10 @@ class AerospikeTest extends Test
         $this->keys[] = 'test-data';
 
         $data = rand(0, 99);
-        $this->tester->haveInAerospike(self::PREFIX.'test-data', $data);
+        $this->tester->haveInAerospike('test-data', $data);
 
         $this->assertTrue($cache->delete('test-data'));
-        $this->tester->dontSeeInAerospike(self::PREFIX.'test-data');
+        $this->tester->dontSeeInAerospike('test-data');
     }
 
     public function testShouldUseOutputFrontend()
@@ -179,7 +177,7 @@ class AerospikeTest extends Test
             ],
             'persistent' => false, // important
             'namespace'  => 'test',
-            'prefix'     => self::PREFIX
+            'prefix'     => ''
         ];
     }
 
@@ -198,7 +196,7 @@ class AerospikeTest extends Test
         return $aerospike->initKey(
             'test',
             'cache',
-            self::PREFIX . $key
+            $key
         );
     }
 }
