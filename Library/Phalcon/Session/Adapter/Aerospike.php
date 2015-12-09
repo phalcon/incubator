@@ -103,7 +103,7 @@ class Aerospike extends Adapter implements AdapterInterface
         }
 
         if (isset($options['prefix'])) {
-            $this->prefix = $options['persistent'];
+            $this->prefix = $options['prefix'];
         }
 
         if (isset($options['lifetime'])) {
