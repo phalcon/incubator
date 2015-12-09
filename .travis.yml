@@ -26,6 +26,7 @@ env:
     - PHALCON_VERSION="2.0.4"
 
 before_install:
+  - phpenv config-rm xdebug.ini
   - bash tests/_ci/setup_beanstalkd.sh
   - beanstalkd -v
   - beanstalkd -l ${TEST_BT_HOST} -p ${TEST_BT_PORT} & # start queue listener
@@ -33,7 +34,9 @@ before_install:
   - cd $TRAVIS_BUILD_DIR
   - pecl channel-update pecl.php.net
   - (CFLAGS="-O1 -g3 -fno-strict-aliasing"; pecl install yaml < /dev/null &)
+  - phpenv config-add tests/_ci/yaml.ini
   - pecl install mongo < /dev/null &
+  - phpenv config-add tests/_ci/mongo.ini
   - phpenv config-add tests/_ci/memcached.ini
   - wget -O aerospike.tgz 'http://aerospike.com/download/server/latest/artifact/ubuntu12'
   - tar -xvf aerospike.tgz
@@ -45,7 +48,6 @@ before_install:
   - cd $TRAVIS_BUILD_DIR
 
 install:
-  - phpenv config-rm xdebug.ini
   - composer self-update
   - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b phalcon-v${PHALCON_VERSION}
   - (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j4 > /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null)
