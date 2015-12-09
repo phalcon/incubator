@@ -16,7 +16,18 @@ services:
 
 env:
   global:
-    - TEST_BT_HOST=127.0.0.1 TEST_BT_PORT=11300 TEST_MC_HOST=127.0.0.1 TEST_MC_PORT=11211 TEST_AS_HOST=127.0.0.1 TEST_AS_PORT=3000
+    - TEST_BT_HOST="127.0.0.1"
+    - TEST_BT_PORT="11300"
+    - TEST_MC_HOST="127.0.0.1"
+    - TEST_MC_PORT="11211"
+    - TEST_AS_HOST="127.0.0.1"
+    - TEST_AS_PORT="3000"
+    - TEST_DB_HOST="127.0.0.1"
+    - TEST_DB_PORT="3306"
+    - TEST_DB_USER="root"
+    - TEST_DB_PASSWD=""
+    - TEST_DB_NAME="incubator_tests"
+    - TEST_DB_CHARSET="utf8"
   matrix:
     - PHALCON_VERSION="2.0.9"
     - PHALCON_VERSION="2.0.8"
