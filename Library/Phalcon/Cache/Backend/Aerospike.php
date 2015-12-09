@@ -42,7 +42,7 @@ use Phalcon\Cache\Exception;
  *     ],
  *     'persistent' => true,
  *     'namespace'  => 'test',
- *     'prefix'     => 'session_',
+ *     'prefix'     => 'cache_',
  *     'options'    => [
  *         \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
  *         \Aerospike::OPT_WRITE_TIMEOUT   => 1500
@@ -97,7 +97,7 @@ class Aerospike extends Prefixable
         }
 
         if (isset($options['prefix'])) {
-            $this->_prefix = $options['persistent'];
+            $this->_prefix = $options['prefix'];
         }
 
         $persistent = false;
