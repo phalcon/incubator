@@ -4,7 +4,7 @@ namespace Phalcon\Test\Cache\Backend;
 
 use Phalcon\Cache\Backend\Database as CacheBackend;
 use Phalcon\Cache\Frontend\Data as CacheFrontend;
-use Phalcon\Db\Adapter\Pdo\Sqlite as DbAdapter;
+use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
 use Codeception\TestCase\Test;
 use UnitTester;
 
@@ -16,7 +16,7 @@ use UnitTester;
  * @link      http://www.phalconphp.com
  * @author    Nikita Vershinin <endeveit@gmail.com>
  * @package   Phalcon\Test\Cache\Backend
- * @group     Cache
+ * @group     db
  *
  * The contents of this file are subject to the New BSD License that is
  * bundled with this package in the file docs/LICENSE.txt
@@ -69,11 +69,15 @@ class DatabaseTest extends Test
     protected function getBackend($prefix = '')
     {
         $frontend   = new CacheFrontend(['lifetime' => 10]);
-        $connection = new DbAdapter(['dbname' => ':memory:']);
-
-        // Make table structure
-        $connection->getInternalHandler()->exec(
-            'CREATE TABLE "cache_data" ("key_name" TEXT PRIMARY KEY, "data" TEXT, "lifetime" INTEGER)'
+        $connection = new DbAdapter(
+            [
+                'host'     => TEST_DB_HOST,
+                'username' => TEST_DB_USER,
+                'password' => TEST_DB_PASSWD,
+                'dbname'   => TEST_DB_NAME,
+                'charset'  => TEST_DB_CHARSET,
+                'port'     => TEST_DB_PORT,
+            ]
         );
 
         return new CacheBackend($frontend, [
