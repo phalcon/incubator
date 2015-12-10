@@ -83,11 +83,11 @@ $loader->register();
 
 ## Testing
 
-See [CONTRIBUTING.md](docs/TESTING.md)
+See [TESTING.md](docs/TESTING.md)
 
 # Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md)
+See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ## Contributions Index
 
@@ -122,7 +122,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ### Loader
 * [Phalcon\Loader\Extended](Library/Phalcon/Loader/Extended.php) - This component extends `Phalcon\Loader` and added ability to set multiple directories per namespace (@sergeyklay)
-* [Phalcon\Loader\PSR](Library/Phalcon/Loader/PSR.php) - Implements PSR-0 autoloader for your apps (!Piyush)
+* [Phalcon\Loader\PSR](Library/Phalcon/Loader/PSR.php) - Implements PSR-0 autoloader for your apps (@Piyush)
 
 ### Logger
 * [Phalcon\Logger\Adapter\Database](Library/Phalcon/Logger) - Adapter to store logs in a database table (!phalcon)
