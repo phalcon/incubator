@@ -36,9 +36,9 @@ class SlugTest extends Test
      */
     protected function _before()
     {
-        if (!extension_loaded('iconv')) {
+        if (!extension_loaded('intl')) {
             $this->markTestSkipped(
-                'The iconv module is not available.'
+                'The intl module is not available.'
             );
         }
     }

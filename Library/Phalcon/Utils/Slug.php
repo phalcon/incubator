@@ -43,8 +43,8 @@ class Slug
      */
     public static function generate($string, $replace = [], $delimiter = '-')
     {
-        if (!extension_loaded('iconv')) {
-            throw new Exception('iconv module not loaded');
+        if (!extension_loaded('intl')) {
+            throw new Exception('intl module not loaded');
         }
 
         // Save the old locale and set the new locale to UTF-8
