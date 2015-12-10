@@ -9,7 +9,7 @@ use Codeception\TestCase\Test;
 use UnitTester;
 
 /**
- * \Phalcon\Annotations\Adapter\BaseTest
+ * \Phalcon\Test\Annotations\Adapter\BaseTest
  * Tests for Phalcon\Annotations\Adapter\Base component
  *
  * @copyright (c) 2011-2015 Phalcon Team

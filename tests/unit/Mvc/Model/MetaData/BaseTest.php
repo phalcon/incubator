@@ -43,7 +43,6 @@ class BaseTest extends Test
      */
     protected function _after()
     {
-        Mockery::close();
     }
 
     public function testBaseMetaDataAdapterImplementsMetaDataInterface()

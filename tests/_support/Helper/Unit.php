@@ -38,7 +38,6 @@ class Unit extends Module
      */
     public function _after(TestCase $test)
     {
-        Mockery::close();
     }
 
     /**

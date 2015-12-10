@@ -22,17 +22,17 @@ namespace Phalcon\Acl\Adapter;
 use Phalcon\Db;
 use Phalcon\Db\AdapterInterface as DbAdapter;
 use Phalcon\Acl\Adapter;
-use Phalcon\Acl\AdapterInterface;
 use Phalcon\Acl\Exception;
 use Phalcon\Acl\Resource;
 use Phalcon\Acl;
 use Phalcon\Acl\Role;
+use Phalcon\Acl\RoleInterface;
 
 /**
  * Phalcon\Acl\Adapter\Database
- * Manages ACL lists in memory
+ * Manages ACL lists in database tables
  */
-class Database extends Adapter implements AdapterInterface
+class Database extends Adapter
 {
     /**
      * @var DbAdapter
@@ -96,6 +96,7 @@ class Database extends Adapter implements AdapterInterface
 
     /**
      * {@inheritdoc}
+     *
      * Example:
      * <code>$acl->addRole(new Phalcon\Acl\Role('administrator'), 'consultor');</code>
      * <code>$acl->addRole('administrator', 'consultor');</code>
@@ -103,11 +104,16 @@ class Database extends Adapter implements AdapterInterface
      * @param  \Phalcon\Acl\Role|string $role
      * @param  string                   $accessInherits
      * @return boolean
+     * @throws \Phalcon\Acl\Exception
      */
     public function addRole($role, $accessInherits = null)
     {
-        if (!is_object($role)) {
-            $role = new Role($role);
+        if (is_string($role)) {
+            $role = new Role($role, ucwords($role) . ' Role');
+        }
+
+        if (!$role instanceof RoleInterface) {
+            throw new Exception('Role must be either an string or implement RoleInterface');
         }
 
         $exists = $this->connection->fetchOne(
@@ -138,8 +144,8 @@ class Database extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param  string                 $roleName
-     * @param  string                 $roleToInherit
+     * @param  string $roleName
+     * @param  string $roleToInherit
      * @throws \Phalcon\Acl\Exception
      */
     public function addInherit($roleName, $roleToInherit)
@@ -243,8 +249,8 @@ class Database extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param  string                 $resourceName
-     * @param  array|string           $accessList
+     * @param  string       $resourceName
+     * @param  array|string $accessList
      * @return boolean
      * @throws \Phalcon\Acl\Exception
      */
@@ -293,7 +299,7 @@ class Database extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Acl\Role[]
+     * @return RoleInterface[]
      */
     public function getRoles()
     {
@@ -315,6 +321,7 @@ class Database extends Adapter implements AdapterInterface
      */
     public function dropResourceAccess($resourceName, $accessList)
     {
+        throw new \BadMethodCallException('Not implemented yet.');
     }
 
     /**
@@ -421,10 +428,10 @@ class Database extends Adapter implements AdapterInterface
     /**
      * Inserts/Updates a permission in the access list
      *
-     * @param  string                 $roleName
-     * @param  string                 $resourceName
-     * @param  string                 $accessName
-     * @param  integer                $action
+     * @param  string  $roleName
+     * @param  string  $resourceName
+     * @param  string  $accessName
+     * @param  integer $action
      * @return boolean
      * @throws \Phalcon\Acl\Exception
      */
@@ -475,10 +482,10 @@ class Database extends Adapter implements AdapterInterface
     /**
      * Inserts/Updates a permission in the access list
      *
-     * @param  string                 $roleName
-     * @param  string                 $resourceName
-     * @param  array|string           $access
-     * @param  integer                $action
+     * @param  string       $roleName
+     * @param  string       $resourceName
+     * @param  array|string $access
+     * @param  integer      $action
      * @throws \Phalcon\Acl\Exception
      */
     protected function allowOrDeny($roleName, $resourceName, $access, $action)
