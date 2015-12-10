@@ -1223,5 +1223,13 @@ DROP TABLE IF EXISTS `roles_inherits`;
 CREATE TABLE `roles_inherits` (
   `roles_name` VARCHAR(32) NOT NULL,
   `roles_inherit` VARCHAR(32) NOT NULL,
-  PRIMARY KEY(roles_name, roles_inherit)
+  PRIMARY KEY(`roles_name`, `roles_inherit`)
+);
+
+DROP TABLE IF EXISTS `cache_data`;
+CREATE TABLE `cache_data` (
+  `key_name` VARCHAR(128) NOT NULL,
+  `data` TEXT,
+  `lifetime` INT,
+  PRIMARY KEY(`key_name`)
 );

@@ -44,3 +44,11 @@ define('TEST_BT_PORT', getenv('TEST_BT_PORT') ?: 11300);
 // Aerospike
 define('TEST_AS_HOST', getenv('TEST_AS_HOST') ?: '127.0.0.1');
 define('TEST_AS_PORT', getenv('TEST_AS_PORT') ?: 3000);
+
+// Database
+define('TEST_DB_HOST', getenv('TEST_DB_HOST') ?: '127.0.0.1');
+define('TEST_DB_PORT', getenv('TEST_DB_PORT') ?: 3306);
+define('TEST_DB_USER', getenv('TEST_DB_USER') ?: 'root');
+define('TEST_DB_PASSWD', getenv('TEST_DB_PASSWD') ?: '');
+define('TEST_DB_NAME', getenv('TEST_DB_NAME') ?: 'incubator_tests');
+define('TEST_DB_CHARSET', getenv('TEST_DB_CHARSET') ?: 'utf8');
