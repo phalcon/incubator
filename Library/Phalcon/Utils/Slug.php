@@ -34,8 +34,6 @@ class Slug
     /**
      * Creates a slug to be used for pretty URLs.
      *
-     * @link http://cubiq.org/the-perfect-php-clean-url-generator
-     *
      * @param  string $string
      * @param  array  $replace
      * @param  string $delimiter
@@ -59,15 +57,18 @@ class Slug
             $string = str_replace(array_keys($replace), array_values($replace), $string);
         }
 
+        $transliterator = \Transliterator::create('Any-Latin; Latin-ASCII');
+        $string = $transliterator->transliterate(
+            mb_convert_encoding(htmlspecialchars_decode($string), 'UTF-8', 'auto')
+        );
+
         // replace non letter or non digits by -
         $string = preg_replace('#[^\pL\d]+#u', '-', $string);
 
         // Trim trailing -
         $string = trim($string, '-');
 
-        $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
-
-        $clean = preg_replace('#[^a-zA-Z0-9\/_|+ -]#', '', $clean);
+        $clean = preg_replace('~[^-\w]+~', '', $string);
         $clean = strtolower($clean);
         $clean = preg_replace('#[\/_|+ -]+#', $delimiter, $clean);
         $clean = trim($clean, $delimiter);
