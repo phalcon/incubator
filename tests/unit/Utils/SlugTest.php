@@ -14,7 +14,7 @@ use UnitTester;
  * @link      http://www.phalconphp.com
  * @author    Ilya Gusev <mail@igusev.ru>
  * @package   Phalcon\Test\Utils
- * @group     Utils
+ * @group     utils
  *
  * The contents of this file are subject to the New BSD License that is
  * bundled with this package in the file docs/LICENSE.txt
@@ -55,11 +55,19 @@ class SlugTest extends Test
      * @param string $string
      * @param mixed $replace
      * @param string $delimiter
-     * @param string $willReturn
+     * @param string $expected
      */
-    public function testGenerateSlug($string, $replace, $delimiter, $willReturn)
+    public function testGenerateSlug($string, $replace, $delimiter, $expected)
     {
-        $this->assertEquals(Slug::generate($string, $replace, $delimiter), strtolower($willReturn));
+        $this->assertEquals(
+            $expected,
+            Slug::generate($string, $replace, $delimiter),
+            'Two strings are equals',
+            0.0,
+            10,
+            false,
+            true
+        );
     }
 
     public function providerStrings()
@@ -112,7 +120,25 @@ class SlugTest extends Test
                 ['ı' => 'i'],
                 "-",
                 "what-does-it-mean-yapilir-in-turkish"
-            ] // Turkish
+            ], // Turkish
+            [
+                'Àà Ââ Ææ Ää Çç Éé Èè Êê Ëë Îî Ïï Ôô Œœ Öö Ùù Ûû Üü Ÿÿ',
+                [],
+                '-',
+                'aa-aa-aeae-aa-cc-ee-ee-ee-ee-ii-ii-oo-oeoe-oo-uu-uu-uu-yy'
+            ],
+            [
+                'а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я',
+                [],
+                '-',
+                'a-b-v-g-d-e-e-z-z-i-j-k-l-m-n-o-p-r-s-t-u-f-h-c-c-s-s-y-e-u-a'
+            ], // Russian
+            [
+                'Keramik og stentøj Populære kategorier',
+                [],
+                '-',
+                'keramik-og-stentoj-populaere-kategorier'
+            ], // Danish
         ];
     }
 }

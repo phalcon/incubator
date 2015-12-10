@@ -35,7 +35,7 @@ Available groups:
 * `MetaData`
 * `Paginator`
 * `Session`
-* `Utils`
+* `utils`
 * `Validation`
 
 Read more about the installation and configuration of Codeception:
