@@ -392,7 +392,7 @@ class Database extends Adapter
     public function isAllowed($role, $resource, $access)
     {
         $sql = implode(' ', [
-            "SELECT 'allowed' FROM {$this->accessList} AS a",
+            "SELECT `allowed` FROM {$this->accessList} AS a",
             // role_name in:
             'WHERE roles_name IN (',
                 // given 'role'-parameter
