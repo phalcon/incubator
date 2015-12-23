@@ -61,7 +61,7 @@ before_install:
 install:
   - composer self-update
   - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b phalcon-v${PHALCON_VERSION}
-  - (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j4 &> /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null)
+  - (cd cphalcon/ext; export CFLAGS="-g3 -O1 -std=gnu90"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j4 &> /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null)
   - php -r 'echo \Phalcon\Version::get()."\n";'
   - travis_retry composer require aerospike/aerospike-client-php "*"
   - find vendor/aerospike/aerospike-client-php/ -name "*.sh" -exec chmod +x {} \;
