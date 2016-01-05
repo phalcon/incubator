@@ -31,13 +31,6 @@ use Phalcon\Session\Exception;
 class Database extends Adapter implements AdapterInterface
 {
     /**
-     * Flag to check if session is destroyed.
-     *
-     * @var boolean
-     */
-    protected $isDestroyed = false;
-
-    /**
      * {@inheritdoc}
      *
      * @param  array $options
@@ -140,7 +133,7 @@ class Database extends Adapter implements AdapterInterface
      */
     public function write($sessionId, $data)
     {
-        if ($this->isDestroyed || empty($data)) {
+        if (empty($data)) {
             return false;
         }
 
@@ -187,7 +180,7 @@ class Database extends Adapter implements AdapterInterface
      */
     public function destroy($session_id = null)
     {
-        if (!$this->isStarted() || $this->isDestroyed) {
+        if (!$this->isStarted()) {
             return true;
         }
 
@@ -195,7 +188,7 @@ class Database extends Adapter implements AdapterInterface
             $session_id = $this->getId();
         }
 
-        $this->isDestroyed = true;
+        $this->_started = false;
         $options = $this->getOptions();
         $result = $options['db']->execute(
             sprintf(
