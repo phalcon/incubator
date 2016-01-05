@@ -133,10 +133,6 @@ class Database extends Adapter implements AdapterInterface
      */
     public function write($sessionId, $data)
     {
-        if (empty($data)) {
-            return false;
-        }
-
         $options = $this->getOptions();
         $row = $options['db']->fetchOne(
             sprintf(
