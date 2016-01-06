@@ -48,12 +48,12 @@ class Mongo extends Adapter implements AdapterInterface
         }
 
         session_set_save_handler(
-            array($this, 'open'),
-            array($this, 'close'),
-            array($this, 'read'),
-            array($this, 'write'),
-            array($this, 'destroy'),
-            array($this, 'gc')
+            [$this, 'open'],
+            [$this, 'close'],
+            [$this, 'read'],
+            [$this, 'write'],
+            [$this, 'destroy'],
+            [$this, 'gc']
         );
 
         parent::__construct($options);
@@ -62,11 +62,9 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param  string  $savePath
-     * @param  string  $name
      * @return boolean
      */
-    public function open($savePath, $name)
+    public function open()
     {
         return true;
     }
@@ -86,9 +84,10 @@ class Mongo extends Adapter implements AdapterInterface
      */
     public function read($sessionId)
     {
-        $sessionData = $this->getCollection()->findOne(array('_id' => $sessionId));
+        $sessionData = $this->getCollection()->findOne(['_id' => $sessionId]);
+
         if (!isset($sessionData['data'])) {
-            return null;
+            return '';
         }
 
         $this->data = $sessionData['data'];
@@ -108,11 +107,11 @@ class Mongo extends Adapter implements AdapterInterface
             return true;
         }
 
-        $sessionData = array(
-            '_id' => $sessionId,
+        $sessionData = [
+            '_id'      => $sessionId,
             'modified' => new \MongoDate(),
-            'data' => $sessionData
-        );
+            'data'     => $sessionData
+        ];
 
         $this->getCollection()->save($sessionData);
 
@@ -125,30 +124,30 @@ class Mongo extends Adapter implements AdapterInterface
     public function destroy($sessionId = null)
     {
         if (is_null($sessionId)) {
-            $sessionId = session_id();
+            $sessionId =$this->getId();
         }
 
         $this->data = null;
 
-        $remove = $this->getCollection()->remove(array('_id' => $sessionId));
+        $remove = $this->getCollection()->remove(['_id' => $sessionId]);
 
-        return (bool)$remove['ok'];
+        return (bool) $remove['ok'];
     }
 
     /**
      * {@inheritdoc}
-     * @param string $maxlifetime
+     * @param string $maxLifetime
      */
-    public function gc($maxlifetime)
+    public function gc($maxLifetime)
     {
         $minAge = new \DateTime();
-        $minAge->sub(new \DateInterval('PT' . $maxlifetime . 'S'));
+        $minAge->sub(new \DateInterval('PT' . $maxLifetime . 'S'));
         $minAgeMongo = new \MongoDate($minAge->getTimestamp());
 
-        $query = array('modified' => array('$lte' => $minAgeMongo));
+        $query = ['modified' => ['$lte' => $minAgeMongo]];
         $remove = $this->getCollection()->remove($query);
 
-        return (bool)$remove['ok'];
+        return (bool) $remove['ok'];
     }
 
     /**
@@ -157,6 +156,7 @@ class Mongo extends Adapter implements AdapterInterface
     protected function getCollection()
     {
         $options = $this->getOptions();
+
         return $options['collection'];
     }
 }

@@ -18,14 +18,14 @@
 
 namespace Phalcon\Cache\Backend;
 
-use Phalcon\Cache\Backend;
-use Phalcon\Cache\BackendInterface;
-
 /**
  * Phalcon\Cache\Backend\Prefixable
- * Abstract class for backend with support of «prefix» option.
+ *
+ * Trait for backend cache adapters with support of "prefix" option.
+ *
+ * @package Phalcon\Cache\Backend
  */
-abstract class Prefixable extends Backend implements BackendInterface
+trait Prefixable
 {
     /**
      * Returns prefixed identifier.

@@ -5,8 +5,9 @@ php:
   - 5.5
   - 5.6
 
-sudo:
-  false
+sudo: required
+dist: precise
+group: edge
 
 services:
   - memcached
@@ -15,7 +16,18 @@ services:
 
 env:
   global:
-    - TEST_BT_HOST=127.0.0.1 TEST_BT_PORT=11300 TEST_MC_HOST=127.0.0.1 TEST_MC_PORT=11211
+    - TEST_BT_HOST="127.0.0.1"
+    - TEST_BT_PORT="11300"
+    - TEST_MC_HOST="127.0.0.1"
+    - TEST_MC_PORT="11211"
+    - TEST_AS_HOST="127.0.0.1"
+    - TEST_AS_PORT="3000"
+    - TEST_DB_HOST="127.0.0.1"
+    - TEST_DB_PORT="3306"
+    - TEST_DB_USER="root"
+    - TEST_DB_PASSWD=""
+    - TEST_DB_NAME="incubator_tests"
+    - TEST_DB_CHARSET="utf8"
   matrix:
     - PHALCON_VERSION="2.0.9"
     - PHALCON_VERSION="2.0.8"
@@ -25,37 +37,57 @@ env:
     - PHALCON_VERSION="2.0.4"
 
 before_install:
+  - phpenv config-rm xdebug.ini
   - bash tests/_ci/setup_beanstalkd.sh
   - beanstalkd -v
   - beanstalkd -l ${TEST_BT_HOST} -p ${TEST_BT_PORT} & # start queue listener
-  - sleep 5 # give server some time to boot
+  - sleep 5
   - cd $TRAVIS_BUILD_DIR
   - pecl channel-update pecl.php.net
   - (CFLAGS="-O1 -g3 -fno-strict-aliasing"; pecl install yaml < /dev/null &)
+  - phpenv config-add tests/_ci/yaml.ini
   - pecl install mongo < /dev/null &
+  - phpenv config-add tests/_ci/mongo.ini
   - phpenv config-add tests/_ci/memcached.ini
-  - php -m
+  - wget -O aerospike.tgz 'http://aerospike.com/download/server/latest/artifact/ubuntu12'
+  - tar -xvf aerospike.tgz
+  - cd aerospike-server-community-*-ubuntu12*
+  - sudo ./asinstall
+  - sudo service aerospike start
+  - sudo service aerospike status
+  - sleep 5
+  - cd $TRAVIS_BUILD_DIR
 
 install:
   - composer self-update
   - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b phalcon-v${PHALCON_VERSION}
-  - (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j4 > /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null)
+  - (cd cphalcon/ext; export CFLAGS="-g3 -O1 -std=gnu90"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j4 &> /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null)
   - php -r 'echo \Phalcon\Version::get()."\n";'
+  - travis_retry composer require aerospike/aerospike-client-php "*"
+  - find vendor/aerospike/aerospike-client-php/ -name "*.sh" -exec chmod +x {} \;
+  - cd vendor/aerospike/aerospike-client-php
+  - sudo $(which composer) run-script -q post-install-cmd
+  - cd $TRAVIS_BUILD_DIR
+  - echo "extension=${TRAVIS_BUILD_DIR}/vendor/aerospike/aerospike-client-php/src/aerospike/modules/aerospike.so" | tee -a tests/_ci/aerospike.ini
+  - phpenv config-add tests/_ci/aerospike.ini
+  - php -m
   - travis_retry composer install --prefer-source --no-interaction
-  - travis_retry composer require "duncan3dc/fork-helper":"*"
 
 before_script:
+  - stty cols 160
   - mysql -e 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;'
 
 script:
   - vendor/bin/phpcs --standard=PSR2 --colors --extensions=php --encoding=utf-8 Library/
   - vendor/bin/codecept build
-  - vendor/bin/codecept run --coverage-text
+  - vendor/bin/codecept run
 
 addons:
   apt:
     packages:
       - libyaml-dev
+      - libssl-dev
+      - autoconf
 
 notifications:
   email:

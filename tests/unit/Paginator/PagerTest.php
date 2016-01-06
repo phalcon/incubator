@@ -47,7 +47,6 @@ class PagerTest extends Test
      */
     protected function _after()
     {
-        Mockery::close();
     }
 
     public function testCreatingPagerObjectWithoutOptionsShouldConstructObject()
