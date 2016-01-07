@@ -201,9 +201,7 @@ class Database extends Adapter implements AdapterInterface
             [$session_id]
         );
 
-        session_regenerate_id();
-
-        return $result;
+        return $result && session_destroy();
     }
 
     /**
