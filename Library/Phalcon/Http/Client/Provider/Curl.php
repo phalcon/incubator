@@ -26,6 +26,7 @@ use Phalcon\Http\Request\Method;
 class Curl extends Request
 {
     private $handle = null;
+    private $responseHeader = null;
 
     public static function isAvailable()
     {
@@ -39,6 +40,9 @@ class Curl extends Request
         }
 
         $this->handle = curl_init();
+        if ($this->handle === false) {
+            throw new HttpException(curl_error($this->handle), 'curl');
+        }
         $this->initOptions();
         parent::__construct();
     }
@@ -50,7 +54,7 @@ class Curl extends Request
 
     public function __clone()
     {
-        $request = new self;
+        $request = new self();
         $request->handle = curl_copy_handle($this->handle);
 
         return $request;
@@ -61,14 +65,12 @@ class Curl extends Request
         $this->setOptions(array(
             CURLOPT_RETURNTRANSFER  => true,
             CURLOPT_AUTOREFERER     => true,
-            CURLOPT_FOLLOWLOCATION  => true,
             CURLOPT_MAXREDIRS       => 20,
-            CURLOPT_HEADER          => true,
             CURLOPT_PROTOCOLS       => CURLPROTO_HTTP | CURLPROTO_HTTPS,
             CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
-            CURLOPT_USERAGENT       => 'Phalcon HTTP/' . self::VERSION . ' (Curl)',
+            CURLOPT_USERAGENT       => 'Phalcon HTTP/'.self::VERSION.' (Curl)',
             CURLOPT_CONNECTTIMEOUT  => 30,
-            CURLOPT_TIMEOUT         => 30
+            CURLOPT_TIMEOUT         => 30,
         ));
     }
 
@@ -103,8 +105,11 @@ class Curl extends Request
             }
             $header[] = 'Expect:';
         }
-        
+
         $this->setOption(CURLOPT_HTTPHEADER, $header);
+        $this->setOption(CURLOPT_HEADER, false);
+        $this->setOption(CURLOPT_HEADERFUNCTION, array($this, "readHeader"));
+        $this->responseHeader = "";
 
         $content = curl_exec($this->handle);
 
@@ -112,18 +117,31 @@ class Curl extends Request
             throw new HttpException(curl_error($this->handle), $errno);
         }
 
-        $headerSize = curl_getinfo($this->handle, CURLINFO_HEADER_SIZE);
-
         $response = new Response();
-        $response->header->parse(substr($content, 0, $headerSize));
-        
+        $response->header->parse($this->responseHeader);
+
         if ($fullResponse) {
-            $response->body = $content;
+            $response->body = $this->responseHeader.$content;
         } else {
-            $response->body = substr($content, $headerSize);
+            $response->body = $content;
         }
 
         return $response;
+    }
+
+    /**
+     * Header reader function for CURL
+     *
+     * @param resource $curl
+     * @param string   $header
+     *
+     * @return int
+     */
+    public function readHeader($curl, $header)
+    {
+        $this->responseHeader .= $header;
+
+        return strlen($header);
     }
 
     /**
@@ -154,17 +172,54 @@ class Curl extends Request
         }
     }
 
+    /**
+     * Setup authentication
+     *
+     * @param string $user
+     * @param string $pass
+     * @param string $auth Can be 'basic' or 'digest'
+     */
+    public function setAuth($user, $pass, $auth = 'basic')
+    {
+        $this->setOption(CURLOPT_HTTPAUTH, constant('CURLAUTH_'.strtoupper($auth)));
+        $this->setOption(CURLOPT_USERPWD, $user.":".$pass);
+    }
+    /**
+     * Set cookies for this session
+     *
+     * @param array $cookies
+     *
+     * @see http://curl.haxx.se/docs/manpage.html
+     * @see http://www.nczonline.net/blog/2009/05/05/http-cookies-explained/
+     */
+    public function setCookies($cookies)
+    {
+        if (empty($cookies)) {
+            return;
+        }
+        $cookieList = array();
+        foreach ($cookies as $cookieName => $cookieValue) {
+            $cookie = urlencode($cookieName);
+            if (isset($cookieValue)) {
+                $cookie .= '=';
+                $cookie .= urlencode($cookieValue);
+            }
+            $cookieList[] = $cookie;
+        }
+        $this->setOption(CURLOPT_COOKIE, implode(';', $cookieList));
+    }
+
     public function setProxy($host, $port = 8080, $user = null, $pass = null)
     {
         $this->setOptions(array(
             CURLOPT_PROXY     => $host,
-            CURLOPT_PROXYPORT => $port
+            CURLOPT_PROXYPORT => $port,
         ));
 
         if (!empty($user) && is_string($user)) {
             $pair = $user;
             if (!empty($pass) && is_string($pass)) {
-                $pair .= ':' . $pass;
+                $pair .= ':'.$pass;
             }
             $this->setOption(CURLOPT_PROXYUSERPWD, $pair);
         }
