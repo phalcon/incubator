@@ -532,7 +532,7 @@ class Message
      * @see Phalcon\Mailer\Message::createAttachmentViaPath()
      * @see Phalcon\Mailer\Message::prepareAttachment()
      */
-    public function attachment($file, Array $options = [])
+    public function attachment($file, array $options = [])
     {
         $attachment = $this->createAttachmentViaPath($file);
         return $this->prepareAttachment($attachment, $options);
@@ -550,7 +550,7 @@ class Message
      * @see Phalcon\Mailer\Message::createAttachmentViaData()
      * @see Phalcon\Mailer\Message::prepareAttachment()
      */
-    public function attachmentData($data, $name, Array $options = [])
+    public function attachmentData($data, $name, array $options = [])
     {
         $attachment = $this->createAttachmentViaData($data, $name);
         return $this->prepareAttachment($attachment, $options);
@@ -662,7 +662,7 @@ class Message
      *
      * @see \Swift_Message::attach()
      */
-    protected function prepareAttachment(\Swift_Attachment $attachment, Array $options = [])
+    protected function prepareAttachment(\Swift_Attachment $attachment, array $options = [])
     {
         if (isset($options['mime'])) {
             $attachment->setContentType($options['mime']);
