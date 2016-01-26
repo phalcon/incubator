@@ -10,7 +10,7 @@ use UnitTester;
  * \Phalcon\Tests\Queue\Beanstalk\ExtendedTest
  * Tests for Phalcon\Queue\Beanstalk\Extended component
  *
- * @copyright (c) 2011-2015 Phalcon Team
+ * @copyright (c) 2011-2016 Phalcon Team
  * @link      http://www.phalconphp.com
  * @author    Nikita Vershinin <endeveit@gmail.com>
  * @package   Phalcon\Tests\Queue\Beanstalk
