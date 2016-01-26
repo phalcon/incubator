@@ -177,7 +177,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 * [Phalcon\Annotations\Adapter\Memcached](Library/Phalcon/Annotations/Adapter) - Memcached adapter for storing annotations (@igusev)
 
 ### Behaviors
-* [Phalcon\Mvc\Model\Behavior\Blameable](Library/Phalcon/Mvc/Model/Behavior) - logs with every created or updated row in your database who created and who updated it (@phalcon) 
+* [Phalcon\Mvc\Model\Behavior\Blameable](Library/Phalcon/Mvc/Model/Behavior) - logs with every created or updated row in your database who created and who updated it (@phalcon)
 * [Phalcon\Mvc\Model\Behavior\NestedSet](Library/Phalcon/Mvc/Model/Behavior) - Nested Set behavior for models (@braska)
 
 ### Cache
@@ -194,6 +194,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 ### Database
 * [Phalcon\Db\Adapter\Cacheable\Mysql](Library/Phalcon/Db) - MySQL adapter that aggressively caches all the queries executed (@phalcon)
 * [Phalcon\Db\Adapter\Factory](Library/Phalcon/Db/Adapter/Factory.php) - Phalcon DB adapters Factory (@Kachit)
+
+### Http
+* [Phalcon\Http](Library/Phalcon/Http) - Uri utility (@tugrultopuz)
+* [Phalcon\Http\Client](Library/Phalcon/Http\Client) - Http Request and Response (@tugrultopuz)
 
 ### Loader
 * [Phalcon\Loader\Extended](Library/Phalcon/Loader/Extended.php) - This component extends `Phalcon\Loader` and added ability to set multiple directories per namespace (@sergeyklay)
@@ -215,7 +219,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 ### ORM Validators
 * [Phalcon\Mvc\Model\Validator\ConfirmationOf](Library/Phalcon/Mvc/Model/Validator) - Allows to validate if a field has a confirmation field with the same value (@suxxes)
 * [Phalcon\Mvc\Model\Validator\CardNumber](Library/Phalcon/Mvc/Model/Validator) - Allows to validate credit card number using Luhn algorithm (@parshikov)
-* [Phalcon\Mvc\Model\Validator\Decimal](Library/Phalcon/Mvc/Model/Validator) - Allows to validate if a field has a valid number in proper decimal format (negative and decimal numbers allowed) (@sergeyklay) 
+* [Phalcon\Mvc\Model\Validator\Decimal](Library/Phalcon/Mvc/Model/Validator) - Allows to validate if a field has a valid number in proper decimal format (negative and decimal numbers allowed) (@sergeyklay)
 * [Phalcon\Mvc\Model\Validator\Between](Library/Phalcon/Mvc/Model/Validator) - Validates that a value is between a range of two values (@sergeyklay)
 
 ### Error Handling
