@@ -58,6 +58,20 @@ class AerospikeTest extends Test
         $this->cleanup();
     }
 
+    public function testShouldGetAerospikeInstance()
+    {
+        $this->assertInstanceOf('\Aerospike', $this->getAdapter()->getDb());
+    }
+
+    /**
+     * @expectedException \Phalcon\Cache\Exception
+     * @expectedExceptionMessage The cache must be started first
+     */
+    public function testShouldThrowExceptionIfCacheIsNotStarted()
+    {
+        $this->getAdapter()->save();
+    }
+
     public function testShouldIncrementValue()
     {
         $cache = $this->getAdapter();
