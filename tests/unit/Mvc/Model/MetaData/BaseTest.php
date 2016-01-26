@@ -10,7 +10,7 @@ use Mockery;
  * \Phalcon\Test\Mvc\Model\MetaData\BaseTest
  * Tests for Phalcon\Mvc\Model\MetaData\Base component
  *
- * @copyright (c) 2011-2015 Phalcon Team
+ * @copyright (c) 2011-2016 Phalcon Team
  * @link      http://www.phalconphp.com
  * @author    Nemanja Ognjanovic <nemanja@ognjanovic.me>
  * @package   Phalcon\Test\Mvc\Model\MetaData

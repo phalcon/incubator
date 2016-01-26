@@ -12,7 +12,7 @@ use UnitTester;
  * \Phalcon\Test\Validation\Validator\MongoIdTest
  * Tests for Phalcon\Validation\Validator\MongoId component
  *
- * @copyright (c) 2011-2015 Phalcon Team
+ * @copyright (c) 2011-2016 Phalcon Team
  * @link      http://www.phalconphp.com
  * @author    Anton Kornilov <kachit@yandex.ru>
  * @package   Phalcon\Test\Validation\Validator

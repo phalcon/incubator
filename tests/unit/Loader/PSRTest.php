@@ -12,7 +12,7 @@ use UnitTester;
  * \Phalcon\Test\Loader\PSRTest
  * Tests the Phalcon\Loader\PSR component
  *
- * @copyright (c) 2011-2015 Phalcon Team
+ * @copyright (c) 2011-2016 Phalcon Team
  * @link      http://www.phalconphp.com
  * @author    Serghei Iakovlev <serghei@phalconphp.com>
  * @package   Phalcon\Loader
