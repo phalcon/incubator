@@ -14,7 +14,7 @@ A MySQL database is also required for several tests. Follow these instructions t
 
 ```sh
 $ echo 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;' | mysql -u root
-cat tests/_data/dump.sql | mysql valid -u root
+cat tests/_data/dump.sql | mysql incubator_tests -u root
 ```
 
 Then you need to re-generate base classes for all suites:
