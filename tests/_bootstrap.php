@@ -1,7 +1,6 @@
 <?php
 
-define('INCUBATOR_FIXTURES', __DIR__ . '/_fixtures/');
-
+error_reporting(-1);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
@@ -24,14 +23,9 @@ if (extension_loaded('xdebug')) {
     ini_set('xdebug.var_display_max_depth', 4);
 }
 
-if (!file_exists(__DIR__ . '/../vendor/autoload.php')) {
-    throw new \RuntimeException(
-        'Unable to locate autoloader. ' .
-        'Install dependencies from the project root directory to run test suite: `composer install`.'
-    );
-}
+clearstatcache();
 
-require __DIR__ . '/../vendor/autoload.php';
+define('INCUBATOR_FIXTURES', __DIR__ . '/_fixtures/');
 
 // Memcached
 define('TEST_MC_HOST', getenv('TEST_MC_HOST') ?: '127.0.0.1');
