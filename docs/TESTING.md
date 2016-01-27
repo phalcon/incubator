@@ -1,9 +1,23 @@
 # Phalcon Incubator Testing
 
-Thanks for reading this page, [test](tests) folder includes all the [Codeception][1] unit tests
+Thanks for reading this page, [test](tests) folder includes all the unit tests
 we used to be sure that Phalcon Incubator will run properly and have a stable state.
 
-First you need to re-generate base classes for all suites:
+The main dependency is [Codeception][1] which can be installed using Composer:
+
+```sh
+# run this command from project root
+$ composer install --dev --prefer-source
+```
+
+A MySQL database is also required for several tests. Follow these instructions to create the database:
+
+```sh
+$ echo 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;' | mysql -u root
+cat tests/_data/dump.sql | mysql valid -u root
+```
+
+Then you need to re-generate base classes for all suites:
 
 ```sh
 $ vendor/bin/codecept build
@@ -15,36 +29,6 @@ You can execute all test with `run` command:
 $ vendor/bin/codecept run
 # OR
 $ vendor/bin/codecept run --debug # Detailed output
-```
-
-Execute test groups with `run -g <group_name>` command.
-
-Available groups:
-* `Acl`
-* `aerospike`
-* `Annotation`
-* `Avatar`
-* `db`
-* `Beanstalk`
-* `Cache`
-* `Config`
-* `DbValidation`
-* `EagerLoading`
-* `Http`
-* `Loader`
-* `MetaData`
-* `Paginator`
-* `Session`
-* `utils`
-* `Validation`
-
-Read more about the installation and configuration of Codeception:
-* [Codeception Introduction][2]
-* [Codeception Console Commands][3]
-
-A MySQL database is also required for several tests. Follow these instructions to create the database:
-```sh
-$ echo 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;' | mysql -u root
 ```
 
 For these tests we use the user `root` without a password. You may need to change this in `codeception.yml` file.
@@ -96,6 +80,31 @@ export TEST_DB_PASSWD=""
 export TEST_DB_NAME="incubator_tests"
 export TEST_DB_CHARSET="urf8"
 ```
+
+Execute test groups with `run -g <group_name>` command.
+
+Available groups:
+* `Acl`
+* `aerospike`
+* `Annotation`
+* `Avatar`
+* `db`
+* `Beanstalk`
+* `Cache`
+* `Config`
+* `DbValidation`
+* `EagerLoading`
+* `Http`
+* `Loader`
+* `MetaData`
+* `Paginator`
+* `Session`
+* `utils`
+* `Validation`
+
+Read more about the installation and configuration of Codeception:
+* [Codeception Introduction][2]
+* [Codeception Console Commands][3]
 
 Additionally, the file `.travis.yml` contains full instructions to test Phalcon Incubator on Ubuntu 12+
 If you cannot run the tests, please refer to the `.travis.yml` file for more instructions how we test Incubator.
