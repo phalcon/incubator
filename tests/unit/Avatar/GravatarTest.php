@@ -11,7 +11,7 @@ use UnitTester;
  * \Phalcon\Test\Avatar\GravatarTest
  * Tests for Phalcon\Avatar\Gravatar component
  *
- * @copyright (c) 2011-2015 Phalcon Team
+ * @copyright (c) 2011-2016 Phalcon Team
  * @author    Serghei Iakovlev <serghei@phalconphp.com>
  * @link      http://phalconphp.com/
  * @package   Phalcon\Test\Avatar

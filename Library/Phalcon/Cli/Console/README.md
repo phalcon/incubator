@@ -130,7 +130,7 @@ Also is available instruction for hiding action from help. Just use `@DoNotCover
 
 Assume that we have developed a task, to list a directory's content. So the file of the task must be located within the tasks folder. **For instance: /path/to/your/project/tasks/LsTask.php**
 
-Pay attention to the file name. This must be named as **<TaskName>Task.php**
+Pay attention to the file name. This must be named as **\<TaskName\>Task.php**
 
 ```php
 use Phalcon\Cli\Task;

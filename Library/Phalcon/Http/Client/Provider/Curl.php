@@ -3,7 +3,7 @@
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2012 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
   | with this package in the file docs/LICENSE.txt.                        |
@@ -103,7 +103,7 @@ class Curl extends Request
             }
             $header[] = 'Expect:';
         }
-        
+
         $this->setOption(CURLOPT_HTTPHEADER, $header);
 
         $content = curl_exec($this->handle);
@@ -116,7 +116,7 @@ class Curl extends Request
 
         $response = new Response();
         $response->header->parse(substr($content, 0, $headerSize));
-        
+
         if ($fullResponse) {
             $response->body = $content;
         } else {

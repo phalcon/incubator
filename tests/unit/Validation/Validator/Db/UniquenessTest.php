@@ -13,7 +13,7 @@ use UnitTester;
  * \Phalcon\Test\Validation\Validator\Db\UniquenessTest
  * Tests for Phalcon\Validation\Validator\Db\Uniqueness component
  *
- * @copyright (c) 2011-2015 Phalcon Team
+ * @copyright (c) 2011-2016 Phalcon Team
  * @link      http://www.phalconphp.com
  * @author    Tomasz Ślązok <tomek@landingi.com>
  * @package   Phalcon\Test\Validation\Validator\Db

@@ -13,7 +13,7 @@ use Aerospike;
  * \Phalcon\Test\Cache\Backend\AerospikeTest
  * Tests for Phalcon\Cache\Backend\Aerospike component
  *
- * @copyright (c) 2011-2015 Phalcon Team
+ * @copyright (c) 2011-2016 Phalcon Team
  * @link      http://www.phalconphp.com
  * @author    Serghei Iakovlev <serghei@phalconphp.com>
  * @package   Phalcon\Test\Cache\Backend
@@ -56,6 +56,20 @@ class AerospikeTest extends Test
     protected function _after()
     {
         $this->cleanup();
+    }
+
+    public function testShouldGetAerospikeInstance()
+    {
+        $this->assertInstanceOf('\Aerospike', $this->getAdapter()->getDb());
+    }
+
+    /**
+     * @expectedException \Phalcon\Cache\Exception
+     * @expectedExceptionMessage The cache must be started first
+     */
+    public function testShouldThrowExceptionIfCacheIsNotStarted()
+    {
+        $this->getAdapter()->save();
     }
 
     public function testShouldIncrementValue()

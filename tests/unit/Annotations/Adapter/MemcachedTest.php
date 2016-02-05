@@ -13,7 +13,7 @@ use UnitTester;
  * \Phalcon\Test\Annotations\Adapter\MemcachedTest
  * Tests for Phalcon\Annotations\Adapter\Memcached component
  *
- * @copyright (c) 2011-2015 Phalcon Team
+ * @copyright (c) 2011-2016 Phalcon Team
  * @author    Ilya Gusev <mail@igusev.ru>
  * @link      http://phalconphp.com/
  * @package   Phalcon\Test\Annotations\Adapter
