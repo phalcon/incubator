@@ -10,7 +10,7 @@ use UnitTester;
  * \Phalcon\Tests\Http\Client\HeaderTest
  * Tests for Phalcon\Http\Client\Header
  *
- * @copyright (c) 2011-2015 Phalcon Team
+ * @copyright (c) 2011-2016 Phalcon Team
  * @link      http://www.phalconphp.com
  * @author    Ruslan Khaibullin
  * @package   Phalcon\Http\Client\Header

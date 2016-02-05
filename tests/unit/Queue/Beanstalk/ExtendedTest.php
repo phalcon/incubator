@@ -1,17 +1,16 @@
 <?php
-
 namespace Phalcon\Tests\Queue\Beanstalk;
 
+use Codeception\TestCase\Test;
 use Phalcon\Queue\Beanstalk\Extended;
 use Phalcon\Queue\Beanstalk\Job;
-use Codeception\TestCase\Test;
 use UnitTester;
 
 /**
  * \Phalcon\Tests\Queue\Beanstalk\ExtendedTest
  * Tests for Phalcon\Queue\Beanstalk\Extended component
  *
- * @copyright (c) 2011-2015 Phalcon Team
+ * @copyright (c) 2011-2016 Phalcon Team
  * @link      http://www.phalconphp.com
  * @author    Nikita Vershinin <endeveit@gmail.com>
  * @package   Phalcon\Tests\Queue\Beanstalk
@@ -79,11 +78,15 @@ class ExtendedTest extends Test
 
     public function testShouldPutAndReserve()
     {
-        $this->client->putInTube(self::TUBE_NAME, 'testPutInTube');
+        $jobId = $this->client->putInTube(self::TUBE_NAME, 'testPutInTube');
+
+        $this->assertNotEquals(false, $jobId);
+
         $job = $this->client->reserveFromTube(self::TUBE_NAME);
 
         $this->assertNotEmpty($job);
         $this->assertInstanceOf(self::JOB_CLASS, $job);
+        $this->assertEquals($jobId, $job->getId());
         $this->assertTrue($job->delete());
     }
 
@@ -96,6 +99,23 @@ class ExtendedTest extends Test
 
         $this->assertNotEmpty($tubes);
         $this->assertContains(self::TUBE_NAME, $tubes);
+
+        // Cleanup tubes
+        foreach ($tubes as $tube) {
+            $isRunning = true;
+
+            $this->client->watch($tube);
+
+            do {
+                $job = $this->client->reserve(0.1);
+
+                if ($job) {
+                    $this->assertTrue($job->delete());
+                } else {
+                    $isRunning = false;
+                }
+            } while ($isRunning);
+        }
     }
 
     /**
@@ -111,28 +131,50 @@ class ExtendedTest extends Test
             ));
         }
 
+        $memory = shmop_open($this->shmKey, 'c', 0644, $this->shmLimit);
+
+        if (false === $memory) {
+            $this->markTestSkipped('Cannot create shared memory block');
+        } else {
+            shmop_close($memory);
+        }
+
         $expected = [
             'test-tube-1' => '1',
             'test-tube-2' => '2',
         ];
 
-        foreach ($expected as $tube => $value) {
-            $this->client->addWorker($tube, function (Job $job) {
-                // Store string "test-tube-%JOB_BODY%" in shared memory
-                $memory  = shmop_open($this->shmKey, 'c', 0644, $this->shmLimit);
-                $output  = trim(shmop_read($memory, 0, $this->shmLimit));
-                $output .= sprintf("\ntest-tube-%s", $job->getBody());
+        $fork = new \duncan3dc\Helpers\Fork();
+        $fork->call(function () use ($expected) {
+            foreach ($expected as $tube => $value) {
+                $this->client->addWorker($tube, function (Job $job) {
+                    // Store string "test-tube-%JOB_BODY%" in a shared memory
+                    $memory  = shmop_open($this->shmKey, 'c', 0644, $this->shmLimit);
+                    $output  = trim(shmop_read($memory, 0, $this->shmLimit));
+                    $output .= sprintf("\ntest-tube-%s", $job->getBody());
 
-                shmop_write($memory, $output, 0);
-                shmop_close($memory);
+                    shmop_write($memory, $output, 0);
+                    shmop_close($memory);
 
-                exit(1);
-            });
+                    throw new \RuntimeException('Forced exception to stop worker');
+                });
 
-            $this->client->putInTube($tube, $value);
-        }
+                $this->assertNotEquals(false, $this->client->putInTube($tube, $value));
+            }
 
-        $this->client->doWork();
+            $this->client->doWork();
+
+            exit(0);
+        });
+
+        $reflectionFork    = new \ReflectionClass($fork);
+        $reflectionThreads = $reflectionFork->getProperty('threads');
+        $reflectionThreads->setAccessible(true);
+
+        sleep(2);
+
+        $reflectionThreads->setValue($fork, []);
+        unset($fork);
 
         $memory = shmop_open($this->shmKey, 'a', 0, 0);
         $output = shmop_read($memory, 0, $this->shmLimit);
@@ -142,10 +184,13 @@ class ExtendedTest extends Test
 
         $this->assertNotEmpty($output);
 
+        $actual = explode("\n", trim($output));
+
         // Compare number of items in expected list with lines in shared memory
-        $this->assertEquals(
-            count($expected),
-            count(array_unique(explode("\n", trim($output))))
-        );
+        $this->assertEquals(count($expected), count($actual));
+
+        foreach ($actual as $value) {
+            $this->assertArrayHasKey($value, $expected);
+        }
     }
 }

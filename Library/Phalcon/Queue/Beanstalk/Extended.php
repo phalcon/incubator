@@ -4,7 +4,7 @@
  +------------------------------------------------------------------------+
  | Phalcon Framework                                                      |
  +------------------------------------------------------------------------+
- | Copyright (c) 2011-2015 Phalcon Team (http://www.phalconphp.com)       |
+ | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
  +------------------------------------------------------------------------+
  | This source file is subject to the New BSD License that is bundled     |
  | with this package in the file docs/LICENSE.txt.                        |
@@ -141,19 +141,15 @@ class Extended extends Base
             $that = clone $this;
 
             // Run the worker in separate process.
-            $fork->call(function () use ($tube, $worker, $that, $fork, $ignoreErrors) {
+            $fork->call(function () use ($tube, $worker, $that, $ignoreErrors) {
                 $that->connect();
 
                 do {
                     $job = $that->reserveFromTube($tube);
 
                     if ($job && ($job instanceof Job)) {
-                        $fork->call(function () use ($worker, $job) {
-                            call_user_func($worker, $job);
-                        });
-
                         try {
-                            $fork->wait();
+                            call_user_func($worker, $job);
 
                             try {
                                 $job->delete();

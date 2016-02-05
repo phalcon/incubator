@@ -3,7 +3,7 @@
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2015 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
   | with this package in the file docs/LICENSE.txt.                        |
@@ -18,14 +18,14 @@
 
 namespace Phalcon\Cache\Backend;
 
-use Phalcon\Cache\Backend;
-use Phalcon\Cache\BackendInterface;
-
 /**
  * Phalcon\Cache\Backend\Prefixable
- * Abstract class for backend with support of «prefix» option.
+ *
+ * Trait for backend cache adapters with support of "prefix" option.
+ *
+ * @package Phalcon\Cache\Backend
  */
-abstract class Prefixable extends Backend implements BackendInterface
+trait Prefixable
 {
     /**
      * Returns prefixed identifier.
