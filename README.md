@@ -125,7 +125,6 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 * [Phalcon\Http\Client](Library/Phalcon/Http\Client) - Http Request and Response (@tugrul)
 
 ### Loader
-* [Phalcon\Loader\Extended](Library/Phalcon/Loader/Extended.php) - This component extends `Phalcon\Loader` and added ability to set multiple directories per namespace (@sergeyklay)
 * [Phalcon\Loader\PSR](Library/Phalcon/Loader/PSR.php) - Implements PSR-0 autoloader for your apps (@Piyush)
 
 ### Logger
