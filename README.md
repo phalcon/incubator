@@ -24,6 +24,16 @@ Install Composer in a common location or in your project:
 curl -s http://getcomposer.org/installer | php
 ```
 
+Then create the `composer.json` file as follows:
+
+```json
+{
+    "require": {
+        "phalcon/incubator": "^2.1"
+    }
+}
+```
+
 If you are still using Phalcon 2.0.x, create the `composer.json` file as follows:
 
 ```json
