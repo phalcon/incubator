@@ -1,17 +1,20 @@
 <?php
+
 namespace Phalcon\Test\Db\Adapter;
 
 use Phalcon\Db\Adapter\Factory as AdaptersFactory;
 use Codeception\TestCase\Test;
+use UnitTester;
+
 /**
  * \Phalcon\Test\Db\Adapter\Factory
  * Tests for Phalcon\Db\Adapter\Factory component
  *
- * @copyright (c) 2011-2015 Phalcon Team
+ * @copyright (c) 2011-2016 Phalcon Team
  * @link      http://www.phalconphp.com
  * @author    Anton Kornilov <kachit@yandex.ru>
  * @package   Phalcon\Test\Db\Adapter
- * @group     Db
+ * @group     db
  *
  * The contents of this file are subject to the New BSD License that is
  * bundled with this package in the file docs/LICENSE.txt
@@ -20,7 +23,13 @@ use Codeception\TestCase\Test;
  * through the world-wide-web, please send an email to license@phalconphp.com
  * so that we can send you a copy immediately.
  */
-class FactoryTest extends Test {
+class FactoryTest extends Test
+{
+    /**
+     * UnitTester Object
+     * @var UnitTester
+     */
+    protected $tester;
 
     /**
      * @var array
@@ -34,11 +43,11 @@ class FactoryTest extends Test {
     {
         $this->testable = [
             'adapter'  => null,
-            'host'     => 'localhost',
-            'username' => 'root',
-            'password' => '',
-            'dbname'   => 'incubator_tests',
-            'charset'  => 'utf8',
+            'host'     => TEST_DB_HOST,
+            'username' => TEST_DB_USER,
+            'password' => TEST_DB_PASSWD,
+            'dbname'   => TEST_DB_NAME,
+            'charset'  => TEST_DB_CHARSET,
         ];
     }
 
@@ -72,7 +81,7 @@ class FactoryTest extends Test {
 
     /**
      * @expectedException \Phalcon\Db\Exception
-     * @expectedExceptionMessage Adapter option must be required
+     * @expectedExceptionMessage A database 'adapter' option is required and must be a nonempty string.
      */
     public function testMissingConfigKeyAdapter()
     {
@@ -82,7 +91,7 @@ class FactoryTest extends Test {
 
     /**
      * @expectedException \Phalcon\Db\Exception
-     * @expectedExceptionMessage Adapter option must be required
+     * @expectedExceptionMessage A database 'adapter' option is required and must be a nonempty string.
      */
     public function testEmptyConfigKeyAdapter()
     {

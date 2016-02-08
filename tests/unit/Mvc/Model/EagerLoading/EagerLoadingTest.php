@@ -21,7 +21,7 @@ use UnitTester;
  * \Phalcon\Test\Mvc\Model\EagerLoading\EagerLoadingTest
  * Tests for Phalcon\Mvc\Model\EagerLoading\Loader component
  *
- * @copyright (c) 2011-2015 Phalcon Team
+ * @copyright (c) 2011-2016 Phalcon Team
  * @link      http://www.phalconphp.com
  * @author    Óscar Enríquez
  * @package   Phalcon\Test\Mvc\Model\EagerLoading
@@ -349,7 +349,7 @@ class EagerLoadingTest extends Test
         }, true));
 
         $getIds = function ($obj) {
-            return property_exists($obj, 'robot') && isset ($obj->robot) ? $obj->robot->readAttribute('id') : null;
+            return property_exists($obj, 'robot') && isset($obj->robot) ? $obj->robot->readAttribute('id') : null;
         };
 
         $this->assertEquals(array_map($getIds, $rawly), array_map($getIds, $eagerly));

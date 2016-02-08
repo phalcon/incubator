@@ -3,7 +3,7 @@
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2015 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
   | with this package in the file docs/LICENSE.txt.                        |
@@ -123,11 +123,11 @@ class Header implements \Countable
         }
 
         $status = array();
-        if (preg_match('/^HTTP\/(\d(?:\.\d)?)\s+(\d{3})\s+(.+)$/i', $content[0], $status)) {
+        if (preg_match('%^HTTP/(\d(?:\.\d)?)\s+(\d{3})\s?+(.+)?$%i', $content[0], $status)) {
             $this->status = array_shift($content);
             $this->version = $status[1];
             $this->statusCode = intval($status[2]);
-            $this->statusMessage = $status[3];
+            $this->statusMessage = isset($status[3]) ? $status[3] : '';
         }
 
         foreach ($content as $field) {

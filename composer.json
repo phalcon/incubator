@@ -11,26 +11,32 @@
             "email": "team@phalconphp.com"
         }
     ],
+    "support": {
+        "issues": "https://github.com/phalcon/incubator/issues",
+        "source": "https://github.com/phalcon/incubator",
+        "forum": "https://forum.phalconphp.com/"
+    },
     "require": {
         "php": ">=5.4",
         "ext-phalcon": ">=2.0.4",
-        "swiftmailer/swiftmailer": "~5.2",
-        "duncan3dc/fork-helper": "*"
+        "swiftmailer/swiftmailer": "~5.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.*",
-        "squizlabs/php_codesniffer": "2.*",
-        "codeception/codeception": "2.*",
-        "mockery/mockery": "*",
-        "php-mock/php-mock": "*"
+        "squizlabs/php_codesniffer": "^2.5",
+        "codeception/codeception": "^2.1",
+        "codeception/mockery-module": "^0.2",
+        "codeception/aerospike-module": "^0.1"
     },
     "suggest": {
-        "duncan3dc/fork-helper": "Allows using Phalcon\\Queue\\Beanstalk\\Extended"
+        "ext-aerospike": "*",
+        "duncan3dc/fork-helper": "To use extended class to access the beanstalk queue service"
     },
     "autoload": {
         "psr-4": { "Phalcon\\": "Library/Phalcon/" }
     },
     "autoload-dev": {
-        "psr-4": { "Phalcon\\Test\\": "tests/unit/" }
+        "psr-4": {
+            "Phalcon\\Test\\": "tests/unit/"
+        }
     }
 }

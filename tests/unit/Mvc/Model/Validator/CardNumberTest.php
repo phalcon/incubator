@@ -16,7 +16,7 @@ use UnitTester;
  * \Phalcon\Test\Mvc\Model\Validator\CardNumberTest
  * Tests for Phalcon\Mvc\Model\Validator\CardNumber component
  *
- * @copyright (c) 2011-2015 Phalcon Team
+ * @copyright (c) 2011-2016 Phalcon Team
  * @link      http://www.phalconphp.com
  * @author    Ilya Gusev <mail@igusev.ru>
  * @package   Phalcon\Test\Mvc\Model\Validator

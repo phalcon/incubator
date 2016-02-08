@@ -10,7 +10,7 @@ use UnitTester;
  * \Phalcon\Test\Config\LoaderTest
  * Tests for Phalcon\Config\Loader component
  *
- * @copyright (c) 2011-2015 Phalcon Team
+ * @copyright (c) 2011-2016 Phalcon Team
  * @link      http://www.phalconphp.com
  * @author    Anton Kornilov <kachit@yandex.ru>
  * @package   Phalcon\Test\Config
@@ -149,5 +149,37 @@ class LoaderTest extends Test
     {
         $file = INCUBATOR_FIXTURES . 'Config/config.txt';
         ConfigLoader::load($file);
+    }
+
+    public function testLoadDirValid()
+    {
+        $dir = INCUBATOR_FIXTURES . 'Config/cfg';
+        $config = ConfigLoader::loadDir($dir);
+        $this->assertTrue(is_object($config));
+        $this->assertInstanceOf('Phalcon\Config', $config);
+        $this->assertEquals('bar', $config->phalcon->foo);
+        $this->assertEquals('bar1', $config->phalcon->foo1);
+        $this->assertEquals('bar2', $config->phalcon->foo2);
+        $this->assertEquals('bar3', $config->phalcon->foo3);
+    }
+
+    /**
+     * @expectedException \Phalcon\Config\Exception
+     * @expectedExceptionMessage Config directory not found
+     */
+    public function testLoadDirInValidDir()
+    {
+        $dir = INCUBATOR_FIXTURES . 'Config/cfg1';
+        ConfigLoader::loadDir($dir);
+    }
+
+    /**
+     * @expectedException \Phalcon\Config\Exception
+     * @expectedExceptionMessage Config adapter for .txt files is not support
+     */
+    public function testLoadDirInValidConfigFiles()
+    {
+        $dir = INCUBATOR_FIXTURES . 'Config';
+        ConfigLoader::loadDir($dir);
     }
 }
