@@ -11,7 +11,6 @@ group: edge
 
 services:
   - memcached
-  - mysql
   - mongodb
 
 env:
@@ -29,16 +28,7 @@ env:
     - TEST_DB_NAME="incubator_tests"
     - TEST_DB_CHARSET="utf8"
   matrix:
-    - PHALCON_VERSION="2.0.13"
-    - PHALCON_VERSION="2.0.12"
-    - PHALCON_VERSION="2.0.11"
-    - PHALCON_VERSION="2.0.10"
-    - PHALCON_VERSION="2.0.9"
-    - PHALCON_VERSION="2.0.8"
-    - PHALCON_VERSION="2.0.7"
-    - PHALCON_VERSION="2.0.6"
-    - PHALCON_VERSION="2.0.5"
-    - PHALCON_VERSION="2.0.4"
+    - PHALCON_VERSION="2.1.x"
 
 before_install:
   - phpenv config-rm xdebug.ini
@@ -64,7 +54,7 @@ before_install:
 
 install:
   - composer self-update
-  - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b phalcon-v${PHALCON_VERSION}
+  - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b ${PHALCON_VERSION}
   - (cd cphalcon/ext; export CFLAGS="-g0 -O0 -std=gnu90"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j2 &> /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null)
   - php --ri phalcon
   - travis_retry composer require aerospike/aerospike-client-php "*"
