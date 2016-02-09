@@ -347,7 +347,7 @@ class Mongo extends Adapter
      * @param array    $parameters
      * @return boolean
      */
-    public function isAllowed($role, $resource, $access, $parameters = null)
+    public function isAllowed($role, $resource, $access, array $parameters = null)
     {
         $accessList = $this->getCollection('accessList');
         $access     = $accessList->findOne([

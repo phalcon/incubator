@@ -399,7 +399,7 @@ class Database extends Adapter
      * @param array  $parameters
      * @return bool
      */
-    public function isAllowed($role, $resource, $access, $parameters = null)
+    public function isAllowed($role, $resource, $access, array $parameters = null)
     {
         $sql = implode(' ', [
             "SELECT " . $this->connection->escapeIdentifier('allowed') . " FROM {$this->accessList} AS a",
