@@ -372,7 +372,7 @@ class Redis extends Adapter
      * @param array  $parameters
      * @return bool
      */
-    public function isAllowed($role, $resource, $access, $parameters = null)
+    public function isAllowed($role, $resource, $access, array $parameters = null)
     {
         if ($this->redis->sIsMember("accessList:$role:$resource:" . Acl::ALLOW, $access)) {
             return Acl::ALLOW;
