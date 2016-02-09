@@ -38,6 +38,12 @@ class Mongo extends Adapter
     protected $options;
 
     /**
+     * Default action for no arguments is allow
+     * @var int
+     */
+    protected $noArgumentsDefaultAction = Acl::ALLOW;
+
+    /**
      * Class constructor.
      *
      * @param  array $options
@@ -290,8 +296,9 @@ class Mongo extends Adapter
      * @param string $roleName
      * @param string $resourceName
      * @param mixed  $access
+     * @param mixed $func
      */
-    public function allow($roleName, $resourceName, $access)
+    public function allow($roleName, $resourceName, $access, $func = null)
     {
         $this->allowOrDeny($roleName, $resourceName, $access, Acl::ALLOW);
     }
@@ -315,9 +322,10 @@ class Mongo extends Adapter
      * @param  string  $roleName
      * @param  string  $resourceName
      * @param  mixed   $access
+     * @param  mixed $func
      * @return boolean
      */
-    public function deny($roleName, $resourceName, $access)
+    public function deny($roleName, $resourceName, $access, $func = null)
     {
         $this->allowOrDeny($roleName, $resourceName, $access, Acl::DENY);
     }
@@ -336,9 +344,10 @@ class Mongo extends Adapter
      * @param  string  $role
      * @param  string  $resource
      * @param  string  $access
+     * @param array    $parameters
      * @return boolean
      */
-    public function isAllowed($role, $resource, $access)
+    public function isAllowed($role, $resource, $access, array $parameters = null)
     {
         $accessList = $this->getCollection('accessList');
         $access     = $accessList->findOne([
@@ -365,6 +374,28 @@ class Mongo extends Adapter
         }
 
         return $this->_defaultAccess;
+    }
+
+    /**
+     * Returns the default ACL access level for no arguments provided
+     * in isAllowed action if there exists func for accessKey
+     *
+     * @return int
+     */
+    public function getNoArgumentsDefaultAction()
+    {
+        return $this->noArgumentsDefaultAction;
+    }
+
+    /**
+     * Sets the default access level for no arguments provided
+     * in isAllowed action if there exists func for accessKey
+     *
+     * @param int $defaultAccess Phalcon\Acl::ALLOW or Phalcon\Acl::DENY
+     */
+    public function setNoArgumentsDefaultAction($defaultAccess)
+    {
+        $this->noArgumentsDefaultAction = intval($defaultAccess);
     }
 
     /**

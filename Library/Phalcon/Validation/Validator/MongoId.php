@@ -16,20 +16,19 @@
   +------------------------------------------------------------------------+
 */
 
-/**
- * MongoId validator
- *
- * @package Phalcon\Validation\Validator
- */
 namespace Phalcon\Validation\Validator;
 
-use ReflectionExtension;
 use MongoId as Id;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator;
 use Phalcon\Validation\Message;
 use Phalcon\Validation\Exception;
 
+/**
+ * MongoId validator
+ *
+ * @package Phalcon\Validation\Validator
+ */
 class MongoId extends Validator
 {
     /**
