@@ -4,42 +4,6 @@ Phalcon\Mvc\Model\Validator
 
 Validators for Phalcon\Mvc\Model
 
-ConfirmationOf
---------------
-Allows to validate if a field has a confirmation field with the same value
-
-```php
-
-use Phalcon\Mvc\Model\Validator\ConfirmationOf;
-
-use Phalcon\Mvc\Model;
-
-class User extends Model
-{
-
-     public function initialize()
-     {
-          $this->skipAttributesOnCreate(array('password_confirmation'));
-          $this->skipAttributesOnUpdate(array('password_confirmation'));
-     }
-
-     public function validation()
-     {
-          $this->validate(new ConfirmationOf(array(
-               'field' => 'password',
-               'field_confirmation' => 'password_confirmation',
-               'message' => 'Both fields should contain equal values'
-          )));
-
-          if ($this->validationHasFailed() == true) {
-               return false;
-          }
-     }
-
-}
-
-```
-
 Decimal
 -------
 Allows to validate if a field has a valid number in proper decimal format (negative and decimal numbers allowed).
@@ -73,35 +37,6 @@ class Product extends Model
 
 ```
 
-Between
--------
-Validates that a value is between a range of two values
-
-```php
-
-use Phalcon\Mvc\Model\Validator\Between;
-
-use Phalcon\Mvc\Model;
-
-class Slider extends Model
-{
-     public function validation()
-     {
-          $this->validate(new Between(array(
-               'field' => 'position',
-               'max' => 50,
-               'min' => 2,
-               'message' => 'Position is not between a valid range'
-          )));
-
-          if ($this->validationHasFailed() == true) {
-               return false;
-          }
-     }
-}
-
-```
-
 CardNumber
 -------
 Validates credit card number using Luhn algorithm.
@@ -120,38 +55,9 @@ class User extends Phalcon\Mvc\Model
                 'type'   => CardNumber::VISA, // Only one type. Any if not specified
                 'message' => 'Card number must be valid',
           )));
- 
+
           if ($this->validationHasFailed() == true) {
                return false;
-          }
-      }
-}
-
-```
-
-IPv4
--------
-Validates that a value is ipv4 address in valid range
-
-```php
-
-use Phalcon\Mvc\Model;
-use Phalcon\Mvc\Model\Validator\IPv4;
-
-class Server extends Phalcon\Mvc\Model
-{
-     public function validation()
-     {
-          $this->validate(new IPv4(array(
-              'field'             => 'server_ip',
-              'version'           => IP::VERSION_4 | IP::VERSION_6, // v6 and v4. The same if not specified
-              'allowReserved'     => false,   // False if not specified. Ignored for v6
-              'allowPrivate'      => false,   // False if not specified
-              'message'           => 'IP address has to be correct'
-          )));
- 
-          if ($this->validationHasFailed() == true) {
-              return false;
           }
       }
 }
