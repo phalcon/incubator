@@ -134,9 +134,6 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 * [Phalcon\Http](Library/Phalcon/Http) - Uri utility (@tugrul)
 * [Phalcon\Http\Client](Library/Phalcon/Http\Client) - Http Request and Response (@tugrul)
 
-### Loader
-* [Phalcon\Loader\PSR](Library/Phalcon/Loader/PSR.php) - Implements PSR-0 autoloader for your apps (@Piyush)
-
 ### Logger
 * [Phalcon\Logger\Adapter\Database](Library/Phalcon/Logger) - Adapter to store logs in a database table (!phalcon)
 * [Phalcon\Logger\Adapter\Firelogger](Library/Phalcon/Logger) - Adapter to log messages in the Firelogger console in Firebug (@phalcon)
@@ -149,10 +146,6 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 * [Phalcon\Mvc\View\Engine\Mustache](Library/Phalcon/Mvc/View/Engine) - Adapter for Mustache (@phalcon)
 * [Phalcon\Mvc\View\Engine\Twig](Library/Phalcon/Mvc/View/Engine) - Adapter for Twig (@phalcon)
 * [Phalcon\Mvc\View\Engine\Smarty](Library/Phalcon/Mvc/View/Engine) - Adapter for Smarty (@phalcon)
-
-### ORM Validators
-* [Phalcon\Mvc\Model\Validator\CardNumber](Library/Phalcon/Mvc/Model/Validator) - Allows to validate credit card number using Luhn algorithm (@parshikov)
-* [Phalcon\Mvc\Model\Validator\Decimal](Library/Phalcon/Mvc/Model/Validator) - Allows to validate if a field has a valid number in proper decimal format (negative and decimal numbers allowed) (@sergeyklay)
 
 ### Error Handling
 * [Phalcon\Error](Library/Phalcon/Error) - Error handler used to centralize the error handling and displaying clean error pages (theDisco)
@@ -181,6 +174,8 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 * [Phalcon\Avatar\Gravatar](Library/Phalcon/Avatar) - Provides an easy way to retrieve a user's profile image from Gravatar site based on a given email address (@sergeyklay)
 
 ### Validators
+* [Phalcon\Validation\Validator\CardNumber](Library/Phalcon/Validation/Validator) - Allows to validate credit card number using Luhn algorithm (@parshikov)
+* [Phalcon\Validation\Validator\Decimal](Library/Phalcon/Validation/Validator) - Allows to validate if a field has a valid number in proper decimal format (negative and decimal numbers allowed) (@sergeyklay)
 * [Phalcon\Validation\Validator\MongoId](Library/Phalcon/Validation/Validator) - Validate MongoId value (@Kachit)
 
 ## License
