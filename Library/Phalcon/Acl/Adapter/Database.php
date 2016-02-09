@@ -442,9 +442,9 @@ class Database extends Adapter
      * @return int
      */
     public function getNoArgumentsDefaultAction()
-	{
-		return $this->noArgumentsDefaultAction;
-	}
+    {
+        return $this->noArgumentsDefaultAction;
+    }
 
     /**
      * Sets the default access level for no arguments provided
@@ -453,9 +453,9 @@ class Database extends Adapter
      * @param int $defaultAccess Phalcon\Acl::ALLOW or Phalcon\Acl::DENY
      */
     public function setNoArgumentsDefaultAction($defaultAccess)
-	{
-		$this->noArgumentsDefaultAction = intval($defaultAccess);
-	}
+    {
+        $this->noArgumentsDefaultAction = intval($defaultAccess);
+    }
 
     /**
      * Inserts/Updates a permission in the access list
