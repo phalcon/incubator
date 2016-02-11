@@ -108,7 +108,7 @@ class Database extends Adapter implements AdapterInterface
         $maxLifetime = (int) ini_get('session.gc_maxlifetime');
 
         $options = $this->getOptions();
-        $row = $options['db']->fetchOne(
+        $row = $this->connection->fetchOne(
             sprintf(
                 'SELECT %s FROM %s WHERE %s = ? AND COALESCE(%s, %s) + %d >= ?',
                 $this->connection->escapeIdentifier($options['column_data']),
@@ -214,7 +214,7 @@ class Database extends Adapter implements AdapterInterface
     {
         $options = $this->getOptions();
 
-        return $options['db']->execute(
+        return $this->connection->execute(
             sprintf(
                 'DELETE FROM %s WHERE COALESCE(%s, %s) + %d < ?',
                 $this->connection->escapeIdentifier($options['table']),

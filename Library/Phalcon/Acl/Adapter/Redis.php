@@ -33,11 +33,21 @@ use Phalcon\Acl\RoleInterface;
  */
 class Redis extends Adapter
 {
-    /** @var bool  */
+    /**
+     * @var bool
+     */
     protected $setNXAccess = true;
 
-    /** @var \Redis */
+    /**
+     * @var \Redis
+     */
     protected $redis;
+
+    /**
+     * Default action for no arguments is allow
+     * @var int
+     */
+    protected $noArgumentsDefaultAction = Acl::ALLOW;
 
     public function __construct($redis = null)
     {
@@ -265,8 +275,9 @@ class Redis extends Adapter
      * @param string $role
      * @param string $resource
      * @param array|string $access
+     * @param mixed $func
      */
-    public function allow($role, $resource, $access)
+    public function allow($role, $resource, $access, $func = null)
     {
         if ($role !== '*' && $resource !== '*') {
             $this->allowOrDeny($role, $resource, $access, Acl::ALLOW);
@@ -331,9 +342,10 @@ class Redis extends Adapter
      * @param  string $roleName
      * @param  string $resourceName
      * @param  array|string $access
+     * @param  mixed $func
      * @return boolean
      */
-    public function deny($role, $resource, $access)
+    public function deny($role, $resource, $access, $func = null)
     {
         if ($role === '*' || empty($role)) {
             $this->rolePermission($resource, $access, Acl::DENY);
@@ -357,10 +369,10 @@ class Redis extends Adapter
      * @param string $role
      * @param string $resource
      * @param string $access
-     *
+     * @param array  $parameters
      * @return bool
      */
-    public function isAllowed($role, $resource, $access)
+    public function isAllowed($role, $resource, $access, array $parameters = null)
     {
         if ($this->redis->sIsMember("accessList:$role:$resource:" . Acl::ALLOW, $access)) {
             return Acl::ALLOW;
@@ -380,6 +392,28 @@ class Redis extends Adapter
          */
 
         return $this->getDefaultAction();
+    }
+
+    /**
+     * Returns the default ACL access level for no arguments provided
+     * in isAllowed action if there exists func for accessKey
+     *
+     * @return int
+     */
+    public function getNoArgumentsDefaultAction()
+    {
+        return $this->noArgumentsDefaultAction;
+    }
+
+    /**
+     * Sets the default access level for no arguments provided
+     * in isAllowed action if there exists func for accessKey
+     *
+     * @param int $defaultAccess Phalcon\Acl::ALLOW or Phalcon\Acl::DENY
+     */
+    public function setNoArgumentsDefaultAction($defaultAccess)
+    {
+        $this->noArgumentsDefaultAction = intval($defaultAccess);
     }
 
     /**
