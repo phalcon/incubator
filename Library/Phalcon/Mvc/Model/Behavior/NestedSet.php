@@ -657,11 +657,13 @@ class NestedSet extends Behavior implements BehaviorInterface
                     return false;
                 }
             }
-            $this->ignoreEvent = false;
 
+            $this->shiftLeftRight($right + 1, $left - $right - 1);
+            $this->ignoreEvent = false;
             $this->db->commit();
         } else {
             $delta = $right - $left + 1;
+            $this->ignoreEvent = true;
             $this->shiftLeftRight($key, $delta);
 
             if ($left >= $key) {
@@ -675,7 +677,6 @@ class NestedSet extends Behavior implements BehaviorInterface
                 $condition .= ' AND ' . $this->rootAttribute . '=' . $owner->{$this->rootAttribute};
             }
 
-            $this->ignoreEvent = true;
             foreach ($owner::find($condition) as $i) {
                 if ($i->update(array($this->levelAttribute => $i->{$this->levelAttribute} + $levelDelta)) == false) {
                     $this->db->rollback();
@@ -701,10 +702,10 @@ class NestedSet extends Behavior implements BehaviorInterface
                     }
                 }
             }
-            $this->ignoreEvent = false;
 
             $this->shiftLeftRight($right + 1, -$delta);
 
+            $this->ignoreEvent = false;
             $this->db->commit();
         }
 
@@ -726,15 +727,14 @@ class NestedSet extends Behavior implements BehaviorInterface
                 $condition .= ' AND ' . $this->rootAttribute . '=' . $owner->{$this->rootAttribute};
             }
 
-            $query = sprintf(
-                'UPDATE %s SET %s=%s+%d WHERE %s',
-                $this->owner->getSource(),
-                $attribute,
-                $attribute,
-                $delta,
-                $condition
-            );
-            $this->owner->getWriteConnection()->execute($query);
+            foreach ($owner::find($condition) as $i) {
+                if ($i->update(array($attribute => $i->{$attribute} + $delta)) == false) {
+                    $this->db->rollback();
+                    $this->ignoreEvent = false;
+
+                    return false;
+                }
+            }
         }
     }
 
@@ -779,7 +779,9 @@ class NestedSet extends Behavior implements BehaviorInterface
             $owner->{$this->rootAttribute} = $target->{$this->rootAttribute};
         }
 
+        $this->ignoreEvent = true;
         $this->shiftLeftRight($key, 2);
+        $this->ignoreEvent = false;
         $owner->{$this->leftAttribute} = $key;
         $owner->{$this->rightAttribute} = $key + 1;
         $owner->{$this->levelAttribute} = $target->{$this->levelAttribute} + $levelUp;
