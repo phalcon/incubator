@@ -642,7 +642,7 @@ class NestedSet extends Behavior implements BehaviorInterface
 
             $condition = $this->leftAttribute . '>=' . $left . ' AND ';
             $condition .= $this->rightAttribute . '<=' . $right . ' AND ';
-            $condition .= $this->rootAttribute . '=' . $target->{$this->rootAttribute};
+            $condition .= $this->rootAttribute . '=' . $owner->{$this->rootAttribute};
             foreach ($owner::find($condition) as $i) {
                 $arr = array(
                     $this->leftAttribute => $i->{$this->leftAttribute} + $delta,
@@ -658,8 +658,6 @@ class NestedSet extends Behavior implements BehaviorInterface
                 }
             }
             $this->ignoreEvent = false;
-
-            $this->shiftLeftRight($right + 1, $left - $right - 1);
 
             $this->db->commit();
         } else {
