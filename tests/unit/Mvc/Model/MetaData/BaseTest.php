@@ -52,27 +52,6 @@ class BaseTest extends Test
         $this->assertInstanceOf('Phalcon\Mvc\Model\MetaDataInterface', $mock);
     }
 
-    public function testMemcacheMetaDataAdapterImplementsMetaDataInterface()
-    {
-        $mock = Mockery::mock('Phalcon\Mvc\Model\MetaData\Memcache');
-
-        $this->assertInstanceOf('Phalcon\Mvc\Model\MetaDataInterface', $mock);
-    }
-
-    public function testMemcachedMetaDataAdapterImplementsMetaDataInterface()
-    {
-        $mock = Mockery::mock('Phalcon\Mvc\Model\MetaData\Memcached');
-
-        $this->assertInstanceOf('Phalcon\Mvc\Model\MetaDataInterface', $mock);
-    }
-
-    public function testRedisMetaDataAdapterImplementsMetaDataInterface()
-    {
-        $mock = Mockery::mock('Phalcon\Mvc\Model\MetaData\Redis');
-
-        $this->assertInstanceOf('Phalcon\Mvc\Model\MetaDataInterface', $mock);
-    }
-
     public function testWincacheMetaDataAdapterImplementsMetaDataInterface()
     {
         $mock = Mockery::mock('Phalcon\Mvc\Model\MetaData\Wincache');
