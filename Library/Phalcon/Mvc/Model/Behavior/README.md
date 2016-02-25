@@ -34,7 +34,7 @@ By default:
 so you can skip configuring these.
 
 There are two ways this behavior can work: one tree per table and multiple trees per table.
-The mode is selected based on the value of `hasManyRoots` option that is false by default meaning single tree mode.
+The mode is selected based on the value of `hasManyRoots` option that is `false` by default meaning single tree mode.
 In multiple trees mode you can set `rootAttribute` option to match existing field in the table storing the tree.
 
 ### Selecting from a tree
@@ -52,7 +52,7 @@ In the following we'll use an example model Category with the following in its D
     - 9. Ford
     - 10. Mercedes
 ```
-In this example we have two trees. Tree roots are ones with ID=1 and ID=7.
+In this example we have two trees. Tree `roots` are ones with ID=1 and ID=7.
 
 #### Getting all roots
 
