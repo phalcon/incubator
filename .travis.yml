@@ -47,6 +47,7 @@ before_install:
   - tar -xvf aerospike.tgz
   - cd aerospike-server-community-*-ubuntu12*
   - sudo ./asinstall
+  - ls -al /etc/init.d/
   - sudo service aerospike start
   - sudo service aerospike status
   - sleep 5
