@@ -37,6 +37,28 @@ There are two ways this behavior can work: one tree per table and multiple trees
 The mode is selected based on the value of `hasManyRoots` option that is `false` by default meaning single tree mode.
 In multiple trees mode you can set `rootAttribute` option to match existing field in the table storing the tree.
 
+### Example schema
+
+```sql
+CREATE TABLE `categories` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(128) NOT NULL,
+  `description` TEXT DEFAULT NULL,
+  `root` INT UNSIGNED DEFAULT NULL,
+  `lft` INT UNSIGNED NOT NULL,
+  `rgt` INT UNSIGNED NOT NULL,
+  `level` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `category_coordinates` (`lft`,`rgt`,`root`),
+  KEY `category_root` (`root`),
+  KEY `category_lft` (`lft`),
+  KEY `category_lft_root` (`lft`, `root`),
+  KEY `category_rgt` (`rgt`),
+  KEY `category_rgt_root` (`rgt`, `root`),
+  KEY `category_level` (`level`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
 ### Selecting from a tree
 
 In the following we'll use an example model Category with the following in its DB:
