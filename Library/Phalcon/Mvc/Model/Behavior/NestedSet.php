@@ -655,8 +655,10 @@ class NestedSet extends Behavior implements BehaviorInterface
 
             // 1. Rebuild the target tree
             foreach ([$this->leftAttribute, $this->rightAttribute] as $attribute) {
-                $condition = $attribute . '>=' . $key . ' AND ' . $this->rootAttribute . '=' . $target->{$this->rootAttribute};
-
+                $condition = join(' AND ', [
+                    $attribute . '>=' . $key,
+                    $this->rootAttribute . '=' . $target->{$this->rootAttribute},
+                ]);
                 foreach ($target::find($condition) as $i) {
                     $delta = $right - $left + 1;
                     /** @var ModelInterface $i */
@@ -823,14 +825,17 @@ class NestedSet extends Behavior implements BehaviorInterface
         try {
             $this->ignoreEvent = true;
             $this->shiftLeftRight($key, 2);
+            $this->ignoreEvent = false;
+
             $owner->{$this->leftAttribute} = $key;
             $owner->{$this->rightAttribute} = $key + 1;
             $owner->{$this->levelAttribute} = $target->{$this->levelAttribute} + $levelUp;
 
+            $this->ignoreEvent = true;
             $result = $owner->create($attributes);
             $this->ignoreEvent = false;
 
-            if (!$result ) {
+            if (!$result) {
                 $db->rollback();
                 $this->ignoreEvent = false;
 
@@ -838,7 +843,7 @@ class NestedSet extends Behavior implements BehaviorInterface
             }
 
             $db->commit();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $db->rollback();
             $this->ignoreEvent = false;
 
