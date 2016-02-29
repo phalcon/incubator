@@ -334,6 +334,9 @@ class NestedSet extends Behavior implements BehaviorInterface
      */
     public function prependTo(ModelInterface $target, array $attributes = null)
     {
+        // Re-search $target
+        $target = $target::findFirst($target->{$this->primaryKey});
+
         return $this->addNode($target, $target->{$this->leftAttribute} + 1, 1, $attributes);
     }
 
@@ -358,6 +361,9 @@ class NestedSet extends Behavior implements BehaviorInterface
      */
     public function appendTo(ModelInterface $target, array $attributes = null)
     {
+        // Re-search $target
+        $target = $target::findFirst($target->{$this->primaryKey});
+
         return $this->addNode($target, $target->{$this->rightAttribute}, 1, $attributes);
     }
 

@@ -211,6 +211,7 @@ class Helper extends Test
         $ford->appendTo($cars);
         $mercedes->insertAfter($ford);
         $audi->insertBefore($ford);
+
         $phones = new CategoriesManyRoots();
         $phones->name = 'Mobile Phones';
         $phones->saveNode();
