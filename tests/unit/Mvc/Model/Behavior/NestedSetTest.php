@@ -252,6 +252,47 @@ class NestedSetTest extends Helper
     }
 
     /**
+     * Created nodes in the desired place
+     *
+     * @author Serghei Iakovlev <serghei@phalconphp.com>
+     * @since  2016-03-01
+     * @issue  513
+     */
+    public function testShouldAddBelowAndAbove()
+    {
+        $this->specify(
+            'Unable to created nodes in the desired place',
+            function () {
+                $root = new CategoriesManyRoots;
+                $root->name = 'ROOT';
+                $root->saveNode();
+
+                $node1 = new CategoriesManyRoots;
+                $node1->name = 'A';
+                $node1->appendTo($root);
+
+                $node2 = new CategoriesManyRoots;
+                $node2->name = 'B';
+                $node2->appendTo($root);
+
+                $node3 = new CategoriesManyRoots;
+                $node3->name = 'C';
+                $node3->prependTo($root);
+
+                $expected = [
+                    'ROOT',
+                    '     C',
+                    '     A',
+                    '     B',
+                ];
+
+                expect($this->prettifyRoots())->equals($expected);
+                $this->checkIntegrity($root->root);
+            }
+        );
+    }
+
+    /**
      * Move node as first
      *
      * @author Serghei Iakovlev <serghei@phalconphp.com>
