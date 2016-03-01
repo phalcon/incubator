@@ -297,6 +297,7 @@ class NestedSetTest extends Helper
      *
      * @author Serghei Iakovlev <serghei@phalconphp.com>
      * @since  2016-02-28
+     * @issue  534
      */
     public function testShouldMoveNodeAsFirst()
     {

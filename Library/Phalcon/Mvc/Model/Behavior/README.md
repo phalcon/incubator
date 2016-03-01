@@ -380,6 +380,20 @@ for ($i = $level; $i; $i--) {
 }
 ```
 
+Or just:
+
+```php
+$order = 'lft'; // or 'root, lft' for multiple trees
+$categories = Categories::find(['order' => $order]);
+
+$result = [];
+foreach ($categories as $category) {
+    $result[] = str_repeat(' ', ($category->level - 1) * 5) . $category->name;
+}
+
+echo print_r($result, true), PHP_EOL;
+```
+
 ## Blameable
 
 ```php
