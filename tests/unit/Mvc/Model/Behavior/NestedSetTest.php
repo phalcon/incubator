@@ -355,4 +355,68 @@ class NestedSetTest extends Helper
             }
         );
     }
+
+    /**
+     * Move nodes between trees
+     *
+     * @author Serghei Iakovlev <serghei@phalconphp.com>
+     * @since  2016-03-02
+     * @issue  535
+     */
+    public function testShouldMoveNodesBetweenTrees()
+    {
+        $this->specify(
+            'Unable to move nodes between trees',
+            function () {
+                $this->createTree();
+
+                $samsung = CategoriesManyRoots::findFirst(6);
+
+                $x100 = new CategoriesManyRoots();
+                $x100->name = 'X100';
+                $x100->appendTo($samsung);
+
+                $c200 = new CategoriesManyRoots();
+                $c200->name = 'C200';
+                $c200->prependTo($samsung);
+
+                $expected = [
+                    'Cars',
+                    '     Audi',
+                    '     Ford',
+                    '     Mercedes',
+                    'Mobile Phones',
+                    '     iPhone',
+                    '     Samsung',
+                    '          C200',
+                    '          X100',
+                    '     Motorola',
+                ];
+
+                expect($this->prettifyRoots())->equals($expected);
+
+                $cars = CategoriesManyRoots::findFirst(1);
+                $motorola = CategoriesManyRoots::findFirst(7);
+
+                $cars->moveAsFirst($motorola);
+
+                $expected = [
+                    'Mobile Phones',
+                    '     iPhone',
+                    '     Samsung',
+                    '          C200',
+                    '          X100',
+                    '     Motorola',
+                    '          Cars',
+                    '               Audi',
+                    '               Ford',
+                    '               Mercedes',
+                ];
+
+                expect($this->prettifyRoots())->equals($expected);
+
+                $this->checkIntegrity(CategoriesManyRoots::findFirst(5)->root); // phones
+            }
+        );
+    }
 }
