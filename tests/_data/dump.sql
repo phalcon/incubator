@@ -1,3 +1,22 @@
+DROP TABLE IF EXISTS `categories`;
+CREATE TABLE `categories` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(128) NOT NULL,
+  `description` TEXT DEFAULT NULL,
+  `root` INT UNSIGNED DEFAULT NULL,
+  `lft` INT UNSIGNED NOT NULL,
+  `rgt` INT UNSIGNED NOT NULL,
+  `level` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `category_coordinates` (`lft`,`rgt`,`root`),
+  KEY `category_root` (`root`),
+  KEY `category_lft` (`lft`),
+  KEY `category_lft_root` (`lft`, `root`),
+  KEY `category_rgt` (`rgt`),
+  KEY `category_rgt_root` (`rgt`, `root`),
+  KEY `category_level` (`level`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `bug`;
 CREATE TABLE `bug` (
   `id` serial,
