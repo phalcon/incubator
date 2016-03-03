@@ -91,7 +91,7 @@ Available groups:
 * `db`
 * `Beanstalk`
 * `Cache`
-* `Config`
+* `config`
 * `DbValidation`
 * `EagerLoading`
 * `Http`
