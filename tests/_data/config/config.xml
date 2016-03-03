@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<root>
+    <phalcon>
+        <baseuri>/phalcon/</baseuri>
+    </phalcon>
+    <models>
+        <metadata>memory</metadata>
+    </models>
+    <nested>
+        <config>
+            <parameter>here</parameter>
+        </config>
+    </nested>
+</root>

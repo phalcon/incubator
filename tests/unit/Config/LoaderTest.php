@@ -14,7 +14,7 @@ use UnitTester;
  * @link      http://www.phalconphp.com
  * @author    Anton Kornilov <kachit@yandex.ru>
  * @package   Phalcon\Test\Config
- * @group     Config
+ * @group     config
  *
  * The contents of this file are subject to the New BSD License that is
  * bundled with this package in the file docs/LICENSE.txt
