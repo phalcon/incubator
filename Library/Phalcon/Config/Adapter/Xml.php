@@ -23,6 +23,41 @@ namespace Phalcon\Config\Adapter;
 use Phalcon\Config;
 use Phalcon\Config\Exception;
 
+/**
+ * Phalcon\Config\Adapter\Xml
+ *
+ * Reads xml files and converts them to Phalcon\Config objects.
+ *
+ * Given the next configuration file:
+ *
+ * <code>
+ * <?xml version="1.0"?>
+ * <root>
+ *   <phalcon>
+ *     <baseuri>/phalcon/</baseuri>
+ *   </phalcon>
+ *   <models>
+ *     <metadata>memory</metadata>
+ *   </models>
+ *   <nested>
+ *     <config>
+ *       <parameter>here</parameter>
+ *     </config>
+ *   </nested>
+ * </root>
+ * </code>
+ *
+ * You can read it as follows:
+ *
+ * <code>
+ * use Phalcon\Config\Adapter\Xml;
+ * $config = new Xml("path/config.xml");
+ * echo $config->phalcon->baseuri;
+ * echo $config->nested->config->parameter;
+ * </code>
+ *
+ * @package Phalcon\Config\Adapter
+ */
 class Xml extends Config
 {
     /**
@@ -50,6 +85,8 @@ class Xml extends Config
                     throw new Exception($error->message);
             }
         }
+
+        libxml_use_internal_errors(false);
 
         parent::__construct(json_decode(json_encode((array) $data), true));
     }
