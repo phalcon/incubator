@@ -25,7 +25,14 @@ if (extension_loaded('xdebug')) {
 
 clearstatcache();
 
-define('INCUBATOR_FIXTURES', __DIR__ . '/_fixtures/');
+$root = realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR;
+
+defined('TESTS_PATH')   || define('TESTS_PATH', $root);
+defined('PROJECT_PATH') || define('PROJECT_PATH', dirname(TESTS_PATH) . DIRECTORY_SEPARATOR);
+defined('PATH_DATA')    || define('PATH_DATA', $root .  '_data' . DIRECTORY_SEPARATOR);
+defined('PATH_CACHE')   || define('PATH_CACHE', $root . '_cache' . DIRECTORY_SEPARATOR);
+defined('PATH_OUTPUT')  || define('PATH_OUTPUT', $root .  '_output' . DIRECTORY_SEPARATOR);
+defined('INCUBATOR_FIXTURES') || define('INCUBATOR_FIXTURES', $root .  '_fixtures' . DIRECTORY_SEPARATOR);
 
 // Memcached
 define('TEST_MC_HOST', getenv('TEST_MC_HOST') ?: '127.0.0.1');
