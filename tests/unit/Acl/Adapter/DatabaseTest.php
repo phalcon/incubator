@@ -52,7 +52,7 @@ class DatabaseTest extends Test
 
     protected function getConnection()
     {
-        return new Sqlite(['dbname' => 'sample.db']);
+        return new Sqlite(['dbname' => 'tests/_output/sample.db']);
     }
 
     protected function assertProtectedPropertyEquals($propertyName, $tableName, DbAdapter $connection, Database $adapter)
