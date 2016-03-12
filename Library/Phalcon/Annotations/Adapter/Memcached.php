@@ -66,12 +66,8 @@ class Memcached extends Base
      *
      * @throws \Phalcon\Mvc\Model\Exception
      */
-    public function __construct($options = null)
+    public function __construct(array $options)
     {
-        if (!is_array($options)) {
-            throw new Exception('No configuration given');
-        }
-
         if (!isset($options['host'])) {
             throw new Exception('No host given in options');
         }
