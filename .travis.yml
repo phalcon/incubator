@@ -27,7 +27,6 @@ install:
 before_script:
   - stty cols 160
   - docker-compose -p incubator up -d
-  - sleep 5
 
 script:
   - bash runtest.sh
