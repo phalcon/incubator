@@ -6,83 +6,30 @@ php:
   - 5.6
 
 sudo: required
-dist: precise
-group: edge
-
-services:
-  - memcached
-  - mongodb
-
-env:
-  global:
-    - TEST_BT_HOST="127.0.0.1"
-    - TEST_BT_PORT="11300"
-    - TEST_MC_HOST="127.0.0.1"
-    - TEST_MC_PORT="11211"
-    - TEST_AS_HOST="127.0.0.1"
-    - TEST_AS_PORT="3000"
-    - TEST_DB_HOST="127.0.0.1"
-    - TEST_DB_PORT="3306"
-    - TEST_DB_USER="root"
-    - TEST_DB_PASSWD=""
-    - TEST_DB_NAME="incubator_tests"
-    - TEST_DB_CHARSET="utf8"
-  matrix:
-    - PHALCON_VERSION="2.1.x"
+dist: trusty
 
 before_install:
-  - phpenv config-rm xdebug.ini
-  - bash tests/_ci/setup_beanstalkd.sh
-  - beanstalkd -v
-  - beanstalkd -l ${TEST_BT_HOST} -p ${TEST_BT_PORT} & # start queue listener
-  - sleep 5
-  - cd $TRAVIS_BUILD_DIR
-  - pecl channel-update pecl.php.net
-  - (CFLAGS="-O1 -g3 -fno-strict-aliasing"; pecl install yaml < /dev/null &)
-  - phpenv config-add tests/_ci/yaml.ini
-  - pecl install mongo < /dev/null &
-  - phpenv config-add tests/_ci/mongo.ini
-  - phpenv config-add tests/_ci/memcached.ini
-  - wget -O aerospike.tgz 'http://aerospike.com/download/server/latest/artifact/ubuntu12'
-  - tar -xvf aerospike.tgz
-  - cd aerospike-server-community-*-ubuntu12*
-  - sudo ./asinstall
-  - ls -al /etc/init.d/
-  - sudo service aerospike start
-  - sudo service aerospike status
-  - sleep 5
-  - cd $TRAVIS_BUILD_DIR
+  - composer self-update
+  - sudo service memcached stop
+  - sudo service docker stop
 
 install:
-  - composer self-update
-  - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b ${PHALCON_VERSION}
-  - (cd cphalcon/ext; export CFLAGS="-g0 -O0 -std=gnu90"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j2 &> /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null)
-  - php --ri phalcon
-  - travis_retry composer require aerospike/aerospike-client-php "*"
-  - find vendor/aerospike/aerospike-client-php/ -name "*.sh" -exec chmod +x {} \;
-  - cd vendor/aerospike/aerospike-client-php
-  - sudo $(which composer) run-script -q post-install-cmd
-  - cd $TRAVIS_BUILD_DIR
-  - echo "extension=${TRAVIS_BUILD_DIR}/vendor/aerospike/aerospike-client-php/src/aerospike/modules/aerospike.so" | tee -a tests/_ci/aerospike.ini
-  - phpenv config-add tests/_ci/aerospike.ini
-  - php -m
-  - travis_retry composer install --prefer-source --no-interaction
+  - sudo apt-get update -qq
+  - sudo apt-get install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y --force-yes docker-engine
+  - sudo service docker restart
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/1.6.2/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - travis_retry composer install --ignore-platform-reqs --prefer-source --no-interaction
+  - travis_retry composer require --ignore-platform-reqs "duncan3dc/fork-helper:*"
 
 before_script:
   - stty cols 160
-  - mysql -e 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;'
+  - docker-compose -p incubator up -d
 
 script:
-  - vendor/bin/phpcs --standard=PSR2 --colors --extensions=php --encoding=utf-8 Library/
-  - vendor/bin/codecept build
-  - vendor/bin/codecept run
-
-addons:
-  apt:
-    packages:
-      - libyaml-dev
-      - libssl-dev
-      - autoconf
+  - bash runtest.sh
 
 notifications:
   email:

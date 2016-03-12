@@ -60,15 +60,6 @@ class MemcachedTest extends Test
         new Memcached(['lifetime' => 23, 'prefix' => '']);
     }
 
-    /**
-     * @expectedException        \Phalcon\Mvc\Model\Exception
-     * @expectedExceptionMessage No configuration given
-     */
-    public function testShouldCatchExceptionWhenNoConfigurationGiven()
-    {
-        new Memcached(1);
-    }
-
     public function testHasDefaultPort()
     {
         $this->assertClassHasStaticAttribute('defaultPort', self::BASE_CLASS);

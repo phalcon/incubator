@@ -1,0 +1,38 @@
+version: '2'
+
+services:
+  mysql:
+    restart: always
+    image: mysql:5.7
+    container_name: incubator_mysql
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: incubator_tests
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+
+  memcached:
+    restart: always
+    image: memcached:1.4
+    container_name: incubator_memcached
+    ports:
+      - "11211:11211"
+
+  queue:
+    restart: always
+    image: klay/beanstalkd
+    container_name: incubator_beanstalkd
+    ports:
+      - "11300:11300"
+
+  aerospike:
+    restart: always
+    image: aerospike/aerospike-server
+    container_name: incubator_aerospike
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+      - "3002:3002"
+      - "3003:3003"
