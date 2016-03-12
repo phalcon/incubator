@@ -35,19 +35,19 @@ defined('PATH_OUTPUT')  || define('PATH_OUTPUT', $root .  '_output' . DIRECTORY_
 defined('INCUBATOR_FIXTURES') || define('INCUBATOR_FIXTURES', $root .  '_fixtures' . DIRECTORY_SEPARATOR);
 
 // Memcached
-define('TEST_MC_HOST', getenv('TEST_MC_HOST') ?: '127.0.0.1');
+define('TEST_MC_HOST', getenv('TEST_MC_HOST') ?: 'memcached');
 define('TEST_MC_PORT', getenv('TEST_MC_PORT') ?: 11211);
 
 // Beanstalk
-define('TEST_BT_HOST', getenv('TEST_BT_HOST') ?: '127.0.0.1');
+define('TEST_BT_HOST', getenv('TEST_BT_HOST') ?: 'queue');
 define('TEST_BT_PORT', getenv('TEST_BT_PORT') ?: 11300);
 
 // Aerospike
-define('TEST_AS_HOST', getenv('TEST_AS_HOST') ?: '127.0.0.1');
+define('TEST_AS_HOST', getenv('TEST_AS_HOST') ?: 'aerospike');
 define('TEST_AS_PORT', getenv('TEST_AS_PORT') ?: 3000);
 
-// Database
-define('TEST_DB_HOST', getenv('TEST_DB_HOST') ?: '127.0.0.1');
+// MySQL
+define('TEST_DB_HOST', getenv('TEST_DB_HOST') ?: 'mysql');
 define('TEST_DB_PORT', getenv('TEST_DB_PORT') ?: 3306);
 define('TEST_DB_USER', getenv('TEST_DB_USER') ?: 'root');
 define('TEST_DB_PASSWD', getenv('TEST_DB_PASSWD') ?: '');
