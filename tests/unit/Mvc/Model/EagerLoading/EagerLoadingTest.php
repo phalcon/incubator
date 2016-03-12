@@ -11,7 +11,7 @@ use Phalcon\Test\Mvc\Model\EagerLoading\Stubs\Manufacturer;
 use Phalcon\Mvc\Model\EagerLoading\Loader;
 use Phalcon\Di;
 use Phalcon\DiInterface;
-use Phalcon\Mvc\Model\Metadata\Memory;
+use Phalcon\Mvc\Model\Metadata;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Codeception\TestCase\Test;
@@ -56,16 +56,16 @@ class EagerLoadingTest extends Test
 
         $di = new Di();
 
-        $di->setShared('modelsMetadata', new Memory());
+        $di->setShared('modelsMetadata', new Metadata\Memory());
         $di->setShared('modelsManager', new Manager());
         $di->setShared('db', function () {
             return new Mysql([
-                'host'     => 'localhost',
-                'port'     => '3306',
-                'username' => 'root',
-                'password' => '',
-                'dbname'   => 'incubator_tests',
-                'charset'  => 'utf8mb4',
+                'host'     => TEST_DB_HOST,
+                'port'     => TEST_DB_PORT,
+                'username' => TEST_DB_USER,
+                'password' => TEST_DB_PASSWD,
+                'dbname'   => TEST_DB_NAME,
+                'charset'  => TEST_DB_CHARSET,
             ]);
         });
 
