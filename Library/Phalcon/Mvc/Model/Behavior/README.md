@@ -1,33 +1,66 @@
-Phalcon\Mvc\Model\Behavior
-==========================
-NestedSet
---------------
-## Installing and configuring
+# Phalcon\Mvc\Model\Behavior
+
+## NestedSet
+
+### Installing and configuring
+
 First you need to configure model as follows:
 ```php
 use Phalcon\Mvc\Model\Behavior\NestedSet as NestedSetBehavior;
 
 class Categories extends \Phalcon\Mvc\Model
 {
-
     public function initialize()
     {
-        $this->addBehavior(new NestedSetBehavior(array(
-            'leftAttribute' => 'lft',
+        $this->addBehavior(new NestedSetBehavior([
+            'rootAttribute'  => 'root',
+            'leftAttribute'  => 'lft',
             'rightAttribute' => 'rgt',
             'levelAttribute' => 'level'
-        )));
+        ]));
     }
-
 }
 ```
-There is no need to validate fields specified in leftAttribute, rightAttribute, rootAttribute and levelAttribute options.
 
-By default leftAttribute = lft, rightAttribute = rgt and levelAttribute = level so you can skip configuring these.
+There is no need to validate fields specified in `leftAttribute`, `rightAttribute`, `rootAttribute` and `levelAttribute` options.
 
-There are two ways this behavior can work: one tree per table and multiple trees per table. The mode is selected based on the value of hasManyRoots option that is false by default meaning single tree mode. In multiple trees mode you can set rootAttribute option to match existing field in the table storing the tree.
+By default:
 
-## Selecting from a tree
+* `leftAttribute` = `lft`
+* `rightAttribute` = `rgt`
+* `levelAttribute` = `level`
+* `rootAttribute` = `root`
+
+so you can skip configuring these.
+
+There are two ways this behavior can work: one tree per table and multiple trees per table.
+The mode is selected based on the value of `hasManyRoots` option that is `false` by default meaning single tree mode.
+In multiple trees mode you can set `rootAttribute` option to match existing field in the table storing the tree.
+
+### Example schema
+
+```sql
+CREATE TABLE `categories` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(128) NOT NULL,
+  `description` TEXT DEFAULT NULL,
+  `root` INT UNSIGNED DEFAULT NULL,
+  `lft` INT UNSIGNED NOT NULL,
+  `rgt` INT UNSIGNED NOT NULL,
+  `level` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `category_coordinates` (`lft`,`rgt`,`root`),
+  KEY `category_root` (`root`),
+  KEY `category_lft` (`lft`),
+  KEY `category_lft_root` (`lft`, `root`),
+  KEY `category_rgt` (`rgt`),
+  KEY `category_rgt_root` (`rgt`, `root`),
+  KEY `category_level` (`level`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
+### Selecting from a tree
+
 In the following we'll use an example model Category with the following in its DB:
 ```
 - 1. Mobile phones
@@ -41,98 +74,134 @@ In the following we'll use an example model Category with the following in its D
     - 9. Ford
     - 10. Mercedes
 ```
-In this example we have two trees. Tree roots are ones with ID=1 and ID=7.
-### Getting all roots
+In this example we have two trees. Tree `roots` are ones with ID=1 and ID=7.
+
+#### Getting all roots
+
 ```php
-$roots=(new Categories())->roots();
+$roots = (new Categories())->roots();
 ```
 Result: result set containing Mobile phones and Cars nodes.
 
 You can also add the following method to the model if you use a single root:
 ```php
-public static function getRoot() {
+public static function getRoot()
+{
     return self::findFirst('lft = 1');
 }
 ```
+
 Or the following method if you use multiple roots:
 ```php
-public static function getRoots() {
+public static function getRoots()
+{
     return self::find('lft = 1');
 }
 ```
-### Getting all descendants of a node
+
+#### Getting all descendants of a node
+
 ```php
-$category=Categories::findFirst(1);
-$descendants=$category->descendants();
+$category = Categories::findFirst(1);
+$descendants = $category->descendants();
 ```
+
 Result: result set containing iPhone, Samsung, X100, C200 and Motorola.
-### Getting all children of a node
+
+#### Getting all children of a node
+
 ```php
-$category=Categories::findFirst(1);
-$children=$category->children();
+$category = Categories::findFirst(1);
+$children = $category->children();
 ```
+
 Result: result set containing iPhone, Samsung and Motorola.
-### Getting all ancestors of a node
+
+#### Getting all ancestors of a node
+
 ```php
-$category=Categories::findFirst(5);
-$ancestors=$category->ancestors();
+$category = Categories::findFirst(5);
+$ancestors = $category->ancestors();
 ```
+
 Result: result set containing Samsung and Mobile phones.
-### Getting parent of a node
+
+#### Getting parent of a node
+
 ```php
-$category=Categories::findFirst(9);
-$parent=$category->parent();
+$category = Categories::findFirst(9);
+$parent = $category->parent();
 ```
+
 Result: Cars node.
-### Getting node siblings
+
+#### Getting node siblings
+
 ```php
-$category=Categories::findFirst(9);
-$nextSibling=$category->next();
-$prevSibling=$category->prev();
+$category = Categories::findFirst(9);
+$nextSibling = $category->next();
+$prevSibling = $category->prev();
 ```
+
 Result: Mercedes node and Audi node.
-### Getting the whole tree
+
+#### Getting the whole tree
+
 You can get the whole tree using standard model methods like the following.
 For single tree per table:
 ```php
-Categories::find(array('order'=>'lft'));
-```
-For multiple trees per table:
-```php
-Categories::find(array('root=:root:', 'order'=>'lft', 'bind'=>array('root'=>$root_id)));
+Categories::find(['order' => 'lft']);
 ```
 
-## Modifying a tree
-In this section we'll build a tree like the one used in the previous section.
-### Creating root nodes
-You can create a root node using `saveNode()`. In a single tree per table mode you can create only one root node. If you'll attempt to create more there will be Exception thrown.
+For multiple trees per table:
 ```php
-$root=new Categories();
-$root->title='Mobile Phones';
+Categories::find(['root=:root:', 'order'=>'lft', 'bind' => ['root' => $root_id]]);
+```
+
+### Modifying a tree
+
+In this section we'll build a tree like the one used in the previous section.
+
+#### Creating root nodes
+
+You can create a root node using `saveNode()`. In a single tree per table mode you can create only one root node.
+If you'll attempt to create more there will be Exception thrown.
+
+```php
+$root = new Categories();
+$root->title = 'Mobile Phones';
 $root->saveNode();
-$root=new Categories();
-$root->title='Cars';
+
+$root = new Categories();
+$root->title = 'Cars';
 $root->saveNode();
 ```
+
 Result:
 ```
 - 1. Mobile Phones
 - 2. Cars
 ```
-### Adding child nodes
+
+#### Adding child nodes
+
 There are multiple methods allowing you adding child nodes. Let's use these to add nodes to the tree we have:
 ```php
-$category1=new Categories();
-$category1->title='Ford';
-$category2=new Categories();
-$category2->title='Mercedes';
-$category3=new Categories();
-$category3->title='Audi';
-$root=Categories::findFirst(1);
+$category1 = new Categories();
+$category1->title = 'Ford';
+
+$category2 = new Categories();
+$category2->title = 'Mercedes';
+
+$category3 = new Categories();
+$category3->title = 'Audi';
+
+$root = Categories::findFirst(1);
 $category1->appendTo($root);
 $category2->insertAfter($category1);
 $category3->insertBefore($category1);
 ```
+
 Result:
 ```
 - 1. Mobile phones
@@ -141,19 +210,24 @@ Result:
     - 5. Mercedes
 - 2. Cars
 ```
-Logically the tree above doesn't looks correct. We'll fix it later.
+
+Logically the tree above does not looks correct. We'll fix it later.
 ```php
-$category1=new Categories();
-$category1->title='Samsung';
-$category2=new Categories();
-$category2->title='Motorola';
-$category3=new Categories();
-$category3->title='iPhone';
-$root=Categories::findFirst(2);
+$category1 = new Categories();
+$category1->title = 'Samsung';
+
+$category2 = new Categories();
+$category2->title = 'Motorola';
+
+$category3 = new Categories();
+$category3->title = 'iPhone';
+
+$root = Categories::findFirst(2);
 $category1->appendTo($root);
 $category2->insertAfter($category1);
 $category3->prependTo($root);
 ```
+
 Result:
 ```
 - 1. Mobile phones
@@ -165,15 +239,19 @@ Result:
     - 7. Samsung
     - 8. Motorola
 ```
+
 ```php
-$category1=new Categories();
-$category1->title='X100';
-$category2=new Categories();
-$category2->title='C200';
-$node=Categories::findFirst(3);
+$category1 = new Categories();
+$category1->title = 'X100';
+
+$category2 = new Categories();
+$category2->title = 'C200';
+
+$node = Categories::findFirst(3);
 $category1->appendTo($node);
 $category2->prependTo($node);
 ```
+
 Result:
 ```
 - 1. Mobile phones
@@ -187,35 +265,46 @@ Result:
     - 7. Samsung
     - 8. Motorola
 ```
-## Modifying a tree
+
+### Modifying a tree
+
 In this section we'll finally make our tree logical.
-### Tree modification methods
+
+#### Tree modification methods
+
 There are several methods allowing you to modify a tree.
 Let's start:
 ```php
 // move phones to the proper place
-$x100=Categories::findFirst(10);
-$c200=Categories::findFirst(9);
-$samsung=Categories::findFirst(7);
+$x100 = Categories::findFirst(10);
+$c200 = Categories::findFirst(9);
+
+$samsung = Categories::findFirst(7);
 $x100->moveAsFirst($samsung);
 $c200->moveBefore($x100);
-// now move all Samsung phones branch
-$mobile_phones=Categories::findFirst(1);
-$samsung->moveAsFirst($mobile_phones);
-// move the rest of phone models
-$iphone=Categories::findFirst(6);
-$iphone->moveAsFirst($mobile_phones);
-$motorola=Categories::findFirst(8);
-$motorola->moveAfter($samsung);
-// move car models to appropriate place
-$cars=Categories::findFirst(2);
-$audi=Categories::findFirst(3);
-$ford=Categories::findFirst(4);
-$mercedes=Categories::findFirst(5);
 
-foreach(array($audi,$ford,$mercedes) as $category)
+// now move all Samsung phones branch
+$mobile_phones = Categories::findFirst(1);
+$samsung->moveAsFirst($mobile_phones);
+
+// move the rest of phone models
+$iphone = Categories::findFirst(6);
+$iphone->moveAsFirst($mobile_phones);
+
+$motorola = Categories::findFirst(8);
+$motorola->moveAfter($samsung);
+
+// move car models to appropriate place
+$cars = Categories::findFirst(2);
+$audi = Categories::findFirst(3);
+$ford = Categories::findFirst(4);
+$mercedes = Categories::findFirst(5);
+
+foreach([$audi,$ford,$mercedes] as $category) {
     $category->moveAsLast($cars);
+}
 ```
+
 Result:
 ```
 - 1. Mobile phones
@@ -229,46 +318,52 @@ Result:
     - 4. Ford
     - 5. Mercedes
 ```
-### Moving a node making it a new root
-There is a special `moveAsRoot()` method that allows moving a node and making it a new root. All descendants are moved as well in this case.
+
+#### Moving a node making it a new root
+There is a special `moveAsRoot()` method that allows moving a node and making it a new root.
+All descendants are moved as well in this case.
+
 Example:
 ```php
-$node=Categories::findFirst(10);
+$node = Categories::findFirst(10);
 $node->moveAsRoot();
 ```
-### Identifying node type
+
+#### Identifying node type
 There are three methods to get node type: `isRoot()`, `isLeaf()`, `isDescendantOf()`.
+
 Example:
 ```php
-$root=Categories::findFirst(1);
-var_dump($root->isRoot()); //true;
-var_dump($root->isLeaf()); //false;
-$node=Categories::findFirst(9);
-var_dump($node->isDescendantOf($root)); //true;
-var_dump($node->isRoot()); //false;
-var_dump($node->isLeaf()); //true;
-$samsung=Categories::findFirst(7);
-var_dump($node->isDescendantOf($samsung)); //true;
+$root = Categories::findFirst(1);
+var_dump($root->isRoot()); // true;
+var_dump($root->isLeaf()); // false;
+
+$node = Categories::findFirst(9);
+var_dump($node->isDescendantOf($root)); // true;
+var_dump($node->isRoot()); // false;
+var_dump($node->isLeaf()); // true;
+
+$samsung = Categories::findFirst(7);
+var_dump($node->isDescendantOf($samsung)); // true;
 ```
-## Useful code
-### Non-recursive tree traversal
+### Useful code
+
+#### Non-recursive tree traversal
+
 ```php
-$order='lft'; // or 'root, lft' for multiple trees
-$categories=Categories::find(array('order'=>$order));
-$level=0;
+$order = 'lft'; // or 'root, lft' for multiple trees
+$categories = Categories::find(['order' => $order]);
+$level = 0;
 
-foreach($categories as $n=>$category)
-{
-    if($category->level==$level)
+foreach ($categories as $n => $category) {
+    if ($category->level == $level) {
         echo "</li>\n";
-    else if($category->level>$level)
+    } elseif ($category->level>$level) {
         echo "<ul>\n";
-    else
-    {
+    } else {
         echo "</li>\n";
 
-        for($i=$level-$category->level;$i;$i--)
-        {
+        for ($i = $level - $category->level; $i; $i--) {
             echo "</ul>\n";
             echo "</li>\n";
         }
@@ -276,47 +371,58 @@ foreach($categories as $n=>$category)
 
     echo "<li>\n";
     echo $category->title;
-    $level=$category->level;
+    $level = $category->level;
 }
 
-for($i=$level;$i;$i--)
-{
+for ($i = $level; $i; $i--) {
     echo "</li>\n";
     echo "</ul>\n";
 }
 ```
 
+Or just:
 
-Blameable
---------------
 ```php
+$order = 'lft'; // or 'root, lft' for multiple trees
+$categories = Categories::find(['order' => $order]);
 
+$result = [];
+foreach ($categories as $category) {
+    $result[] = str_repeat(' ', ($category->level - 1) * 5) . $category->name;
+}
+
+echo print_r($result, true), PHP_EOL;
+```
+
+## Blameable
+
+```php
 class Products extends Phalcon\Mvc\Model
 {
-
     public function initialize()
     {
         $this->keepSnapshots(true);
     }
-
 }
 ```
 
-```
-CREATE TABLE audit (
-    id integer primary key auto_increment,
-    user_name varchar(32) not null,
-    model_name varchar(32) not null,
-    ipaddress char(15) not null,
-    type char(1) not null, /* C=Create/U=Update */
-    created_at datetime not null
-);
+```sql
+CREATE TABLE `audit` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_name` VARCHAR(32) NOT NULL,
+  `model_name` VARCHAR(32) NOT NULL,
+  `ipaddress` CHAR(15) NOT NULL,
+  `type` CHAR(1) NOT NULL, /* C=Create/U=Update */
+  `created_at` DATETIME NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE audit_detail (
-    id integer primary key auto_increment,
-    audit_id integer not null,
-    field_name varchar(32) not null,
-    old_value varchar(32),
-    new_value varchar(32) not null
-)
+CREATE TABLE `audit_detail` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `audit_id` BIGINT NOT NULL,
+  `field_name` VARCHAR(32) NOT NULL,
+  `old_value` VARCHAR(32) DEFAULT NULL,
+  `new_value` VARCHAR(32) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ```
