@@ -19,7 +19,6 @@
 
 namespace Phalcon\Cache\Backend;
 
-use Aerospike as AerospikeDb;
 use Phalcon\Cache\FrontendInterface;
 use Phalcon\Cache\Exception;
 use Phalcon\Cache\Backend;
@@ -67,7 +66,7 @@ class Aerospike extends Backend implements BackendInterface
 
     /**
      * The Aerospike DB
-     * @var AerospikeDb
+     * @var \Aerospike
      */
     protected $db;
 
@@ -78,7 +77,7 @@ class Aerospike extends Backend implements BackendInterface
     protected $namespace = 'test';
 
     /**
-     * The Aerospike Set for store sessions
+     * The Aerospike Set for store cache
      * @var string
      */
     protected $set = 'cache';
@@ -114,11 +113,11 @@ class Aerospike extends Backend implements BackendInterface
             $opts = $options['options'];
         }
 
-        $this->db = new AerospikeDb(['hosts' => $options['hosts']], $persistent, $opts);
+        $this->db = new \Aerospike(['hosts' => $options['hosts']], $persistent, $opts);
 
         if (!$this->db->isConnected()) {
             throw new Exception(
-                sprintf("Aerospike failed to connect [%s]: %s", $this->db->errorno(), $this->db->error())
+                sprintf('Aerospike failed to connect [%s]: %s', $this->db->errorno(), $this->db->error())
             );
         }
 
@@ -128,7 +127,7 @@ class Aerospike extends Backend implements BackendInterface
     /**
      * Gets the Aerospike instance.
      *
-     * @return AerospikeDb
+     * @return \Aerospike
      */
     public function getDb()
     {
@@ -183,10 +182,10 @@ class Aerospike extends Backend implements BackendInterface
             $aKey,
             $bins,
             $lifetime,
-            [AerospikeDb::OPT_POLICY_KEY => AerospikeDb::POLICY_KEY_SEND]
+            [\Aerospike::OPT_POLICY_KEY => \Aerospike::POLICY_KEY_SEND]
         );
 
-        if (AerospikeDb::OK != $status) {
+        if (\Aerospike::OK != $status) {
             throw new Exception(
                 sprintf('Failed storing data in Aerospike: %s', $this->db->error()),
                 $this->db->errorno()
@@ -247,7 +246,7 @@ class Aerospike extends Backend implements BackendInterface
 
         $status = $this->db->get($aKey, $cache);
 
-        if ($status != AerospikeDb::OK) {
+        if ($status != \Aerospike::OK) {
             return null;
         }
 
@@ -274,7 +273,7 @@ class Aerospike extends Backend implements BackendInterface
 
         $status = $this->db->remove($aKey);
 
-        return $status == AerospikeDb::OK;
+        return $status == \Aerospike::OK;
     }
 
     /**
@@ -299,7 +298,7 @@ class Aerospike extends Backend implements BackendInterface
         $aKey = $this->buildKey($prefixedKey);
         $status = $this->db->get($aKey, $cache);
 
-        return $status == AerospikeDb::OK;
+        return $status == \Aerospike::OK;
     }
 
     /**
@@ -332,7 +331,7 @@ class Aerospike extends Backend implements BackendInterface
 
         $status = $this->db->get($aKey, $cache);
 
-        if ($status != AerospikeDb::OK) {
+        if ($status != \Aerospike::OK) {
             return false;
         }
 
