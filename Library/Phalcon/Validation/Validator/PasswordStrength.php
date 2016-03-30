@@ -13,7 +13,7 @@
   | obtain it through the world-wide-web, please send an email             |
   | to license@phalconphp.com so we can send you a copy immediately.       |
   +------------------------------------------------------------------------+
-  | Authors: David Hubner <david.hubner@gmail.com>                         |
+  | Authors: David Hubner <david.hubner@gmail.com>                             |
   +------------------------------------------------------------------------+
  */
 
@@ -31,7 +31,7 @@ use Phalcon\Validation;
  *     'allowEmpty' => {bool - allow empty value}
  * ])
  * </code>
- *
+ * 
  * @package Phalcon\Validation\Validator
  */
 class PasswordStrength extends Validation\Validator
@@ -57,7 +57,7 @@ class PasswordStrength extends Validation\Validator
 
         $minScore = ($this->hasOption('minScore') ? $this->getOption('minScore') : self::MIN_VALID_SCORE);
 
-        if (is_string($value) && $this->countScore($value) >= $minScore) {
+        if (is_string($value) && $this->_countScore($value) >= $minScore) {
             return true;
         }
 
@@ -76,7 +76,7 @@ class PasswordStrength extends Validation\Validator
      * @param   string $value - password
      * @return  int (1 = very weak, 2 = weak, 3 = medium, 4+ = strong)
      */
-    private function countScore($value)
+    private function _countScore($value)
     {
         $score = 0;
         $hasLower = preg_match('![a-z]!', $value);
@@ -107,4 +107,5 @@ class PasswordStrength extends Validation\Validator
 
         return $score;
     }
+
 }

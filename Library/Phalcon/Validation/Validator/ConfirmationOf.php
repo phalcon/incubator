@@ -13,15 +13,15 @@
   | obtain it through the world-wide-web, please send an email             |
   | to license@phalconphp.com so we can send you a copy immediately.       |
   +------------------------------------------------------------------------+
-  | Authors: David Hubner <david.hubner@gmail.com>                         |
+  | Authors: David Hubner <david.hubner@gmail.com>                             |
   +------------------------------------------------------------------------+
  */
 
 namespace Phalcon\Validation\Validator;
 
-use Phalcon\Validation;
-use Phalcon\Validation\Exception;
-use Phalcon\Validation\Validator;
+use Phalcon\Validation,
+    Phalcon\Validation\Validator,
+    Phalcon\Validation\Exception;
 
 /**
  * Validates confirmation of other field value
@@ -33,7 +33,7 @@ use Phalcon\Validation\Validator;
  *     'allowEmpty' => {bool - allow empty value}
  * ])
  * </code>
- *
+ * 
  * @package Phalcon\Validation\Validator
  */
 class ConfirmationOf extends Validator
@@ -75,4 +75,5 @@ class ConfirmationOf extends Validator
 
         return false;
     }
+
 }

@@ -13,25 +13,27 @@
   | obtain it through the world-wide-web, please send an email             |
   | to license@phalconphp.com so we can send you a copy immediately.       |
   +------------------------------------------------------------------------+
-  | Authors: David Hubner <david.hubner@gmail.com>                         |
+  | Authors: David Hubner <david.hubner@gmail.com>                             |
   +------------------------------------------------------------------------+
  */
 
 namespace Phalcon\Test\Validation\Validator;
 
-use Codeception\TestCase\Test;
-use Codeception\Util\Stub;
-use Phalcon\Validation\Validator\ConfirmationOf;
+use Phalcon\Validation\Validator\ConfirmationOf,
+    Codeception\TestCase\Test,
+    Codeception\Util\Stub;
 
 class ConfirmationOfTest extends Test
 {
 
     protected function _before()
     {
+        
     }
 
     protected function _after()
     {
+        
     }
 
     public function testValidateExceptionWithoutOrigField()
@@ -88,4 +90,5 @@ class ConfirmationOfTest extends Test
         ));
         $this->assertFalse($validator->validate($validation, 'confirmation'));
     }
+
 }
