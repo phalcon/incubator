@@ -107,5 +107,4 @@ class PasswordStrength extends Validation\Validator
 
         return $score;
     }
-
 }
