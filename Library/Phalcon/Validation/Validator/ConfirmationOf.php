@@ -75,5 +75,4 @@ class ConfirmationOf extends Validator
 
         return false;
     }
-
 }
