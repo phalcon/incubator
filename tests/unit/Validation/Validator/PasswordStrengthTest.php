@@ -28,12 +28,10 @@ class PasswordStrengthTest extends Test
 
     protected function _before()
     {
-
     }
 
     protected function _after()
     {
-
     }
 
     public function testValidateWeakOnDefaultScore()
@@ -110,5 +108,4 @@ class PasswordStrengthTest extends Test
         $validator = new PasswordStrength();
         $this->assertFalse($validator->validate($validation, 'password'));
     }
-
 }
