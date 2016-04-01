@@ -28,12 +28,10 @@ class ConfirmationOfTest extends Test
 
     protected function _before()
     {
-
     }
 
     protected function _after()
     {
-
     }
 
     public function testValidateExceptionWithoutOrigField()
@@ -90,5 +88,4 @@ class ConfirmationOfTest extends Test
         ));
         $this->assertFalse($validator->validate($validation, 'confirmation'));
     }
-
 }
