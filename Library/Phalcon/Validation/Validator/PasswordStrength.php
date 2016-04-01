@@ -57,7 +57,7 @@ class PasswordStrength extends Validation\Validator
 
         $minScore = ($this->hasOption('minScore') ? $this->getOption('minScore') : self::MIN_VALID_SCORE);
 
-        if (is_string($value) && $this->_countScore($value) >= $minScore) {
+        if (is_string($value) && $this->countScore($value) >= $minScore) {
             return true;
         }
 
@@ -76,7 +76,7 @@ class PasswordStrength extends Validation\Validator
      * @param   string $value - password
      * @return  int (1 = very weak, 2 = weak, 3 = medium, 4+ = strong)
      */
-    private function _countScore($value)
+    private function countScore($value)
     {
         $score = 0;
         $hasLower = preg_match('![a-z]!', $value);
