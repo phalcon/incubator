@@ -438,14 +438,16 @@ class Database extends Adapter
     protected function insertOrUpdateAccess($roleName, $resourceName, $accessName, $action)
     {
         /**
-         * Check if the access is valid in the resource
+         * Check if the access is valid in the resource unless wildcard
          */
-        $sql = "SELECT COUNT(*) FROM {$this->resourcesAccesses} WHERE resources_name = ? AND access_name = ?";
-        $exists = $this->connection->fetchOne($sql, null, [$resourceName, $accessName]);
-        if (!$exists[0]) {
-            throw new Exception(
-                "Access '{$accessName}' does not exist in resource '{$resourceName}' in ACL"
-            );
+        if ($resourceName !== '*' && $accessName !== '*') {
+            $sql = "SELECT COUNT(*) FROM {$this->resourcesAccesses} WHERE resources_name = ? AND access_name = ?";
+            $exists = $this->connection->fetchOne($sql, null, [$resourceName, $accessName]);
+            if (!$exists[0]) {
+                throw new Exception(
+                    "Access '{$accessName}' does not exist in resource '{$resourceName}' in ACL"
+                );
+            }
         }
 
         /**
