@@ -417,7 +417,7 @@ class Database extends Adapter
             // access_name should be given one or 'any'
             "AND access_name IN (?, '*')",
             // order be the sum of bools for 'literals' before 'any'
-            "ORDER BY (roles_name != '*')+(resources_name != '*')+(access_name != '*') DESC",
+            "ORDER BY ".$this->connection->escapeIdentifier('allowed')." DESC",
             // get only one...
             'LIMIT 1'
         ]);
