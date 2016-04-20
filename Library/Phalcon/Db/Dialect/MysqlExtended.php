@@ -36,7 +36,7 @@ class MysqlExtended extends Mysql
      * @return string
      * @throws \Exception
      */
-    public function getSqlExpression(array $expression, $escapeChar = null)
+    public function getSqlExpression(array $expression, $escapeChar = null, $bindCounts = null)
     {
         if ($expression["type"] == 'functionCall') {
             switch ($expression["name"]) {
@@ -85,6 +85,6 @@ class MysqlExtended extends Mysql
             }
         }
 
-        return parent::getSqlExpression($expression, $escapeChar);
+        return parent::getSqlExpression($expression, $escapeChar, $bindCounts);
     }
 }
