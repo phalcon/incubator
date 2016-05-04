@@ -55,7 +55,7 @@ We use the following settings of these services:
 + Username: `root`
 + Password: `''` _(empty string)_
 + DB Name: `incubator_tests`
-+ Charset: `urf8`
++ Charset: `utf8`
 
 You can change the connection settings of these services **before** running tests
 by using [environment variables][4]:
