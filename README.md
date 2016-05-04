@@ -24,7 +24,7 @@ Install Composer in a common location or in your project:
 curl -s http://getcomposer.org/installer | php
 ```
 
-If you are still using Phalcon 2.0.x, create the `composer.json` file as follows:
+If you are using Phalcon 2.0.x, create the `composer.json` file as follows:
 
 ```json
 {
