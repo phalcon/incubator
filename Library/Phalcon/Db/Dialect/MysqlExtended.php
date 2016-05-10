@@ -46,12 +46,27 @@ class MysqlExtended extends Mysql
                     }
 
                     switch ($expression["arguments"][1]['value']) {
+                        case "'MICROSECOND'":
+                            return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' MICROSECOND';
+                        case "'SECOND'":
+                            return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' SECOND';
+                        case "'MINUTE'":
+                            return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' MINUTE';
+                        case "'HOUR'":
+                            return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' HOUR';
                         case "'DAY'":
                             return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' DAY';
-                        case "'MONTH'":
+                        case "'WEEK'":
+                            return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' WEEK';
+                         case "'MONTH'":
                             return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' MONTH';
+                        case "'QUARTER'":
+                            return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' QUARTER';
                         case "'YEAR'":
                             return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' YEAR';
+                        default:
+                            throw new \Exception('DATE_INTERVAL unit is not supported');
+                          
                     }
                     break;
 
