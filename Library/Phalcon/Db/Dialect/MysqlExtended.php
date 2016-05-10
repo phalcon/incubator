@@ -58,7 +58,7 @@ class MysqlExtended extends Mysql
                             return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' DAY';
                         case "'WEEK'":
                             return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' WEEK';
-                         case "'MONTH'":
+                        case "'MONTH'":
                             return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' MONTH';
                         case "'QUARTER'":
                             return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' QUARTER';
@@ -66,7 +66,6 @@ class MysqlExtended extends Mysql
                             return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' YEAR';
                         default:
                             throw new \Exception('DATE_INTERVAL unit is not supported');
-                          
                     }
                     break;
 
