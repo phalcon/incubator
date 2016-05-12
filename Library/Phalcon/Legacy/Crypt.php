@@ -17,30 +17,31 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Phalcon;
+namespace Phalcon\Legacy;
 
-use Phalcon\Crypt\Exception;
+use Phalcon\Legacy\Crypt\Exception;
 
 /**
- * Phalcon\CryptLegacy
+ * Phalcon\Legacy\Crypt
  *
- * Provides encryption facilities to phalcon applications
+ * Port of Phalcon 2.0.x Phalcon\Crypt.
+ * Provides encryption facilities to phalcon applications.
  *
  *<code>
- *	$crypt = new \Phalcon\CryptLegacy();
+ *  $crypt = new \Phalcon\Legacy\Crypt();
  *
- *	$key = 'le password';
- *	$text = 'This is a secret text';
+ *  $key = 'le password';
+ *  $text = 'This is a secret text';
  *
- *	$encrypted = $crypt->encrypt($text, $key);
+ *  $encrypted = $crypt->encrypt($text, $key);
  *
- *	echo $crypt->decrypt($encrypted, $key);
+ *  echo $crypt->decrypt($encrypted, $key);
  *</code>
  *
- * @package Phalcon
  * @link https://github.com/phalcon/incubator/issues/563
+ * @package Phalcon\Legacy
  */
-class CryptLegacy implements CryptLegacyInterface
+class Crypt implements CryptInterface
 {
     protected $_key;
 
@@ -68,7 +69,7 @@ class CryptLegacy implements CryptLegacyInterface
      * Changes the padding scheme used
      *
      * @param int $scheme
-     * @return CryptLegacyInterface
+     * @return CryptInterface
      */
     public function setPadding($scheme)
     {
@@ -81,7 +82,7 @@ class CryptLegacy implements CryptLegacyInterface
      * @inheritdoc
      *
      * @param string $cipher
-     * @return CryptLegacyInterface
+     * @return CryptInterface
      */
     public function setCipher($cipher)
     {
@@ -104,7 +105,7 @@ class CryptLegacy implements CryptLegacyInterface
      * Sets the encrypt/decrypt mode
      *
      * @param string $mode
-     * @return CryptLegacyInterface
+     * @return CryptInterface
      */
     public function setMode($mode)
     {
@@ -127,7 +128,7 @@ class CryptLegacy implements CryptLegacyInterface
      * Sets the encryption key
      *
      * @param string $key
-     * @return CryptLegacyInterface
+     * @return CryptInterface
      */
     public function setKey($key)
     {

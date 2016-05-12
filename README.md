@@ -128,7 +128,7 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 * [Phalcon\Cli\Environment](Library/Phalcon/Cli/Environment) - This component provides functionality that helps writing CLI oriented code that has runtime-specific execution params (@sergeyklay)
 
 ### Crypt
-* [Phalcon\CryptLegacy](Library/Phalcon) - Port of Phalcon 2.0.x (legacy) `Phalcon\Crypt` (@sergeyklay)
+* [Phalcon\Legacy\Crypt](Library/Phalcon/Legacy) - Port of Phalcon 2.0.x (legacy) `Phalcon\Crypt` (@sergeyklay)
 
 ### Database
 * [Phalcon\Db\Adapter\Cacheable\Mysql](Library/Phalcon/Db) - MySQL adapter that aggressively caches all the queries executed (@phalcon)

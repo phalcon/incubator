@@ -17,110 +17,110 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Phalcon;
+namespace Phalcon\Legacy;
 
 /**
- * Phalcon\CryptLegacyInterface
+ * Phalcon\Legacy\CryptInterface
  *
- * Interface for Phalcon\CryptLegacy
+ * Interface for Phalcon\Legacy\Crypt
  *
  * @link https://github.com/phalcon/incubator/issues/563
- * @package Phalcon
+ * @package Phalcon\Legacy
  */
-interface CryptLegacyInterface
+interface CryptInterface
 {
     /**
      * Sets the cipher algorithm
      *
      * @param string $cipher
-     * @return CryptLegacyInterface
+     * @return CryptInterface
      */
     public function setCipher($cipher);
 
-	/**
+    /**
      * Returns the current cipher
      *
      * @return string
      */
-	public function getCipher();
+    public function getCipher();
 
-	/**
+    /**
      * Sets the encrypt/decrypt mode
      *
      * @param string $mode
-     * @return CryptLegacyInterface
+     * @return CryptInterface
      */
-	public function setMode($mode);
+    public function setMode($mode);
 
-	/**
+    /**
      * Returns the current encryption mode
      *
      * @return string
      */
-	public function getMode();
+    public function getMode();
 
-	/**
+    /**
      * Sets the encryption key
      *
      * @param string $key
-     * @return CryptLegacyInterface
+     * @return CryptInterface
      */
-	public function setKey($key);
+    public function setKey($key);
 
-	/**
+    /**
      * Returns the encryption key
      *
      * @return string
      */
-	public function getKey();
+    public function getKey();
 
-	/**
+    /**
      * Encrypts a text
      *
      * @param string $text
      * @param mixed $key
      * @return string
      */
-	public function encrypt($text, $key = null);
+    public function encrypt($text, $key = null);
 
-	/**
+    /**
      * Decrypts a text
      *
      * @param string $text
      * @param string $key
      * @return string
      */
-	public function decrypt($text, $key = null);
+    public function decrypt($text, $key = null);
 
-	/**
+    /**
      * Encrypts a text returning the result as a base64 string
      *
      * @param string $text
      * @param mixed $key
      * @return string
      */
-	public function encryptBase64($text, $key = null);
+    public function encryptBase64($text, $key = null);
 
-	/**
+    /**
      * Decrypt a text that is coded as a base64 string
      *
      * @param string $text
      * @param mixed $key
      * @return string
      */
-	public function decryptBase64($text, $key = null);
+    public function decryptBase64($text, $key = null);
 
-	/**
+    /**
      * Returns a list of available cyphers
      *
      * @return array
      */
-	public function getAvailableCiphers();
+    public function getAvailableCiphers();
 
-	/**
+    /**
      * Returns a list of available modes
      *
      * @return array
      */
-	public function getAvailableModes();
+    public function getAvailableModes();
 }
