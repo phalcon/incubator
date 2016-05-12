@@ -22,10 +22,10 @@ services:
 
   queue:
     restart: always
-    image: klay/beanstalkd
+    image: phalconphp/beanstalkd:1.10
     container_name: incubator_beanstalkd
     ports:
-      - "11300:11300"
+      - "11302:11302"
 
   aerospike:
     restart: always
