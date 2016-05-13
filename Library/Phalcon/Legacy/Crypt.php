@@ -376,7 +376,9 @@ class Crypt implements CryptInterface
         }
 
         if ($keySize > strlen($text)) {
-            throw new Exception("Size of IV is larger than text to decrypt");
+            throw new Exception(
+                "Size of IV is larger than text to decrypt. Are you trying to decrypt an uncrypted text?"
+            );
         }
 
         $data = substr($text, $ivSize);
