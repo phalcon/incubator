@@ -179,10 +179,8 @@ class Crypt implements CryptInterface
                     break;
                 case self::PADDING_ISO_10126:
                     $padding = "";
-                    $j = range(0, $paddingSize - 2);
-                    while (!empty($j)) {
+                    foreach (range(0, $paddingSize - 2) as $i) {
                         $padding .= chr(rand());
-                        array_pop($j);
                     }
                     $padding .= chr($paddingSize);
                     break;
