@@ -35,7 +35,16 @@ echo -e "${GREEN}Phalcon${NC}     version ${YELLOW}${PHALCON_VERSION}${NC}"
 /app/vendor/bin/codecept build &> /dev/null
 
 echo -e ""
-/app/vendor/bin/codecept run "${RUN_ARGS}"
+/app/vendor/bin/phpcs --standard=PSR2 --colors --extensions=php --encoding=utf-8 Library/
+result_phpcs=$?
 
-exit $?
+/app/vendor/bin/codecept run "${RUN_ARGS}"
+result_codecept=$?
+
+if [ ${result_codecept} -ne 0 -o ${result_phpcs} -ne 0 ];
+then
+   exit 1;
+fi
+
+exit 0
 

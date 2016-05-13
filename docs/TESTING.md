@@ -23,6 +23,12 @@ Phalcon Incubator uses [Codeception][3] which can be installed using Composer:
 $ composer install --dev --prefer-source
 ```
 
+You have to export few variables:
+```sh
+export TRAVIS_PHP_VERSION=5.6 # PHP version you want to use
+export PHALCON_SRC_PATH=/home/user/src/phalcon # Path to the cphalcon source
+```
+
 After you have installed all necessary dependencies use these two commands:
 
 ```sh
@@ -30,7 +36,7 @@ After you have installed all necessary dependencies use these two commands:
 docker-compose -p incubator up -d
 
 # run test
-bash runtest.sh
+bash tests/build.sh
 ```
 
 In addition to the obvious advantage related to reduction in the number of dependencies, this approach allows you to

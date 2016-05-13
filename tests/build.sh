@@ -23,8 +23,6 @@ docker_bin="$(which docker.io 2> /dev/null || which docker 2> /dev/null)"
 RUN_ARGS="$@"
 shift
 
-cd ${PHALCON_SRC_PATH}
-
 function zephir() {
     ${docker_bin} run -it --rm \
         --privileged=true \
@@ -33,17 +31,23 @@ function zephir() {
         phalconphp/zephir:${TRAVIS_PHP_VERSION} "/usr/local/bin/zephir $1"
 }
 
-zephir "fullclean"
-zephir "builddev"
+if [ ! -f ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.so ]; then
+    echo "Phalcon extension not loaded, compiling it..."
 
-if [ ! -f $(pwd)/ext/modules/phalcon.so ]; then
-    echo "Unable to compile Phalcon."
-    exit 1;
+    cd ${PHALCON_SRC_PATH}
+
+    zephir "fullclean"
+    zephir "builddev"
+
+    if [ ! -f $(pwd)/ext/modules/phalcon.so ]; then
+        echo "Unable to compile Phalcon."
+        exit 1;
+    fi
+
+    cp $(pwd)/ext/modules/phalcon.so ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.so
+
+    cd ${TRAVIS_BUILD_DIR}
 fi
-
-cp $(pwd)/ext/modules/phalcon.so ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.so
-
-cd ${TRAVIS_BUILD_DIR}
 
 if [ ! -f ${TRAVIS_BUILD_DIR}/tests/_ci/entrypoint.sh ]; then
     echo "Unable locate docker entry point."
