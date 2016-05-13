@@ -47,7 +47,7 @@ class Crypt implements CryptInterface
 
     protected $padding = 0;
 
-    protected $mode = "cbc";
+    protected $mode = MCRYPT_MODE_CBC;
 
     protected $cipher = "rijndael-256";
 
@@ -164,7 +164,7 @@ class Crypt implements CryptInterface
         $paddingSize = 0;
         $padding = null;
 
-        if ($mode == "cbc" || $mode == "ecb") {
+        if ($mode == MCRYPT_MODE_CBC || $mode == MCRYPT_MODE_ECB) {
             $paddingSize = $blockSize - (strlen($text) % $blockSize);
             if ($paddingSize >= 256) {
                 throw new Exception("Block size is bigger than 256");
@@ -227,7 +227,7 @@ class Crypt implements CryptInterface
         $paddingSize = 0;
         $length = strlen($text);
 
-        if ($length > 0 && ($length % $blockSize == 0) && ($mode == "cbc" || $mode == "ecb")) {
+        if ($length > 0 && ($length % $blockSize == 0) && ($mode == MCRYPT_MODE_CBC || $mode == MCRYPT_MODE_ECB)) {
             switch ($paddingType) {
                 case self::PADDING_ANSI_X_923:
                     $last = substr($text, $length - 1, 1);
@@ -332,7 +332,7 @@ class Crypt implements CryptInterface
         $iv = strval(mcrypt_create_iv($ivSize, MCRYPT_RAND));
         $blockSize = intval(mcrypt_get_block_size($this->cipher, $this->mode));
 
-        if ($this->padding != 0 && ($this->mode == "cbc" || $this->mode == "ecb")) {
+        if ($this->padding != 0 && ($this->mode == MCRYPT_MODE_CBC || $this->mode == MCRYPT_MODE_ECB)) {
             $padded = $this->cryptPadText($text, $this->mode, $blockSize, $this->padding);
         } else {
             $padded = $text;
@@ -383,7 +383,7 @@ class Crypt implements CryptInterface
         $decrypted = mcrypt_decrypt($this->cipher, $decryptKey, $data, $this->mode, substr($text, 0, $ivSize));
         $blockSize = mcrypt_get_block_size($this->cipher, $this->mode);
 
-        if ($this->mode == "cbc" || $this->mode == "ecb") {
+        if ($this->mode == MCRYPT_MODE_CBC || $this->mode == MCRYPT_MODE_ECB) {
             return $this->cryptUnpadText($decrypted, $this->mode, $blockSize, $this->padding);
         }
 
