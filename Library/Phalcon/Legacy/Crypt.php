@@ -132,7 +132,9 @@ class Crypt implements CryptInterface
      */
     public function setKey($key)
     {
-        return $this->key;
+        $this->key = $key;
+
+        return $this;
     }
 
     /**
