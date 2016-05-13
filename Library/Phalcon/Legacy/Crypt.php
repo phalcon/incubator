@@ -43,13 +43,13 @@ use Phalcon\Legacy\Crypt\Exception;
  */
 class Crypt implements CryptInterface
 {
-    protected $_key;
+    protected $key;
 
-    protected $_padding = 0;
+    protected $padding = 0;
 
-    protected $_mode = "cbc";
+    protected $mode = "cbc";
 
-    protected $_cipher = "rijndael-256";
+    protected $cipher = "rijndael-256";
 
     const PADDING_DEFAULT = 0;
 
@@ -73,7 +73,7 @@ class Crypt implements CryptInterface
      */
     public function setPadding($scheme)
     {
-        $this->_padding = $scheme;
+        $this->padding = $scheme;
 
         return $this;
     }
@@ -86,7 +86,7 @@ class Crypt implements CryptInterface
      */
     public function setCipher($cipher)
     {
-        $this->_cipher = $cipher;
+        $this->cipher = $cipher;
 
         return $this;
     }
@@ -98,7 +98,7 @@ class Crypt implements CryptInterface
      */
     public function getCipher()
     {
-        return $this->_cipher;
+        return $this->cipher;
     }
 
     /**
@@ -109,7 +109,7 @@ class Crypt implements CryptInterface
      */
     public function setMode($mode)
     {
-        $this->_mode = $mode;
+        $this->mode = $mode;
 
         return $this;
     }
@@ -121,7 +121,7 @@ class Crypt implements CryptInterface
      */
     public function getMode()
     {
-        return $this->_mode;
+        return $this->mode;
     }
 
     /**
@@ -132,7 +132,7 @@ class Crypt implements CryptInterface
      */
     public function setKey($key)
     {
-        return $this->_key;
+        return $this->key;
     }
 
     /**
@@ -142,7 +142,7 @@ class Crypt implements CryptInterface
      */
     public function getKey()
     {
-        return $this->_key;
+        return $this->key;
     }
 
     /**
@@ -157,7 +157,7 @@ class Crypt implements CryptInterface
      * @return string
      * @throws Exception
      */
-    protected function _cryptPadText($text, $mode, $blockSize, $paddingType)
+    protected function cryptPadText($text, $mode, $blockSize, $paddingType)
     {
         $paddingSize = 0;
         $padding = null;
@@ -220,7 +220,7 @@ class Crypt implements CryptInterface
      * @param int $paddingType Padding scheme
      * @return string
      */
-    protected function _cryptUnpadText($text, $mode, $blockSize, $paddingType)
+    protected function cryptUnpadText($text, $mode, $blockSize, $paddingType)
     {
         $paddingSize = 0;
         $length = strlen($text);
@@ -313,7 +313,7 @@ class Crypt implements CryptInterface
         }
 
         if ($key === null) {
-            $encryptKey = $this->_key;
+            $encryptKey = $this->key;
         } else {
             $encryptKey = $key;
         }
@@ -322,21 +322,21 @@ class Crypt implements CryptInterface
             throw new Exception("Encryption key cannot be empty");
         }
 
-        $ivSize = mcrypt_get_iv_size($this->_cipher, $this->_mode);
+        $ivSize = mcrypt_get_iv_size($this->cipher, $this->mode);
         if (strlen($encryptKey) > $ivSize) {
             throw new Exception("Size of key is too large for this algorithm");
         }
 
         $iv = strval(mcrypt_create_iv($ivSize, MCRYPT_RAND));
-        $blockSize = intval(mcrypt_get_block_size($this->_cipher, $this->_mode));
+        $blockSize = intval(mcrypt_get_block_size($this->cipher, $this->mode));
 
-        if ($this->_padding != 0 && ($this->_mode == "cbc" || $this->_mode == "ecb")) {
-            $padded = $this->_cryptPadText($text, $this->_mode, $blockSize, $this->_padding);
+        if ($this->padding != 0 && ($this->mode == "cbc" || $this->mode == "ecb")) {
+            $padded = $this->cryptPadText($text, $this->mode, $blockSize, $this->padding);
         } else {
             $padded = $text;
         }
 
-        return $iv . mcrypt_encrypt($this->_cipher, $encryptKey, $padded, $this->_mode, $iv);
+        return $iv . mcrypt_encrypt($this->cipher, $encryptKey, $padded, $this->mode, $iv);
     }
 
     /**
@@ -358,7 +358,7 @@ class Crypt implements CryptInterface
         }
 
         if ($key === null) {
-            $decryptKey = $this->_key;
+            $decryptKey = $this->key;
         } else {
             $decryptKey = $key;
         }
@@ -367,7 +367,7 @@ class Crypt implements CryptInterface
             throw new Exception("Decryption key cannot be empty");
         }
 
-        $ivSize = mcrypt_get_iv_size($this->_cipher, $this->_mode);
+        $ivSize = mcrypt_get_iv_size($this->cipher, $this->mode);
         $keySize = strlen($decryptKey);
         if ($keySize > $ivSize) {
             throw new Exception("Size of key is too large for this algorithm");
@@ -378,11 +378,11 @@ class Crypt implements CryptInterface
         }
 
         $data = substr($text, $ivSize);
-        $decrypted = mcrypt_decrypt($this->_cipher, $decryptKey, $data, $this->_mode, substr($text, 0, $ivSize));
-        $blockSize = mcrypt_get_block_size($this->_cipher, $this->_mode);
+        $decrypted = mcrypt_decrypt($this->cipher, $decryptKey, $data, $this->mode, substr($text, 0, $ivSize));
+        $blockSize = mcrypt_get_block_size($this->cipher, $this->mode);
 
-        if ($this->_mode == "cbc" || $this->_mode == "ecb") {
-            return $this->_cryptUnpadText($decrypted, $this->_mode, $blockSize, $this->_padding);
+        if ($this->mode == "cbc" || $this->mode == "ecb") {
+            return $this->cryptUnpadText($decrypted, $this->mode, $blockSize, $this->padding);
         }
 
         return $decrypted;
