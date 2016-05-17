@@ -131,6 +131,7 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 ### Logger
 * [Phalcon\Logger\Adapter\Database](Library/Phalcon/Logger) - Adapter to store logs in a database table (!phalcon)
 * [Phalcon\Logger\Adapter\Firelogger](Library/Phalcon/Logger) - Adapter to log messages in the Firelogger console in Firebug (@phalcon)
+* [Phalcon\Logger\Adapter\Udplogger](Library/Phalcon/Logger) - Adapter to log messages using UDP protocol to external server (@vitalypanait)
 * [Phalcon\Logger\Adapter\File\Multiple](Library/Phalcon/Logger) - Adapter to log to multiple files (@rlaffers)
 
 ### Mailer
