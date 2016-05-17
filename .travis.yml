@@ -29,6 +29,7 @@ env:
     - TEST_DB_NAME="incubator_tests"
     - TEST_DB_CHARSET="utf8"
   matrix:
+    - PHALCON_VERSION="2.0.12"
     - PHALCON_VERSION="2.0.11"
     - PHALCON_VERSION="2.0.10"
     - PHALCON_VERSION="2.0.9"
