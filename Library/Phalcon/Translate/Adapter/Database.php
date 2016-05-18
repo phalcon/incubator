@@ -110,9 +110,7 @@ class Database extends Base implements AdapterInterface, \ArrayAccess
 
         if (is_array($placeholders) && !empty($placeholders)) {
             if (true === $this->useIcuMessageFormatter) {
-                $value = \MessageFormatter::formatMessage(
-                    $options['language'], $value, $placeholders
-                );
+                $value = \MessageFormatter::formatMessage($options['language'], $value, $placeholders);
             } else {
                 foreach ($placeholders as $placeHolderKey => $placeHolderValue) {
                     $value = str_replace('%' . $placeHolderKey . '%', $placeHolderValue, $value);
