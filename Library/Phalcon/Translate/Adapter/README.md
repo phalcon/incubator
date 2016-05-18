@@ -96,9 +96,9 @@ Or, if you wish you can use [Volt][2]:
 ICU MessageFormatter Example
 ```php
 // Example plural message with key 'cats'
-// Peter has {0, plural, =0{no cat} =1{a cat} other{# cats}}
+// Peter has {nbCats, plural, =0{no cat} =1{a cat} other{# cats}}
 
-$this->_getTranslation()->_('cats', ['cats' => rand(0, 10)]);
+$this->_getTranslation()->_('cats', ['nbCats' => rand(0, 10)]);
 ```
 
 ## ResourceBundle
