@@ -53,6 +53,11 @@ CREATE TABLE `translations` (
 )
 ```
 
+Optional create unique index
+```sql
+CREATE UNIQUE INDEX translations_language_key_name_unique_index ON translations (language, key_name);
+```
+
 The columns are self-described, but pay attention to `language` — it's a column that stores the language
 that the user is using, that can be `en`, `en-us` or `en-US`.
 Now it's your responsibility to decide which pattern you want to use.
