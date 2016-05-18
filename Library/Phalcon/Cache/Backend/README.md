@@ -1,10 +1,42 @@
-Phalcon\Cache\Backend
-=====================
+# Phalcon\Cache\Backend
 
 Usage examples of the adapters available here:
 
-Database
---------
+## Aerospike
+
+This adapter uses an Aerospike Database to store the cached content.
+
+To use this adapter on your machine, you need at least:
+
+- [Aerospike Server][1] >= 3.5.3
+- [Aerospike PHP Extension][2]
+
+Usage:
+
+```php
+use Phalcon\Cache\Backend\Aerospike as BackendCache;
+use Phalcon\Cache\Frontend\Data;
+
+$di->set('cache', function () {
+    $cache = new BackendCache(new Data(['lifetime' => 3600]), [
+        'hosts' => [
+            ['addr' => '127.0.0.1', 'port' => 3000]
+        ],
+        'persistent' => true,
+        'namespace'  => 'test',
+        'prefix'     => 'cache_',
+        'options'    => [
+            \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
+            \Aerospike::OPT_WRITE_TIMEOUT   => 1500
+        ]
+    ]);
+
+    return $cache;
+});
+```
+
+## Database
+
 This adapter uses a database backend to store the cached content:
 
 ```php
@@ -61,6 +93,9 @@ echo $time;
 
 ```
 
-Wincache
---------
+## Wincache
+
 This adapter uses [windows cache extension](http://pecl.php.net/package/wincache) for PHP
+
+[1]: http://www.aerospike.com/
+[2]: http://www.aerospike.com/docs/client/php/install/

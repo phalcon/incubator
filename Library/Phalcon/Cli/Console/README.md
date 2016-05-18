@@ -1,8 +1,10 @@
 # Phalcon\Cli\Console\Extended
 
-Extended "Phalcon\Cli\Console\Extended" class that uses **annotations** in order to create automatically a help description.
+## Phalcon\Cli\Console\Extended
 
-## How to use it?
+Extended `Phalcon\Cli\Console\Extended` class that uses **annotations** in order to create automatically a help description.
+
+### How to use it?
 
 The parameters **-h**, **--help** or **help** could be used in order to get the help documentation automatically. For instance:
 
@@ -42,37 +44,40 @@ or
 $ ./yourAppCommand <task> help
 ```
 
-## How to set it up?
+### How to set it up?
 
 Firstly you need to add some important values into the config.
 
 ```php
-$config =  new \Phalcon\Config(array(
+use Phalcon\Config;
 
+$config =  new Config([
     'appName' => 'My Console App',
     'version' => '1.0',
 
     /**
-    * tasksDir is the absolute path to your tasks directory
-    * For instance, 'tasksDir' => realpath(dirname(dirname(__FILE__))).'/tasks',
-    */
+     * tasksDir is the absolute path to your tasks directory
+     * For instance, 'tasksDir' => realpath(dirname(dirname(__FILE__))).'/tasks',
+     */
     'tasksDir' => '/path/to/your/project/tasks',
     
     /**
-    * annotationsAdapter is the choosen adapter to read annotations. 
-    * Adapter by default: memory
-    */
+     * annotationsAdapter is the choosen adapter to read annotations. 
+     * Adapter by default: memory
+     */
     'annotationsAdapter' => 'memory',
     
     'printNewLine' => true
-));
+]);
 ```
 
 Second you must to create an instance of the DI class and add the created config class under key 'config'.
 
 ```php
-$di = new \Phalcon\DI\FactoryDefault\CLI();
-$di->set("config",function () use ($config) {
+use Phalcon\DI\FactoryDefault\Cli as CliDi;
+
+$di = new CliDi();
+$di->set('config', function () use ($config) {
     return $config;
 });
 ```
@@ -80,15 +85,17 @@ $di->set("config",function () use ($config) {
 Well, it's time to create an instance of Extended Console Class to handle the calls
 
 ```php
-$console = new \Phalcon\CLI\Console\Extended();
-//Seting the above DI
+use Phalcon\Cli\Console\Extended as Console;
+
+$console = new Console();
+// Seting the above DI
 $console->setDI($di);
 
 /**
  * Process the console arguments
  */
-$arguments = array();
-$params = array();
+$arguments = [];
+$params = [];
 
 foreach ($argv as $k => $arg) {
     if ($k == 1) {
@@ -108,7 +115,7 @@ try {
 }
 ```
 
-## How to add task description?
+### How to add task description?
 
 The annotation tags that have been used to add tasks description are described below:
 
@@ -123,22 +130,24 @@ Also is available instruction for hiding action from help. Just use `@DoNotCover
 
 Assume that we have developed a task, to list a directory's content. So the file of the task must be located within the tasks folder. **For instance: /path/to/your/project/tasks/LsTask.php**
 
-Pay attention to the file name. This must be named as **<TaskName>Task.php**
+Pay attention to the file name. This must be named as **\<TaskName\>Task.php**
 
 ```php
+use Phalcon\Cli\Task;
+
 /**
  * Class LsTask
- * @description("List directory content","The content will be displayed in the standard output")
+ * @description('List directory content', 'The content will be displayed in the standard output')
  */
-class LsTask extends \Phalcon\CLI\Task
+class LsTask extends Task
 {
     /**
-     * @description("Non recursive list")
+     * @description('Non recursive list')
      */
     public function mainAction()
     {
         echo 'Content list:'.PHP_EOL;
-        //Code to iterate a directory and show the content
+        // Code to iterate a directory and show the content
     }
 
     /**
@@ -149,7 +158,7 @@ class LsTask extends \Phalcon\CLI\Task
     public function hrAction(array $params) {
         $directoryToList = $params[0];
         $unitSize = $params[1];
-        //Code to iterate a directory and show the content
+        // Code to iterate a directory and show the content
     }
     
     /**

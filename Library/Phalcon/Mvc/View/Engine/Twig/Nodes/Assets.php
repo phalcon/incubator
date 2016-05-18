@@ -17,7 +17,6 @@ namespace Phalcon\Mvc\View\Engine\Twig\Nodes;
  */
 class Assets extends \Twig_Node
 {
-
     /**
      * {@inheritdoc}
      *

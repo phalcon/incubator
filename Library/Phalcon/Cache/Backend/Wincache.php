@@ -3,7 +3,7 @@
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2012 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
   | with this package in the file docs/LICENSE.txt.                        |
@@ -16,17 +16,24 @@
   |          Nikita Vershinin <endeveit@gmail.com>                         |
   +------------------------------------------------------------------------+
 */
+
 namespace Phalcon\Cache\Backend;
 
 use Phalcon\Cache\Exception;
+use Phalcon\Cache\Backend;
+use Phalcon\Cache\BackendInterface;
 
 /**
  * Phalcon\Cache\Backend\Wincache
  *
  * This backend uses wincache as cache backend
+ *
+ * @package Phalcon\Cache\Backend
+ * @property \Phalcon\Cache\FrontendInterface _frontend
  */
-class Wincache extends Prefixable
+class Wincache extends Backend implements BackendInterface
 {
+    use Prefixable;
 
     /**
      * {@inheritdoc}

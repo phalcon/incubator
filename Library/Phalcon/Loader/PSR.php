@@ -3,7 +3,7 @@
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2015 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
   | with this package in the file docs/LICENSE.txt.                        |
@@ -13,7 +13,7 @@
   | to license@phalconphp.com so we can send you a copy immediately.       |
   +------------------------------------------------------------------------+
   | Authors: Piyush Rajesh <mba.piyushgupta@gmail.com>                     |
-  |          Serghei Iakovlev <sadhooklay@gmail.com>                       |
+  |          Serghei Iakovlev <serghei@phalconphp.com>                     |
   +------------------------------------------------------------------------+
 */
 

@@ -1,9 +1,9 @@
 <?php
 namespace Phalcon\Mvc\Model\Validator;
 
+use Phalcon\Mvc\EntityInterface;
 use Phalcon\Mvc\Model\Validator;
 use Phalcon\Mvc\Model\ValidatorInterface;
-use Phalcon\Mvc\ModelInterface;
 
 /**
  * Phalcon\Mvc\Model\Validator\ConfirmationOf
@@ -12,14 +12,13 @@ use Phalcon\Mvc\ModelInterface;
  */
 class ConfirmationOf extends Validator implements ValidatorInterface
 {
-
     /**
      * {@inheritdoc}
      *
-     * @param  \Phalcon\Mvc\ModelInterface $record
+     * @param  \Phalcon\Mvc\EntityInterface $record
      * @return boolean
      */
-    public function validate(ModelInterface $record)
+    public function validate(EntityInterface $record)
     {
         $field = $this->getOption('field');
         $fieldConfirmation = $this->getOption('field_confirmation');

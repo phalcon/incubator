@@ -12,7 +12,6 @@ use Phalcon\Cache\Frontend\Data;
  */
 class Msgpack extends Data
 {
-
     /**
      * {@inheritdoc}
      *

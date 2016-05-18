@@ -2,6 +2,8 @@
 namespace Phalcon\Logger\Adapter;
 
 use Phalcon\Logger\Formatter\Firelogger as FireloggerFormatter;
+use Phalcon\Logger\Adapter as LoggerAdapter;
+use Phalcon\Logger\AdapterInterface;
 
 /**
  * Phalcon\Logger\Adapter\Firelogger
@@ -12,15 +14,14 @@ use Phalcon\Logger\Formatter\Firelogger as FireloggerFormatter;
  * @author  Richard Laffers <rlaffers@gmail.com>
  * @license The BSD 3-Clause License {@link http://opensource.org/licenses/BSD-3-Clause}
  */
-class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\AdapterInterface
+class Firelogger extends LoggerAdapter implements AdapterInterface
 {
-
     /**
      * Name
      *
      * @var string
      */
-    protected $name;
+    protected $name = 'phalcon';
 
     /**
      * Adapter options
@@ -32,7 +33,7 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
      *
      * @var array
      */
-    protected $options;
+    protected $options = [];
 
     /**
      * @var boolean
@@ -65,7 +66,7 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
      *
      * @var array
      */
-    protected $logs = array();
+    protected $logs = [];
 
     /**
      * Denotes if there is a transaction started.
@@ -80,27 +81,30 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
      * @param string $name
      * @param array  $options
      */
-    public function __construct($name = 'phalcon', $options = array())
+    public function __construct($name = 'phalcon', array $options = [])
     {
-        $defaults = array(
+        $defaults = [
             'password'     => null,
             'checkVersion' => true,
             'traceable'    => false,
-        );
+            'triggerError' => true
+        ];
 
-        $this->name = $name;
+        if ($name) {
+            $this->name = $name;
+        }
+
         $this->options = array_merge($defaults, $options);
-        $this->enabled = $this->checkPassword();
-        $this->checkVersion();
+        $this->enabled = $this->checkPassword() && $this->checkVersion();
 
-        register_shutdown_function(array($this, 'commit'));
+        register_shutdown_function([$this, 'commit']);
     }
 
     /**
-     * Setter for _name
+     * Setter for name
      *
-     * @param  string                             $name
-     * @return \Phalcon\Logger\Adapter\Firelogger
+     * @param  string $name
+     * @return $this
      */
     public function setName($name)
     {
@@ -112,7 +116,7 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Logger\Formatter\Line
+     * @return \Phalcon\Logger\FormatterInterface
      */
     public function getFormatter()
     {
@@ -128,12 +132,11 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
      *
      * @param mixed $message Stuff to log. Can be of any type castable into a string (i.e. anything except for
      *                       objects without __toString() implementation).
-     *
      * @param integer $type
      * @param integer $time
      * @param array   $context
      */
-    public function logInternal($message, $type, $time, $context = array())
+    public function logInternal($message, $type, $time, $context = [])
     {
         if (!$this->enabled) {
             return;
@@ -158,6 +161,7 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
      */
     public function close()
     {
+        return true;
     }
 
     /**
@@ -193,7 +197,7 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
      */
     protected function flush()
     {
-        if (headers_sent($file, $line)) {
+        if (headers_sent($file, $line) && $this->options['triggerError']) {
             trigger_error(
                 "Cannot send FireLogger headers after output has been sent" .
                 ($file ? " (output started at $file:$line)." : "."),
@@ -207,14 +211,14 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
 
         // final encoding
         $id = dechex(mt_rand(0, 0xFFFF)) . dechex(mt_rand(0, 0xFFFF)); // mt_rand is not working with 0xFFFFFFFF
-        $json = json_encode(array('logs' => $logs));
+        $json = json_encode(['logs' => $logs]);
         $res = str_split(base64_encode($json), 76); // RFC 2045
 
         foreach ($res as $k => $v) {
             header("FireLogger-$id-$k:$v");
         }
 
-        $this->logs = array();
+        $this->logs = [];
     }
 
     /**
@@ -236,10 +240,12 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
             $serverHash = md5("#FireLoggerPassword#" . $this->options['password'] . "#");
             if ($clientHash !== $serverHash) { // passwords do not match
                 $this->enabled = false;
-
-                trigger_error(
-                    "FireLogger passwords do not match. Have you specified correct password FireLogger extension?"
-                );
+                
+                if ($this->options['triggerError']) {
+                    trigger_error(
+                        "FireLogger passwords do not match. Have you specified correct password FireLogger extension?"
+                    );
+                }
             } else {
                 $this->enabled = true;
             }
@@ -259,10 +265,12 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
     private function checkVersion()
     {
         if (!$this->options['checkVersion']) {
+            $this->enabled = true;
             return true;
         }
 
         if (!isset($_SERVER['HTTP_X_FIRELOGGER'])) {
+            $this->enabled = false;
             return false;
         }
 
@@ -276,9 +284,11 @@ class Firelogger extends \Phalcon\Logger\Adapter implements \Phalcon\Logger\Adap
                 'https://github.com/phalcon/incubator/tree/master/Library/Phalcon/Logger'
             );
 
+            $this->enabled = false;
             return false;
         }
 
+        $this->enabled = true;
         return true;
     }
 }

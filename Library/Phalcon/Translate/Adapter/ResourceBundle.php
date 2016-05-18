@@ -10,7 +10,6 @@ use Phalcon\Translate\Exception;
  */
 class ResourceBundle extends Base implements AdapterInterface
 {
-
     /**
      * @var \ResourceBundle
      */

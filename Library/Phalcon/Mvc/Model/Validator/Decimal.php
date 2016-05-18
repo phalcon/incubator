@@ -1,10 +1,10 @@
 <?php
 namespace Phalcon\Mvc\Model\Validator;
 
+use Phalcon\Mvc\EntityInterface;
+use Phalcon\Mvc\Model\Exception;
 use Phalcon\Mvc\Model\Validator;
 use Phalcon\Mvc\Model\ValidatorInterface;
-use Phalcon\Mvc\Model\Exception;
-use Phalcon\Mvc\ModelInterface;
 
 /**
  * Phalcon\Mvc\Model\Validator\Decimal
@@ -44,11 +44,11 @@ class Decimal extends Validator implements ValidatorInterface
     /**
      * {@inheritdoc}
      *
-     * @param $record
+     * @param  \Phalcon\Mvc\EntityInterface $record
      * @return boolean
-     * @throws Exception
+     * @throws \Phalcon\Mvc\Model\Exception
      */
-    public function validate(ModelInterface $record)
+    public function validate(EntityInterface $record)
     {
         $field = $this->getOption('field');
 
@@ -66,11 +66,9 @@ class Decimal extends Validator implements ValidatorInterface
             throw new Exception('A number of decimal places must be set');
         }
 
-        $places = $this->getOption('places');
-
         if ($this->isSetOption('digits')) {
             // Specific number of digits
-            $digits = '{'.( (int) $this->getOption('digits')).'}';
+            $digits = '{' . ((int) $this->getOption('digits')) . '}';
         } else {
             // Any number of digits
             $digits = '+';
@@ -83,9 +81,17 @@ class Decimal extends Validator implements ValidatorInterface
             list($decimal) = array_values(localeconv());
         }
 
-        $regexp = (bool) preg_match('#^[+-]?[0-9]'.$digits.preg_quote($decimal).'[0-9]{'.((int) $places).'}$#', $value);
+        $result = (boolean) preg_match(
+            sprintf(
+                '#^[+-]?[0-9]%s%s[0-9]{%d}$#',
+                $digits,
+                preg_quote($decimal),
+                $this->getOption('places')
+            ),
+            $value
+        );
 
-        if (!$regexp) {
+        if (!$result) {
             // Check if the developer has defined a custom message
             $message = $this->getOption('message') ?: sprintf('%s must contain valid decimal value', $field);
 

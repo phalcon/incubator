@@ -19,7 +19,6 @@ use Phalcon\Paginator\Pager;
  */
 class Layout
 {
-
     /**
      * Pager object.
      *

@@ -10,17 +10,6 @@ use Phalcon\Mvc\ModelInterface;
  */
 class Blameable extends Behavior implements BehaviorInterface
 {
-
-    /**
-     * Class constructor.
-     *
-     * @param array $options
-     */
-    public function __construct($options = null)
-    {
-        $this->_options = $options;
-    }
-
     /**
      * {@inheritdoc}
      *

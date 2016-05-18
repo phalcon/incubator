@@ -3,7 +3,7 @@
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2012 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
   | with this package in the file docs/LICENSE.txt.                        |
@@ -15,15 +15,20 @@
   | Authors: Andres Gutierrez <andres@phalconphp.com>                      |
   |          Eduar Carvajal <eduar@phalconphp.com>                         |
   |          Nikita Vershinin <endeveit@gmail.com>                         |
+  |          Serghei Iakovlev <serghei@phalconphp.com>                     |
   +------------------------------------------------------------------------+
 */
 namespace Phalcon\Error;
 
-use Phalcon\DI;
+use Phalcon\Di;
+use Phalcon\Logger\Formatter;
+use Phalcon\Logger;
+use Phalcon\Logger\AdapterInterface;
+use Phalcon\Logger\Adapter\File as FileLogger;
+use Phalcon\Logger\Formatter\Line as FormatterLine;
 
 class Handler
 {
-
     /**
      * Registers itself as error and exception handler.
      *
@@ -50,26 +55,26 @@ class Handler
                 return;
             }
 
-            $options = array(
+            $options = [
                 'type'    => $errno,
                 'message' => $errstr,
                 'file'    => $errfile,
                 'line'    => $errline,
                 'isError' => true,
-            );
+            ];
 
             static::handle(new Error($options));
         });
 
         set_exception_handler(function (\Exception $e) {
-            $options = array(
+            $options = [
                 'type'        => $e->getCode(),
                 'message'     => $e->getMessage(),
                 'file'        => $e->getFile(),
                 'line'        => $e->getLine(),
                 'isException' => true,
                 'exception'   => $e,
-            );
+            ];
 
             static::handle(new Error($options));
         });
@@ -89,12 +94,47 @@ class Handler
      */
     public static function handle(Error $error)
     {
-        $di = DI::getDefault();
-        $config = $di->getShared('config');
+        $di = Di::getDefault();
+        $config = $di->getShared('config')->error->toArray();
+
+        $logger = $config['logger'];
+        if (!$logger instanceof AdapterInterface) {
+            $logger = new FileLogger($logger);
+        }
+
         $type = static::getErrorType($error->type());
         $message = "$type: {$error->message()} in {$error->file()} on line {$error->line()}";
 
-        $config->error->logger->log($message);
+        if (isset($config['formatter'])) {
+            $formatter = null;
+
+            if ($config['formatter'] instanceof Formatter) {
+                $formatter = $config['formatter'];
+            } elseif (is_array($config['formatter'])) {
+                $format = null;
+                $dateFormat = null;
+
+                if (isset($config['formatter']['format'])) {
+                    $format = $config['formatter']['format'];
+                }
+
+                if (isset($config['formatter']['dateFormat'])) {
+                    $dateFormat = $config['formatter']['dateFormat'];
+                } elseif (isset($config['formatter']['date_format'])) {
+                    $dateFormat = $config['formatter']['date_format'];
+                } elseif (isset($config['formatter']['date'])) {
+                    $dateFormat = $config['formatter']['date'];
+                }
+
+                $formatter = new FormatterLine($format, $dateFormat);
+            }
+
+            if ($formatter) {
+                $logger->setFormatter($formatter);
+            }
+        }
+
+        $logger->log(static::getLogType($error->type()), $message);
 
         switch ($error->type()) {
             case E_WARNING:
@@ -115,20 +155,24 @@ class Handler
             case E_COMPILE_ERROR:
             case E_USER_ERROR:
             case E_RECOVERABLE_ERROR:
-                $dispatcher = $di->getShared('dispatcher');
-                $view = $di->getShared('view');
-                $response = $di->getShared('response');
+                if ($di->has('view')) {
+                    $dispatcher = $di->getShared('dispatcher');
+                    $view = $di->getShared('view');
+                    $response = $di->getShared('response');
 
-                $dispatcher->setControllerName($config->error->controller);
-                $dispatcher->setActionName($config->error->action);
-                $dispatcher->setParams(array('error' => $error));
+                    $dispatcher->setControllerName($config['controller']);
+                    $dispatcher->setActionName($config['action']);
+                    $dispatcher->setParams(['error' => $error]);
 
-                $view->start();
-                $dispatcher->dispatch();
-                $view->render($config->error->controller, $config->error->action, $dispatcher->getParams());
-                $view->finish();
+                    $view->start();
+                    $dispatcher->dispatch();
+                    $view->render($config['controller'], $config['action'], $dispatcher->getParams());
+                    $view->finish();
 
-                return $response->setContent($view->getContent())->send();
+                    return $response->setContent($view->getContent())->send();
+                } else {
+                    echo $message;
+                }
         }
     }
 
@@ -176,5 +220,38 @@ class Handler
         }
 
         return $code;
+    }
+
+    /**
+     * Maps error code to a log type.
+     *
+     * @param  integer $code
+     * @return integer
+     */
+    public static function getLogType($code)
+    {
+        switch ($code) {
+            case E_ERROR:
+            case E_RECOVERABLE_ERROR:
+            case E_CORE_ERROR:
+            case E_COMPILE_ERROR:
+            case E_USER_ERROR:
+            case E_PARSE:
+                return Logger::ERROR;
+            case E_WARNING:
+            case E_USER_WARNING:
+            case E_CORE_WARNING:
+            case E_COMPILE_WARNING:
+                return Logger::WARNING;
+            case E_NOTICE:
+            case E_USER_NOTICE:
+                return Logger::NOTICE;
+            case E_STRICT:
+            case E_DEPRECATED:
+            case E_USER_DEPRECATED:
+                return Logger::INFO;
+        }
+
+        return Logger::ERROR;
     }
 }

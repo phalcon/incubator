@@ -3,7 +3,7 @@
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2012 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
   | with this package in the file docs/LICENSE.txt.                        |
@@ -21,6 +21,7 @@ namespace Phalcon\Error;
 
 use Phalcon\Config;
 use Phalcon\DI\FactoryDefault;
+use Phalcon\DiInterface;
 use Phalcon\Error\Handler as ErrorHandler;
 use Phalcon\Loader;
 use Phalcon\Mvc\Dispatcher;
@@ -37,13 +38,16 @@ class Application extends \Phalcon\Mvc\Application
      * Class constructor registers autoloading and error
      * handler.
      *
+     * @param mixed $dependencyInjector
      * @return \Phalcon\Error\Application
      */
-    public function __construct()
+    public function __construct(DiInterface $dependencyInjector = null)
     {
         $this->registerAutoloaders();
 
         ErrorHandler::register();
+
+        parent::__construct($dependencyInjector);
     }
 
     /**
@@ -66,9 +70,7 @@ class Application extends \Phalcon\Mvc\Application
     private function registerAutoloaders()
     {
         $loader = new Loader();
-        $loader->registerNamespaces(array(
-            'Phalcon\Error' => '.',
-        ));
+        $loader->registerNamespaces(['Phalcon\Error' => '.']);
         $loader->register();
     }
 

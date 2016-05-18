@@ -1,41 +1,38 @@
 <?php
-/**
- * FunctionalTestCase.php
- * Phalcon_Test_FunctionalTestCase
- * Functional Test Helper
- * PhalconPHP Framework
- *
- * @copyright (c) 2011-2012 Phalcon Team
- * @link          http://www.phalconphp.com
- * @author        Andres Gutierrez <andres@phalconphp.com>
- * @author        Nikolaos Dimopoulos <nikos@phalconphp.com>
- *                The contents of this file are subject to the New BSD License that is
- *                bundled with this package in the file docs/LICENSE.txt
- *                If you did not receive a copy of the license and are unable to obtain it
- *                through the world-wide-web, please send an email to license@phalconphp.com
- *                so that we can send you a copy immediately.
- */
+/*
+  +------------------------------------------------------------------------+
+  | Phalcon Framework                                                      |
+  +------------------------------------------------------------------------+
+  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
+  +------------------------------------------------------------------------+
+  | This source file is subject to the New BSD License that is bundled     |
+  | with this package in the file docs/LICENSE.txt.                        |
+  |                                                                        |
+  | If you did not receive a copy of the license and are unable to         |
+  | obtain it through the world-wide-web, please send an email             |
+  | to license@phalconphp.com so we can send you a copy immediately.       |
+  +------------------------------------------------------------------------+
+  | Authors: Stephen Hoogendijk <stephen@tca0.nl>                          |
+  +------------------------------------------------------------------------+
+*/
+
 namespace Phalcon\Test;
 
 use Phalcon\Escaper as PhEscaper;
 use Phalcon\Mvc\Dispatcher as PhDispatcher;
 use Phalcon\Mvc\Application as PhApplication;
+use Phalcon\DiInterface;
 
 abstract class FunctionalTestCase extends ModelTestCase
 {
-
     protected $application;
 
     /**
-     * Sets the test up by loading the DI container and other stuff
-     *
-     * @param  \Phalcon\DiInterface $di
-     * @param  \Phalcon\Config      $config
-     * @return void
+     * This method is called before a test is executed.
      */
-    protected function setUp(\Phalcon\DiInterface $di = null, \Phalcon\Config $config = null)
+    protected function setUp()
     {
-        parent::setUp($di, $config);
+        parent::setUp();
 
         // Set the dispatcher
         $this->di->setShared(
@@ -44,7 +41,7 @@ abstract class FunctionalTestCase extends ModelTestCase
                 $dispatcher = new PhDispatcher();
                 $dispatcher->setControllerName('test');
                 $dispatcher->setActionName('empty');
-                $dispatcher->setParams(array());
+                $dispatcher->setParams([]);
 
                 return $dispatcher;
             }
@@ -57,10 +54,9 @@ abstract class FunctionalTestCase extends ModelTestCase
             }
         );
 
-        if ($this->di instanceof \Phalcon\DiInterface) {
+        if ($this->di instanceof DiInterface) {
             $this->application = new PhApplication($this->di);
         }
-
     }
 
     /**
@@ -73,10 +69,12 @@ abstract class FunctionalTestCase extends ModelTestCase
         $this->di->reset();
         $this->application = null;
 
-        $_SESSION = array();
-        $_GET = array();
-        $_POST = array();
-        $_COOKIE = array();
+        $_SESSION = [];
+        $_GET =  [];
+        $_POST = [];
+        $_COOKIE = [];
+        $_REQUEST = [];
+        $_FILES = [];
     }
 
     /**
@@ -93,7 +91,7 @@ abstract class FunctionalTestCase extends ModelTestCase
     /**
      * Assert that the last dispatched controller matches the given controller class name
      *
-     * @param  string                                        $expected The expected controller name
+     * @param  string $expected The expected controller name
      * @throws \PHPUnit_Framework_ExpectationFailedException
      */
     public function assertController($expected)
@@ -115,7 +113,7 @@ abstract class FunctionalTestCase extends ModelTestCase
     /**
      * Assert that the last dispatched action matches the given action name
      *
-     * @param  string                                        $expected The expected action name
+     * @param  string $expected The expected action name
      * @throws \PHPUnit_Framework_ExpectationFailedException
      */
     public function assertAction($expected)
@@ -139,7 +137,7 @@ abstract class FunctionalTestCase extends ModelTestCase
      * $expected = array('Content-Type' => 'application/json')
      * </code>
      *
-     * @param  array                                         $expected The expected headers
+     * @param  array $expected The expected headers
      * @throws \PHPUnit_Framework_ExpectationFailedException
      */
     public function assertHeader(array $expected)
@@ -164,7 +162,7 @@ abstract class FunctionalTestCase extends ModelTestCase
     /**
      * Asserts that the response code matches the given one
      *
-     * @param  string                                        $expected the expected response code
+     * @param  string $expected the expected response code
      * @throws \PHPUnit_Framework_ExpectationFailedException
      */
     public function assertResponseCode($expected)
@@ -210,7 +208,7 @@ abstract class FunctionalTestCase extends ModelTestCase
     /**
      * Assert location redirect
      *
-     * @param  string                                        $location
+     * @param  string $location
      * @throws \PHPUnit_Framework_ExpectationFailedException
      */
     public function assertRedirectTo($location)

@@ -1,28 +1,38 @@
 <?php
-/**
- * Phalcon Framework
- * This source file is subject to the New BSD License that is bundled
- * with this package in the file docs/LICENSE.txt.
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@phalconphp.com so we can send you a copy immediately.
- *
- * @author Nikita Vershinin <endeveit@gmail.com>
+
+/*
+ +------------------------------------------------------------------------+
+ | Phalcon Framework                                                      |
+ +------------------------------------------------------------------------+
+ | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
+ +------------------------------------------------------------------------+
+ | This source file is subject to the New BSD License that is bundled     |
+ | with this package in the file docs/LICENSE.txt.                        |
+ |                                                                        |
+ | If you did not receive a copy of the license and are unable to         |
+ | obtain it through the world-wide-web, please send an email             |
+ | to license@phalconphp.com so we can send you a copy immediately.       |
+ +------------------------------------------------------------------------+
+ | Authors: Nikita Vershinin <endeveit@gmail.com>                         |
+ +------------------------------------------------------------------------+
  */
+
 namespace Phalcon\Queue\Beanstalk;
 
+use duncan3dc\Helpers\Fork;
 use Phalcon\Logger\Adapter as LoggerAdapter;
 use Phalcon\Queue\Beanstalk as Base;
-use Phalcon\Queue\Beanstalk\Job;
 
 /**
  * \Phalcon\Queue\Beanstalk\Extended
+ *
  * Extended class to access the beanstalk queue service.
  * Supports tubes prefixes, pcntl-workers and tubes stats.
+ *
+ * @package Phalcon\Queue\Beanstalk
  */
 class Extended extends Base
 {
-
     /**
      * Seconds to wait before putting the job in the ready queue.
      * The job will be in the "delayed" state during this time.
@@ -66,7 +76,7 @@ class Extended extends Base
      *
      * @var array
      */
-    protected $workers = array();
+    protected $workers = [];
 
     /**
      * {@inheritdoc}
@@ -117,34 +127,66 @@ class Extended extends Base
     /**
      * Runs the main worker cycle.
      *
-     * @throws \RuntimeException
+     * @param boolean $ignoreErrors
      */
-    public function doWork()
+    public function doWork($ignoreErrors = false)
     {
-        if (!extension_loaded('pcntl')) {
-            throw new \RuntimeException('The pcntl extension is required for workers');
-        }
-
-        declare(ticks = 1);
+        declare (ticks = 1);
         set_time_limit(0);
 
-        $tubes = array_keys($this->workers);
+        $fork = new Fork();
+        $fork->ignoreErrors = $ignoreErrors;
 
-        do {
-            if (!empty($this->workers)) {
-                $tube = $tubes[array_rand($tubes)];
-                $job = $this->reserveFromTube($tube);
+        foreach ($this->workers as $tube => $worker) {
+            $that = clone $this;
 
-                if ($job && ($job instanceof Job)) {
-                    $this->spawn($this->workers[$tube], $job);
-                } else {
-                    // There is no jobs so let's sleep to not increase CPU usage
-                    usleep(rand(7000, 10000));
-                }
-            } else {
-                sleep(10);
-            }
-        } while (true);
+            // Run the worker in separate process.
+            $fork->call(function () use ($tube, $worker, $that, $ignoreErrors) {
+                $that->connect();
+
+                do {
+                    $job = $that->reserveFromTube($tube);
+
+                    if ($job && ($job instanceof Job)) {
+                        try {
+                            call_user_func($worker, $job);
+
+                            try {
+                                $job->delete();
+                            } catch (\Exception $e) {
+                                if (null !== $this->logger) {
+                                    $this->logger->warning(sprintf(
+                                        'Exception thrown while deleting the job: %d — %s',
+                                        $e->getCode(),
+                                        $e->getMessage()
+                                    ));
+                                }
+                            }
+                        } catch (\Exception $e) {
+                            if (null !== $this->logger) {
+                                $this->logger->warning(sprintf(
+                                    'Exception thrown while handling job #%s: %d — %s',
+                                    $job->getId(),
+                                    $e->getCode(),
+                                    $e->getMessage()
+                                ));
+                            }
+
+                            if (!$ignoreErrors) {
+                                return;
+                            }
+                        }
+                    } else {
+                        // There is no jobs so let's sleep to not increase CPU usage
+                        usleep(rand(7000, 10000));
+                    }
+                } while (true);
+
+                exit(0);
+            });
+        }
+
+        $fork->wait();
     }
 
     /**
@@ -153,11 +195,12 @@ class Extended extends Base
      * @param string $tube
      * @param string $data
      * @param array  $options
+     * @return boolean|string job id or false
      */
     public function putInTube($tube, $data, $options = null)
     {
         if (null === $options) {
-            $options = array();
+            $options = [];
         }
 
         if (!array_key_exists('delay', $options)) {
@@ -174,7 +217,7 @@ class Extended extends Base
 
         $this->choose($this->getTubeName($tube));
 
-        parent::put($data, $options);
+        return parent::put($data, $options);
     }
 
     /**
@@ -205,7 +248,7 @@ class Extended extends Base
             foreach ($lines as $line) {
                 $line = ltrim($line, '- ');
                 if (empty($this->tubePrefix) || (0 === strpos($line, $this->tubePrefix))) {
-                    $result[] = $line;
+                    $result[] = !empty($this->tubePrefix) ? substr($line, strlen($this->tubePrefix)) : $line;
                 }
             }
         }
@@ -264,6 +307,29 @@ class Extended extends Base
     }
 
     /**
+     * Returns the number of tube watched by current session.
+     * Example return array: ['WATCHED' => 1]
+     * Added on 10-Jan-2014 20:04 IST by Tapan Kumar Thapa @ tapan.thapa@yahoo.com
+     *
+     * @param  string     $tube
+     * @return null|array
+     */
+    public function ignoreTube($tube)
+    {
+        $result = null;
+        $lines  = $this->getWatchingResponse('ignore ' . $this->getTubeName($tube));
+
+        if (!empty($lines)) {
+            list($name, $value) = explode(' ', $lines);
+            if (null !== $value) {
+                $result[$name] = intval($value);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Returns the tube name with prefix.
      *
      * @param  string|null $tube
@@ -283,29 +349,6 @@ class Extended extends Base
     }
 
     /**
-     * Returns the number of tube watched by current session.
-     * Example return array: array('WATCHED' => 1)
-     * Added on 10-Jan-2014 20:04 IST by Tapan Kumar Thapa @ tapan.thapa@yahoo.com
-     *
-     * @param  string     $tube
-     * @return null|array
-    */
-    public function ignoreTube($tube)
-    {
-        $result = null;
-        $lines  = $this->getResponseLinesText('ignore ' . $this->getTubeName($tube));
-
-        if (null !== $lines) {
-            list($name, $value) = explode(' ', $lines);
-            if (null !== $value) {
-                $result[$name] = intval($value);
-            }
-        }
-
-        return $result;
-    }
-
-    /**
      * Returns the result of command that wait the list in response from beanstalkd.
      *
      * @param  string            $cmd
@@ -318,7 +361,7 @@ class Extended extends Base
         $this->write(trim($cmd));
 
         $response = $this->read();
-        $matches  = array();
+        $matches  = [];
 
         if (!preg_match('#^(OK (\d+))#mi', $response, $matches)) {
             throw new \RuntimeException(sprintf(
@@ -352,7 +395,7 @@ class Extended extends Base
 
         if ($nbBytes && ($nbBytes > 0)) {
             $response = $this->read($nbBytes);
-            $matches  = array();
+            $matches  = [];
 
             if (!preg_match('#^WATCHING (\d+).*?#', $response, $matches)) {
                 throw new \RuntimeException(sprintf(
@@ -365,54 +408,5 @@ class Extended extends Base
         }
 
         return $result;
-    }
-
-    /**
-     * Runs the worker in separate process.
-     *
-     * @param  callable                     $callable
-     * @param  \Phalcon\Queue\Beanstalk\Job $job
-     * @return boolean
-     * @throws \RuntimeException
-     */
-    private function spawn($callable, Job $job)
-    {
-        $pid = pcntl_fork();
-
-        switch ($pid) {
-            case -1:
-                throw new \RuntimeException('Fork failed, bailing');
-                break;
-            case 0:
-                // We're in the child process
-                call_user_func($callable, $job);
-                break;
-            default:
-                // Wait for success exit code — exit(0)
-                pcntl_waitpid($pid, $status);
-                $result = pcntl_wexitstatus($status);
-
-                if ($result != 0) {
-                    // Something goes wrong
-                    return false;
-                } else {
-                    // If everything is OK, delete the job from queue
-                    try {
-                        $job->delete();
-                    } catch (\Exception $e) {
-                        if (null !== $this->logger) {
-                            $this->logger->warning(sprintf(
-                                'Exception thrown when trying to delete job: %d — %s',
-                                $e->getCode(),
-                                $e->getMessage()
-                            ));
-                        }
-                    }
-                }
-
-                break;
-        }
-
-        return true;
     }
 }

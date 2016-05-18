@@ -1,17 +1,21 @@
 <?php
-/**
- * Manager.php 2014-08-31 04:11
- * ----------------------------------------------
- *
- *
- * @author      Stanislav Kiryukhin <korsar.zn@gmail.com>
- * @copyright   Copyright (c) 2014, CKGroup.ru
- *
- * @version     0.0.1
- * ----------------------------------------------
- * All Rights Reserved.
- * ----------------------------------------------
- */
+/*
+  +------------------------------------------------------------------------+
+  | Phalcon Framework                                                      |
+  +------------------------------------------------------------------------+
+  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
+  +------------------------------------------------------------------------+
+  | This source file is subject to the New BSD License that is bundled     |
+  | with this package in the file docs/LICENSE.txt.                        |
+  |                                                                        |
+  | If you did not receive a copy of the license and are unable to         |
+  | obtain it through the world-wide-web, please send an email             |
+  | to license@phalconphp.com so we can send you a copy immediately.       |
+  +------------------------------------------------------------------------+
+  | Authors: Stanislav Kiryukhin <korsar.zn@gmail.com>                     |
+  +------------------------------------------------------------------------+
+*/
+
 namespace Phalcon\Mailer;
 
 use Phalcon\Config;
@@ -80,7 +84,7 @@ class Manager extends Component
         }
 
         if ($eventsManager) {
-            $eventsManager->fire('mailer:afterCreateMessage', $this, [$message]);
+            $eventsManager->fire('mailer:afterCreateMessage', $this, $message);
         }
 
         return $message;
@@ -322,13 +326,20 @@ class Manager extends Component
     protected function getView()
     {
         if (!$this->view) {
+            /** @var $viewApp \Phalcon\Mvc\View */
+            $viewApp = $this->getDI()->get('view');
+
             if (!($viewsDir = $this->getConfig('viewsDir'))) {
-                $viewsDir = $this->getDI()->get('view')->getViewsDir();
+                $viewsDir = $viewApp->getViewsDir();
             }
 
             /** @var $view \Phalcon\Mvc\View\Simple */
             $view = $this->getDI()->get('\Phalcon\Mvc\View\Simple');
             $view->setViewsDir($viewsDir);
+
+            if ($engines = $viewApp->getRegisteredEngines()) {
+                $view->registerEngines($engines);
+            }
 
             $this->view = $view;
         }

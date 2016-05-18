@@ -19,7 +19,6 @@ use Phalcon\Paginator\Pager\Layout;
  */
 class Bootstrap extends Layout
 {
-
     /**
      * {@inheritdoc}
      *
