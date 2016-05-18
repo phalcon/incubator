@@ -34,7 +34,7 @@ class IndexController extends \Phalcon\Mvc\Controller
 		    'db'                     => $this->di->get('db'), // Here we're getting the database from DI
 		    'table'                  => 'translations', // The table that is storing the translations
 		    'language'               => $this->request->getBestLanguage(), // Now we're getting the best language for the user
-		    'useIcuMessageFormatter' => true, // Optional, if need to formatting message using ICU MessageFormatter
+		    'useIcuMessageFormatter' => true, // Optional, if need formatting message using ICU MessageFormatter
 		]);
 	}
 	
