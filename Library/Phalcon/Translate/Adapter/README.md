@@ -31,9 +31,10 @@ class IndexController extends \Phalcon\Mvc\Controller
 	protected function _getTranslation()
 	{
 		return new Phalcon\Translate\Adapter\Database([
-		    'db'       => $this->di->get('db'), // Here we're getting the database from DI
-		    'table'    => 'translations', // The table that is storing the translations
-		    'language' => $this->request->getBestLanguage() // Now we're getting the best language for the user
+		    'db'                     => $this->di->get('db'), // Here we're getting the database from DI
+		    'table'                  => 'translations', // The table that is storing the translations
+		    'language'               => $this->request->getBestLanguage(), // Now we're getting the best language for the user
+		    'useIcuMessageFormatter' => true, // Optional, if need formatting message using ICU MessageFormatter
 		]);
 	}
 	
@@ -50,6 +51,11 @@ CREATE TABLE `translations` (
     `value` TEXT NOT NULL COLLATE 'utf8_bin',
     PRIMARY KEY (`id`)
 )
+```
+
+Optional create unique index
+```sql
+CREATE UNIQUE INDEX translations_language_key_name_unique_index ON translations (language, key_name);
 ```
 
 The columns are self-described, but pay attention to `language` — it's a column that stores the language
@@ -90,6 +96,14 @@ Then, just output the`phrase/sentence/word` in your view:
 Or, if you wish you can use [Volt][2]:
 ```html+php
 <h1>{{ expression._("IndexPage_Hello_World") }}</h1>
+```
+
+ICU MessageFormatter Example
+```php
+// Example plural message with key 'cats'
+// Peter has {nbCats, plural, =0{no cat} =1{a cat} other{# cats}}
+
+$this->_getTranslation()->_('cats', ['nbCats' => rand(0, 10)]);
 ```
 
 ## ResourceBundle
