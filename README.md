@@ -122,7 +122,7 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ### Http
 * [Phalcon\Http](Library/Phalcon/Http) - Uri utility (@tugrul)
-* [Phalcon\Http\Client](Library/Phalcon/Http\Client) - Http Request and Response (@tugrul)
+* [Phalcon\Http\Client](Library/Phalcon/Http/Client) - Http Request and Response (@tugrul)
 
 ### Loader
 * [Phalcon\Loader\Extended](Library/Phalcon/Loader/Extended.php) - This component extends `Phalcon\Loader` and added ability to set multiple directories per namespace (@sergeyklay)
