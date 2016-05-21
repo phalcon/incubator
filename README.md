@@ -136,7 +136,7 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ### Http
 * [Phalcon\Http](Library/Phalcon/Http) - Uri utility (@tugrul)
-* [Phalcon\Http\Client](Library/Phalcon/Http\Client) - Http Request and Response (@tugrul)
+* [Phalcon\Http\Client](Library/Phalcon/Http/Client) - Http Request and Response (@tugrul)
 
 ### Logger
 * [Phalcon\Logger\Adapter\Database](Library/Phalcon/Logger) - Adapter to store logs in a database table (!phalcon)
