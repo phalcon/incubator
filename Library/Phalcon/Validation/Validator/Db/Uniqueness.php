@@ -34,21 +34,27 @@ use Phalcon\Validation;
  *
  * <code>
  * $uniqueness = new Uniqueness(
- *     [
- *         'table'   => 'users',
- *         'column'  => 'login',
+ *     array(
+ *         'table' => 'users',
+ *         'column' => 'login',
  *         'message' => 'already taken',
- *     ],
+ *          'exclude' => array(
+ *              'column' => 'id',
+ *              'value' => 1 //same ID to exclude
+ *          )
+ *     ),
  *     $di->get('db');
  * );
  * </code>
+ *
+ * Exclude option is Optional. Ideal to validate existins records
  *
  * If second parameter will be null (omitted) than validator will try to get database
  * connection from default DI instance with \Phalcon\Di::getDefault()->get('db');
  */
 
-class Uniqueness extends Validator
-{
+class Uniqueness extends Validator implements ValidatorInterface {
+
     /**
      * Database connection
      * @var \Phalcon\Db\Adapter\Pdo
@@ -58,11 +64,11 @@ class Uniqueness extends Validator
     /**
      * Class constructor.
      *
-     * @param  array $options
-     * @param  DbConnection  $db
+     * @param  array               $options
+     * @param  DbConnection        $db
      * @throws ValidationException
      */
-    public function __construct(array $options = [], $db = null)
+    public function __construct(array $options = array(), $db = null)
     {
         parent::__construct($options);
 
@@ -87,7 +93,37 @@ class Uniqueness extends Validator
             throw new ValidationException('Validator require column option to be set');
         }
 
+        if ($this->hasOption('exclude')) {
+
+            if (empty($this->getOption('exclude')['column'])) {
+                throw new ValidationException('Validator with exclude option, require column option to be set');
+            }
+
+            if (empty($this->getOption('exclude')['value'])) {
+                throw new ValidationException('Validator with exclude option, require value option to be set');
+            }
+
+        }
+
+        $this->setDb($db);
+    }
+
+    /**
+     * @return DbConnection
+     */
+    public function getDb()
+    {
+        return $this->db;
+    }
+
+    /**
+     * @param DbConnection $db
+     * @return Uniqueness
+     */
+    public function setDb(DbConnection $db)
+    {
         $this->db = $db;
+        return $this;
     }
 
     /**
@@ -102,11 +138,20 @@ class Uniqueness extends Validator
         $table = $this->getOption('table');
         $column = $this->getOption('column');
 
-        $result = $this->db->fetchOne(
-            sprintf('SELECT COUNT(*) as count FROM %s WHERE %s = ?', $table, $column),
-            Db::FETCH_ASSOC,
-            [$validator->getValue($attribute)]
-        );
+        if($this->hasOption('exclude')) {
+            $result = $this->getDb()->fetchOne(
+                sprintf('SELECT COUNT(*) as count FROM %s WHERE %s = ? and %s != ?', $table, $column, $this->getOption('exclude')['column']),
+                Db::FETCH_ASSOC,
+                array($validator->getValue($attribute), $this->getOption('exclude')['value'])
+            );
+        } else {
+            $result = $this->getDb()->fetchOne(
+                sprintf('SELECT COUNT(*) as count FROM %s WHERE %s = ?', $table, $column),
+                Db::FETCH_ASSOC,
+                array($validator->getValue($attribute))
+            );
+        }
+
 
         if ($result['count']) {
             $message = $this->getOption('message');
@@ -122,4 +167,5 @@ class Uniqueness extends Validator
 
         return true;
     }
+
 }
