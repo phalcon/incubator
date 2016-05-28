@@ -211,6 +211,10 @@ class Aerospike extends Adapter implements AdapterInterface
             $sessionId = $this->getId();
         }
 
+        if (!isset($_SESSION) || !is_array($_SESSION)) {
+            $_SESSION = [];
+        }
+
         foreach ($_SESSION as $id => $key) {
             unset($_SESSION[$id]);
         }
