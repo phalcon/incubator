@@ -19,10 +19,11 @@
 
 namespace Phalcon\Session\Adapter;
 
-use Aerospike as AerospikeDb;
 use Phalcon\Session\Adapter;
-use Phalcon\Session\AdapterInterface;
 use Phalcon\Session\Exception;
+use Phalcon\Session\AdapterInterface;
+use Phalcon\Cache\Frontend\Data as FrontendData;
+use Phalcon\Cache\Backend\Aerospike as AerospikeDb;
 
 /**
  * Phalcon\Session\Adapter\Aerospike
@@ -90,7 +91,9 @@ class Aerospike extends Adapter implements AdapterInterface
      * Phalcon\Session\Adapter\Aerospike constructor
      *
      * @param array $options Constructor options
-     * @throws Exception
+     *
+     * @throws \Phalcon\Session\Exception
+     * @throws \Phalcon\Cache\Exception
      */
     public function __construct(array $options)
     {
@@ -120,13 +123,17 @@ class Aerospike extends Adapter implements AdapterInterface
             $opts = $options['options'];
         }
 
-        $this->db = new AerospikeDb(['hosts' => $options['hosts']], $persistent, $opts);
+        $this->db = new AerospikeDb(
+            new FrontendData(['lifetime' => $this->lifetime]),
+            [
+                'hosts'      => $options['hosts'],
+                'namespace'  => $this->namespace,
+                'prefix'     => $this->prefix,
+                'persistent' => $persistent,
+                'options'    => $opts,
 
-        if (!$this->db->isConnected()) {
-            throw new Exception(
-                sprintf("Aerospike failed to connect [%s]: %s", $this->db->errorno(), $this->db->error())
-            );
-        }
+            ]
+        );
 
         parent::__construct($options);
 
@@ -143,11 +150,11 @@ class Aerospike extends Adapter implements AdapterInterface
     /**
      * Gets the Aerospike instance.
      *
-     * @return AerospikeDb
+     * @return \Aerospike
      */
     public function getDb()
     {
-        return $this->db;
+        return $this->db->getDb();
     }
 
     /**
@@ -178,14 +185,7 @@ class Aerospike extends Adapter implements AdapterInterface
      */
     public function read($sessionId)
     {
-        $key = $this->buildKey($sessionId);
-        $status = $this->db->get($key, $record);
-
-        if ($status != AerospikeDb::OK) {
-            return false;
-        }
-
-        return base64_decode($record['bins']['value']);
+        return $this->db->get($sessionId, $this->lifetime);
     }
 
     /**
@@ -196,10 +196,7 @@ class Aerospike extends Adapter implements AdapterInterface
      */
     public function write($sessionId, $data)
     {
-        $key = $this->buildKey($sessionId);
-        $bins = ['value' => base64_encode($data)];
-
-        $this->db->put($key, $bins, $this->lifetime);
+        return $this->db->save($sessionId, $data, $this->lifetime);
     }
 
     /**
@@ -210,12 +207,15 @@ class Aerospike extends Adapter implements AdapterInterface
      */
     public function destroy($sessionId = null)
     {
-        $sessionId = $sessionId ?: $this->getId();
-        $key = $this->buildKey($sessionId);
+        if (null === $sessionId) {
+            $sessionId = $this->getId();
+        }
 
-        $status = $this->db->remove($key);
+        foreach ($_SESSION as $id => $key) {
+            unset($_SESSION[$id]);
+        }
 
-        return $status == AerospikeDb::OK;
+        return $this->db->delete($sessionId);
     }
 
     /**
@@ -226,20 +226,5 @@ class Aerospike extends Adapter implements AdapterInterface
     public function gc()
     {
         return true;
-    }
-
-    /**
-     * Generates a unique key used for storing session data in Aerospike DB.
-     *
-     * @param string $sessionId Session variable name
-     * @return array
-     */
-    protected function buildKey($sessionId)
-    {
-        return $this->db->initKey(
-            $this->namespace,
-            $this->set,
-            $this->prefix . $sessionId
-        );
     }
 }
