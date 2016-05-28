@@ -58,11 +58,13 @@ class Wincache extends Backend implements BackendInterface
     /**
      * {@inheritdoc}
      *
-     * @param  string                   $keyName
-     * @param  string                   $content
-     * @param  integer                  $lifetime
-     * @param  boolean                  $stopBuffer
-     * @throws \Phalcon\Cache\Exception
+     * @param  string $keyName
+     * @param  string $content
+     * @param  int    $lifetime
+     * @param  bool   $stopBuffer
+     * @return bool
+     *
+     * @throws Exception
      */
     public function save($keyName = null, $content = null, $lifetime = null, $stopBuffer = true)
     {
@@ -99,7 +101,11 @@ class Wincache extends Backend implements BackendInterface
             $ttl = $lifetime;
         }
 
-        wincache_ucache_set($lastKey, $preparedContent, $ttl);
+        $status = wincache_ucache_set($lastKey, $preparedContent, $ttl);
+
+        if (!$status) {
+            throw new Exception('Failed storing data by using wincache');
+        }
 
         $isBuffering = $frontend->isBuffering();
 
@@ -112,6 +118,8 @@ class Wincache extends Backend implements BackendInterface
         }
 
         $this->_started = false;
+
+        return $status;
     }
 
     /**

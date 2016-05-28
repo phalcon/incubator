@@ -141,6 +141,7 @@ class Aerospike extends Backend implements BackendInterface
      * @param string     $content
      * @param int        $lifetime
      * @param bool       $stopBuffer
+     * @return bool
      *
      * @throws Exception
      */
@@ -201,6 +202,8 @@ class Aerospike extends Backend implements BackendInterface
         }
 
         $this->_started = false;
+
+        return \Aerospike::OK == $status;
     }
 
     /**
