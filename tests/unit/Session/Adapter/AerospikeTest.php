@@ -43,9 +43,13 @@ class AerospikeTest extends Test
             $this->markTestSkipped(
                 'The aerospike module is not available.'
             );
-        } else {
-            $this->getModule('Aerospike')->_reconfigure(['set' => 'session']);
         }
+
+        $this->getModule('Aerospike')->_reconfigure([
+            'set'  => 'session',
+            'addr' => TEST_AS_HOST,
+            'port' => TEST_AS_PORT
+        ]);
     }
 
     /**
@@ -87,13 +91,13 @@ class AerospikeTest extends Test
             ]
         );
 
-        $session->write($sessionId, $data);
-        $this->tester->seeInAerospike($sessionId, base64_encode($data));
+        $this->assertTrue($session->write($sessionId, $data));
+        $this->tester->seeInAerospike($sessionId, $data);
     }
 
     public function testShouldReadSession()
     {
-        $sessionId = 'abcdef123458';
+        $sessionId = 'some_session_key';
         $session = new SessionHandler($this->getConfig());
 
         $data = serialize(
@@ -104,11 +108,10 @@ class AerospikeTest extends Test
             ]
         );
 
-        $this->tester->haveInAerospike($sessionId, base64_encode($data));
+        $this->tester->haveInAerospike($sessionId, $data);
         $this->keys[] = $sessionId;
 
-        $expected = $session->read($sessionId);
-        $this->assertEquals($data, $expected);
+        $this->assertEquals($data, $session->read($sessionId));
     }
 
     public function testShouldDestroySession()
