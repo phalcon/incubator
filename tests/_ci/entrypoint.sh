@@ -24,7 +24,9 @@ export PHP_EXTENSION_DIR=`php-config --extension-dir`
 echo -e "PHP extension path: ${PURPLE}${PHP_EXTENSION_DIR}${NC}\n"
 
 ln -s /ext/phalcon.so ${PHP_EXTENSION_DIR}/phalcon.so
-[[ "${TRAVIS_PHP_VERSION}" == "7" ]] || ln -s /app/tests/_ci/phalcon.ini /etc/php5/cli/conf.d/50-phalcon.ini;
+
+[[ "${TRAVIS_PHP_VERSION}" == "5.4" ]] && ln -s /app/tests/_ci/phalcon.ini /etc/php5/cli/conf.d/50-phalcon.ini;
+[[ "${TRAVIS_PHP_VERSION}" == "7" ]] || ln -s /app/tests/_ci/phalcon.ini /etc/php/${TRAVIS_PHP_VERSION}/cli/conf.d/50-phalcon.ini;
 [[ "${TRAVIS_PHP_VERSION}" != "7" ]] || ln -s /app/tests/_ci/phalcon.ini /etc/php/7.0/cli/conf.d/50-phalcon.ini;
 
 export PHALCON_VERSION=`php --ri phalcon | grep "Version =" | awk '{print $3}'`
