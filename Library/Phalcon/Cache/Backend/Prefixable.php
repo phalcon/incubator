@@ -23,6 +23,7 @@ namespace Phalcon\Cache\Backend;
  *
  * Trait for backend cache adapters with support of "prefix" option.
  *
+ * @property string _prefix
  * @package Phalcon\Cache\Backend
  */
 trait Prefixable
