@@ -32,10 +32,13 @@
     },
     "suggest": {
         "ext-aerospike": "*",
+        "sergeyklay/aerospike-php-stubs": "The most complete Aerospike PHP stubs which allows autocomplete in modern IDEs",
         "duncan3dc/fork-helper": "To use extended class to access the beanstalk queue service"
     },
     "autoload": {
-        "psr-4": { "Phalcon\\": "Library/Phalcon/" }
+        "psr-4": {
+            "Phalcon\\": "Library/Phalcon/"
+        }
     },
     "autoload-dev": {
         "psr-4": {
