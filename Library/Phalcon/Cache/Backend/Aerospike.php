@@ -97,10 +97,16 @@ class Aerospike extends Backend implements BackendInterface
 
         if (isset($options['namespace'])) {
             $this->namespace = $options['namespace'];
+            unset($options['namespace']);
         }
 
         if (isset($options['prefix'])) {
             $this->_prefix = $options['prefix'];
+        }
+
+        if (isset($options['set']) && !empty($options['set'])) {
+            $this->set = $options['set'];
+            unset($options['set']);
         }
 
         $persistent = false;

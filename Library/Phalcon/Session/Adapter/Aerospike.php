@@ -103,10 +103,16 @@ class Aerospike extends Adapter implements AdapterInterface
 
         if (isset($options['namespace'])) {
             $this->namespace = $options['namespace'];
+            unset($options['namespace']);
         }
 
         if (isset($options['prefix'])) {
             $this->prefix = $options['prefix'];
+        }
+
+        if (isset($options['set']) && !empty($options['set'])) {
+            $this->set = $options['set'];
+            unset($options['set']);
         }
 
         if (isset($options['lifetime'])) {
@@ -128,6 +134,7 @@ class Aerospike extends Adapter implements AdapterInterface
             [
                 'hosts'      => $options['hosts'],
                 'namespace'  => $this->namespace,
+                'set'        => $this->set,
                 'prefix'     => $this->prefix,
                 'persistent' => $persistent,
                 'options'    => $opts,
