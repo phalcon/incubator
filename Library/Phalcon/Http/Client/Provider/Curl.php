@@ -249,13 +249,13 @@ class Curl extends Request
     
     public function patch($uri, $params = array(), $useEncoding = true, $customHeader = array(), $fullResponse = false)
     {
-      $this->setOptions(array(
-        CURLOPT_URL           => $this->resolveUri($uri),
-        CURLOPT_POST          => true,
-        CURLOPT_CUSTOMREQUEST => 'PATCH'
-      ));
+        $this->setOptions(array(
+          CURLOPT_URL           => $this->resolveUri($uri),
+          CURLOPT_POST          => true,
+          CURLOPT_CUSTOMREQUEST => 'PATCH'
+        ));
       
-      $this->initPostFields($params, $useEncoding);
-      return $this->send($customHeader, $fullResponse);
+        $this->initPostFields($params, $useEncoding);
+        return $this->send($customHeader, $fullResponse);
     }
 }
