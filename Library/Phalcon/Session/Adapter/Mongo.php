@@ -74,6 +74,7 @@ class Mongo extends Adapter implements AdapterInterface
      */
     public function close()
     {
+        return true;
     }
 
     /**
