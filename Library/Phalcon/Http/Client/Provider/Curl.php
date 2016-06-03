@@ -56,7 +56,7 @@ class Curl extends Request
         return $request;
     }
 
-    private function initOptions()
+    protected function initOptions()
     {
         $this->setOptions(array(
             CURLOPT_RETURNTRANSFER  => true,
@@ -92,7 +92,7 @@ class Curl extends Request
         $this->setOption(CURLOPT_CONNECTTIMEOUT, $timeout);
     }
 
-    private function send($customHeader = array(), $fullResponse = false)
+    protected function send($customHeader = array(), $fullResponse = false)
     {
         if (!empty($customHeader)) {
             $header = $customHeader;
@@ -244,6 +244,18 @@ class Curl extends Request
 
         $this->initPostFields($params, $useEncoding);
 
+        return $this->send($customHeader, $fullResponse);
+    }
+    
+    public function patch($uri, $params = array(), $useEncoding = true, $customHeader = array(), $fullResponse = false)
+    {
+        $this->setOptions(array(
+          CURLOPT_URL           => $this->resolveUri($uri),
+          CURLOPT_POST          => true,
+          CURLOPT_CUSTOMREQUEST => 'PATCH'
+        ));
+      
+        $this->initPostFields($params, $useEncoding);
         return $this->send($customHeader, $fullResponse);
     }
 }
