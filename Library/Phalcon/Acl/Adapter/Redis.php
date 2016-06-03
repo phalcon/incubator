@@ -101,7 +101,7 @@ class Redis extends Adapter
      * {@inheritdoc}
      *
      * @param  string $roleName
-     * @param  string $roleToInherit
+     * @param  \Phalcon\Acl\Role|string $roleToInherit
      * @throws \Phalcon\Acl\Exception
      */
     public function addInherit($roleName, $roleToInherit)
@@ -112,6 +112,10 @@ class Redis extends Adapter
             throw new Exception(
                 sprintf("Role '%s' does not exist in the role list", $roleName)
             );
+        }
+
+        if ($roleToInherit instanceof Role) {
+            $roleToInherit = $roleToInherit->getName();
         }
 
         $this->redis->sAdd("rolesInherits:$roleName", $roleToInherit);
