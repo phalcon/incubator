@@ -82,7 +82,7 @@ class Stream extends Request
         throw new HttpException($errstr, $errno);
     }
 
-    private function send($uri)
+    protected function send($uri)
     {
         if (count($this->header) > 0) {
             $this->setOption('header', $this->header->build(Header::BUILD_FIELDS));
@@ -99,7 +99,7 @@ class Stream extends Request
         return $response;
     }
 
-    private function initPostFields($params)
+    protected function initPostFields($params)
     {
         if (!empty($params) && is_array($params)) {
             $this->header->set('Content-Type', 'application/x-www-form-urlencoded');
@@ -191,6 +191,15 @@ class Stream extends Request
     public function put($uri, $params = array())
     {
         $this->setOption('method', Method::PUT);
+
+        $this->initPostFields($params);
+
+        return $this->send($this->resolveUri($uri));
+    }
+
+    public function patch($uri, $params = array())
+    {
+        $this->setOption('method', Method::PATCH);
 
         $this->initPostFields($params);
 
