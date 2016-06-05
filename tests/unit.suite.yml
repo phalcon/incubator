@@ -1,0 +1,26 @@
+# Codeception Test Suite Configuration
+#
+# Suite for unit (internal) tests.
+
+class_name: UnitTester
+modules:
+    # enabled modules and helpers
+    enabled:
+        - Asserts
+        - Db
+        - Mockery
+        - Helper\Unit
+        - Aerospike
+    config:
+        Db:
+            dsn: 'mysql:host=localhost;dbname=incubator_tests'
+            user: 'root'
+            password: ''
+            dump: tests/_data/dump.sql
+            populate: true
+            cleanup: false
+        Aerospike:
+            addr: '127.0.0.1'
+            port: 3000
+            set: 'cache'
+            namespace: 'test'

@@ -5,46 +5,97 @@ php:
   - 5.5
   - 5.6
 
+sudo: required
+dist: precise
+group: edge
+
 services:
   - memcached
   - mysql
+  - mongodb
 
 env:
-  - TEST_BS_HOST=127.0.0.1 TEST_BS_PORT=11301
-
-cache:
-  directories:
-    - vendor
-    - $HOME/.composer/cache
-
-env:
-  - PHALCON_VERSION="2.0.8"
-  - PHALCON_VERSION="2.0.7"
-  - PHALCON_VERSION="2.0.6"
-  - PHALCON_VERSION="2.0.5"
-  - PHALCON_VERSION="2.0.4"
+  global:
+    - TEST_BT_HOST="127.0.0.1"
+    - TEST_BT_PORT="11300"
+    - TEST_MC_HOST="127.0.0.1"
+    - TEST_MC_PORT="11211"
+    - TEST_AS_HOST="127.0.0.1"
+    - TEST_AS_PORT="3000"
+    - TEST_DB_HOST="127.0.0.1"
+    - TEST_DB_PORT="3306"
+    - TEST_DB_USER="root"
+    - TEST_DB_PASSWD=""
+    - TEST_DB_NAME="incubator_tests"
+    - TEST_DB_CHARSET="utf8"
+  matrix:
+    - PHALCON_VERSION="2.0.13"
+    - PHALCON_VERSION="2.0.12"
+    - PHALCON_VERSION="2.0.11"
+    - PHALCON_VERSION="2.0.10"
+    - PHALCON_VERSION="2.0.9"
+    - PHALCON_VERSION="2.0.8"
+    - PHALCON_VERSION="2.0.7"
+    - PHALCON_VERSION="2.0.6"
+    - PHALCON_VERSION="2.0.5"
+    - PHALCON_VERSION="2.0.4"
 
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y beanstalkd
-  - sudo beanstalkd -l ${TEST_BS_HOST} -p ${TEST_BS_PORT} &
+  - phpenv config-rm xdebug.ini
+  - bash tests/_ci/setup_beanstalkd.sh
+  - beanstalkd -v
+  - beanstalkd -l ${TEST_BT_HOST} -p ${TEST_BT_PORT} & # start queue listener
+  - sleep 5
+  - cd $TRAVIS_BUILD_DIR
+  - pecl channel-update pecl.php.net
+  - (CFLAGS="-O1 -g3 -fno-strict-aliasing"; pecl install yaml < /dev/null &)
+  - phpenv config-add tests/_ci/yaml.ini
+  - pecl install mongo < /dev/null &
+  - phpenv config-add tests/_ci/mongo.ini
+  - phpenv config-add tests/_ci/memcached.ini
+  - wget -O aerospike.tgz 'http://aerospike.com/download/server/latest/artifact/ubuntu12'
+  - tar -xvf aerospike.tgz
+  - cd aerospike-server-community-*-ubuntu12*
+  - sudo ./asinstall
+  - sudo service aerospike start
+  - sudo service aerospike status
+  - sleep 5
+  - cd $TRAVIS_BUILD_DIR
 
 install:
   - composer self-update
   - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b phalcon-v${PHALCON_VERSION}
-  - (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j4 > /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null)
-  - php -r 'echo \Phalcon\Version::get()."\n";'
-  - composer install
+  - (cd cphalcon/ext; export CFLAGS="-g0 -O0 -std=gnu90"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j2 &> /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null)
+  - php --ri phalcon
+  - travis_retry composer require aerospike/aerospike-client-php "*"
+  - find vendor/aerospike/aerospike-client-php/ -name "*.sh" -exec chmod +x {} \;
+  - cd vendor/aerospike/aerospike-client-php
+  - sudo $(which composer) run-script -q post-install-cmd
+  - cd $TRAVIS_BUILD_DIR
+  - echo "extension=${TRAVIS_BUILD_DIR}/vendor/aerospike/aerospike-client-php/src/aerospike/modules/aerospike.so" | tee -a tests/_ci/aerospike.ini
+  - phpenv config-add tests/_ci/aerospike.ini
+  - php -m
+  - travis_retry composer install --prefer-source --no-interaction
 
 before_script:
+  - stty cols 160
   - mysql -e 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;'
-  - cat tests/travis/db_schema.sql | mysql incubator_tests
 
 script:
-  - php vendor/bin/phpcs --standard=PSR2 --encoding=utf-8 Library/
-  - phpunit --configuration tests/phpunit.xml.dist --coverage-clover=coverage.clover
+  - vendor/bin/phpcs --standard=PSR2 --colors --extensions=php --encoding=utf-8 Library/
+  - vendor/bin/codecept build
+  - vendor/bin/codecept run
 
-after_script:
-  - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
-  - mysql -e 'DROP DATABASE incubator_tests;'
+addons:
+  apt:
+    packages:
+      - libyaml-dev
+      - libssl-dev
+      - autoconf
+
+notifications:
+  email:
+    recipients:
+      - serghei@phalconphp.com
+    on_success: change
+    on_failure: always

@@ -3,7 +3,7 @@
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2012 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
   | with this package in the file docs/LICENSE.txt.                        |
@@ -23,6 +23,7 @@ use Phalcon\Http\Client\Provider\Exception as ProviderException;
 use Phalcon\Http\Client\Request;
 use Phalcon\Http\Client\Response;
 use Phalcon\Http\Uri;
+use Phalcon\Http\Request\Method;
 
 class Stream extends Request
 {
@@ -133,7 +134,7 @@ class Stream extends Request
         }
 
         $this->setOptions(array(
-            'method'  => 'GET',
+            'method'  => Method::GET,
             'content' => ''
         ));
 
@@ -151,7 +152,7 @@ class Stream extends Request
         }
 
         $this->setOptions(array(
-            'method'  => 'HEAD',
+            'method'  => Method::HEAD,
             'content' => ''
         ));
 
@@ -169,7 +170,7 @@ class Stream extends Request
         }
 
         $this->setOptions(array(
-            'method'  => 'DELETE',
+            'method'  => Method::DELETE,
             'content' => ''
         ));
 
@@ -180,7 +181,7 @@ class Stream extends Request
 
     public function post($uri, $params = array())
     {
-        $this->setOption('method', 'POST');
+        $this->setOption('method', Method::POST);
 
         $this->initPostFields($params);
 
@@ -189,7 +190,7 @@ class Stream extends Request
 
     public function put($uri, $params = array())
     {
-        $this->setOption('method', 'PUT');
+        $this->setOption('method', Method::PUT);
 
         $this->initPostFields($params);
 
