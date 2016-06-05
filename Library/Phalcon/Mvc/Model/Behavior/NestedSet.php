@@ -869,6 +869,8 @@ class NestedSet extends Behavior implements BehaviorInterface
     private function makeRoot($attributes, $whiteList)
     {
         $owner = $this->getOwner();
+        
+        $owner->{$this->rootAttribute} = 0;
         $owner->{$this->leftAttribute} = 1;
         $owner->{$this->rightAttribute} = 2;
         $owner->{$this->levelAttribute} = 1;

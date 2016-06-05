@@ -56,6 +56,24 @@ $logger->info('Info Message');
 // etc
 ```
 
+## UDP logger
+
+Adapter to send messages by UDP protocol to external server
+
+```php
+use Phalcon\Logger\Adapter\Udplogger as UdpLogger;
+
+$di->set('logger', function() {
+
+	$logger = new UdpLogger('errors', [
+		'url'  => $url,
+		'port' => $port
+	]);
+
+	return $logger;
+});
+```
+
 ## Multiple file logger
 
 Adapter `Phalcon\Logger\Adapter\File\Multiple` can be used to log messages to multiple files. This is similar to the core
