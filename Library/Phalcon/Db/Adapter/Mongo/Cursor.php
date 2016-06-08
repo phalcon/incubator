@@ -25,8 +25,8 @@ class Cursor extends \MongoCursor
     public function __construct(
         $collection,
         $className = 'Phalcon\Db\Adapter\Mongo\Cursor',
-        $query = array(),
-        $fields = array()
+        $query = [],
+        $fields = []
     ) {
         $ns = $collection->db->name . '.' . $collection->getName();
         parent::__construct($collection->db->conn, $ns, $query, $fields);

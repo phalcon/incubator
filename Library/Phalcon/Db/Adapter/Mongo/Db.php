@@ -39,7 +39,7 @@ class Db extends \MongoDB
         return new Collection($this, $name);
     }
 
-    public function createCollection($name, $options = array())
+    public function createCollection($name, $options = [])
     {
         parent::createCollection($name, $options);
 

@@ -167,8 +167,8 @@ class Mongo extends Adapter
      * $acl->addResource(new Phalcon\Acl\Resource('customers'), 'search');
      * $acl->addResource('customers', 'search');
      * //Add a resource  with an access list
-     * $acl->addResource(new Phalcon\Acl\Resource('customers'), array('create', 'search'));
-     * $acl->addResource('customers', array('create', 'search'));
+     * $acl->addResource(new Phalcon\Acl\Resource('customers'), ['create', 'search']);
+     * $acl->addResource('customers', ['create', 'search']);
      * </code>
      *
      * @param  \Phalcon\Acl\Resource $resource
@@ -286,7 +286,7 @@ class Mongo extends Adapter
      * //Allow access to guests to search on customers
      * $acl->allow('guests', 'customers', 'search');
      * //Allow access to guests to search or create on customers
-     * $acl->allow('guests', 'customers', array('search', 'create'));
+     * $acl->allow('guests', 'customers', ['search', 'create']);
      * //Allow access to any role to browse on products
      * $acl->allow('*', 'products', 'browse');
      * //Allow access to any role to browse on any resource
@@ -312,7 +312,7 @@ class Mongo extends Adapter
      * //Deny access to guests to search on customers
      * $acl->deny('guests', 'customers', 'search');
      * //Deny access to guests to search or create on customers
-     * $acl->deny('guests', 'customers', array('search', 'create'));
+     * $acl->deny('guests', 'customers', ['search', 'create']);
      * //Deny access to any role to browse on products
      * $acl->deny('*', 'products', 'browse');
      * //Deny access to any role to browse on any resource

@@ -36,10 +36,10 @@ abstract class Base extends MetaData implements \Phalcon\Mvc\Model\MetaDataInter
      *
      * @var array
      */
-    protected static $defaults = array(
+    protected static $defaults = [
         'lifetime' => 8600,
         'prefix'   => '',
-    );
+    ];
 
     /**
      * Backend's options.

@@ -241,7 +241,7 @@ class Extended extends Base
      */
     public function getTubes()
     {
-        $result = array();
+        $result = [];
         $lines = $this->getResponseLines('list-tubes');
 
         if (null !== $lines) {

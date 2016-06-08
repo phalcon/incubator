@@ -7,10 +7,9 @@ Usage examples of the adapters available here:
 This adapter uses a Wincache backend to store the cached content:
 
 ```php
-$di->set('modelsMetadata', function ()
-{
-    return new \Phalcon\Mvc\Model\MetaData\Wincache(array(
+$di->set('modelsMetadata', function () {
+    return new \Phalcon\Mvc\Model\MetaData\Wincache([
         'lifetime' => 8600,
-    ));
+    ]);
 });
 ```

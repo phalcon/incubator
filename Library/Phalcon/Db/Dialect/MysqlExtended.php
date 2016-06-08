@@ -60,7 +60,7 @@ class MysqlExtended extends Mysql
                         throw new \Exception('FULLTEXT_MATCH requires 2 parameters');
                     }
 
-                    $arguments = array();
+                    $arguments = [];
                     $length = count($expression["arguments"]) - 1;
                     for ($i = 0; $i < $length; $i++) {
                         $arguments[] = $this->getSqlExpression($expression["arguments"][$i]);
@@ -74,7 +74,7 @@ class MysqlExtended extends Mysql
                         throw new \Exception('FULLTEXT_MATCH requires 2 parameters');
                     }
 
-                    $arguments = array();
+                    $arguments = [];
                     $length = count($expression["arguments"]) - 1;
                     for ($i = 0; $i < $length; $i++) {
                         $arguments[] = $this->getSqlExpression($expression["arguments"][$i]);

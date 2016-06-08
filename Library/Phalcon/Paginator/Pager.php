@@ -31,7 +31,7 @@ class Pager implements \IteratorAggregate, \Countable
      *
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * Current rows limit (if provided)
@@ -55,7 +55,7 @@ class Pager implements \IteratorAggregate, \Countable
      * @param array                               $options options array
      *
      */
-    public function __construct(AdapterInterface $adapter, array $options = array())
+    public function __construct(AdapterInterface $adapter, array $options = [])
     {
         $this->paginateResult = $adapter->getPaginate();
 

@@ -66,7 +66,7 @@ class Message
      * Set the from address of this message.
      *
      * You may pass an array of addresses if this message is from multiple people.
-     * Example: array('receiver@domain.org', 'other@domain.org' => 'A name')
+     * Example: ['receiver@domain.org', 'other@domain.org' => 'A name']
      *
      * If $name is passed and the first parameter is a string, this name will be
      * associated with the address.
@@ -102,7 +102,7 @@ class Message
      * Set the reply-to address of this message.
      *
      * You may pass an array of addresses if replies will go to multiple people.
-     * Example: array('receiver@domain.org', 'other@domain.org' => 'A name')
+     * Example: ['receiver@domain.org', 'other@domain.org' => 'A name']
      *
      * If $name is passed and the first parameter is a string, this name will be
      * associated with the address.
@@ -138,7 +138,7 @@ class Message
      * Set the to addresses of this message.
      *
      * If multiple recipients will receive the message an array should be used.
-     * Example: array('receiver@domain.org', 'other@domain.org' => 'A name')
+     * Example: ['receiver@domain.org', 'other@domain.org' => 'A name']
      *
      * If $name is passed and the first parameter is a string, this name will be
      * associated with the address.
@@ -174,7 +174,7 @@ class Message
      * Set the Cc addresses of this message.
      *
      * If multiple recipients will receive the message an array should be used.
-     * Example: array('receiver@domain.org', 'other@domain.org' => 'A name')
+     * Example: ['receiver@domain.org', 'other@domain.org' => 'A name']
      *
      * If $name is passed and the first parameter is a string, this name will be
      * associated with the address.
@@ -210,7 +210,7 @@ class Message
      * Set the Bcc addresses of this message.
      *
      * If multiple recipients will receive the message an array should be used.
-     * Example: array('receiver@domain.org', 'other@domain.org' => 'A name')
+     * Example: ['receiver@domain.org', 'other@domain.org' => 'A name']
      *
      * If $name is passed and the first parameter is a string, this name will be
      * associated with the address.

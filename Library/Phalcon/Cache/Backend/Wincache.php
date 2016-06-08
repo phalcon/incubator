@@ -142,7 +142,7 @@ class Wincache extends Backend implements BackendInterface
     public function queryKeys($prefix = null)
     {
         $info    = wincache_ucache_info();
-        $entries = array();
+        $entries = [];
 
         if (!$prefix) {
             $prefix = $this->_prefix;
