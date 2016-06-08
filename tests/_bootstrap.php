@@ -38,6 +38,10 @@ defined('INCUBATOR_FIXTURES') || define('INCUBATOR_FIXTURES', $root .  '_fixture
 define('TEST_MC_HOST', getenv('TEST_MC_HOST') ?: 'memcached');
 define('TEST_MC_PORT', getenv('TEST_MC_PORT') ?: 11211);
 
+// Redis
+define('TEST_RS_HOST', getenv('TEST_RS_HOST') ?: 'redis');
+define('TEST_RS_PORT', getenv('TEST_RS_PORT') ?: 6379);
+
 // Beanstalk
 define('TEST_BT_HOST', getenv('TEST_BT_HOST') ?: 'queue');
 define('TEST_BT_PORT', getenv('TEST_BT_PORT') ?: 11300);

@@ -20,3 +20,21 @@ $di->set('annotations', function () {
     ]);
 });
 ```
+
+## Redis
+
+Stores the parsed annotations to Redis.
+This adapter uses a `Phalcon\Cache\Backend\Redis` backend to store the cached content:
+
+```php
+use Phalcon\Annotations\Adapter\Redis;
+
+$di->set('annotations', function () {
+    return new Redis([
+        'lifetime' => 8600,
+        'host'     => 'localhost',
+        'port'     => 6379,
+        'prefix'   => 'annotations_',
+    ]);
+});
+```
