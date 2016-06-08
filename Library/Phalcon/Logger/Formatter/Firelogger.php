@@ -124,7 +124,7 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
      * @param  integer                                    $order     How many logs are stored in the stack already.
      * @return mixed
      */
-    public function format($message, $type, $timestamp, $context = array(), $trace = null, $order = 0)
+    public function format($message, $type, $timestamp, $context = [], $trace = null, $order = 0)
     {
         $level = $this->getTypeString($type);
 
@@ -136,16 +136,16 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
             $message = '';
         }
 
-        $item = array(
+        $item = [
             'name'      => $this->name,
-            'args'      => array(),
+            'args'      => [],
             'level'     => $level,
             'timestamp' => $timestamp,
             'order'     => $order, // PHP is really fast, timestamp has insufficient resolution for log records ordering
             'time'      => gmdate('H:i:s', (int) $timestamp) . '.000',
             'template'  => $message,
             'message'   => $message
-        );
+        ];
 
         if ($this->style) {
             $item['style'] = $this->style;
@@ -154,11 +154,11 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
         if (isset($exception)) {
             // exception with backtrace
             $traceInfo = $this->extractTrace($exception->getTrace());
-            $item['exc_info'] = array(
+            $item['exc_info'] = [
                 $exception->getMessage(),
                 $exception->getFile(),
                 $traceInfo[0]
-            );
+            ];
             $item['exc_frames'] = $traceInfo[1];
             $item['exc_text'] = get_class($exception);
             $item['template'] = $exception->getMessage();
@@ -175,16 +175,16 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
 
             if (isset($trace)) {
                 $traceInfo = $this->extractTrace($trace);
-                $item['exc_info'] = array(
+                $item['exc_info'] = [
                     '',
                     '',
                     $traceInfo[0]
-                );
+                ];
                 $item['exc_frames'] = $traceInfo[1];
             }
 
             if (isset($richMessage)) {
-                $item['args'] = array($richMessage);
+                $item['args'] = [$richMessage];
             }
         }
 
@@ -224,7 +224,7 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
             }
 
             $var[$marker] = true;
-            $res = array();
+            $res = [];
 
             foreach ($var as $k => &$v) {
                 if ($k !== $marker) {
@@ -241,14 +241,14 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
             $arr = (array) $var;
             $arr['__class##'] = get_class($var);
 
-            static $list = array(); // detects recursions
+            static $list = []; // detects recursions
             if (in_array($var, $list, true)) {
                 return '*RECURSION*';
             }
 
             if ($level < $this->maxPickleDepth || !$this->maxPickleDepth) {
                 $list[] = $var;
-                $res = array();
+                $res = [];
 
                 foreach ($arr as $k => &$v) {
                     if ($k[0] === "\x00") {
@@ -281,11 +281,11 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
      */
     protected function extractTrace($trace)
     {
-        $t = array();
-        $f = array();
+        $t = [];
+        $f = [];
         foreach ($trace as $frame) {
             // prevent notices about invalid indices, wasn't able to google smart solution, PHP is dumb ass
-            $frame += array(
+            $frame += [
                 'file'     => null,
                 'line'     => null,
                 'class'    => null,
@@ -293,19 +293,19 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
                 'function' => null,
                 'object'   => null,
                 'args'     => null
-            );
+            ];
 
-            $t[] = array(
+            $t[] = [
                 $frame['file'],
                 $frame['line'],
                 $frame['class'] . $frame['type'] . $frame['function'],
                 $frame['object']
-            );
+            ];
 
             $f[] = $frame['args'];
         };
 
-        return array($t, $f);
+        return [$t, $f];
     }
 
     /**
@@ -330,12 +330,12 @@ class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\Fo
         }
 
         if (count($trace) == 0) {
-            return array("?", "0");
+            return ["?", "0"];
         }
 
         $file = $trace[0]['file'];
         $line = $trace[0]['line'];
 
-        return array($file, $line);
+        return [$file, $line];
     }
 }

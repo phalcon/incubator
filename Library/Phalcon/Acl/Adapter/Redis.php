@@ -129,8 +129,8 @@ class Redis extends Adapter
      * $acl->addResource(new Phalcon\Acl\Resource('customers'), 'search');
      * $acl->addResource('customers', 'search');
      * //Add a resource  with an access list
-     * $acl->addResource(new Phalcon\Acl\Resource('customers'), array('create', 'search'));
-     * $acl->addResource('customers', array('create', 'search'));
+     * $acl->addResource(new Phalcon\Acl\Resource('customers'), ['create', 'search']);
+     * $acl->addResource('customers', ['create', 'search']);
      * </code>
      *
      * @param  \Phalcon\Acl\Resource|string $resource
@@ -142,7 +142,7 @@ class Redis extends Adapter
         if (!is_object($resource)) {
             $resource = new Resource($resource, ucwords($resource) . " Resource");
         }
-        $this->redis->hMset("resources", array($resource->getName() => $resource->getDescription()));
+        $this->redis->hMset("resources", [$resource->getName() => $resource->getDescription()]);
 
         if ($accessList) {
             return $this->addResourceAccess($resource->getName(), $accessList);
@@ -207,7 +207,7 @@ class Redis extends Adapter
      */
     public function getResources()
     {
-        $resources = array();
+        $resources = [];
 
         foreach ($this->redis->hGetAll("resources") as $name => $desc) {
             $resources[] = new Resource($name, $desc);
@@ -223,7 +223,7 @@ class Redis extends Adapter
      */
     public function getRoles()
     {
-        $roles = array();
+        $roles = [];
 
         foreach ($this->redis->hGetAll("roles") as $name => $desc) {
             $roles[] = new Role($name, $desc);
@@ -258,7 +258,7 @@ class Redis extends Adapter
             $accessList = (array)$accessList;
         }
         array_unshift($accessList, "resourcesAccesses:$resource");
-        call_user_func_array(array($this->redis, 'sRem'), $accessList);
+        call_user_func_array([$this->redis, 'sRem'], $accessList);
     }
 
     /**
@@ -269,7 +269,7 @@ class Redis extends Adapter
      * //Allow access to guests to search on customers
      * $acl->allow('guests', 'customers', 'search');
      * //Allow access to guests to search or create on customers
-     * $acl->allow('guests', 'customers', array('search', 'create'));
+     * $acl->allow('guests', 'customers', ['search', 'create']);
      * //Allow access to any role to browse on products
      * $acl->allow('*', 'products', 'browse');
      * //Allow access to any role to browse on any resource
@@ -336,7 +336,7 @@ class Redis extends Adapter
      * //Deny access to guests to search on customers
      * $acl->deny('guests', 'customers', 'search');
      * //Deny access to guests to search or create on customers
-     * $acl->deny('guests', 'customers', array('search', 'create'));
+     * $acl->deny('guests', 'customers', ['search', 'create']);
      * //Deny access to any role to browse on products
      * $acl->deny('*', 'products', 'browse');
      * //Deny access to any role to browse on any resource
@@ -445,7 +445,7 @@ class Redis extends Adapter
         $accessList = "accessList:$roleName:$resourceName";
 
         // remove first if exists
-        foreach (array(1, 2) as $act) {
+        foreach ([1, 2] as $act) {
             $this->redis->sRem("$accessList:$act", $accessName);
             $this->redis->sRem("$accessList:$act", "*");
         }

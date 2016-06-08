@@ -25,7 +25,7 @@ namespace Phalcon\Db\Result;
  */
 class Serializable
 {
-    protected $data = array();
+    protected $data = [];
 
     protected $position = 0;
 

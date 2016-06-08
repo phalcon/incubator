@@ -74,7 +74,7 @@ $acl->setDefaultAction(Phalcon\Acl::DENY);
 $acl->addRole(new Phalcon\Acl\Role('Admins'));
 
 // Create the resource with its accesses
-$acl->addResource('Products', array('insert', 'update', 'delete'));
+$acl->addResource('Products', ['insert', 'update', 'delete']);
 
 // Allow Admins to insert products
 $acl->allow('Admin', 'Products', 'insert');

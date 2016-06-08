@@ -47,17 +47,17 @@ class HandlerSocket extends Adapter implements AdapterInterface
      * 'dbname' => (string) : the database name of the mysql handlersocket server
      * 'dbtable' => (string) : the table name of the mysql handlersocket server
      */
-    protected $options = array(
+    protected $options = [
         'cookie_path'   => '/',
         'cookie_domain' => '',
         'lifetime'      => 3600,
-        'server'        => array(
+        'server'        => [
             'host'    => self::DEFAULT_HOST,
             'port'    => self::DEFAULT_PORT,
             'dbname'  => self::DEFAULT_DBNAME,
             'dbtable' => self::DEFAULT_DBTABLE
-        )
-    );
+        ],
+    ];
 
     /**
      * HandlerSocket object
@@ -78,7 +78,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
      *
      * @var array
      */
-    protected $fields = array();
+    protected $fields = [];
 
     /**
      * Class constructor.
@@ -86,7 +86,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
      * @param  array                      $options associative array of options
      * @throws \Phalcon\Session\Exception
      */
-    public function __construct($options = array())
+    public function __construct($options = [])
     {
         // initialize the handlersocket database
         if (empty($options)) {
@@ -97,12 +97,12 @@ class HandlerSocket extends Adapter implements AdapterInterface
 
         //set object as the save handler
         session_set_save_handler(
-            array($this, 'open'),
-            array($this, 'close'),
-            array($this, 'read'),
-            array($this, 'write'),
-            array($this, 'destroy'),
-            array($this, 'gc')
+            [$this, 'open'],
+            [$this, 'close'],
+            [$this, 'read'],
+            [$this, 'write'],
+            [$this, 'destroy'],
+            [$this, 'gc']
         );
     }
 
@@ -122,7 +122,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
      * @param  array $options associative array of options
      * @return void
      */
-    public function start($options = array())
+    public function start($options = [])
     {
         $object = new self($options);
 
@@ -160,7 +160,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
      */
     public function read($id)
     {
-        $retval = $this->hs->executeSingle($this->hsIndex, '=', array($id), 1, 0);
+        $retval = $this->hs->executeSingle($this->hsIndex, '=', [$id], 1, 0);
 
         if (!isset($retval[0], $retval[0][2])) {
             return '';
@@ -183,13 +183,13 @@ class HandlerSocket extends Adapter implements AdapterInterface
     public function write($id, $data)
     {
         if (isset($this->fields['id']) && $this->fields['id'] != $id) {
-            $this->fields = array();
+            $this->fields = [];
         }
 
         if (empty($this->fields)) {
-            $this->hs->executeInsert($this->hsIndex, array($id, date('Y-m-d H:i:s'), $data));
+            $this->hs->executeInsert($this->hsIndex, [$id, date('Y-m-d H:i:s'), $data]);
         } else {
-            $this->hs->executeUpdate($this->hsIndex, '=', array($id), array($id, date('Y-m-d H:i:s'), $data), 1, 0);
+            $this->hs->executeUpdate($this->hsIndex, '=', [$id], [$id, date('Y-m-d H:i:s'), $data], 1, 0);
         }
 
         return true;
@@ -203,7 +203,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
      */
     public function destroy($id)
     {
-        $this->hs->executeDelete($this->hsIndex, '=', array($id), 1, 0);
+        $this->hs->executeDelete($this->hsIndex, '=', [$id], 1, 0);
 
         return true;
     }
@@ -227,7 +227,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
             ''
         );
 
-        $this->hs->executeDelete($index, '<', array($time), 1000, 0);
+        $this->hs->executeDelete($index, '<', [$time], 1000, 0);
 
         return true;
     }
@@ -241,7 +241,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
     protected function init($options)
     {
         if (empty($options['server'])) {
-            $options['server'] = array();
+            $options['server'] = [];
         }
 
         if (empty($options['server']['host'])) {

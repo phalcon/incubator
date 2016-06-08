@@ -28,7 +28,7 @@ $di->set('view', function() {
     $view->setViewsDir('../app/views/');
 
     $view->registerEngines(
-		array(".mhtml" => 'Phalcon\Mvc\View\Engine\Mustache')
+		['.mhtml' => 'Phalcon\Mvc\View\Engine\Mustache']
 	);
 
     return $view;
@@ -48,7 +48,7 @@ Twig_Autoloader::register();
 Register the adapter in the view component:
 
 ```php
-//Setting up the view component
+// Setting up the view component
 $di->set('view', function() {
 
     $view = new \Phalcon\Mvc\View();
@@ -56,7 +56,7 @@ $di->set('view', function() {
     $view->setViewsDir('../app/views/');
 
     $view->registerEngines(
-		array(".twig" => 'Phalcon\Mvc\View\Engine\Twig')
+		['.twig' => 'Phalcon\Mvc\View\Engine\Twig']
 	);
 
     return $view;
@@ -66,21 +66,27 @@ $di->set('view', function() {
 or
 
 ```php
-//Setting up the view component
+use Phalcon\Mvc\View;
+use Phalcon\Mvc\View\Engine\Twig;
+
+// Setting up the view component
 $di->set('view', function() {
 
-    $view = new \Phalcon\Mvc\View();
+    $view = new View();
 
     $view->setViewsDir('../app/views/');
 
     $view->registerEngines(
-        array(
+        [
             '.twig' => function($view, $di) {
-                //Setting up Twig Environment Options
-                $options = array('cache' => '../cache/');
-                $twig = new \Phalcon\Mvc\View\Engine\Twig($view, $di, $options);
+                // Setting up Twig Environment Options
+                $options = ['cache' => '../cache/'];
+                $twig = new Twig($view, $di, $options);
+
                 return $twig;
-            }));
+            }
+        ]
+     );
 
     return $view;
 });
@@ -89,27 +95,40 @@ $di->set('view', function() {
 You can also create your own defined functions to extend Twig parsing capabilities by passing a forth parameter to the Twig constructor that consists of an Array of Twig_SimpleFunction elements. This will allow you to extend Twig, or even override default functions, with your own.
 
 ```php
-//Setting up the view component
+use Twig_SimpleFunction;
+use Phalcon\Mvc\View;
+use Phalcon\Mvc\View\Engine\Twig;
+
+// Setting up the view component
 $di->set('view', function() {
 
-    $view = new \Phalcon\Mvc\View();
+    $view = new View();
 
     $view->setViewsDir('../app/views/');
 
     $view->registerEngines(
-        array(
+        [
             '.twig' => function($view, $di) {
-                //Setting up Twig Environment Options
-                $options = array('cache' => '../cache/');
+                // Setting up Twig Environment Options
+                $options = ['cache' => '../cache/'];
+
                 // Adding support for the native PHP chunk_split function
-                $user_functions = array(
-		            new \Twig_SimpleFunction('chunk_split', function ($string, $len = 76, $end = "\r\n") use ($di) {
-		                return chunk_split($string, $len, $end);
-		            }, $options)
-		        );
-                $twig = new \Phalcon\Mvc\View\Engine\Twig($view, $di, $options, $user_functions);
+                $user_functions = [
+                    new Twig_SimpleFunction(
+                        'chunk_split',
+                        function ($string, $len = 76, $end = "\r\n") use ($di) {
+		                    return chunk_split($string, $len, $end);
+		                },
+		                $options
+		            ),
+                ];
+
+                $twig = new Twig($view, $di, $options, $user_functions);
+
                 return $twig;
-            }));
+            }
+        ]
+    );
 
     return $view;
 });
@@ -155,15 +174,17 @@ require_once 'Smarty3/Smarty.class.php';
 Register the adapter in the view component:
 
 ```php
-//Setting up the view component
+use Phalcon\Mvc\View;
+
+// Setting up the view component
 $di->set('view', function() {
 
-    $view = new \Phalcon\Mvc\View();
+    $view = new View();
 
     $view->setViewsDir('../app/views/');
 
     $view->registerEngines(
-		array(".tpl" => 'Phalcon\Mvc\View\Engine\Smarty')
+		['.tpl' => 'Phalcon\Mvc\View\Engine\Smarty']
 	);
 
     return $view;
@@ -173,8 +194,9 @@ $di->set('view', function() {
 Smarty's equivalent to Phalcon's "setVar($key, $value)" function is "assign($key, $value, $nocache = false)" which has a third optional argument. This third argument, when set to true, marks the variable as exempt from caching. This is an essential Smarty feature that other template engines lack, being useful for pages that have portions that are often changing such as the current user who is logged in. If you want to utilize this additional argument, use the incubator SmartyView instead of View which extends View to include this functionality.
 
 ```php
-//Setting up the view component
 use Phalcon\Mvc\View\SmartyView;
+
+// Setting up the view component
 $di->set('view', function() {
 
     $view = new SmartyView();
@@ -182,7 +204,7 @@ $di->set('view', function() {
     $view->setViewsDir('../app/views/');
 
     $view->registerEngines(
-		array(".tpl" => 'Phalcon\Mvc\View\Engine\Smarty')
+		['.tpl' => 'Phalcon\Mvc\View\Engine\Smarty']
 	);
 
     return $view;
@@ -202,17 +224,21 @@ $this->view->setVar($key, $value);
 Smarty can be configured to alter its default behavior, the following example explain how to do that:
 
 ```php
+use Phalcon\Mvc\View;
+use Phalcon\Mvc\View\Engine\Smarty;
+
 $di->set('view', function() use ($config) {
 
-	$view = new \Phalcon\Mvc\View();
+	$view = new View();
 	$view->setViewsDir('../app/views/');
 
 	$view->registerEngines(
-		array('.html' => function($view, $di) {
+		[
+		    '.html' => function($view, $di) {
 
-				$smarty = new \Phalcon\Mvc\View\Engine\Smarty($view, $di);
+				$smarty = new Smarty($view, $di);
 
-				$smarty->setOptions(array(
+				$smarty->setOptions([
 					'template_dir'		=> $view->getViewsDir(),
 					'compile_dir'		=> '../app/viewscompiled',
 					'error_reporting'	=> error_reporting() ^ E_NOTICE,
@@ -223,11 +249,11 @@ $di->set('view', function() use ($config) {
 					'compile_check'		=> true,
 					'caching'			=> false,
 					'debugging'			=> true,
-				));
+				]);
 
 				return $smarty;
 			}
-		)
+		]
 	);
 
 	return $view;
