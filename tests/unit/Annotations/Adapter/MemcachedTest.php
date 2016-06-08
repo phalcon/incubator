@@ -42,6 +42,9 @@ class MemcachedTest extends Test
      */
     protected function _before()
     {
+        if (!extension_loaded('memcached')) {
+            $this->markTestSkipped('memcached extension not loaded');
+        }
     }
 
     /**
@@ -77,7 +80,6 @@ class MemcachedTest extends Test
 
     /**
      * @dataProvider providerReadWrite
-     * @requires extension memcached
      * @param string $key
      * @param mixed $data
      */
@@ -91,7 +93,6 @@ class MemcachedTest extends Test
 
     /**
      * @dataProvider providerReadWrite
-     * @requires extension memcached
      * @param string $key
      * @param mixed $data
      */
@@ -103,9 +104,6 @@ class MemcachedTest extends Test
         $this->assertEquals($data, $object->read($key));
     }
 
-    /**
-     * @requires extension memcached
-     */
     public function testShouldGetCacheBackendThroughGetter()
     {
         $object = new Memcached(['host' => TEST_MC_HOST]);
@@ -115,9 +113,6 @@ class MemcachedTest extends Test
         $this->assertInstanceOf(self::LIBMEMCACHED_CLASS, $reflectedMethod->invoke($object));
     }
 
-    /**
-     * @requires extension memcached
-     */
     public function testShouldGetCacheBackendThroughReflectionSetter()
     {
         $object = new Memcached(['host' => TEST_MC_HOST]);
@@ -133,7 +128,7 @@ class MemcachedTest extends Test
     }
 
     /**
-     * @dataProvider providerReadWrite
+     * @dataProvider providerKey
      * @param mixed $key
      */
     public function testShouldPrepareKey($key)
