@@ -1,6 +1,15 @@
 version: '2'
 
 services:
+  redis:
+    restart: always
+    image: redis:3.2
+    container_name: incubator_redis
+    expose:
+      - "6379"
+    ports:
+      - "6379:6379"
+
   mysql:
     restart: always
     image: mysql:5.7

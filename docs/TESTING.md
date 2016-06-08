@@ -37,6 +37,9 @@ docker-compose -p incubator up -d
 
 # run test
 bash tests/build.sh
+
+# run particular test
+bash tests/build.sh tests/unit/Annotations/Adapter/RedisTest.php
 ```
 
 In addition to the obvious advantage related to reduction in the number of dependencies, this approach allows you to
