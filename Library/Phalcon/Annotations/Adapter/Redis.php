@@ -42,14 +42,17 @@ use Phalcon\Cache\Frontend\Data as FrontendData;
  */
 class Redis extends Base
 {
+    /**
+     * @var BackendRedis
+     */
     protected $redis;
 
     /**
      * {@inheritdoc}
      *
-     * @param null|array $options options array
+     * @param array $options Options array
      */
-    public function __construct(array $options)
+    public function __construct(array $options = [])
     {
         if (!isset($options['host'])) {
             $options['host'] = '127.0.0.1';
@@ -74,7 +77,7 @@ class Redis extends Base
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Cache\Backend\Redis
+     * @return BackendRedis
      */
     protected function getCacheBackend()
     {
