@@ -91,20 +91,20 @@ class Memcached extends Base
     {
         if (null === $this->memcached) {
             $this->memcached = new CacheBackend(
-                new CacheFrontend(array('lifetime' => $this->options['lifetime'])),
-                array(
-                    'servers' => array(
-                        array(
+                new CacheFrontend(['lifetime' => $this->options['lifetime']]),
+                [
+                    'servers' => [
+                        [
                             'host' => $this->options['host'],
                             'port' => $this->options['port'],
                             'weight' => $this->options['weight']
-                        ),
-                    ),
-                    'client' => array(
+                        ],
+                    ],
+                    'client' => [
                         MemcachedGeneric::OPT_HASH => MemcachedGeneric::HASH_MD5,
                         MemcachedGeneric::OPT_PREFIX_KEY => $this->options['prefix']
-                    )
-                )
+                    ]
+                ]
             );
         }
 

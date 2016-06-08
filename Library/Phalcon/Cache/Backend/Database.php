@@ -147,7 +147,7 @@ class Database extends Backend implements BackendInterface
 
         // Check if the cache already exist
         $sql   = "SELECT data, lifetime FROM {$this->table} WHERE key_name = ?";
-        $cache = $this->db->fetchOne($sql, Db::FETCH_ASSOC, array($prefixedKey));
+        $cache = $this->db->fetchOne($sql, Db::FETCH_ASSOC, [$prefixedKey]);
 
         if (!$cache) {
             $status = $this->db->execute("INSERT INTO {$this->table} VALUES (?, ?, ?)", [

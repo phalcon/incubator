@@ -1,12 +1,10 @@
-Phalcon\Paginator\Pager
-=======================
+# Phalcon\Paginator\Pager
 
 Pager object is a navigation menu renderer based on doctrine1 pager object.
 
 Initialize the paginator object in the controller:
 
 ```php
-<?php
 use Phalcon\Mvc\Controller;
 use Phalcon\Paginator\Adapter\NativeArray as Paginator;
 use Phalcon\Paginator\Pager;
@@ -22,12 +20,12 @@ class IndexController extends Controller
         }
 
         $pager = new Pager(
-            new Paginator(array(
+            new Paginator([
                 'data'  => range(1, 200),
                 'limit' => 10,
                 'page'  => $currentPage,
-            )),
-            array(
+            ]),
+            [
                 // We will use Bootstrap framework styles
                 'layoutClass' => 'Phalcon\Paginator\Pager\Layout\Bootstrap',
                 // Range window will be 5 pages
@@ -37,24 +35,23 @@ class IndexController extends Controller
                 // Or something like this
                 // 'urlMask'     => sprintf(
                 //     '%s?page={%%page_number}',
-                //     $this->url->get(array(
+                //     $this->url->get([
                 //         'for'        => 'index:posts',
                 //         'controller' => 'index',
                 //         'action'     => 'index'
-                //     ))
+                //     ])
                 // ),
-            )
+            ]
         );
 
         $this->view->setVar('pager', $pager);
     }
-
 }
 ```
 
 And use it in template:
 
-```django
+```volt
 {% if pager|length() == 0 %}
     <p>Sorry nothing found</p>
 {% else %}

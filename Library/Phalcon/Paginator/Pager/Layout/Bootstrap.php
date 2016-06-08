@@ -39,7 +39,7 @@ class Bootstrap extends Layout
      * @param  array  $options
      * @return string
      */
-    public function getRendered(array $options = array())
+    public function getRendered(array $options = [])
     {
         $result = '<ul class="pagination">';
 

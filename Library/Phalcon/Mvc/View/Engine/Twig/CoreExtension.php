@@ -35,16 +35,16 @@ class CoreExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        $options = array(
+        $options = [
             'needs_environment' => true,
             'pre_escape'        => 'html',
-            'is_safe'           => array('html'),
-        );
+            'is_safe'           => ['html'],
+        ];
 
-        return array(
+        return [
             'assetsOutputCss' => new \Twig_Function_Method($this, 'functionAssetsOutputCss', $options),
             'assetsOutputJs'  => new \Twig_Function_Method($this, 'functionAssetsOutputJs', $options),
-        );
+        ];
     }
 
     /**
@@ -78,9 +78,7 @@ class CoreExtension extends \Twig_Extension
      */
     public function getTokenParsers()
     {
-        return array(
-            new TokenParsers\Assets(),
-        );
+        return [new TokenParsers\Assets()];
     }
 
     /**

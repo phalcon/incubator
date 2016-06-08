@@ -134,7 +134,7 @@ abstract class FunctionalTestCase extends ModelTestCase
     /**
      * Assert that the response headers contains the given array
      * <code>
-     * $expected = array('Content-Type' => 'application/json')
+     * $expected = ['Content-Type' => 'application/json']
      * </code>
      *
      * @param  array $expected The expected headers
