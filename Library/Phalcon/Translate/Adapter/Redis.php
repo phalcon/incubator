@@ -37,7 +37,7 @@ class Redis extends Base implements AdapterInterface
      *
      * @var array
      */
-    protected $cache = array();
+    protected $cache = [];
 
     /**
      * Class constructor.
@@ -113,7 +113,7 @@ class Redis extends Base implements AdapterInterface
         $this->loadValueByKey($key);
 
         if (!isset($this->cache[$key])) {
-            $this->cache[$key] = array();
+            $this->cache[$key] = [];
         }
 
         $this->cache[$key][$index] = $message;
