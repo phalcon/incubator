@@ -20,7 +20,7 @@ namespace Phalcon\Annotations\Adapter;
 
 use Phalcon\Cache\Backend\Libmemcached as CacheBackend;
 use Phalcon\Cache\Frontend\Data as CacheFrontend;
-use Phalcon\Mvc\Model\Exception;
+use Phalcon\Annotations\Exception;
 use Memcached as MemcachedGeneric;
 use Phalcon\Annotations\Adapter;
 
@@ -31,7 +31,15 @@ use Phalcon\Annotations\Adapter;
  * This adapter is suitable for production.
  *
  *<code>
- * $annotations = new \Phalcon\Annotations\Adapter\Memcached();
+ * use Phalcon\Annotations\Adapter\Memcached;
+ *
+ * $annotations = new Memcached([
+ *     'lifetime' => 8600,
+ *     'host'     => 'localhost',
+ *     'port'     => 11211,
+ *     'weight'   => 1,
+ *     'prefix'   => 'prefix.',
+ * ]);
  *</code>
  *
  * @package Phalcon\Annotations\Adapter
@@ -64,7 +72,7 @@ class Memcached extends Base
      *
      * @param null|array $options options array
      *
-     * @throws \Phalcon\Mvc\Model\Exception
+     * @throws \Phalcon\Annotations\Exception
      */
     public function __construct(array $options)
     {
@@ -85,6 +93,7 @@ class Memcached extends Base
 
     /**
      * {@inheritdoc}
+     *
      * @return \Phalcon\Cache\Backend\Libmemcached
      */
     protected function getCacheBackend()
