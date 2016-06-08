@@ -4,11 +4,14 @@ Usage examples of the adapters available here:
 
 ## Memcached
 
-This adapter uses a Libmemcached backend to store the cached content:
+Stores the parsed annotations to Memcached.
+This adapter uses a `Phalcon\Cache\Backend\Libmemcached` backend to store the cached content:
 
 ```php
+use Phalcon\Annotations\Adapter\Memcached;
+
 $di->set('annotations', function () {
-    return new \Phalcon\Annotations\Adapter\Memcached([
+    return new Memcached([
         'lifetime' => 8600,
         'host'     => 'localhost',
         'port'     => 11211,
