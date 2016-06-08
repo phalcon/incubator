@@ -197,7 +197,7 @@ class Stream extends Request
         return $this->send($this->resolveUri($uri));
     }
 
-    public function patch($uri, $params = array())
+    public function patch($uri, $params = [])
     {
         $this->setOption('method', Method::PATCH);
 

@@ -52,7 +52,7 @@ class MemcachedTest extends Test
     }
 
     /**
-     * @expectedException        \Phalcon\Mvc\Model\Exception
+     * @expectedException        \Phalcon\Annotations\Exception
      * @expectedExceptionMessage No host given in options
      */
     public function testShouldCatchExceptionWhenNoHostGivenInOptions()

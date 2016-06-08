@@ -247,7 +247,7 @@ class Curl extends Request
         return $this->send($customHeader, $fullResponse);
     }
 
-    public function patch($uri, $params = [], $useEncoding = true, $customHeader = array(), $fullResponse = false)
+    public function patch($uri, $params = [], $useEncoding = true, $customHeader = [], $fullResponse = false)
     {
         $this->setOptions([
             CURLOPT_URL           => $this->resolveUri($uri),

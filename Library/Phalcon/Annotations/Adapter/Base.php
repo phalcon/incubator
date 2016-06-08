@@ -22,7 +22,8 @@ use Phalcon\Annotations\Adapter;
 
 /**
  * \Phalcon\Annotations\Adapter\Base
- * Base class for \Phalcon\Annotations\Adapter\Memcached and other adapters.
+ *
+ * Base class for annotations adapters.
  *
  * @package Phalcon\Annotations\Adapter
  */
@@ -111,8 +112,7 @@ abstract class Base extends Adapter
     /**
      * Returns cache backend instance.
      *
-     * @abstract
-     * @@implements \Phalcon\Cache\BackendInterface
+     * @return \Phalcon\Cache\BackendInterface
      */
     abstract protected function getCacheBackend();
 }
