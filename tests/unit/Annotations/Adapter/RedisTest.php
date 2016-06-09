@@ -159,7 +159,6 @@ class RedisTest extends Test
         ];
     }
 
-
     public function providerConstructor()
     {
         return [
@@ -281,31 +280,6 @@ class RedisTest extends Test
                 ],
                 [
                     'host' => '127.0.0.1',
-                    'port' => TEST_RS_PORT,
-                    'lifetime' => 8600,
-                    'prefix' => '',
-                    'persistent' => false
-                ]
-            ],
-            [
-                [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
-                ],
-                [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
-                    'lifetime' => 8600,
-                    'prefix' => '',
-                    'persistent' => false
-                ]
-            ],
-            [
-                [
-                    'host' => TEST_RS_HOST,
-                ],
-                [
-                    'host' => TEST_RS_HOST,
                     'port' => TEST_RS_PORT,
                     'lifetime' => 8600,
                     'prefix' => '',
