@@ -63,16 +63,16 @@ class Memcached extends Base
     /**
      * Memcached backend instance.
      *
-     * @var \Phalcon\Cache\Backend\Libmemcached
+     * @var CacheBackend
      */
     protected $memcached = null;
 
     /**
      * {@inheritdoc}
      *
-     * @param null|array $options options array
+     * @param array $options options array
      *
-     * @throws \Phalcon\Annotations\Exception
+     * @throws Exception
      */
     public function __construct(array $options)
     {
@@ -94,7 +94,7 @@ class Memcached extends Base
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Cache\Backend\Libmemcached
+     * @return CacheBackend
      */
     protected function getCacheBackend()
     {
@@ -125,7 +125,6 @@ class Memcached extends Base
      * {@inheritdoc}
      *
      * @param string $key
-     *
      * @return string
      */
     protected function prepareKey($key)
