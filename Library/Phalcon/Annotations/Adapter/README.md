@@ -38,3 +38,28 @@ $di->set('annotations', function () {
     ]);
 });
 ```
+
+## Aerospike
+
+Stores the parsed annotations to the Aerospike database.
+This adapter uses a `Phalcon\Cache\Backend\Aerospike` backend to store the cached content:
+
+```php
+use Phalcon\Annotations\Adapter\Aerospike;
+
+$di->set('annotations', function () {
+    return new Aerospike([
+        'hosts' => [
+            ['addr' => '127.0.0.1', 'port' => 3000]
+        ],
+        'persistent' => true,
+        'namespace'  => 'test',
+        'prefix'     => 'annotations_',
+        'lifetime'   => 8600,
+        'options'    => [
+            \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
+            \Aerospike::OPT_WRITE_TIMEOUT   => 1500
+        ]
+    ]);
+});
+```
