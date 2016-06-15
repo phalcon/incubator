@@ -165,7 +165,7 @@ class Aggregate implements Executable
      */
     public function execute(Server $server)
     {
-        $isCursorSupported=Functions::server_supports_feature($server, self::$wireVersionForCursor);
+        $isCursorSupported=Functions::serverSupportsFeature($server, self::$wireVersionForCursor);
         $readPreference   =isset($this->options['readPreference'])?$this->options['readPreference']:null;
 
         $command=$this->createCommand($server, $isCursorSupported);
@@ -213,7 +213,7 @@ class Aggregate implements Executable
 
         $cmd['allowDiskUse']=$this->options['allowDiskUse'];
 
-        if (isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)) {
             $cmd['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 
@@ -221,8 +221,8 @@ class Aggregate implements Executable
             $cmd['maxTimeMS']=$this->options['maxTimeMS'];
         }
 
-        if (isset($this->options['readConcern'])&&Functions::server_supports_feature($server, self::$wireVersionForReadConcern)) {
-            $cmd['readConcern']=Functions::read_concern_as_document($this->options['readConcern']);
+        if (isset($this->options['readConcern'])&&Functions::serverSupportsFeature($server, self::$wireVersionForReadConcern)) {
+            $cmd['readConcern']=Functions::readConcernAsDocument($this->options['readConcern']);
         }
 
         if ($this->options['useCursor']) {

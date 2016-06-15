@@ -64,7 +64,7 @@ class Count implements Executable
 
         if (isset($options['hint'])) {
             if (is_array($options['hint'])||is_object($options['hint'])) {
-                $options['hint']=Functions::generate_index_name($options['hint']);
+                $options['hint']=Functions::generateIndexName($options['hint']);
             }
 
             if (!is_string($options['hint'])) {
@@ -144,8 +144,8 @@ class Count implements Executable
             }
         }
 
-        if (isset($this->options['readConcern'])&&Functions::server_supports_feature($server, self::$wireVersionForReadConcern)) {
-            $cmd['readConcern']=Functions::read_concern_as_document($this->options['readConcern']);
+        if (isset($this->options['readConcern'])&&Functions::serverSupportsFeature($server, self::$wireVersionForReadConcern)) {
+            $cmd['readConcern']=Functions::readConcernAsDocument($this->options['readConcern']);
         }
 
         return new Command($cmd);

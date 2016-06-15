@@ -99,7 +99,7 @@ class InsertMany implements Executable
     {
         $options=['ordered'=>$this->options['ordered']];
 
-        if (isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)) {
             $options['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 
@@ -112,7 +112,7 @@ class InsertMany implements Executable
             if ($insertedId!==null) {
                 $insertedIds[ $i ]=$insertedId;
             } else {
-                $insertedIds[ $i ]=Functions::extract_id_from_inserted_document($document);
+                $insertedIds[ $i ]=Functions::extractIdFromInsertedDocument($document);
             }
         }
 

@@ -25,10 +25,10 @@ class Functions
      *
      * @return mixed
      */
-    public static function extract_id_from_inserted_document($document)
+    public static function extractIdFromInsertedDocument($document)
     {
         if ($document instanceof Serializable) {
-            return self::extract_id_from_inserted_document($document->bsonSerialize());
+            return self::extractIdFromInsertedDocument($document->bsonSerialize());
         }
 
         return is_array($document)?$document['_id']:$document->_id;
@@ -45,7 +45,7 @@ class Functions
      * @return string
      * @throws InvalidArgumentException
      */
-    public static function generate_index_name($document)
+    public static function generateIndexName($document)
     {
         if (is_object($document)) {
             $document=get_object_vars($document);
@@ -76,7 +76,7 @@ class Functions
      * @return boolean
      * @throws InvalidArgumentException
      */
-    public static function is_first_key_operator($document)
+    public static function isFirstKeyOperator($document)
     {
         if (is_object($document)) {
             $document=get_object_vars($document);
@@ -103,7 +103,7 @@ class Functions
      *
      * @return boolean
      */
-    public static function is_last_pipeline_operator_out(array $pipeline)
+    public static function isLastPipelineOperatorOut(array $pipeline)
     {
         $lastOp=end($pipeline);
 
@@ -126,7 +126,7 @@ class Functions
      *
      * @return stdClass
      */
-    public static function read_concern_as_document(ReadConcern $readConcern)
+    public static function readConcernAsDocument(ReadConcern $readConcern)
     {
         $document=[];
 
@@ -147,7 +147,7 @@ class Functions
      *
      * @return boolean
      */
-    public static function server_supports_feature(Server $server, $feature)
+    public static function serverSupportsFeature(Server $server, $feature)
     {
         $info          =$server->getInfo();
         $maxWireVersion=isset($info['maxWireVersion'])?(integer)$info['maxWireVersion']:0;
@@ -156,7 +156,12 @@ class Functions
         return ($minWireVersion<=$feature&&$maxWireVersion>=$feature);
     }
 
-    public static function is_string_array($input)
+    /**
+     * @param $input
+     *
+     * @return bool
+     */
+    public static function isStringArray($input)
     {
         if (!is_array($input)) {
             return false;

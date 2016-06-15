@@ -124,7 +124,7 @@ class BulkWrite implements Executable
                     }
 
 
-                    if (Functions::is_first_key_operator($args[1])) {
+                    if (Functions::isFirstKeyOperator($args[1])) {
                         throw new InvalidArgumentException(sprintf('First key in $operations[%d]["%s"][1] is an update operator', $i, $type));
                     }
 
@@ -157,7 +157,7 @@ class BulkWrite implements Executable
                         throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
                     }
 
-                    if (!Functions::is_first_key_operator($args[1])) {
+                    if (!Functions::isFirstKeyOperator($args[1])) {
                         throw new InvalidArgumentException(sprintf('First key in $operations[%d]["%s"][1] is not an update operator', $i, $type));
                     }
 
@@ -220,7 +220,7 @@ class BulkWrite implements Executable
     {
         $options=['ordered'=>$this->options['ordered']];
 
-        if (isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)) {
             $options['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 
@@ -243,7 +243,7 @@ class BulkWrite implements Executable
                     if ($insertedId!==null) {
                         $insertedIds[ $i ]=$insertedId;
                     } else {
-                        $insertedIds[ $i ]=Functions::extract_id_from_inserted_document($args[0]);
+                        $insertedIds[ $i ]=Functions::extractIdFromInsertedDocument($args[0]);
                     }
 
                     break;

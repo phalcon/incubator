@@ -75,7 +75,7 @@ class InsertOne implements Executable
     {
         $options=[];
 
-        if (isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)) {
             $options['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 
@@ -83,7 +83,7 @@ class InsertOne implements Executable
         $insertedId=$bulk->insert($this->document);
 
         if ($insertedId===null) {
-            $insertedId=Functions::extract_id_from_inserted_document($this->document);
+            $insertedId=Functions::extractIdFromInsertedDocument($this->document);
         }
 
         $writeConcern=isset($this->options['writeConcern'])?$this->options['writeConcern']:null;

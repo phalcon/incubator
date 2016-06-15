@@ -121,8 +121,8 @@ class Distinct implements Executable
             $cmd['maxTimeMS']=$this->options['maxTimeMS'];
         }
 
-        if (isset($this->options['readConcern'])&&Functions::server_supports_feature($server, self::$wireVersionForReadConcern)) {
-            $cmd['readConcern']=Functions::read_concern_as_document($this->options['readConcern']);
+        if (isset($this->options['readConcern'])&&Functions::serverSupportsFeature($server, self::$wireVersionForReadConcern)) {
+            $cmd['readConcern']=Functions::readConcernAsDocument($this->options['readConcern']);
         }
 
         return new Command($cmd);

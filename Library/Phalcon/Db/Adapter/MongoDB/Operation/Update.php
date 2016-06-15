@@ -77,7 +77,7 @@ class Update implements Executable
             throw InvalidArgumentException::invalidType('"multi" option', $options['multi'], 'boolean');
         }
 
-        if ($options['multi']&&!Functions::is_first_key_operator($update)) {
+        if ($options['multi']&&!Functions::isFirstKeyOperator($update)) {
             throw new InvalidArgumentException('"multi" option cannot be true if $update is a replacement document');
         }
 
@@ -114,7 +114,7 @@ class Update implements Executable
 
         $bulkOptions=[];
 
-        if (isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)) {
             $bulkOptions['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 

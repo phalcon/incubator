@@ -45,7 +45,7 @@ class ReplaceOne implements Executable
             throw InvalidArgumentException::invalidType('$replacement', $replacement, 'array or object');
         }
 
-        if (Functions::is_first_key_operator($replacement)) {
+        if (Functions::isFirstKeyOperator($replacement)) {
             throw new InvalidArgumentException('First key in $replacement argument is an update operator');
         }
 
