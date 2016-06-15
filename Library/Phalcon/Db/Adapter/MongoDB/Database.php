@@ -69,13 +69,17 @@ class Database
 
         if (isset($options['readConcern'])&&!$options['readConcern'] instanceof ReadConcern) {
             throw InvalidArgumentException::invalidType(
-                '"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern'
+                '"readConcern" option',
+                $options['readConcern'],
+                'MongoDB\Driver\ReadConcern'
             );
         }
 
         if (isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference) {
             throw InvalidArgumentException::invalidType(
-                '"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference'
+                '"readPreference" option',
+                $options['readPreference'],
+                'MongoDB\Driver\ReadPreference'
             );
         }
 
@@ -85,7 +89,9 @@ class Database
 
         if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
             throw InvalidArgumentException::invalidType(
-                '"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern'
+                '"writeConcern" option',
+                $options['writeConcern'],
+                'MongoDB\Driver\WriteConcern'
             );
         }
 

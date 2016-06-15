@@ -144,7 +144,7 @@ class BulkWrite implements Executable
 
                     if (Functions::isFirstKeyOperator($args[1])) {
                         throw new InvalidArgumentException(
-                            sprintf('First key in $operations[%d]["%s"][1] is an update operator',$i, $type)
+                            sprintf('First key in $operations[%d]["%s"][1] is an update operator', $i, $type)
                         );
                     }
 
@@ -274,9 +274,10 @@ class BulkWrite implements Executable
     {
         $options=['ordered'=>$this->options['ordered']];
 
-        if (
-            isset($this->options['bypassDocumentValidation'])&&
-            Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)
+        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature(
+                $server,
+                self::$wireVersionForDocumentLevelValidation
+            )
         ) {
             $options['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }

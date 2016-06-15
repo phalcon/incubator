@@ -62,14 +62,16 @@ class Bucket
         if (isset($options['chunkSizeBytes'])&&!is_integer($options['chunkSizeBytes'])) {
             throw InvalidArgumentException::invalidType(
                 '"chunkSizeBytes" option',
-                $options['chunkSizeBytes'], 'integer'
+                $options['chunkSizeBytes'],
+                'integer'
             );
         }
 
         if (isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference) {
             throw InvalidArgumentException::invalidType(
                 '"readPreference" option',
-                $options['readPreference'], 'MongoDB\Driver\ReadPreference'
+                $options['readPreference'],
+                'MongoDB\Driver\ReadPreference'
             );
         }
 
