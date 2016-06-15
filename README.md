@@ -153,6 +153,9 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 ### Model MetaData Adapters
 * [Phalcon\Mvc\Model\MetaData\Wincache](Library/Phalcon/Mvc/Model/MetaData) - Adapter for the Wincache php extension
 
+### MVC
+* [Phalcon\Mvc\MongoCollection](Library/Phalcon/MVC/MongoCollection) - Collection class for the new MongoDB Extension (@tigerstrikemedia)
+
 ### Template Engines
 * [Phalcon\Mvc\View\Engine\Mustache](Library/Phalcon/Mvc/View/Engine) - Adapter for Mustache (@phalcon)
 * [Phalcon\Mvc\View\Engine\Twig](Library/Phalcon/Mvc/View/Engine) - Adapter for Twig (@phalcon)
@@ -190,9 +193,6 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 * [Phalcon\Validation\Validator\Decimal](Library/Phalcon/Validation/Validator) - Allows to validate if a field has a valid number in proper decimal format (negative and decimal numbers allowed) (@sergeyklay)
 * [Phalcon\Validation\Validator\MongoId](Library/Phalcon/Validation/Validator) - Validate MongoId value (@Kachit)
 * [Phalcon\Validation\Validator\PasswordStrength](Library/Phalcon/Validation/Validator) - Validates password strength (@davihu)
-
-### MVC
-* [Phalcon\Mvc\MongoCollection](Library/Phalcon/MVC/MongoCollection) - Collection class for the new MongoDB Extension (@tigerstrikemedia)
 
 ## License
 
