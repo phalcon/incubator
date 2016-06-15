@@ -532,9 +532,9 @@ class Collection
         $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         if (!isset($options['writeConcern'])&&Functions::serverSupportsFeature(
-                $server,
-                self::$wireVersionForFindAndModifyWriteConcern
-            )
+            $server,
+            self::$wireVersionForFindAndModifyWriteConcern
+        )
         ) {
             $options['writeConcern']=$this->writeConcern;
         }
@@ -570,9 +570,9 @@ class Collection
         $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         if (!isset($options['writeConcern'])&&Functions::serverSupportsFeature(
-                $server,
-                self::$wireVersionForFindAndModifyWriteConcern
-            )
+            $server,
+            self::$wireVersionForFindAndModifyWriteConcern
+        )
         ) {
             $options['writeConcern']=$this->writeConcern;
         }
@@ -608,9 +608,9 @@ class Collection
         $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         if (!isset($options['writeConcern'])&&Functions::serverSupportsFeature(
-                $server,
-                self::$wireVersionForFindAndModifyWriteConcern
-            )
+            $server,
+            self::$wireVersionForFindAndModifyWriteConcern
+        )
         ) {
             $options['writeConcern']=$this->writeConcern;
         }

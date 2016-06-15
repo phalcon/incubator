@@ -230,9 +230,9 @@ class Aggregate implements Executable
         $cmd['allowDiskUse']=$this->options['allowDiskUse'];
 
         if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature(
-                $server,
-                self::$wireVersionForDocumentLevelValidation
-            )
+            $server,
+            self::$wireVersionForDocumentLevelValidation
+        )
         ) {
             $cmd['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
@@ -242,9 +242,9 @@ class Aggregate implements Executable
         }
 
         if (isset($this->options['readConcern'])&&Functions::serverSupportsFeature(
-                $server,
-                self::$wireVersionForReadConcern
-            )
+            $server,
+            self::$wireVersionForReadConcern
+        )
         ) {
             $cmd['readConcern']=Functions::readConcernAsDocument($this->options['readConcern']);
         }

@@ -275,9 +275,9 @@ class BulkWrite implements Executable
         $options=['ordered'=>$this->options['ordered']];
 
         if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature(
-                $server,
-                self::$wireVersionForDocumentLevelValidation
-            )
+            $server,
+            self::$wireVersionForDocumentLevelValidation
+        )
         ) {
             $options['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }

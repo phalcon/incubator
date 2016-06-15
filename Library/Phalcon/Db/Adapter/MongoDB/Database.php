@@ -98,9 +98,13 @@ class Database
         $this->manager       =$manager;
         $this->databaseName  =(string)$databaseName;
         $this->readConcern   =isset($options['readConcern'])?$options['readConcern']:$this->manager->getReadConcern();
-        $this->readPreference=isset($options['readPreference'])?$options['readPreference']:$this->manager->getReadPreference();
+        $this->readPreference=isset($options['readPreference'])
+            ?$options['readPreference']
+            :$this->manager->getReadPreference();
         $this->typeMap       =isset($options['typeMap'])?$options['typeMap']:self::$defaultTypeMap;
-        $this->writeConcern  =isset($options['writeConcern'])?$options['writeConcern']:$this->manager->getWriteConcern();
+        $this->writeConcern  =isset($options['writeConcern'])
+            ?$options['writeConcern']
+            :$this->manager->getWriteConcern();
     }
 
     /**

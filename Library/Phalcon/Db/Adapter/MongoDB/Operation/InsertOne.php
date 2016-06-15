@@ -84,9 +84,9 @@ class InsertOne implements Executable
         $options=[];
 
         if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature(
-                $server,
-                self::$wireVersionForDocumentLevelValidation
-            )
+            $server,
+            self::$wireVersionForDocumentLevelValidation
+        )
         ) {
             $options['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
