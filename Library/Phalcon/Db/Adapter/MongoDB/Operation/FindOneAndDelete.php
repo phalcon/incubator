@@ -48,7 +48,11 @@ class FindOneAndDelete implements Executable
         }
 
         if (isset($options['projection'])&&!is_array($options['projection'])&&!is_object($options['projection'])) {
-            throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'array or object');
+            throw InvalidArgumentException::invalidType(
+                '"projection" option',
+                $options['projection'], 
+                'array or object'
+            );
         }
 
         if (isset($options['projection'])) {

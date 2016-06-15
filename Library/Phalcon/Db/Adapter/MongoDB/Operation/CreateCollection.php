@@ -84,8 +84,16 @@ class CreateCollection implements Executable
             throw InvalidArgumentException::invalidType('"flags" option', $options['flags'], 'integer');
         }
 
-        if (isset($options['indexOptionDefaults'])&&!is_array($options['indexOptionDefaults'])&&!is_object($options['indexOptionDefaults'])) {
-            throw InvalidArgumentException::invalidType('"indexOptionDefaults" option', $options['indexOptionDefaults'], 'array or object');
+        if (
+            isset($options['indexOptionDefaults'])&&
+            !is_array($options['indexOptionDefaults'])&&
+            !is_object($options['indexOptionDefaults'])
+        ) {
+            throw InvalidArgumentException::invalidType(
+                '"indexOptionDefaults" option',
+                $options['indexOptionDefaults'],
+                'array or object'
+            );
         }
 
         if (isset($options['max'])&&!is_integer($options['max'])) {
@@ -100,8 +108,16 @@ class CreateCollection implements Executable
             throw InvalidArgumentException::invalidType('"size" option', $options['size'], 'integer');
         }
 
-        if (isset($options['storageEngine'])&&!is_array($options['storageEngine'])&&!is_object($options['storageEngine'])) {
-            throw InvalidArgumentException::invalidType('"storageEngine" option', $options['storageEngine'], 'array or object');
+        if (
+            isset($options['storageEngine'])&&
+            !is_array($options['storageEngine'])&&
+            !is_object($options['storageEngine'])
+        ) {
+            throw InvalidArgumentException::invalidType(
+                '"storageEngine" option',
+                $options['storageEngine'],
+                'array or object'
+            );
         }
 
         if (isset($options['typeMap'])&&!is_array($options['typeMap'])) {
@@ -109,11 +125,19 @@ class CreateCollection implements Executable
         }
 
         if (isset($options['validationAction'])&&!is_string($options['validationAction'])) {
-            throw InvalidArgumentException::invalidType('"validationAction" option', $options['validationAction'], 'string');
+            throw InvalidArgumentException::invalidType(
+                '"validationAction" option',
+                $options['validationAction'],
+                'string'
+            );
         }
 
         if (isset($options['validationLevel'])&&!is_string($options['validationLevel'])) {
-            throw InvalidArgumentException::invalidType('"validationLevel" option', $options['validationLevel'], 'string');
+            throw InvalidArgumentException::invalidType(
+                '"validationLevel" option',
+                $options['validationLevel'],
+                'string'
+            );
         }
 
         if (isset($options['validator'])&&!is_array($options['validator'])&&!is_object($options['validator'])) {

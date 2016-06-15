@@ -46,7 +46,11 @@ class DatabaseCommand implements Executable
         }
 
         if (isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference) {
-            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType(
+                '"readPreference" option',
+                $options['readPreference'],
+                'MongoDB\Driver\ReadPreference'
+            );
         }
 
         if (isset($options['typeMap'])&&!is_array($options['typeMap'])) {

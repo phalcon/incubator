@@ -68,11 +68,15 @@ class Database
         }
 
         if (isset($options['readConcern'])&&!$options['readConcern'] instanceof ReadConcern) {
-            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+            throw InvalidArgumentException::invalidType(
+                '"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern'
+            );
         }
 
         if (isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference) {
-            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType(
+                '"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference'
+            );
         }
 
         if (isset($options['typeMap'])&&!is_array($options['typeMap'])) {
@@ -80,7 +84,9 @@ class Database
         }
 
         if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
-            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            throw InvalidArgumentException::invalidType(
+                '"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern'
+            );
         }
 
         $this->manager       =$manager;

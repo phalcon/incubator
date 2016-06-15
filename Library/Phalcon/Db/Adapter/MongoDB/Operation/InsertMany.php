@@ -60,7 +60,11 @@ class InsertMany implements Executable
             }
 
             if (!is_array($document)&&!is_object($document)) {
-                throw InvalidArgumentException::invalidType(sprintf('$documents[%d]', $i), $document, 'array or object');
+                throw InvalidArgumentException::invalidType(
+                    sprintf('$documents[%d]', $i),
+                    $document,
+                    'array or object'
+                );
             }
 
             $expectedIndex+=1;
@@ -69,7 +73,11 @@ class InsertMany implements Executable
         $options+=['ordered'=>true];
 
         if (isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])) {
-            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+            throw InvalidArgumentException::invalidType(
+                '"bypassDocumentValidation" option',
+                $options['bypassDocumentValidation'],
+                'boolean'
+            );
         }
 
         if (!is_bool($options['ordered'])) {
@@ -77,7 +85,11 @@ class InsertMany implements Executable
         }
 
         if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
-            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            throw InvalidArgumentException::invalidType(
+                '"writeConcern" option',
+                $options['writeConcern'],
+                'MongoDB\Driver\WriteConcern'
+            );
         }
 
         $this->databaseName  =(string)$databaseName;
@@ -99,7 +111,10 @@ class InsertMany implements Executable
     {
         $options=['ordered'=>$this->options['ordered']];
 
-        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)) {
+        if (
+            isset($this->options['bypassDocumentValidation'])&&
+            Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)
+        ) {
             $options['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 

@@ -90,11 +90,19 @@ class Collection
         }
 
         if (isset($options['readConcern'])&&!$options['readConcern'] instanceof ReadConcern) {
-            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+            throw InvalidArgumentException::invalidType(
+                '"readConcern" option',
+                $options['readConcern'],
+                'MongoDB\Driver\ReadConcern'
+            );
         }
 
         if (isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference) {
-            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType(
+                '"readPreference" option',
+                $options['readPreference'],
+                'MongoDB\Driver\ReadPreference'
+            );
         }
 
         if (isset($options['typeMap'])&&!is_array($options['typeMap'])) {
@@ -102,16 +110,25 @@ class Collection
         }
 
         if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
-            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            throw InvalidArgumentException::invalidType(
+                '"writeConcern" option',
+                $options['writeConcern'],
+                'MongoDB\Driver\WriteConcern'
+            );
         }
 
         $this->manager       =$manager;
         $this->databaseName  =(string)$databaseName;
         $this->collectionName=(string)$collectionName;
         $this->readConcern   =isset($options['readConcern'])?$options['readConcern']:$this->manager->getReadConcern();
-        $this->readPreference=isset($options['readPreference'])?$options['readPreference']:$this->manager->getReadPreference();
+        $this->readPreference=isset(
+            $options['readPreference'])
+            ?$options['readPreference']
+            :$this->manager->getReadPreference();
         $this->typeMap       =isset($options['typeMap'])?$options['typeMap']:self::$defaultTypeMap;
-        $this->writeConcern  =isset($options['writeConcern'])?$options['writeConcern']:$this->manager->getWriteConcern();
+        $this->writeConcern  =isset($options['writeConcern'])
+            ?$options['writeConcern']
+            :$this->manager->getWriteConcern();
     }
 
     /**
@@ -515,7 +532,10 @@ class Collection
     {
         $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if (!isset($options['writeConcern'])&&Functions::serverSupportsFeature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
+        if (
+            !isset($options['writeConcern'])&&
+            Functions::serverSupportsFeature($server, self::$wireVersionForFindAndModifyWriteConcern)
+        ) {
             $options['writeConcern']=$this->writeConcern;
         }
 
@@ -549,7 +569,10 @@ class Collection
     {
         $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if (!isset($options['writeConcern'])&&Functions::serverSupportsFeature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
+        if (
+            !isset($options['writeConcern'])&&
+            Functions::serverSupportsFeature($server, self::$wireVersionForFindAndModifyWriteConcern)
+        ) {
             $options['writeConcern']=$this->writeConcern;
         }
 
@@ -583,7 +606,10 @@ class Collection
     {
         $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if (!isset($options['writeConcern'])&&Functions::serverSupportsFeature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
+        if (
+            !isset($options['writeConcern'])&&
+            Functions::serverSupportsFeature($server, self::$wireVersionForFindAndModifyWriteConcern)
+        ) {
             $options['writeConcern']=$this->writeConcern;
         }
 

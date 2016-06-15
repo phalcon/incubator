@@ -96,7 +96,11 @@ class Aggregate implements Executable
             }
 
             if (!is_array($operation)&&!is_object($operation)) {
-                throw InvalidArgumentException::invalidType(sprintf('$pipeline[%d]', $i), $operation, 'array or object');
+                throw InvalidArgumentException::invalidType(
+                    sprintf('$pipeline[%d]', $i),
+                    $operation,
+                    'array or object'
+                );
             }
 
             $expectedIndex+=1;
@@ -116,7 +120,11 @@ class Aggregate implements Executable
         }
 
         if (isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])) {
-            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+            throw InvalidArgumentException::invalidType(
+                '"bypassDocumentValidation" option',
+                $options['bypassDocumentValidation'],
+                'boolean'
+            );
         }
 
         if (isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])) {
@@ -124,11 +132,19 @@ class Aggregate implements Executable
         }
 
         if (isset($options['readConcern'])&&!$options['readConcern'] instanceof ReadConcern) {
-            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+            throw InvalidArgumentException::invalidType(
+                '"readConcern" option',
+                $options['readConcern'],
+                'MongoDB\Driver\ReadConcern'
+            );
         }
 
         if (isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference) {
-            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType(
+                '"readPreference" option',
+                $options['readPreference'],
+                'MongoDB\Driver\ReadPreference'
+            );
         }
 
         if (isset($options['typeMap'])&&!is_array($options['typeMap'])) {
@@ -213,7 +229,10 @@ class Aggregate implements Executable
 
         $cmd['allowDiskUse']=$this->options['allowDiskUse'];
 
-        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)) {
+        if (
+            isset($this->options['bypassDocumentValidation'])&&
+            Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)
+        ) {
             $cmd['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 
@@ -221,7 +240,10 @@ class Aggregate implements Executable
             $cmd['maxTimeMS']=$this->options['maxTimeMS'];
         }
 
-        if (isset($this->options['readConcern'])&&Functions::serverSupportsFeature($server, self::$wireVersionForReadConcern)) {
+        if (
+            isset($this->options['readConcern'])&&
+            Functions::serverSupportsFeature($server, self::$wireVersionForReadConcern)
+        ) {
             $cmd['readConcern']=Functions::readConcernAsDocument($this->options['readConcern']);
         }
 

@@ -60,15 +60,25 @@ class Bucket
         }
 
         if (isset($options['chunkSizeBytes'])&&!is_integer($options['chunkSizeBytes'])) {
-            throw InvalidArgumentException::invalidType('"chunkSizeBytes" option', $options['chunkSizeBytes'], 'integer');
+            throw InvalidArgumentException::invalidType(
+                '"chunkSizeBytes" option',
+                $options['chunkSizeBytes'], 'integer'
+            );
         }
 
         if (isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference) {
-            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType(
+                '"readPreference" option',
+                $options['readPreference'], 'MongoDB\Driver\ReadPreference'
+            );
         }
 
         if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
-            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            throw InvalidArgumentException::invalidType(
+                '"writeConcern" option',
+                $options['writeConcern'],
+                'MongoDB\Driver\WriteConcern'
+            );
         }
 
         $this->databaseName=(string)$databaseName;
@@ -76,7 +86,12 @@ class Bucket
 
         $collectionOptions=array_intersect_key($options, ['readPreference'=>1,'writeConcern'=>1]);
 
-        $this->collectionWrapper=new CollectionWrapper($manager, $databaseName, $options['bucketName'], $collectionOptions);
+        $this->collectionWrapper=new CollectionWrapper(
+            $manager,
+            $databaseName,
+            $options['bucketName'],
+            $collectionOptions
+        );
         $this->registerStreamWrapper();
     }
 
@@ -152,7 +167,11 @@ class Bucket
         $file=$this->collectionWrapper->findFileByFilenameAndRevision($filename, $options['revision']);
 
         if ($file===null) {
-            throw FileNotFoundException::byFilenameAndRevision($filename, $options['revision'], $this->getFilesNamespace());
+            throw FileNotFoundException::byFilenameAndRevision(
+                $filename,
+                $options['revision'],
+                $this->getFilesNamespace()
+            );
         }
 
         $stream=new ReadableStream($this->collectionWrapper, $file);
@@ -263,7 +282,11 @@ class Bucket
         $file=$this->collectionWrapper->findFileByFilenameAndRevision($filename, $options['revision']);
 
         if ($file===null) {
-            throw FileNotFoundException::byFilenameAndRevision($filename, $options['revision'], $this->getFilesNamespace());
+            throw FileNotFoundException::byFilenameAndRevision(
+                $filename,
+                $options['revision'],
+                $this->getFilesNamespace()
+            );
         }
 
         return $this->openDownloadStreamByFile($file);
@@ -319,7 +342,9 @@ class Bucket
          * the write result's matched count will be most efficient, but fall
          * back to a findOne operation if necessary (i.e. legacy writes).
          */
-        $found=$updateResult->getMatchedCount()!==null?$updateResult->getMatchedCount()===1:$this->collectionWrapper->findFileById($id)!==null;
+        $found=$updateResult->getMatchedCount()!==null
+            ?$updateResult->getMatchedCount()===1
+            :$this->collectionWrapper->findFileById($id)!==null;
 
         if (!$found) {
             throw FileNotFoundException::byId($id, $this->getFilesNamespace());
@@ -365,7 +390,13 @@ class Bucket
             $id=\MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP(['_id'=>$file->_id]));
         }
 
-        return sprintf('%s://%s/%s.files/%s', self::$streamWrapperProtocol, urlencode($this->databaseName), urlencode($this->options['bucketName']), urlencode($id));
+        return sprintf(
+            '%s://%s/%s.files/%s',
+            self::$streamWrapperProtocol,
+            urlencode($this->databaseName),
+            urlencode($this->options['bucketName']),
+            urlencode($id)
+        );
     }
 
     /**
@@ -375,7 +406,12 @@ class Bucket
      */
     private function createPathForUpload()
     {
-        return sprintf('%s://%s/%s.files', self::$streamWrapperProtocol, urlencode($this->databaseName), urlencode($this->options['bucketName']));
+        return sprintf(
+            '%s://%s/%s.files',
+            self::$streamWrapperProtocol,
+            urlencode($this->databaseName),
+            urlencode($this->options['bucketName'])
+        );
     }
 
     /**

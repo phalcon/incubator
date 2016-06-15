@@ -17,7 +17,9 @@ class FileNotFoundException extends RuntimeException
      */
     public static function byFilenameAndRevision($filename, $revision, $namespace)
     {
-        return new static(sprintf('File with name "%s" and revision "%d" not found in "%s"', $filename, $revision, $namespace));
+        return new static(
+            sprintf('File with name "%s" and revision "%d" not found in "%s"', $filename, $revision, $namespace)
+        );
     }
 
     /**

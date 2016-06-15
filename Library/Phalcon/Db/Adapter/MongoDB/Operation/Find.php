@@ -94,7 +94,11 @@ class Find implements Executable
         }
 
         if (isset($options['allowPartialResults'])&&!is_bool($options['allowPartialResults'])) {
-            throw InvalidArgumentException::invalidType('"allowPartialResults" option', $options['allowPartialResults'], 'boolean');
+            throw InvalidArgumentException::invalidType(
+                '"allowPartialResults" option',
+                $options['allowPartialResults'],
+                'boolean'
+            );
         }
 
         if (isset($options['batchSize'])&&!is_integer($options['batchSize'])) {
@@ -110,7 +114,11 @@ class Find implements Executable
                 throw InvalidArgumentException::invalidType('"cursorType" option', $options['cursorType'], 'integer');
             }
 
-            if ($options['cursorType']!==self::NON_TAILABLE&&$options['cursorType']!==self::TAILABLE&&$options['cursorType']!==self::TAILABLE_AWAIT) {
+            if (
+                $options['cursorType']!==self::NON_TAILABLE&&
+                $options['cursorType']!==self::TAILABLE&&
+                $options['cursorType']!==self::TAILABLE_AWAIT
+            ) {
                 throw new InvalidArgumentException('Invalid value for "cursorType" option: '.$options['cursorType']);
             }
         }
@@ -128,7 +136,11 @@ class Find implements Executable
         }
 
         if (isset($options['noCursorTimeout'])&&!is_bool($options['noCursorTimeout'])) {
-            throw InvalidArgumentException::invalidType('"noCursorTimeout" option', $options['noCursorTimeout'], 'boolean');
+            throw InvalidArgumentException::invalidType(
+                '"noCursorTimeout" option',
+                $options['noCursorTimeout'],
+                'boolean'
+            );
         }
 
         if (isset($options['oplogReplay'])&&!is_bool($options['oplogReplay'])) {
@@ -136,15 +148,27 @@ class Find implements Executable
         }
 
         if (isset($options['projection'])&&!is_array($options['projection'])&&!is_object($options['projection'])) {
-            throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'array or object');
+            throw InvalidArgumentException::invalidType(
+                '"projection" option',
+                $options['projection'],
+                'array or object'
+            );
         }
 
         if (isset($options['readConcern'])&&!$options['readConcern'] instanceof ReadConcern) {
-            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+            throw InvalidArgumentException::invalidType(
+                '"readConcern" option',
+                $options['readConcern'],
+                'MongoDB\Driver\ReadConcern'
+            );
         }
 
         if (isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference) {
-            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType(
+                '"readPreference" option',
+                $options['readPreference'],
+                'MongoDB\Driver\ReadPreference'
+            );
         }
 
         if (isset($options['skip'])&&!is_integer($options['skip'])) {
@@ -178,7 +202,11 @@ class Find implements Executable
     {
         $readPreference=isset($this->options['readPreference'])?$this->options['readPreference']:null;
 
-        $cursor=$server->executeQuery($this->databaseName.'.'.$this->collectionName, $this->createQuery(), $readPreference);
+        $cursor=$server->executeQuery(
+            $this->databaseName.'.'.$this->collectionName,
+            $this->createQuery(),
+            $readPreference
+        );
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);

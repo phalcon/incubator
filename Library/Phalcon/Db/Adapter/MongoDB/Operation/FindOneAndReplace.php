@@ -78,15 +78,28 @@ class FindOneAndReplace implements Executable
         ];
 
         if (isset($options['projection'])&&!is_array($options['projection'])&&!is_object($options['projection'])) {
-            throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'array or object');
+            throw InvalidArgumentException::invalidType(
+                '"projection" option',
+                $options['projection'],
+                'array or object'
+            );
         }
 
         if (!is_integer($options['returnDocument'])) {
-            throw InvalidArgumentException::invalidType('"returnDocument" option', $options['returnDocument'], 'integer');
+            throw InvalidArgumentException::invalidType(
+                '"returnDocument" option',
+                $options['returnDocument'],
+                'integer'
+            );
         }
 
-        if ($options['returnDocument']!==self::RETURN_DOCUMENT_AFTER&&$options['returnDocument']!==self::RETURN_DOCUMENT_BEFORE) {
-            throw new InvalidArgumentException('Invalid value for "returnDocument" option: '.$options['returnDocument']);
+        if (
+            $options['returnDocument']!==self::RETURN_DOCUMENT_AFTER&&
+            $options['returnDocument']!==self::RETURN_DOCUMENT_BEFORE
+        ) {
+            throw new InvalidArgumentException(
+                'Invalid value for "returnDocument" option: '.$options['returnDocument']
+            );
         }
 
         if (isset($options['projection'])) {
