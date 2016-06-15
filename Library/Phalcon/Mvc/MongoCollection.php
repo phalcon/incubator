@@ -74,7 +74,6 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
      */
     public function save()
     {
-
         $dependencyInjector=$this->_dependencyInjector;
 
         if (!is_object($dependencyInjector)) {
@@ -144,8 +143,6 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
 
     public static function findById($id)
     {
-        //		var className, collection, mongoId;
-
         if (is_object($id)) {
             $classname =get_called_class();
             $collection=new $classname();
@@ -188,8 +185,6 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
     protected static function _getResultset($params, \Phalcon\Mvc\CollectionInterface $collection, $connection, $unique)
     {
         // @codingStandardsIgnoreEnd
-        //		var source, mongoCollection, conditions, base, documentsCursor,
-        //			fields, skip, limit, sort, document, collections, className;
 
         /**
          * Check if "class" clause was defined
@@ -327,8 +322,6 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
      */
     public function delete()
     {
-        //		var disableEvents, status, id, connection, source,
-        //			collection, mongoId, success, ok;
 
         if (!$id=$this->_id) {
             throw new Exception("The document cannot be deleted because it doesn't exist");
@@ -400,7 +393,6 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
     protected function _exists($collection)
     {
         // @codingStandardsIgnoreStart
-        //var id, mongoId;
 
         if (!$id=$this->_id) {
             return false;
