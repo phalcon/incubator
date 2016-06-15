@@ -159,8 +159,7 @@ class FindAndModify implements Executable
          * when an upsert is performed and the pre-modified document was
          * requested.
          */
-        if (
-            $this->options['upsert']&&
+        if ($this->options['upsert']&&
             !$this->options['new']&&
             isset($result->lastErrorObject->updatedExisting)&&
             !$result->lastErrorObject->updatedExisting
@@ -203,16 +202,18 @@ class FindAndModify implements Executable
             $cmd['maxTimeMS']=$this->options['maxTimeMS'];
         }
 
-        if (
-            isset($this->options['bypassDocumentValidation'])&&
-            Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)
+        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature(
+                $server,
+                self::$wireVersionForDocumentLevelValidation
+            )
         ) {
             $cmd['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 
-        if (
-            isset($this->options['writeConcern'])&&
-            Functions::serverSupportsFeature($server, self::$wireVersionForWriteConcern)
+        if (isset($this->options['writeConcern'])&&Functions::serverSupportsFeature(
+                $server,
+                self::$wireVersionForWriteConcern
+            )
         ) {
             $cmd['writeConcern']=$this->options['writeConcern'];
         }

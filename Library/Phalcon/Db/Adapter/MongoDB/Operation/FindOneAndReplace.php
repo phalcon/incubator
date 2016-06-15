@@ -93,8 +93,7 @@ class FindOneAndReplace implements Executable
             );
         }
 
-        if (
-            $options['returnDocument']!==self::RETURN_DOCUMENT_AFTER&&
+        if ($options['returnDocument']!==self::RETURN_DOCUMENT_AFTER&&
             $options['returnDocument']!==self::RETURN_DOCUMENT_BEFORE
         ) {
             throw new InvalidArgumentException(

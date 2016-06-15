@@ -121,8 +121,7 @@ class Collection
         $this->databaseName  =(string)$databaseName;
         $this->collectionName=(string)$collectionName;
         $this->readConcern   =isset($options['readConcern'])?$options['readConcern']:$this->manager->getReadConcern();
-        $this->readPreference=isset(
-            $options['readPreference'])
+        $this->readPreference=isset($options['readPreference'])
             ?$options['readPreference']
             :$this->manager->getReadPreference();
         $this->typeMap       =isset($options['typeMap'])?$options['typeMap']:self::$defaultTypeMap;
@@ -532,9 +531,10 @@ class Collection
     {
         $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if (
-            !isset($options['writeConcern'])&&
-            Functions::serverSupportsFeature($server, self::$wireVersionForFindAndModifyWriteConcern)
+        if (!isset($options['writeConcern'])&&Functions::serverSupportsFeature(
+                $server,
+                self::$wireVersionForFindAndModifyWriteConcern
+            )
         ) {
             $options['writeConcern']=$this->writeConcern;
         }
@@ -569,9 +569,10 @@ class Collection
     {
         $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if (
-            !isset($options['writeConcern'])&&
-            Functions::serverSupportsFeature($server, self::$wireVersionForFindAndModifyWriteConcern)
+        if (!isset($options['writeConcern'])&&Functions::serverSupportsFeature(
+                $server,
+                self::$wireVersionForFindAndModifyWriteConcern
+            )
         ) {
             $options['writeConcern']=$this->writeConcern;
         }
@@ -606,9 +607,10 @@ class Collection
     {
         $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if (
-            !isset($options['writeConcern'])&&
-            Functions::serverSupportsFeature($server, self::$wireVersionForFindAndModifyWriteConcern)
+        if (!isset($options['writeConcern'])&&Functions::serverSupportsFeature(
+                $server,
+                self::$wireVersionForFindAndModifyWriteConcern
+            )
         ) {
             $options['writeConcern']=$this->writeConcern;
         }

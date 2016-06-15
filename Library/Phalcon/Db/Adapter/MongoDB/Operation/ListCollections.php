@@ -67,9 +67,8 @@ class ListCollections implements Executable
     {
         return Functions::serverSupportsFeature(
             $server,
-            self::$wireVersionForCommand)
-            ?$this->executeCommand($server)
-            :$this->executeLegacy($server);
+            self::$wireVersionForCommand
+        )?$this->executeCommand($server):$this->executeLegacy($server);
     }
 
     /**

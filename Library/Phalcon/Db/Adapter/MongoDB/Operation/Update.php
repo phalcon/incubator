@@ -122,9 +122,10 @@ class Update implements Executable
 
         $bulkOptions=[];
 
-        if (
-            isset($this->options['bypassDocumentValidation'])&&
-            Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)
+        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature(
+                $server,
+                self::$wireVersionForDocumentLevelValidation
+            )
         ) {
             $bulkOptions['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }

@@ -111,9 +111,10 @@ class InsertMany implements Executable
     {
         $options=['ordered'=>$this->options['ordered']];
 
-        if (
-            isset($this->options['bypassDocumentValidation'])&&
-            Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)
+        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature(
+                $server,
+                self::$wireVersionForDocumentLevelValidation
+            )
         ) {
             $options['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }

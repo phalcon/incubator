@@ -84,8 +84,7 @@ class CreateCollection implements Executable
             throw InvalidArgumentException::invalidType('"flags" option', $options['flags'], 'integer');
         }
 
-        if (
-            isset($options['indexOptionDefaults'])&&
+        if (isset($options['indexOptionDefaults'])&&
             !is_array($options['indexOptionDefaults'])&&
             !is_object($options['indexOptionDefaults'])
         ) {
@@ -108,8 +107,7 @@ class CreateCollection implements Executable
             throw InvalidArgumentException::invalidType('"size" option', $options['size'], 'integer');
         }
 
-        if (
-            isset($options['storageEngine'])&&
+        if (isset($options['storageEngine'])&&
             !is_array($options['storageEngine'])&&
             !is_object($options['storageEngine'])
         ) {
