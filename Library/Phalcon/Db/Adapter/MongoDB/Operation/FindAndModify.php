@@ -78,7 +78,11 @@ class FindAndModify implements Executable
         ];
 
         if (isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])) {
-            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+            throw InvalidArgumentException::invalidType(
+                '"bypassDocumentValidation" option',
+                $options['bypassDocumentValidation'],
+                'boolean'
+            );
         }
 
         if (isset($options['fields'])&&!is_array($options['fields'])&&!is_object($options['fields'])) {
@@ -110,7 +114,11 @@ class FindAndModify implements Executable
         }
 
         if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
-            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            throw InvalidArgumentException::invalidType(
+                '"writeConcern" option',
+                $options['writeConcern'],
+                'MongoDB\Driver\WriteConcern'
+            );
         }
 
         if (!is_bool($options['upsert'])) {
@@ -118,7 +126,9 @@ class FindAndModify implements Executable
         }
 
         if (!(isset($options['update']) xor $options['remove'])) {
-            throw new InvalidArgumentException('The "remove" option must be true or an "update" document must be specified, but not both');
+            throw new InvalidArgumentException(
+                'The "remove" option must be true or an "update" document must be specified, but not both'
+            );
         }
 
         $this->databaseName  =(string)$databaseName;
@@ -149,7 +159,12 @@ class FindAndModify implements Executable
          * when an upsert is performed and the pre-modified document was
          * requested.
          */
-        if ($this->options['upsert']&&!$this->options['new']&&isset($result->lastErrorObject->updatedExisting)&&!$result->lastErrorObject->updatedExisting) {
+        if (
+            $this->options['upsert']&&
+            !$this->options['new']&&
+            isset($result->lastErrorObject->updatedExisting)&&
+            !$result->lastErrorObject->updatedExisting
+        ) {
             return null;
         }
 
@@ -188,11 +203,17 @@ class FindAndModify implements Executable
             $cmd['maxTimeMS']=$this->options['maxTimeMS'];
         }
 
-        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)) {
+        if (
+            isset($this->options['bypassDocumentValidation'])&&
+            Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)
+        ) {
             $cmd['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 
-        if (isset($this->options['writeConcern'])&&Functions::serverSupportsFeature($server, self::$wireVersionForWriteConcern)) {
+        if (
+            isset($this->options['writeConcern'])&&
+            Functions::serverSupportsFeature($server, self::$wireVersionForWriteConcern)
+        ) {
             $cmd['writeConcern']=$this->options['writeConcern'];
         }
 

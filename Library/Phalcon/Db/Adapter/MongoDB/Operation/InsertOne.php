@@ -49,11 +49,19 @@ class InsertOne implements Executable
         }
 
         if (isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])) {
-            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+            throw InvalidArgumentException::invalidType(
+                '"bypassDocumentValidation" option',
+                $options['bypassDocumentValidation'],
+                'boolean'
+            );
         }
 
         if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
-            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            throw InvalidArgumentException::invalidType(
+                '"writeConcern" option',
+                $options['writeConcern'],
+                'MongoDB\Driver\WriteConcern'
+            );
         }
 
         $this->databaseName  =(string)$databaseName;
@@ -75,7 +83,10 @@ class InsertOne implements Executable
     {
         $options=[];
 
-        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)) {
+        if (
+            isset($this->options['bypassDocumentValidation'])&&
+            Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)
+        ) {
             $options['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 

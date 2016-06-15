@@ -61,11 +61,19 @@ class Distinct implements Executable
         }
 
         if (isset($options['readConcern'])&&!$options['readConcern'] instanceof ReadConcern) {
-            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+            throw InvalidArgumentException::invalidType(
+                '"readConcern" option',
+                $options['readConcern'],
+                'MongoDB\Driver\ReadConcern'
+            );
         }
 
         if (isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference) {
-            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType(
+                '"readPreference" option',
+                $options['readPreference'],
+                'MongoDB\Driver\ReadPreference'
+            );
         }
 
         $this->databaseName  =(string)$databaseName;
@@ -121,7 +129,10 @@ class Distinct implements Executable
             $cmd['maxTimeMS']=$this->options['maxTimeMS'];
         }
 
-        if (isset($this->options['readConcern'])&&Functions::serverSupportsFeature($server, self::$wireVersionForReadConcern)) {
+        if (
+            isset($this->options['readConcern'])&&
+            Functions::serverSupportsFeature($server, self::$wireVersionForReadConcern)
+        ) {
             $cmd['readConcern']=Functions::readConcernAsDocument($this->options['readConcern']);
         }
 

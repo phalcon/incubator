@@ -39,7 +39,11 @@ class IndexInput implements Serializable
 
         foreach ($index['key'] as $fieldName => $order) {
             if (!is_int($order)&&!is_float($order)&&!is_string($order)) {
-                throw InvalidArgumentException::invalidType(sprintf('order value for "%s" field within "key" option', $fieldName), $order, 'numeric or string');
+                throw InvalidArgumentException::invalidType(
+                    sprintf('order value for "%s" field within "key" option', $fieldName),
+                    $order,
+                    'numeric or string'
+                );
             }
         }
 

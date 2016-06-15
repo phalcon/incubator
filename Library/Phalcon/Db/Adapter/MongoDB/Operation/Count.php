@@ -68,7 +68,11 @@ class Count implements Executable
             }
 
             if (!is_string($options['hint'])) {
-                throw InvalidArgumentException::invalidType('"hint" option', $options['hint'], 'string or array or object');
+                throw InvalidArgumentException::invalidType(
+                    '"hint" option',
+                    $options['hint'],
+                    'string or array or object'
+                );
             }
         }
 
@@ -81,11 +85,19 @@ class Count implements Executable
         }
 
         if (isset($options['readConcern'])&&!$options['readConcern'] instanceof ReadConcern) {
-            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+            throw InvalidArgumentException::invalidType(
+                '"readConcern" option',
+                $options['readConcern'],
+                'MongoDB\Driver\ReadConcern'
+            );
         }
 
         if (isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference) {
-            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType(
+                '"readPreference" option',
+                $options['readPreference'],
+                'MongoDB\Driver\ReadPreference'
+            );
         }
 
         if (isset($options['skip'])&&!is_integer($options['skip'])) {
@@ -144,7 +156,10 @@ class Count implements Executable
             }
         }
 
-        if (isset($this->options['readConcern'])&&Functions::serverSupportsFeature($server, self::$wireVersionForReadConcern)) {
+        if (
+            isset($this->options['readConcern'])&&
+            Functions::serverSupportsFeature($server, self::$wireVersionForReadConcern)
+        ) {
             $cmd['readConcern']=Functions::readConcernAsDocument($this->options['readConcern']);
         }
 

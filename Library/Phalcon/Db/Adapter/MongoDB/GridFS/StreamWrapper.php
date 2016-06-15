@@ -197,7 +197,10 @@ class StreamWrapper
     {
         $context=stream_context_get_options($this->context);
 
-        $this->stream=new ReadableStream($context[ $this->protocol ]['collectionWrapper'], $context[ $this->protocol ]['file']);
+        $this->stream=new ReadableStream(
+            $context[ $this->protocol ]['collectionWrapper'],
+            $context[ $this->protocol ]['file']
+        );
 
         return true;
     }
@@ -212,7 +215,11 @@ class StreamWrapper
     {
         $context=stream_context_get_options($this->context);
 
-        $this->stream=new WritableStream($context[ $this->protocol ]['collectionWrapper'], $context[ $this->protocol ]['filename'], $context[ $this->protocol ]['options']);
+        $this->stream=new WritableStream(
+            $context[ $this->protocol ]['collectionWrapper'],
+            $context[ $this->protocol ]['filename'],
+            $context[ $this->protocol ]['options']
+        );
 
         return true;
     }

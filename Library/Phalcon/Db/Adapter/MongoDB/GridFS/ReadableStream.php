@@ -79,7 +79,11 @@ class ReadableStream
             $output.=substr($this->chunksIterator->current()->data->getData(), 0, $bytesLeft);
         }
 
-        if (!$this->iteratorEmpty&&$this->file->length>0&&$bytesLeft<strlen($this->chunksIterator->current()->data->getData())) {
+        if (!
+            $this->iteratorEmpty &&
+            $this->file->length > 0 &&
+            $bytesLeft < strlen($this->chunksIterator->current()->data->getData())
+        ) {
             fwrite($this->buffer, substr($this->chunksIterator->current()->data->getData(), $bytesLeft));
             $this->bufferEmpty=false;
         }
@@ -151,7 +155,9 @@ class ReadableStream
 
         $actualChunkSize=strlen($this->chunksIterator->current()->data->getData());
 
-        $expectedChunkSize=($this->chunkOffset==$this->numChunks-1)?($this->file->length-$this->bytesSeen):$this->file->chunkSize;
+        $expectedChunkSize=($this->chunkOffset==$this->numChunks-1)
+            ?($this->file->length-$this->bytesSeen)
+            :$this->file->chunkSize;
 
         if ($actualChunkSize!=$expectedChunkSize) {
             throw CorruptFileException::unexpectedSize($actualChunkSize, $expectedChunkSize);

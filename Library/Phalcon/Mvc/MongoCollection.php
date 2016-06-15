@@ -76,7 +76,9 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
         $dependencyInjector=$this->_dependencyInjector;
 
         if (!is_object($dependencyInjector)) {
-            throw new Exception("A dependency injector container is required to obtain the services related to the ORM");
+            throw new Exception(
+                "A dependency injector container is required to obtain the services related to the ORM"
+            );
         }
 
         $source=$this->getSource();
@@ -195,7 +197,10 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
             $base=new $classname();
 
             if (!$base instanceof CollectionInterface||$base instanceof Document) {
-                throw new Exception("Object of class '".$classname."' must be an implementation of Phalcon\\Mvc\\CollectionInterface or an instance of Phalcon\\Mvc\\Collection\\Document");
+                throw new Exception(
+                    "Object of class '".$classname."' must be an implementation of 
+                    Phalcon\\Mvc\\CollectionInterface or an instance of Phalcon\\Mvc\\Collection\\Document"
+                );
             }
         } else {
             $base=$collection;
