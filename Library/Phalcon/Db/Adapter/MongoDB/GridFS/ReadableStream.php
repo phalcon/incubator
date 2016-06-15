@@ -3,6 +3,7 @@
 namespace Phalcon\Db\Adapter\MongoDB\GridFS;
 
 use MongoDB\Driver\Exception\Exception;
+use Phalcon\Db\Adapter\MongoDB\Exception\InvalidArgumentException;
 use Phalcon\Db\Adapter\MongoDB\GridFS\Exception\CorruptFileException;
 use stdClass;
 

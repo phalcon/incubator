@@ -41,7 +41,9 @@ use Phalcon\Mvc\Collection as PhalconCollection;
 abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSON\Unserializable
 {
 
+    // @codingStandardsIgnoreStart
     static protected $_disableEvents;
+    // @codingStandardsIgnoreEnd
 
     /**
      * Sets a value for the _id property, creates a MongoId object if needed
@@ -174,17 +176,18 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
     }
 
     /**
-     * Returns a collection resultset
-     *
-     * @param array params
-     * @param \Phalcon\Mvc\Collection collection
-     * @param \MongoDb                connection
-     * @param boolean unique
+     * @param array               $params
+     * @param CollectionInterface $collection
+     * @param \MongoDb            $connection
+     * @param bool                $unique
      *
      * @return array
+     * @throws Exception
      */
+    // @codingStandardsIgnoreStart
     protected static function _getResultset($params, \Phalcon\Mvc\CollectionInterface $collection, $connection, $unique)
     {
+        // @codingStandardsIgnoreEnd
         //		var source, mongoCollection, conditions, base, documentsCursor,
         //			fields, skip, limit, sort, document, collections, className;
 
@@ -393,8 +396,10 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
      *
      * @return boolean
      */
+    // @codingStandardsIgnoreStart
     protected function _exists($collection)
     {
+        // @codingStandardsIgnoreStart
         //var id, mongoId;
 
         if (!$id=$this->_id) {

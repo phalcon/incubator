@@ -44,8 +44,10 @@ class StreamWrapper
      *
      * @see http://php.net/manual/en/streamwrapper.stream-close.php
      */
+    // @codingStandardsIgnoreStart
     public function stream_close()
     {
+        // @codingStandardsIgnoreEnd
         $this->stream->close();
     }
 
@@ -55,8 +57,10 @@ class StreamWrapper
      * @see http://php.net/manual/en/streamwrapper.stream-eof.php
      * @return boolean
      */
+    // @codingStandardsIgnoreStart
     public function stream_eof()
     {
+        // @codingStandardsIgnoreEnd
         return $this->stream->isEOF();
     }
 
@@ -70,8 +74,10 @@ class StreamWrapper
      * @param integer $options Additional flags set by the streams API
      * @param string  $openedPath Not used
      */
+    // @codingStandardsIgnoreStart
     public function stream_open($path, $mode, $options, &$openedPath)
     {
+        // @codingStandardsIgnoreEnd
         $this->initProtocol($path);
         $this->mode=$mode;
 
@@ -98,8 +104,10 @@ class StreamWrapper
      *
      * @return string
      */
+    // @codingStandardsIgnoreStart
     public function stream_read($count)
     {
+        // @codingStandardsIgnoreEnd
         // TODO: Ensure that $this->stream is a ReadableStream
         return $this->stream->downloadNumBytes($count);
     }
@@ -110,8 +118,10 @@ class StreamWrapper
      * @see http://php.net/manual/en/streamwrapper.stream-stat.php
      * @return array
      */
+    // @codingStandardsIgnoreStart
     public function stream_stat()
     {
+        // @codingStandardsIgnoreEnd
         $stat=$this->getStatTemplate();
 
         $stat[2]=$stat['mode']=$this->mode;
@@ -129,8 +139,10 @@ class StreamWrapper
      *
      * @return integer The number of bytes successfully stored
      */
+    // @codingStandardsIgnoreStart
     public function stream_write($data)
     {
+        // @codingStandardsIgnoreEnd
         // TODO: Ensure that $this->stream is a WritableStream
         $this->stream->insertChunks($data);
 
