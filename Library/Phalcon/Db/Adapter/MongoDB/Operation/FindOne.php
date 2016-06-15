@@ -58,9 +58,9 @@ class FindOne implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,$filter,array $options=[])
+    public function __construct($databaseName, $collectionName, $filter, array $options = [])
     {
-        $this->find=new Find($databaseName,$collectionName,$filter,['limit'=>1]+$options);
+        $this->find=new Find($databaseName, $collectionName, $filter, ['limit'=>1]+$options);
 
         $this->options=$options;
     }

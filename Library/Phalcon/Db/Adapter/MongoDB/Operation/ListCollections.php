@@ -40,14 +40,14 @@ class ListCollections implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,array $options=[])
+    public function __construct($databaseName, array $options = [])
     {
-        if(isset($options['filter'])&&!is_array($options['filter'])&&!is_object($options['filter'])){
-            throw InvalidArgumentException::invalidType('"filter" option',$options['filter'],'array or object');
+        if (isset($options['filter'])&&!is_array($options['filter'])&&!is_object($options['filter'])) {
+            throw InvalidArgumentException::invalidType('"filter" option', $options['filter'], 'array or object');
         }
 
-        if(isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])){
-            throw InvalidArgumentException::invalidType('"maxTimeMS" option',$options['maxTimeMS'],'integer');
+        if (isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
         $this->databaseName=(string)$databaseName;
@@ -65,7 +65,7 @@ class ListCollections implements Executable
      */
     public function execute(Server $server)
     {
-        return Functions::server_supports_feature($server,self::$wireVersionForCommand)?$this->executeCommand($server):$this->executeLegacy($server);
+        return Functions::server_supports_feature($server, self::$wireVersionForCommand)?$this->executeCommand($server):$this->executeLegacy($server);
     }
 
     /**
@@ -80,15 +80,15 @@ class ListCollections implements Executable
     {
         $cmd=['listCollections'=>1];
 
-        if(!empty($this->options['filter'])){
+        if (!empty($this->options['filter'])) {
             $cmd['filter']=(object)$this->options['filter'];
         }
 
-        if(isset($this->options['maxTimeMS'])){
+        if (isset($this->options['maxTimeMS'])) {
             $cmd['maxTimeMS']=$this->options['maxTimeMS'];
         }
 
-        $cursor=$server->executeCommand($this->databaseName,new Command($cmd));
+        $cursor=$server->executeCommand($this->databaseName, new Command($cmd));
         $cursor->setTypeMap(['root'=>'array','document'=>'array']);
 
         return new CollectionInfoCommandIterator($cursor);
@@ -107,9 +107,9 @@ class ListCollections implements Executable
     {
         $filter=empty($this->options['filter'])?[]:(array)$this->options['filter'];
 
-        if(array_key_exists('name',$filter)){
-            if(!is_string($filter['name'])){
-                throw InvalidArgumentException::invalidType('filter name for MongoDB <3.0',$filter['name'],'string');
+        if (array_key_exists('name', $filter)) {
+            if (!is_string($filter['name'])) {
+                throw InvalidArgumentException::invalidType('filter name for MongoDB <3.0', $filter['name'], 'string');
             }
 
             $filter['name']=$this->databaseName.'.'.$filter['name'];
@@ -117,7 +117,7 @@ class ListCollections implements Executable
 
         $options=isset($this->options['maxTimeMS'])?['modifiers'=>['$maxTimeMS'=>$this->options['maxTimeMS']]]:[];
 
-        $cursor=$server->executeQuery($this->databaseName.'.system.namespaces',new Query($filter,$options));
+        $cursor=$server->executeQuery($this->databaseName.'.system.namespaces', new Query($filter, $options));
         $cursor->setTypeMap(['root'=>'array','document'=>'array']);
 
         return new CollectionInfoLegacyIterator($cursor);

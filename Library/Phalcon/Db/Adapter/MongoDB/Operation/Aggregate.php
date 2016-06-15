@@ -82,21 +82,21 @@ class Aggregate implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,array $pipeline,array $options=[])
+    public function __construct($databaseName, $collectionName, array $pipeline, array $options = [])
     {
-        if(empty($pipeline)){
+        if (empty($pipeline)) {
             throw new InvalidArgumentException('$pipeline is empty');
         }
 
         $expectedIndex=0;
 
-        foreach($pipeline as $i=>$operation){
-            if($i!==$expectedIndex){
-                throw new InvalidArgumentException(sprintf('$pipeline is not a list (unexpected index: "%s")',$i));
+        foreach ($pipeline as $i => $operation) {
+            if ($i!==$expectedIndex) {
+                throw new InvalidArgumentException(sprintf('$pipeline is not a list (unexpected index: "%s")', $i));
             }
 
-            if(!is_array($operation)&&!is_object($operation)){
-                throw InvalidArgumentException::invalidType(sprintf('$pipeline[%d]',$i),$operation,'array or object');
+            if (!is_array($operation)&&!is_object($operation)) {
+                throw InvalidArgumentException::invalidType(sprintf('$pipeline[%d]', $i), $operation, 'array or object');
             }
 
             $expectedIndex+=1;
@@ -107,43 +107,43 @@ class Aggregate implements Executable
             'useCursor'   =>true,
         ];
 
-        if(!is_bool($options['allowDiskUse'])){
-            throw InvalidArgumentException::invalidType('"allowDiskUse" option',$options['allowDiskUse'],'boolean');
+        if (!is_bool($options['allowDiskUse'])) {
+            throw InvalidArgumentException::invalidType('"allowDiskUse" option', $options['allowDiskUse'], 'boolean');
         }
 
-        if(isset($options['batchSize'])&&!is_integer($options['batchSize'])){
-            throw InvalidArgumentException::invalidType('"batchSize" option',$options['batchSize'],'integer');
+        if (isset($options['batchSize'])&&!is_integer($options['batchSize'])) {
+            throw InvalidArgumentException::invalidType('"batchSize" option', $options['batchSize'], 'integer');
         }
 
-        if(isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])){
-            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option',$options['bypassDocumentValidation'],'boolean');
+        if (isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])) {
+            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
-        if(isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])){
-            throw InvalidArgumentException::invalidType('"maxTimeMS" option',$options['maxTimeMS'],'integer');
+        if (isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
-        if(isset($options['readConcern'])&&!$options['readConcern'] instanceof ReadConcern){
-            throw InvalidArgumentException::invalidType('"readConcern" option',$options['readConcern'],'MongoDB\Driver\ReadConcern');
+        if (isset($options['readConcern'])&&!$options['readConcern'] instanceof ReadConcern) {
+            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
         }
 
-        if(isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference){
-            throw InvalidArgumentException::invalidType('"readPreference" option',$options['readPreference'],'MongoDB\Driver\ReadPreference');
+        if (isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference) {
+            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
-        if(isset($options['typeMap'])&&!is_array($options['typeMap'])){
-            throw InvalidArgumentException::invalidType('"typeMap" option',$options['typeMap'],'array');
+        if (isset($options['typeMap'])&&!is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
-        if(!is_bool($options['useCursor'])){
-            throw InvalidArgumentException::invalidType('"useCursor" option',$options['useCursor'],'boolean');
+        if (!is_bool($options['useCursor'])) {
+            throw InvalidArgumentException::invalidType('"useCursor" option', $options['useCursor'], 'boolean');
         }
 
-        if(isset($options['batchSize'])&&!$options['useCursor']){
+        if (isset($options['batchSize'])&&!$options['useCursor']) {
             throw new InvalidArgumentException('"batchSize" option should not be used if "useCursor" is false');
         }
 
-        if(isset($options['typeMap'])&&!$options['useCursor']){
+        if (isset($options['typeMap'])&&!$options['useCursor']) {
             throw new InvalidArgumentException('"typeMap" option should not be used if "useCursor" is false');
         }
 
@@ -165,17 +165,17 @@ class Aggregate implements Executable
      */
     public function execute(Server $server)
     {
-        $isCursorSupported=Functions::server_supports_feature($server,self::$wireVersionForCursor);
+        $isCursorSupported=Functions::server_supports_feature($server, self::$wireVersionForCursor);
         $readPreference   =isset($this->options['readPreference'])?$this->options['readPreference']:null;
 
-        $command=$this->createCommand($server,$isCursorSupported);
-        $cursor =$server->executeCommand($this->databaseName,$command,$readPreference);
+        $command=$this->createCommand($server, $isCursorSupported);
+        $cursor =$server->executeCommand($this->databaseName, $command, $readPreference);
 
-        if($isCursorSupported&&$this->options['useCursor']){
+        if ($isCursorSupported&&$this->options['useCursor']) {
             /* The type map can only be applied to command cursors until
              * https://jira.mongodb.org/browse/PHPC-314 is implemented.
              */
-            if(isset($this->options['typeMap'])){
+            if (isset($this->options['typeMap'])) {
                 $cursor->setTypeMap($this->options['typeMap']);
             }
 
@@ -184,7 +184,7 @@ class Aggregate implements Executable
 
         $result=current($cursor->toArray());
 
-        if(!isset($result->result)||!is_array($result->result)){
+        if (!isset($result->result)||!is_array($result->result)) {
             throw new UnexpectedValueException('aggregate command did not return a "result" array');
         }
 
@@ -199,7 +199,7 @@ class Aggregate implements Executable
      *
      * @return Command
      */
-    private function createCommand(Server $server,$isCursorSupported)
+    private function createCommand(Server $server, $isCursorSupported)
     {
         $cmd=[
             'aggregate'=>$this->collectionName,
@@ -207,25 +207,25 @@ class Aggregate implements Executable
         ];
 
         // Servers < 2.6 do not support any command options
-        if(!$isCursorSupported){
+        if (!$isCursorSupported) {
             return new Command($cmd);
         }
 
         $cmd['allowDiskUse']=$this->options['allowDiskUse'];
 
-        if(isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server,self::$wireVersionForDocumentLevelValidation)){
+        if (isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
             $cmd['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 
-        if(isset($this->options['maxTimeMS'])){
+        if (isset($this->options['maxTimeMS'])) {
             $cmd['maxTimeMS']=$this->options['maxTimeMS'];
         }
 
-        if(isset($this->options['readConcern'])&&Functions::server_supports_feature($server,self::$wireVersionForReadConcern)){
+        if (isset($this->options['readConcern'])&&Functions::server_supports_feature($server, self::$wireVersionForReadConcern)) {
             $cmd['readConcern']=Functions::read_concern_as_document($this->options['readConcern']);
         }
 
-        if($this->options['useCursor']){
+        if ($this->options['useCursor']) {
             $cmd['cursor']=isset($this->options["batchSize"])?['batchSize'=>$this->options["batchSize"]]:new stdClass;
         }
 

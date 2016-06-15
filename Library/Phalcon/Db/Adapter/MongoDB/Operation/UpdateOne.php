@@ -39,17 +39,17 @@ class UpdateOne implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,$filter,$update,array $options=[])
+    public function __construct($databaseName, $collectionName, $filter, $update, array $options = [])
     {
-        if(!is_array($update)&&!is_object($update)){
-            throw InvalidArgumentException::invalidType('$update',$update,'array or object');
+        if (!is_array($update)&&!is_object($update)) {
+            throw InvalidArgumentException::invalidType('$update', $update, 'array or object');
         }
 
-        if(!Functions::is_first_key_operator($update)){
+        if (!Functions::is_first_key_operator($update)) {
             throw new InvalidArgumentException('First key in $update argument is not an update operator');
         }
 
-        $this->update=new Update($databaseName,$collectionName,$filter,$update,['multi'=>false]+$options);
+        $this->update=new Update($databaseName, $collectionName, $filter, $update, ['multi'=>false]+$options);
     }
 
     /**

@@ -39,18 +39,18 @@ class DatabaseCommand implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$command,array $options=[])
+    public function __construct($databaseName, $command, array $options = [])
     {
-        if(!is_array($command)&&!is_object($command)){
-            throw InvalidArgumentException::invalidType('$command',$command,'array or object');
+        if (!is_array($command)&&!is_object($command)) {
+            throw InvalidArgumentException::invalidType('$command', $command, 'array or object');
         }
 
-        if(isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference){
-            throw InvalidArgumentException::invalidType('"readPreference" option',$options['readPreference'],'MongoDB\Driver\ReadPreference');
+        if (isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference) {
+            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
-        if(isset($options['typeMap'])&&!is_array($options['typeMap'])){
-            throw InvalidArgumentException::invalidType('"typeMap" option',$options['typeMap'],'array');
+        if (isset($options['typeMap'])&&!is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
         $this->databaseName=(string)$databaseName;
@@ -71,9 +71,9 @@ class DatabaseCommand implements Executable
     {
         $readPreference=isset($this->options['readPreference'])?$this->options['readPreference']:null;
 
-        $cursor=$server->executeCommand($this->databaseName,$this->command,$readPreference);
+        $cursor=$server->executeCommand($this->databaseName, $this->command, $readPreference);
 
-        if(isset($this->options['typeMap'])){
+        if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
         }
 

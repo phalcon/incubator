@@ -33,10 +33,10 @@ class CollectionWrapper
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(Manager $manager,$databaseName,$bucketName,array $collectionOptions=[])
+    public function __construct(Manager $manager, $databaseName, $bucketName, array $collectionOptions = [])
     {
-        $this->filesCollection =new Collection($manager,$databaseName,sprintf('%s.files',$bucketName),$collectionOptions);
-        $this->chunksCollection=new Collection($manager,$databaseName,sprintf('%s.chunks',$bucketName),$collectionOptions);
+        $this->filesCollection =new Collection($manager, $databaseName, sprintf('%s.files', $bucketName), $collectionOptions);
+        $this->chunksCollection=new Collection($manager, $databaseName, sprintf('%s.chunks', $bucketName), $collectionOptions);
     }
 
     /**
@@ -89,20 +89,20 @@ class CollectionWrapper
      *
      * @return stdClass|null
      */
-    public function findFileByFilenameAndRevision($filename,$revision)
+    public function findFileByFilenameAndRevision($filename, $revision)
     {
         $filename=(string)$filename;
         $revision=(integer)$revision;
 
-        if($revision<0){
+        if ($revision<0) {
             $skip     =abs($revision)-1;
             $sortOrder=-1;
-        } else{
+        } else {
             $skip     =$revision;
             $sortOrder=1;
         }
 
-        return $this->filesCollection->findOne(['filename'=>$filename],[
+        return $this->filesCollection->findOne(['filename'=>$filename], [
                 'skip'   =>$skip,
                 'sort'   =>['uploadDate'=>$sortOrder],
                 'typeMap'=>['root'=>'stdClass'],
@@ -118,7 +118,7 @@ class CollectionWrapper
      */
     public function findFileById($id)
     {
-        return $this->filesCollection->findOne(['_id'=>$id],['typeMap'=>['root'=>'stdClass']]);
+        return $this->filesCollection->findOne(['_id'=>$id], ['typeMap'=>['root'=>'stdClass']]);
     }
 
     /**
@@ -131,9 +131,9 @@ class CollectionWrapper
      *
      * @return Cursor
      */
-    public function findFiles($filter,array $options=[])
+    public function findFiles($filter, array $options = [])
     {
-        return $this->filesCollection->find($filter,$options);
+        return $this->filesCollection->find($filter, $options);
     }
 
     // TODO: Remove this
@@ -151,7 +151,7 @@ class CollectionWrapper
      */
     public function getChunksIteratorByFilesId($id)
     {
-        $cursor=$this->chunksCollection->find(['files_id'=>$id],[
+        $cursor=$this->chunksCollection->find(['files_id'=>$id], [
                 'sort'   =>['n'=>1],
                 'typeMap'=>['root'=>'stdClass'],
             ]);
@@ -172,7 +172,7 @@ class CollectionWrapper
      */
     public function insertChunk($chunk)
     {
-        if(!$this->checkedIndexes){
+        if (!$this->checkedIndexes) {
             $this->ensureIndexes();
         }
 
@@ -188,7 +188,7 @@ class CollectionWrapper
      */
     public function insertFile($file)
     {
-        if(!$this->checkedIndexes){
+        if (!$this->checkedIndexes) {
             $this->ensureIndexes();
         }
 
@@ -203,9 +203,9 @@ class CollectionWrapper
      *
      * @return UpdateResult
      */
-    public function updateFilenameForId($id,$filename)
+    public function updateFilenameForId($id, $filename)
     {
-        return $this->filesCollection->updateOne(['_id'=>$id],['$set'=>['filename'=>(string)$filename]]);
+        return $this->filesCollection->updateOne(['_id'=>$id], ['$set'=>['filename'=>(string)$filename]]);
     }
 
     /**
@@ -213,13 +213,13 @@ class CollectionWrapper
      */
     private function ensureChunksIndex()
     {
-        foreach($this->chunksCollection->listIndexes() as $index){
-            if($index->isUnique()&&$index->getKey()===['files_id'=>1,'n'=>1]){
+        foreach ($this->chunksCollection->listIndexes() as $index) {
+            if ($index->isUnique()&&$index->getKey()===['files_id'=>1,'n'=>1]) {
                 return;
             }
         }
 
-        $this->chunksCollection->createIndex(['files_id'=>1,'n'=>1],['unique'=>true]);
+        $this->chunksCollection->createIndex(['files_id'=>1,'n'=>1], ['unique'=>true]);
     }
 
     /**
@@ -227,8 +227,8 @@ class CollectionWrapper
      */
     private function ensureFilesIndex()
     {
-        foreach($this->filesCollection->listIndexes() as $index){
-            if($index->getKey()===['filename'=>1,'uploadDate'=>1]){
+        foreach ($this->filesCollection->listIndexes() as $index) {
+            if ($index->getKey()===['filename'=>1,'uploadDate'=>1]) {
                 return;
             }
         }
@@ -244,13 +244,13 @@ class CollectionWrapper
      */
     private function ensureIndexes()
     {
-        if($this->checkedIndexes){
+        if ($this->checkedIndexes) {
             return;
         }
 
         $this->checkedIndexes=true;
 
-        if(!$this->isFilesCollectionEmpty()){
+        if (!$this->isFilesCollectionEmpty()) {
             return;
         }
 
@@ -265,7 +265,7 @@ class CollectionWrapper
      */
     private function isFilesCollectionEmpty()
     {
-        return null===$this->filesCollection->findOne([],[
+        return null===$this->filesCollection->findOne([], [
             'readPreference'=>new ReadPreference(ReadPreference::RP_PRIMARY),
             'projection'    =>['_id'=>1],
         ]);

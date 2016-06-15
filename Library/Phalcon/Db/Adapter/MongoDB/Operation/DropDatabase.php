@@ -30,10 +30,10 @@ class DropDatabase implements Executable
      * @param string $databaseName Database name
      * @param array  $options Command options
      */
-    public function __construct($databaseName,array $options=[])
+    public function __construct($databaseName, array $options = [])
     {
-        if(isset($options['typeMap'])&&!is_array($options['typeMap'])){
-            throw InvalidArgumentException::invalidType('"typeMap" option',$options['typeMap'],'array');
+        if (isset($options['typeMap'])&&!is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
         $this->databaseName=(string)$databaseName;
@@ -51,9 +51,9 @@ class DropDatabase implements Executable
      */
     public function execute(Server $server)
     {
-        $cursor=$server->executeCommand($this->databaseName,new Command(['dropDatabase'=>1]));
+        $cursor=$server->executeCommand($this->databaseName, new Command(['dropDatabase'=>1]));
 
-        if(isset($this->options['typeMap'])){
+        if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
         }
 

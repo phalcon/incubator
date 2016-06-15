@@ -50,22 +50,22 @@ class Distinct implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,$fieldName,$filter=[],array $options=[])
+    public function __construct($databaseName, $collectionName, $fieldName, $filter = [], array $options = [])
     {
-        if(!is_array($filter)&&!is_object($filter)){
-            throw InvalidArgumentException::invalidType('$filter',$filter,'array or object');
+        if (!is_array($filter)&&!is_object($filter)) {
+            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
-        if(isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])){
-            throw InvalidArgumentException::invalidType('"maxTimeMS" option',$options['maxTimeMS'],'integer');
+        if (isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
-        if(isset($options['readConcern'])&&!$options['readConcern'] instanceof ReadConcern){
-            throw InvalidArgumentException::invalidType('"readConcern" option',$options['readConcern'],'MongoDB\Driver\ReadConcern');
+        if (isset($options['readConcern'])&&!$options['readConcern'] instanceof ReadConcern) {
+            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
         }
 
-        if(isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference){
-            throw InvalidArgumentException::invalidType('"readPreference" option',$options['readPreference'],'MongoDB\Driver\ReadPreference');
+        if (isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference) {
+            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
         $this->databaseName  =(string)$databaseName;
@@ -89,10 +89,10 @@ class Distinct implements Executable
     {
         $readPreference=isset($this->options['readPreference'])?$this->options['readPreference']:null;
 
-        $cursor=$server->executeCommand($this->databaseName,$this->createCommand($server),$readPreference);
+        $cursor=$server->executeCommand($this->databaseName, $this->createCommand($server), $readPreference);
         $result=current($cursor->toArray());
 
-        if(!isset($result->values)||!is_array($result->values)){
+        if (!isset($result->values)||!is_array($result->values)) {
             throw new UnexpectedValueException('distinct command did not return a "values" array');
         }
 
@@ -113,15 +113,15 @@ class Distinct implements Executable
             'key'     =>$this->fieldName,
         ];
 
-        if(!empty($this->filter)){
+        if (!empty($this->filter)) {
             $cmd['query']=(object)$this->filter;
         }
 
-        if(isset($this->options['maxTimeMS'])){
+        if (isset($this->options['maxTimeMS'])) {
             $cmd['maxTimeMS']=$this->options['maxTimeMS'];
         }
 
-        if(isset($this->options['readConcern'])&&Functions::server_supports_feature($server,self::$wireVersionForReadConcern)){
+        if (isset($this->options['readConcern'])&&Functions::server_supports_feature($server, self::$wireVersionForReadConcern)) {
             $cmd['readConcern']=Functions::read_concern_as_document($this->options['readConcern']);
         }
 

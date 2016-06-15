@@ -69,7 +69,7 @@ class FindAndModify implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,array $options)
+    public function __construct($databaseName, $collectionName, array $options)
     {
         $options+=[
             'new'   =>false,
@@ -77,47 +77,47 @@ class FindAndModify implements Executable
             'upsert'=>false,
         ];
 
-        if(isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])){
-            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option',$options['bypassDocumentValidation'],'boolean');
+        if (isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])) {
+            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
-        if(isset($options['fields'])&&!is_array($options['fields'])&&!is_object($options['fields'])){
-            throw InvalidArgumentException::invalidType('"fields" option',$options['fields'],'array or object');
+        if (isset($options['fields'])&&!is_array($options['fields'])&&!is_object($options['fields'])) {
+            throw InvalidArgumentException::invalidType('"fields" option', $options['fields'], 'array or object');
         }
 
-        if(isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])){
-            throw InvalidArgumentException::invalidType('"maxTimeMS" option',$options['maxTimeMS'],'integer');
+        if (isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
-        if(!is_bool($options['new'])){
-            throw InvalidArgumentException::invalidType('"new" option',$options['new'],'boolean');
+        if (!is_bool($options['new'])) {
+            throw InvalidArgumentException::invalidType('"new" option', $options['new'], 'boolean');
         }
 
-        if(isset($options['query'])&&!is_array($options['query'])&&!is_object($options['query'])){
-            throw InvalidArgumentException::invalidType('"query" option',$options['query'],'array or object');
+        if (isset($options['query'])&&!is_array($options['query'])&&!is_object($options['query'])) {
+            throw InvalidArgumentException::invalidType('"query" option', $options['query'], 'array or object');
         }
 
-        if(!is_bool($options['remove'])){
-            throw InvalidArgumentException::invalidType('"remove" option',$options['remove'],'boolean');
+        if (!is_bool($options['remove'])) {
+            throw InvalidArgumentException::invalidType('"remove" option', $options['remove'], 'boolean');
         }
 
-        if(isset($options['sort'])&&!is_array($options['sort'])&&!is_object($options['sort'])){
-            throw InvalidArgumentException::invalidType('"sort" option',$options['sort'],'array or object');
+        if (isset($options['sort'])&&!is_array($options['sort'])&&!is_object($options['sort'])) {
+            throw InvalidArgumentException::invalidType('"sort" option', $options['sort'], 'array or object');
         }
 
-        if(isset($options['update'])&&!is_array($options['update'])&&!is_object($options['update'])){
-            throw InvalidArgumentException::invalidType('"update" option',$options['update'],'array or object');
+        if (isset($options['update'])&&!is_array($options['update'])&&!is_object($options['update'])) {
+            throw InvalidArgumentException::invalidType('"update" option', $options['update'], 'array or object');
         }
 
-        if(isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern){
-            throw InvalidArgumentException::invalidType('"writeConcern" option',$options['writeConcern'],'MongoDB\Driver\WriteConcern');
+        if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
-        if(!is_bool($options['upsert'])){
-            throw InvalidArgumentException::invalidType('"upsert" option',$options['upsert'],'boolean');
+        if (!is_bool($options['upsert'])) {
+            throw InvalidArgumentException::invalidType('"upsert" option', $options['upsert'], 'boolean');
         }
 
-        if(!(isset($options['update']) xor $options['remove'])){
+        if (!(isset($options['update']) xor $options['remove'])) {
             throw new InvalidArgumentException('The "remove" option must be true or an "update" document must be specified, but not both');
         }
 
@@ -138,10 +138,10 @@ class FindAndModify implements Executable
      */
     public function execute(Server $server)
     {
-        $cursor=$server->executeCommand($this->databaseName,$this->createCommand($server));
+        $cursor=$server->executeCommand($this->databaseName, $this->createCommand($server));
         $result=current($cursor->toArray());
 
-        if(!isset($result->value)){
+        if (!isset($result->value)) {
             return null;
         }
 
@@ -149,12 +149,11 @@ class FindAndModify implements Executable
          * when an upsert is performed and the pre-modified document was
          * requested.
          */
-        if($this->options['upsert']&&!$this->options['new']&&isset($result->lastErrorObject->updatedExisting)&&!$result->lastErrorObject->updatedExisting){
-
+        if ($this->options['upsert']&&!$this->options['new']&&isset($result->lastErrorObject->updatedExisting)&&!$result->lastErrorObject->updatedExisting) {
             return null;
         }
 
-        if(!is_object($result->value)){
+        if (!is_object($result->value)) {
             throw new UnexpectedValueException('findAndModify command did not return a "value" document');
         }
 
@@ -172,28 +171,28 @@ class FindAndModify implements Executable
     {
         $cmd=['findAndModify'=>$this->collectionName];
 
-        if($this->options['remove']){
+        if ($this->options['remove']) {
             $cmd['remove']=true;
-        } else{
+        } else {
             $cmd['new']   =$this->options['new'];
             $cmd['upsert']=$this->options['upsert'];
         }
 
-        foreach(['fields','query','sort','update'] as $option){
-            if(isset($this->options[ $option ])){
+        foreach (['fields','query','sort','update'] as $option) {
+            if (isset($this->options[ $option ])) {
                 $cmd[ $option ]=(object)$this->options[ $option ];
             }
         }
 
-        if(isset($this->options['maxTimeMS'])){
+        if (isset($this->options['maxTimeMS'])) {
             $cmd['maxTimeMS']=$this->options['maxTimeMS'];
         }
 
-        if(isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server,self::$wireVersionForDocumentLevelValidation)){
+        if (isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
             $cmd['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 
-        if(isset($this->options['writeConcern'])&&Functions::server_supports_feature($server,self::$wireVersionForWriteConcern)){
+        if (isset($this->options['writeConcern'])&&Functions::server_supports_feature($server, self::$wireVersionForWriteConcern)) {
             $cmd['writeConcern']=$this->options['writeConcern'];
         }
 

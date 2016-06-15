@@ -43,10 +43,10 @@ class ListIndexes implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,array $options=[])
+    public function __construct($databaseName, $collectionName, array $options = [])
     {
-        if(isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])){
-            throw InvalidArgumentException::invalidType('"maxTimeMS" option',$options['maxTimeMS'],'integer');
+        if (isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
         $this->databaseName  =(string)$databaseName;
@@ -65,7 +65,7 @@ class ListIndexes implements Executable
      */
     public function execute(Server $server)
     {
-        return Functions::server_supports_feature($server,self::$wireVersionForCommand)?$this->executeCommand($server):$this->executeLegacy($server);
+        return Functions::server_supports_feature($server, self::$wireVersionForCommand)?$this->executeCommand($server):$this->executeLegacy($server);
     }
 
     /**
@@ -80,18 +80,18 @@ class ListIndexes implements Executable
     {
         $cmd=['listIndexes'=>$this->collectionName];
 
-        if(isset($this->options['maxTimeMS'])){
+        if (isset($this->options['maxTimeMS'])) {
             $cmd['maxTimeMS']=$this->options['maxTimeMS'];
         }
 
-        try{
-            $cursor=$server->executeCommand($this->databaseName,new Command($cmd));
-        } catch(RuntimeException $e){
+        try {
+            $cursor=$server->executeCommand($this->databaseName, new Command($cmd));
+        } catch (RuntimeException $e) {
             /* The server may return an error if the collection does not exist.
              * Check for possible error codes (see: SERVER-20463) and return an
              * empty iterator instead of throwing.
              */
-            if($e->getCode()===self::$errorCodeNamespaceNotFound||$e->getCode()===self::$errorCodeDatabaseNotFound){
+            if ($e->getCode()===self::$errorCodeNamespaceNotFound||$e->getCode()===self::$errorCodeDatabaseNotFound) {
                 return new IndexInfoIteratorIterator(new EmptyIterator);
             }
 
@@ -117,7 +117,7 @@ class ListIndexes implements Executable
 
         $options=isset($this->options['maxTimeMS'])?['modifiers'=>['$maxTimeMS'=>$this->options['maxTimeMS']]]:[];
 
-        $cursor=$server->executeQuery($this->databaseName.'.system.indexes',new Query($filter,$options));
+        $cursor=$server->executeQuery($this->databaseName.'.system.indexes', new Query($filter, $options));
         $cursor->setTypeMap(['root'=>'array','document'=>'array']);
 
         return new IndexInfoIteratorIterator($cursor);

@@ -58,17 +58,17 @@ class FindOneAndUpdate implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,$filter,$update,array $options=[])
+    public function __construct($databaseName, $collectionName, $filter, $update, array $options = [])
     {
-        if(!is_array($filter)&&!is_object($filter)){
-            throw InvalidArgumentException::invalidType('$filter',$filter,'array or object');
+        if (!is_array($filter)&&!is_object($filter)) {
+            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
-        if(!is_array($update)&&!is_object($update)){
-            throw InvalidArgumentException::invalidType('$update',$update,'array or object');
+        if (!is_array($update)&&!is_object($update)) {
+            throw InvalidArgumentException::invalidType('$update', $update, 'array or object');
         }
 
-        if(!Functions::is_first_key_operator($update)){
+        if (!Functions::is_first_key_operator($update)) {
             throw new InvalidArgumentException('First key in $update argument is not an update operator');
         }
 
@@ -77,19 +77,19 @@ class FindOneAndUpdate implements Executable
             'upsert'        =>false,
         ];
 
-        if(isset($options['projection'])&&!is_array($options['projection'])&&!is_object($options['projection'])){
-            throw InvalidArgumentException::invalidType('"projection" option',$options['projection'],'array or object');
+        if (isset($options['projection'])&&!is_array($options['projection'])&&!is_object($options['projection'])) {
+            throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'array or object');
         }
 
-        if(!is_integer($options['returnDocument'])){
-            throw InvalidArgumentException::invalidType('"returnDocument" option',$options['returnDocument'],'integer');
+        if (!is_integer($options['returnDocument'])) {
+            throw InvalidArgumentException::invalidType('"returnDocument" option', $options['returnDocument'], 'integer');
         }
 
-        if($options['returnDocument']!==self::RETURN_DOCUMENT_AFTER&&$options['returnDocument']!==self::RETURN_DOCUMENT_BEFORE){
+        if ($options['returnDocument']!==self::RETURN_DOCUMENT_AFTER&&$options['returnDocument']!==self::RETURN_DOCUMENT_BEFORE) {
             throw new InvalidArgumentException('Invalid value for "returnDocument" option: '.$options['returnDocument']);
         }
 
-        if(isset($options['projection'])){
+        if (isset($options['projection'])) {
             $options['fields']=$options['projection'];
         }
 
@@ -97,7 +97,7 @@ class FindOneAndUpdate implements Executable
 
         unset($options['projection'],$options['returnDocument']);
 
-        $this->findAndModify=new FindAndModify($databaseName,$collectionName,['query' =>$filter,
+        $this->findAndModify=new FindAndModify($databaseName, $collectionName, ['query' =>$filter,
                                                                               'update'=>$update
                                                                              ]+$options);
     }

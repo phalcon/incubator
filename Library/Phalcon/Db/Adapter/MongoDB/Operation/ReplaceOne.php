@@ -39,17 +39,17 @@ class ReplaceOne implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,$filter,$replacement,array $options=[])
+    public function __construct($databaseName, $collectionName, $filter, $replacement, array $options = [])
     {
-        if(!is_array($replacement)&&!is_object($replacement)){
-            throw InvalidArgumentException::invalidType('$replacement',$replacement,'array or object');
+        if (!is_array($replacement)&&!is_object($replacement)) {
+            throw InvalidArgumentException::invalidType('$replacement', $replacement, 'array or object');
         }
 
-        if(Functions::is_first_key_operator($replacement)){
+        if (Functions::is_first_key_operator($replacement)) {
             throw new InvalidArgumentException('First key in $replacement argument is an update operator');
         }
 
-        $this->update=new Update($databaseName,$collectionName,$filter,$replacement,['multi'=>false]+$options);
+        $this->update=new Update($databaseName, $collectionName, $filter, $replacement, ['multi'=>false]+$options);
     }
 
     /**

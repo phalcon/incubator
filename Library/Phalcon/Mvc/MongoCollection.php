@@ -31,11 +31,11 @@ use Phalcon\Mvc\Collection as PhalconCollection;
  * aggregate($params)
  * summatory($field, $conditions, $finalize) Collection::group() Doesn't exist.
  * delete()
- *
  */
 
 /**
  * Class MongoCollection
+ *
  * @package Phalcon\Mvc
  */
 abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSON\Unserializable
@@ -48,20 +48,18 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
      *
      * @param mixed id
      */
-    function setId($id)
+    public function setId($id)
     {
 
         $mongoId=null;
 
-        if(!is_object($id)){
-
-            if($this->_modelsManager->isUsingImplicitObjectIds($this)){
+        if (!is_object($id)) {
+            if ($this->_modelsManager->isUsingImplicitObjectIds($this)) {
                 $mongoId=new \MongoDB\BSON\ObjectID($id); //\MongoId( $id );
-            } else{
+            } else {
                 $mongoId=$id;
             }
-
-        } else{
+        } else {
             $mongoId=$id;
         }
 
@@ -77,13 +75,13 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
 
         $dependencyInjector=$this->_dependencyInjector;
 
-        if(!is_object($dependencyInjector)){
+        if (!is_object($dependencyInjector)) {
             throw new Exception("A dependency injector container is required to obtain the services related to the ORM");
         }
 
         $source=$this->getSource();
 
-        if(empty($source)){
+        if (empty($source)) {
             throw new Exception("Method getSource() returns empty string");
         }
 
@@ -93,9 +91,9 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
 
         $exists=$this->_exists($collection);
 
-        if($exists===false){
+        if ($exists===false) {
             $this->_operationMade=self::OP_CREATE;
-        } else{
+        } else {
             $this->_operationMade=self::OP_UPDATE;
         }
 
@@ -109,7 +107,7 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
         /**
          * Execute the preSave hook
          */
-        if($this->_preSave($dependencyInjector,$disableEvents,$exists)===false){
+        if ($this->_preSave($dependencyInjector, $disableEvents, $exists)===false) {
             return false;
         }
 
@@ -121,26 +119,22 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
          * We always use safe stores to get the success state
          * Save the document
          */
-        $status=$collection->insertOne($data,['w'=>true]);
+        $status=$collection->insertOne($data, ['w'=>true]);
 
-        if($status->isAcknowledged()){
-
+        if ($status->isAcknowledged()) {
             $success==true;
 
-            if($exists===false){
+            if ($exists===false) {
                 $this->_id=$status->getInsertedId();
             }
-
-        } else{
-
+        } else {
             $success=false;
-
         }
 
         /**
          * Call the postSave hooks
          */
-        return $this->_postSave($disableEvents,$success,$exists);
+        return $this->_postSave($disableEvents, $success, $exists);
 
     }
 
@@ -148,24 +142,23 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
     {
         //		var className, collection, mongoId;
 
-        if(is_object($id)){
+        if (is_object($id)) {
             $classname =get_called_class();
             $collection=new $classname();
 
-            if($collection->getCollectionManager()->isUsingImplicitObjectIds($collection)){
+            if ($collection->getCollectionManager()->isUsingImplicitObjectIds($collection)) {
                 $mongoId=new ObjectID($id);
-            } else{
+            } else {
                 $mongoId=$id;
             }
-
-        } else{
+        } else {
             $mongoId=$id;
         }
 
         return static::findFirst([["_id"=>$mongoId]]);
     }
 
-    public static function findFirst(array $parameters=null)
+    public static function findFirst(array $parameters = null)
     {
 
         $className=get_called_class();
@@ -174,21 +167,21 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
 
         $connection=$collection->getConnection();
 
-        return static::_getResultset($parameters,$collection,$connection,true);
+        return static::_getResultset($parameters, $collection, $connection, true);
 
     }
 
     /**
      * Returns a collection resultset
      *
-     * @param                         array params
+     * @param array params
      * @param \Phalcon\Mvc\Collection collection
      * @param \MongoDb                connection
-     * @param                         boolean unique
+     * @param boolean unique
      *
      * @return array
      */
-    protected static function _getResultset($params,\Phalcon\Mvc\CollectionInterface $collection,$connection,$unique)
+    protected static function _getResultset($params, \Phalcon\Mvc\CollectionInterface $collection, $connection, $unique)
     {
         //		var source, mongoCollection, conditions, base, documentsCursor,
         //			fields, skip, limit, sort, document, collections, className;
@@ -196,23 +189,21 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
         /**
          * Check if "class" clause was defined
          */
-        if(isset($params['class'])){
-
+        if (isset($params['class'])) {
             $classname=$params['class'];
 
             $base=new $classname();
 
-            if(!$base instanceof CollectionInterface||$base instanceof Document){
+            if (!$base instanceof CollectionInterface||$base instanceof Document) {
                 throw new Exception("Object of class '".$classname."' must be an implementation of Phalcon\\Mvc\\CollectionInterface or an instance of Phalcon\\Mvc\\Collection\\Document");
             }
-
-        } else{
+        } else {
             $base=$collection;
         }
 
         $source=$collection->getSource();
 
-        if(empty($source)){
+        if (empty($source)) {
             throw new Exception("Method getSource() returns empty string");
         }
 
@@ -221,20 +212,20 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
          */
         $mongoCollection=$connection->selectCollection($source);
 
-        if(!is_object($mongoCollection)){
+        if (!is_object($mongoCollection)) {
             throw new Exception("Couldn't select mongo collection");
         }
 
         $conditions=[];
 
-        if(isset($params[0])||isset($params['conditions'])){
+        if (isset($params[0])||isset($params['conditions'])) {
             $conditions=(isset($params[0]))?$params[0]:$params['conditions'];
         }
 
         /**
          * Convert the string to an array
          */
-        if(!is_array($conditions)){
+        if (!is_array($conditions)) {
             throw new Exception("Find parameters must be an array");
         }
 
@@ -243,67 +234,58 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
         /**
          * Check if a "limit" clause was defined
          */
-        if(isset($params['limit'])){
-
+        if (isset($params['limit'])) {
             $limit=$params['limit'];
 
             $options['limit']=(int)$limit;
 
-            if($unique){
+            if ($unique) {
                 $options['limit']=1;
             }
-
         }
 
         /**
          * Check if a "sort" clause was defined
          */
-        if(isset($params['sort'])){
-
+        if (isset($params['sort'])) {
             $sort=$params["sort"];
 
             $options['sort']=$sort;
-
         }
 
         /**
          * Check if a "skip" clause was defined
          */
-        if(isset($params['skip'])){
-
+        if (isset($params['skip'])) {
             $skip=$params["skip"];
 
             $options['skip']=(int)$skip;
-
         }
 
-        if(isset($params['fields'])&&is_array($params['fields'])&&!empty($params['fields'])){
-
+        if (isset($params['fields'])&&is_array($params['fields'])&&!empty($params['fields'])) {
             $options['projection']=[];
 
-            foreach($params['fields'] as $field){
+            foreach ($params['fields'] as $field) {
                 $options['projection'][ $field ]=1;
             }
-
         }
 
         /**
          * Perform the find
          */
-        $cursor=$mongoCollection->find($conditions,$options);
+        $cursor=$mongoCollection->find($conditions, $options);
 
         $cursor->setTypeMap(['root'=>get_called_class(),'document'=>'object']);
 
 
-        if($unique===true){
+        if ($unique===true) {
 
             /**
              * Iterate through and return the first one.
              */
-            foreach($cursor as $document){
+            foreach ($cursor as $document) {
                 return $document;
             }
-
         }
 
         /**
@@ -312,7 +294,7 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
         $collections=[];
 
 
-        foreach($cursor as $document){
+        foreach ($cursor as $document) {
             /**
              * Assign the values to the base object
              */
@@ -340,27 +322,27 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
         //		var disableEvents, status, id, connection, source,
         //			collection, mongoId, success, ok;
 
-        if(!$id=$this->_id){
+        if (!$id=$this->_id) {
             throw new Exception("The document cannot be deleted because it doesn't exist");
         }
 
 
         $disableEvents=self::$_disableEvents;
 
-        if(!$disableEvents){
-            if($this->fireEventCancel("beforeDelete")===false){
+        if (!$disableEvents) {
+            if ($this->fireEventCancel("beforeDelete")===false) {
                 return false;
             }
         }
 
-        if($this->_skipped===true){
+        if ($this->_skipped===true) {
             return true;
         }
 
         $connection=$this->getConnection();
 
         $source=$this->getSource();
-        if(empty($source)){
+        if (empty($source)) {
             throw new Exception("Method getSource() returns empty string");
         }
 
@@ -371,16 +353,14 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
          */
         $collection=$connection->selectCollection($source);
 
-        if(is_object($id)){
+        if (is_object($id)) {
             $mongoId=$id;
-        } else{
-
-            if($this->_modelsManager->isUsingImplicitObjectIds($this)){
+        } else {
+            if ($this->_modelsManager->isUsingImplicitObjectIds($this)) {
                 $mongoId=new ObjectID($id);
-            } else{
+            } else {
                 $mongoId=$id;
             }
-
         }
 
 
@@ -389,14 +369,12 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
         /**
          * Remove the instance
          */
-        $status=$collection->deleteOne(['_id'=>$mongoId],['w'=>true]);
+        $status=$collection->deleteOne(['_id'=>$mongoId], ['w'=>true]);
 
-        if($status->isAcknowledged()){
-
+        if ($status->isAcknowledged()) {
             $success=true;
 
             $this->fireEvent("afterDelete");
-
         }
 
         return $success;
@@ -414,23 +392,22 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
     {
         //var id, mongoId;
 
-        if(!$id=$this->_id){
+        if (!$id=$this->_id) {
             return false;
         }
 
-        if(is_object($id)){
+        if (is_object($id)) {
             $mongoId=$id;
-        } else{
+        } else {
 
             /**
              * Check if the model use implicit ids
              */
-            if($this->_modelsManager->isUsingImplicitObjectIds($this)){
+            if ($this->_modelsManager->isUsingImplicitObjectIds($this)) {
                 $mongoId=new ObjectID($id);
-            } else{
+            } else {
                 $mongoId=$id;
             }
-
         }
 
         /**
@@ -448,8 +425,8 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
         /**
          * Check if there is a method with the same name of the event
          */
-        if(method_exists($this,$eventName)){
-            if($this->{eventName}()===false){
+        if (method_exists($this, $eventName)) {
+            if ($this->{eventName}()===false) {
                 return false;
             }
         }
@@ -457,7 +434,7 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
         /**
          * Send a notification to the events manager
          */
-        if($this->_modelsManager->notifyEvent($eventName,$this)===false){
+        if ($this->_modelsManager->notifyEvent($eventName, $this)===false) {
             return false;
         }
 
@@ -475,10 +452,9 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
         $this->setDI(Di::getDefault());
         $this->_modelsManager=Di::getDefault()->getShared('collectionManager');
 
-        foreach($data as $key=>$val){
+        foreach ($data as $key => $val) {
             $this->{$key}=$val;
         }
 
     }
-
 }

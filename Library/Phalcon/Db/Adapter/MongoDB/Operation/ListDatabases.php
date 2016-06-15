@@ -32,10 +32,10 @@ class ListDatabases implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(array $options=[])
+    public function __construct(array $options = [])
     {
-        if(isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])){
-            throw InvalidArgumentException::invalidType('"maxTimeMS" option',$options['maxTimeMS'],'integer');
+        if (isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
         $this->options=$options;
@@ -55,15 +55,15 @@ class ListDatabases implements Executable
     {
         $cmd=['listDatabases'=>1];
 
-        if(isset($this->options['maxTimeMS'])){
+        if (isset($this->options['maxTimeMS'])) {
             $cmd['maxTimeMS']=$this->options['maxTimeMS'];
         }
 
-        $cursor=$server->executeCommand('admin',new Command($cmd));
+        $cursor=$server->executeCommand('admin', new Command($cmd));
         $cursor->setTypeMap(['root'=>'array','document'=>'array']);
         $result=current($cursor->toArray());
 
-        if(!isset($result['databases'])||!is_array($result['databases'])){
+        if (!isset($result['databases'])||!is_array($result['databases'])) {
             throw new UnexpectedValueException('listDatabases command did not return a "databases" array');
         }
 

@@ -15,9 +15,9 @@ class FileNotFoundException extends RuntimeException
      *
      * @return self
      */
-    public static function byFilenameAndRevision($filename,$revision,$namespace)
+    public static function byFilenameAndRevision($filename, $revision, $namespace)
     {
-        return new static(sprintf('File with name "%s" and revision "%d" not found in "%s"',$filename,$revision,$namespace));
+        return new static(sprintf('File with name "%s" and revision "%d" not found in "%s"', $filename, $revision, $namespace));
     }
 
     /**
@@ -28,10 +28,10 @@ class FileNotFoundException extends RuntimeException
      *
      * @return self
      */
-    public static function byId($id,$namespace)
+    public static function byId($id, $namespace)
     {
         $json=\MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP(['_id'=>$id]));
 
-        return new static(sprintf('File "%s" not found in "%s"',$json,$namespace));
+        return new static(sprintf('File "%s" not found in "%s"', $json, $namespace));
     }
 }

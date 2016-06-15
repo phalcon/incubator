@@ -31,9 +31,9 @@ class DeleteMany implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,$filter,array $options=[])
+    public function __construct($databaseName, $collectionName, $filter, array $options = [])
     {
-        $this->delete=new Delete($databaseName,$collectionName,$filter,0,$options);
+        $this->delete=new Delete($databaseName, $collectionName, $filter, 0, $options);
     }
 
     /**

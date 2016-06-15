@@ -79,30 +79,30 @@ class Collection
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(Manager $manager,$databaseName,$collectionName,array $options=[])
+    public function __construct(Manager $manager, $databaseName, $collectionName, array $options = [])
     {
-        if(strlen($databaseName)<1){
+        if (strlen($databaseName)<1) {
             throw new InvalidArgumentException('$databaseName is invalid: '.$databaseName);
         }
 
-        if(strlen($collectionName)<1){
+        if (strlen($collectionName)<1) {
             throw new InvalidArgumentException('$collectionName is invalid: '.$collectionName);
         }
 
-        if(isset($options['readConcern'])&&!$options['readConcern'] instanceof ReadConcern){
-            throw InvalidArgumentException::invalidType('"readConcern" option',$options['readConcern'],'MongoDB\Driver\ReadConcern');
+        if (isset($options['readConcern'])&&!$options['readConcern'] instanceof ReadConcern) {
+            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
         }
 
-        if(isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference){
-            throw InvalidArgumentException::invalidType('"readPreference" option',$options['readPreference'],'MongoDB\Driver\ReadPreference');
+        if (isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference) {
+            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
-        if(isset($options['typeMap'])&&!is_array($options['typeMap'])){
-            throw InvalidArgumentException::invalidType('"typeMap" option',$options['typeMap'],'array');
+        if (isset($options['typeMap'])&&!is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
-        if(isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern){
-            throw InvalidArgumentException::invalidType('"writeConcern" option',$options['writeConcern'],'MongoDB\Driver\WriteConcern');
+        if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         $this->manager       =$manager;
@@ -163,30 +163,30 @@ class Collection
      *
      * @return Traversable
      */
-    public function aggregate(array $pipeline,array $options=[])
+    public function aggregate(array $pipeline, array $options = [])
     {
         $hasOutStage=Functions::is_last_pipeline_operator_out($pipeline);
 
         /* A "majority" read concern is not compatible with the $out stage, so
          * avoid providing the Collection's read concern if it would conflict.
          */
-        if(!isset($options['readConcern'])&&!($hasOutStage&&$this->readConcern->getLevel()===ReadConcern::MAJORITY)){
+        if (!isset($options['readConcern'])&&!($hasOutStage&&$this->readConcern->getLevel()===ReadConcern::MAJORITY)) {
             $options['readConcern']=$this->readConcern;
         }
 
-        if(!isset($options['readPreference'])){
+        if (!isset($options['readPreference'])) {
             $options['readPreference']=$this->readPreference;
         }
 
-        if($hasOutStage){
+        if ($hasOutStage) {
             $options['readPreference']=new ReadPreference(ReadPreference::RP_PRIMARY);
         }
 
-        if(!isset($options['typeMap'])&&(!isset($options['useCursor'])||$options['useCursor'])){
+        if (!isset($options['typeMap'])&&(!isset($options['useCursor'])||$options['useCursor'])) {
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new Aggregate($this->databaseName,$this->collectionName,$pipeline,$options);
+        $operation=new Aggregate($this->databaseName, $this->collectionName, $pipeline, $options);
         $server   =$this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
@@ -202,13 +202,13 @@ class Collection
      *
      * @return BulkWriteResult
      */
-    public function bulkWrite(array $operations,array $options=[])
+    public function bulkWrite(array $operations, array $options = [])
     {
-        if(!isset($options['writeConcern'])){
+        if (!isset($options['writeConcern'])) {
             $options['writeConcern']=$this->writeConcern;
         }
 
-        $operation=new BulkWrite($this->databaseName,$this->collectionName,$operations,$options);
+        $operation=new BulkWrite($this->databaseName, $this->collectionName, $operations, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -224,17 +224,17 @@ class Collection
      *
      * @return integer
      */
-    public function count($filter=[],array $options=[])
+    public function count($filter = [], array $options = [])
     {
-        if(!isset($options['readConcern'])){
+        if (!isset($options['readConcern'])) {
             $options['readConcern']=$this->readConcern;
         }
 
-        if(!isset($options['readPreference'])){
+        if (!isset($options['readPreference'])) {
             $options['readPreference']=$this->readPreference;
         }
 
-        $operation=new Count($this->databaseName,$this->collectionName,$filter,$options);
+        $operation=new Count($this->databaseName, $this->collectionName, $filter, $options);
         $server   =$this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
@@ -251,7 +251,7 @@ class Collection
      *
      * @return string The name of the created index
      */
-    public function createIndex($key,array $options=[])
+    public function createIndex($key, array $options = [])
     {
         return current($this->createIndexes([['key'=>$key]+$options]));
     }
@@ -283,7 +283,7 @@ class Collection
      */
     public function createIndexes(array $indexes)
     {
-        $operation=new CreateIndexes($this->databaseName,$this->collectionName,$indexes);
+        $operation=new CreateIndexes($this->databaseName, $this->collectionName, $indexes);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -300,13 +300,13 @@ class Collection
      *
      * @return DeleteResult
      */
-    public function deleteMany($filter,array $options=[])
+    public function deleteMany($filter, array $options = [])
     {
-        if(!isset($options['writeConcern'])){
+        if (!isset($options['writeConcern'])) {
             $options['writeConcern']=$this->writeConcern;
         }
 
-        $operation=new DeleteMany($this->databaseName,$this->collectionName,$filter,$options);
+        $operation=new DeleteMany($this->databaseName, $this->collectionName, $filter, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -323,13 +323,13 @@ class Collection
      *
      * @return DeleteResult
      */
-    public function deleteOne($filter,array $options=[])
+    public function deleteOne($filter, array $options = [])
     {
-        if(!isset($options['writeConcern'])){
+        if (!isset($options['writeConcern'])) {
             $options['writeConcern']=$this->writeConcern;
         }
 
-        $operation=new DeleteOne($this->databaseName,$this->collectionName,$filter,$options);
+        $operation=new DeleteOne($this->databaseName, $this->collectionName, $filter, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -346,17 +346,17 @@ class Collection
      *
      * @return mixed[]
      */
-    public function distinct($fieldName,$filter=[],array $options=[])
+    public function distinct($fieldName, $filter = [], array $options = [])
     {
-        if(!isset($options['readConcern'])){
+        if (!isset($options['readConcern'])) {
             $options['readConcern']=$this->readConcern;
         }
 
-        if(!isset($options['readPreference'])){
+        if (!isset($options['readPreference'])) {
             $options['readPreference']=$this->readPreference;
         }
 
-        $operation=new Distinct($this->databaseName,$this->collectionName,$fieldName,$filter,$options);
+        $operation=new Distinct($this->databaseName, $this->collectionName, $fieldName, $filter, $options);
         $server   =$this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
@@ -371,13 +371,13 @@ class Collection
      *
      * @return array|object Command result document
      */
-    public function drop(array $options=[])
+    public function drop(array $options = [])
     {
-        if(!isset($options['typeMap'])){
+        if (!isset($options['typeMap'])) {
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new DropCollection($this->databaseName,$this->collectionName,$options);
+        $operation=new DropCollection($this->databaseName, $this->collectionName, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -394,19 +394,19 @@ class Collection
      * @return array|object Command result document
      * @throws InvalidArgumentException if $indexName is an empty string or "*"
      */
-    public function dropIndex($indexName,array $options=[])
+    public function dropIndex($indexName, array $options = [])
     {
         $indexName=(string)$indexName;
 
-        if($indexName==='*'){
+        if ($indexName==='*') {
             throw new InvalidArgumentException('dropIndexes() must be used to drop multiple indexes');
         }
 
-        if(!isset($options['typeMap'])){
+        if (!isset($options['typeMap'])) {
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new DropIndexes($this->databaseName,$this->collectionName,$indexName,$options);
+        $operation=new DropIndexes($this->databaseName, $this->collectionName, $indexName, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -421,13 +421,13 @@ class Collection
      *
      * @return array|object Command result document
      */
-    public function dropIndexes(array $options=[])
+    public function dropIndexes(array $options = [])
     {
-        if(!isset($options['typeMap'])){
+        if (!isset($options['typeMap'])) {
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new DropIndexes($this->databaseName,$this->collectionName,'*',$options);
+        $operation=new DropIndexes($this->databaseName, $this->collectionName, '*', $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -444,21 +444,21 @@ class Collection
      *
      * @return Cursor
      */
-    public function find($filter=[],array $options=[])
+    public function find($filter = [], array $options = [])
     {
-        if(!isset($options['readConcern'])){
+        if (!isset($options['readConcern'])) {
             $options['readConcern']=$this->readConcern;
         }
 
-        if(!isset($options['readPreference'])){
+        if (!isset($options['readPreference'])) {
             $options['readPreference']=$this->readPreference;
         }
 
-        if(!isset($options['typeMap'])){
+        if (!isset($options['typeMap'])) {
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new Find($this->databaseName,$this->collectionName,$filter,$options);
+        $operation=new Find($this->databaseName, $this->collectionName, $filter, $options);
         $server   =$this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
@@ -475,21 +475,21 @@ class Collection
      *
      * @return array|object|null
      */
-    public function findOne($filter=[],array $options=[])
+    public function findOne($filter = [], array $options = [])
     {
-        if(!isset($options['readConcern'])){
+        if (!isset($options['readConcern'])) {
             $options['readConcern']=$this->readConcern;
         }
 
-        if(!isset($options['readPreference'])){
+        if (!isset($options['readPreference'])) {
             $options['readPreference']=$this->readPreference;
         }
 
-        if(!isset($options['typeMap'])){
+        if (!isset($options['typeMap'])) {
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new FindOne($this->databaseName,$this->collectionName,$filter,$options);
+        $operation=new FindOne($this->databaseName, $this->collectionName, $filter, $options);
         $server   =$this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
@@ -511,15 +511,15 @@ class Collection
      *
      * @return object|null
      */
-    public function findOneAndDelete($filter,array $options=[])
+    public function findOneAndDelete($filter, array $options = [])
     {
         $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if(!isset($options['writeConcern'])&&Functions::server_supports_feature($server,self::$wireVersionForFindAndModifyWriteConcern)){
+        if (!isset($options['writeConcern'])&&Functions::server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
             $options['writeConcern']=$this->writeConcern;
         }
 
-        $operation=new FindOneAndDelete($this->databaseName,$this->collectionName,$filter,$options);
+        $operation=new FindOneAndDelete($this->databaseName, $this->collectionName, $filter, $options);
 
         return $operation->execute($server);
     }
@@ -545,15 +545,15 @@ class Collection
      *
      * @return object|null
      */
-    public function findOneAndReplace($filter,$replacement,array $options=[])
+    public function findOneAndReplace($filter, $replacement, array $options = [])
     {
         $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if(!isset($options['writeConcern'])&&Functions::server_supports_feature($server,self::$wireVersionForFindAndModifyWriteConcern)){
+        if (!isset($options['writeConcern'])&&Functions::server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
             $options['writeConcern']=$this->writeConcern;
         }
 
-        $operation=new FindOneAndReplace($this->databaseName,$this->collectionName,$filter,$replacement,$options);
+        $operation=new FindOneAndReplace($this->databaseName, $this->collectionName, $filter, $replacement, $options);
 
         return $operation->execute($server);
     }
@@ -579,15 +579,15 @@ class Collection
      *
      * @return object|null
      */
-    public function findOneAndUpdate($filter,$update,array $options=[])
+    public function findOneAndUpdate($filter, $update, array $options = [])
     {
         $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if(!isset($options['writeConcern'])&&Functions::server_supports_feature($server,self::$wireVersionForFindAndModifyWriteConcern)){
+        if (!isset($options['writeConcern'])&&Functions::server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
             $options['writeConcern']=$this->writeConcern;
         }
 
-        $operation=new FindOneAndUpdate($this->databaseName,$this->collectionName,$filter,$update,$options);
+        $operation=new FindOneAndUpdate($this->databaseName, $this->collectionName, $filter, $update, $options);
 
         return $operation->execute($server);
     }
@@ -634,13 +634,13 @@ class Collection
      *
      * @return InsertManyResult
      */
-    public function insertMany(array $documents,array $options=[])
+    public function insertMany(array $documents, array $options = [])
     {
-        if(!isset($options['writeConcern'])){
+        if (!isset($options['writeConcern'])) {
             $options['writeConcern']=$this->writeConcern;
         }
 
-        $operation=new InsertMany($this->databaseName,$this->collectionName,$documents,$options);
+        $operation=new InsertMany($this->databaseName, $this->collectionName, $documents, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -657,13 +657,13 @@ class Collection
      *
      * @return InsertOneResult
      */
-    public function insertOne($document,array $options=[])
+    public function insertOne($document, array $options = [])
     {
-        if(!isset($options['writeConcern'])){
+        if (!isset($options['writeConcern'])) {
             $options['writeConcern']=$this->writeConcern;
         }
 
-        $operation=new InsertOne($this->databaseName,$this->collectionName,$document,$options);
+        $operation=new InsertOne($this->databaseName, $this->collectionName, $document, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -675,9 +675,9 @@ class Collection
      * @see ListIndexes::__construct() for supported options
      * @return IndexInfoIterator
      */
-    public function listIndexes(array $options=[])
+    public function listIndexes(array $options = [])
     {
-        $operation=new ListIndexes($this->databaseName,$this->collectionName,$options);
+        $operation=new ListIndexes($this->databaseName, $this->collectionName, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -695,13 +695,13 @@ class Collection
      *
      * @return UpdateResult
      */
-    public function replaceOne($filter,$replacement,array $options=[])
+    public function replaceOne($filter, $replacement, array $options = [])
     {
-        if(!isset($options['writeConcern'])){
+        if (!isset($options['writeConcern'])) {
             $options['writeConcern']=$this->writeConcern;
         }
 
-        $operation=new ReplaceOne($this->databaseName,$this->collectionName,$filter,$replacement,$options);
+        $operation=new ReplaceOne($this->databaseName, $this->collectionName, $filter, $replacement, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -719,13 +719,13 @@ class Collection
      *
      * @return UpdateResult
      */
-    public function updateMany($filter,$update,array $options=[])
+    public function updateMany($filter, $update, array $options = [])
     {
-        if(!isset($options['writeConcern'])){
+        if (!isset($options['writeConcern'])) {
             $options['writeConcern']=$this->writeConcern;
         }
 
-        $operation=new UpdateMany($this->databaseName,$this->collectionName,$filter,$update,$options);
+        $operation=new UpdateMany($this->databaseName, $this->collectionName, $filter, $update, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -743,13 +743,13 @@ class Collection
      *
      * @return UpdateResult
      */
-    public function updateOne($filter,$update,array $options=[])
+    public function updateOne($filter, $update, array $options = [])
     {
-        if(!isset($options['writeConcern'])){
+        if (!isset($options['writeConcern'])) {
             $options['writeConcern']=$this->writeConcern;
         }
 
-        $operation=new UpdateOne($this->databaseName,$this->collectionName,$filter,$update,$options);
+        $operation=new UpdateOne($this->databaseName, $this->collectionName, $filter, $update, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -764,7 +764,7 @@ class Collection
      *
      * @return Collection
      */
-    public function withOptions(array $options=[])
+    public function withOptions(array $options = [])
     {
         $options+=[
             'readConcern'   =>$this->readConcern,
@@ -773,6 +773,6 @@ class Collection
             'writeConcern'  =>$this->writeConcern,
         ];
 
-        return new Collection($this->manager,$this->databaseName,$this->collectionName,$options);
+        return new Collection($this->manager, $this->databaseName, $this->collectionName, $options);
     }
 }

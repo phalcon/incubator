@@ -20,7 +20,7 @@ class BulkWriteResult
      * @param WriteResult $writeResult
      * @param mixed[]     $insertedIds
      */
-    public function __construct(WriteResult $writeResult,array $insertedIds)
+    public function __construct(WriteResult $writeResult, array $insertedIds)
     {
         $this->writeResult   =$writeResult;
         $this->insertedIds   =$insertedIds;
@@ -38,7 +38,7 @@ class BulkWriteResult
      */
     public function getDeletedCount()
     {
-        if($this->isAcknowledged){
+        if ($this->isAcknowledged) {
             return $this->writeResult->getDeletedCount();
         }
 
@@ -56,7 +56,7 @@ class BulkWriteResult
      */
     public function getInsertedCount()
     {
-        if($this->isAcknowledged){
+        if ($this->isAcknowledged) {
             return $this->writeResult->getInsertedCount();
         }
 
@@ -89,7 +89,7 @@ class BulkWriteResult
      */
     public function getMatchedCount()
     {
-        if($this->isAcknowledged){
+        if ($this->isAcknowledged) {
             return $this->writeResult->getMatchedCount();
         }
 
@@ -110,7 +110,7 @@ class BulkWriteResult
      */
     public function getModifiedCount()
     {
-        if($this->isAcknowledged){
+        if ($this->isAcknowledged) {
             return $this->writeResult->getModifiedCount();
         }
 
@@ -128,7 +128,7 @@ class BulkWriteResult
      */
     public function getUpsertedCount()
     {
-        if($this->isAcknowledged){
+        if ($this->isAcknowledged) {
             return $this->writeResult->getUpsertedCount();
         }
 
@@ -151,7 +151,7 @@ class BulkWriteResult
      */
     public function getUpsertedIds()
     {
-        if($this->isAcknowledged){
+        if ($this->isAcknowledged) {
             return $this->writeResult->getUpsertedIds();
         }
 

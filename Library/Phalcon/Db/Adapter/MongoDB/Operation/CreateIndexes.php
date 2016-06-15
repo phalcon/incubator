@@ -35,24 +35,24 @@ class CreateIndexes implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,array $indexes)
+    public function __construct($databaseName, $collectionName, array $indexes)
     {
-        if(empty($indexes)){
+        if (empty($indexes)) {
             throw new InvalidArgumentException('$indexes is empty');
         }
 
         $expectedIndex=0;
 
-        foreach($indexes as $i=>$index){
-            if($i!==$expectedIndex){
-                throw new InvalidArgumentException(sprintf('$indexes is not a list (unexpected index: "%s")',$i));
+        foreach ($indexes as $i => $index) {
+            if ($i!==$expectedIndex) {
+                throw new InvalidArgumentException(sprintf('$indexes is not a list (unexpected index: "%s")', $i));
             }
 
-            if(!is_array($index)){
-                throw InvalidArgumentException::invalidType(sprintf('$index[%d]',$i),$index,'array');
+            if (!is_array($index)) {
+                throw InvalidArgumentException::invalidType(sprintf('$index[%d]', $i), $index, 'array');
             }
 
-            if(!isset($index['ns'])){
+            if (!isset($index['ns'])) {
                 $index['ns']=$databaseName.'.'.$collectionName;
             }
 
@@ -79,15 +79,15 @@ class CreateIndexes implements Executable
      */
     public function execute(Server $server)
     {
-        if(Functions::server_supports_feature($server,self::$wireVersionForCommand)){
+        if (Functions::server_supports_feature($server, self::$wireVersionForCommand)) {
             $this->executeCommand($server);
-        } else{
+        } else {
             $this->executeLegacy($server);
         }
 
-        return array_map(function(IndexInput $index){
+        return array_map(function (IndexInput $index) {
             return (string)$index;
-        },$this->indexes);
+        }, $this->indexes);
     }
 
     /**
@@ -103,7 +103,7 @@ class CreateIndexes implements Executable
             'indexes'      =>$this->indexes,
         ]);
 
-        $server->executeCommand($this->databaseName,$command);
+        $server->executeCommand($this->databaseName, $command);
     }
 
     /**
@@ -116,10 +116,10 @@ class CreateIndexes implements Executable
     {
         $bulk=new Bulk(['ordered'=>true]);
 
-        foreach($this->indexes as $index){
+        foreach ($this->indexes as $index) {
             $bulk->insert($index);
         }
 
-        $server->executeBulkWrite($this->databaseName.'.system.indexes',$bulk,new WriteConcern(1));
+        $server->executeBulkWrite($this->databaseName.'.system.indexes', $bulk, new WriteConcern(1));
     }
 }
