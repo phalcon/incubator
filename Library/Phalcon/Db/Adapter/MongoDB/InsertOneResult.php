@@ -20,7 +20,7 @@ class InsertOneResult
      * @param WriteResult $writeResult
      * @param mixed       $insertedId
      */
-    public function __construct(WriteResult $writeResult,$insertedId)
+    public function __construct(WriteResult $writeResult, $insertedId)
     {
         $this->writeResult   =$writeResult;
         $this->insertedId    =$insertedId;
@@ -38,7 +38,7 @@ class InsertOneResult
      */
     public function getInsertedCount()
     {
-        if($this->isAcknowledged){
+        if ($this->isAcknowledged) {
             return $this->writeResult->getInsertedCount();
         }
 

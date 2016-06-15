@@ -35,7 +35,7 @@ class DeleteResult
      */
     public function getDeletedCount()
     {
-        if($this->isAcknowledged){
+        if ($this->isAcknowledged) {
             return $this->writeResult->getDeletedCount();
         }
 

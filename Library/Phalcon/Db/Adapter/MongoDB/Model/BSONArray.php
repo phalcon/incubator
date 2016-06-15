@@ -14,7 +14,7 @@ use ArrayObject;
  *
  * @api
  */
-class BSONArray extends ArrayObject implements Serializable,Unserializable
+class BSONArray extends ArrayObject implements Serializable, Unserializable
 {
     /**
      * Factory method for var_export().

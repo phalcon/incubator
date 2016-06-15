@@ -14,7 +14,7 @@ use ArrayObject;
  *
  * @api
  */
-class BSONDocument extends ArrayObject implements Serializable,Unserializable
+class BSONDocument extends ArrayObject implements Serializable, Unserializable
 {
     /**
      * Constructor.
@@ -24,9 +24,9 @@ class BSONDocument extends ArrayObject implements Serializable,Unserializable
      *
      * @see http://php.net/arrayobject.construct
      */
-    public function __construct($input=[],$flags=ArrayObject::ARRAY_AS_PROPS,$iterator_class='ArrayIterator')
+    public function __construct($input = [], $flags = ArrayObject::ARRAY_AS_PROPS, $iterator_class = 'ArrayIterator')
     {
-        parent::__construct($input,$flags,$iterator_class);
+        parent::__construct($input, $flags, $iterator_class);
     }
 
     /**
@@ -67,6 +67,6 @@ class BSONDocument extends ArrayObject implements Serializable,Unserializable
      */
     public function bsonUnserialize(array $data)
     {
-        parent::__construct($data,ArrayObject::ARRAY_AS_PROPS);
+        parent::__construct($data, ArrayObject::ARRAY_AS_PROPS);
     }
 }

@@ -70,54 +70,54 @@ class CreateCollection implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,array $options=[])
+    public function __construct($databaseName, $collectionName, array $options = [])
     {
-        if(isset($options['autoIndexId'])&&!is_bool($options['autoIndexId'])){
-            throw InvalidArgumentException::invalidType('"autoIndexId" option',$options['autoIndexId'],'boolean');
+        if (isset($options['autoIndexId'])&&!is_bool($options['autoIndexId'])) {
+            throw InvalidArgumentException::invalidType('"autoIndexId" option', $options['autoIndexId'], 'boolean');
         }
 
-        if(isset($options['capped'])&&!is_bool($options['capped'])){
-            throw InvalidArgumentException::invalidType('"capped" option',$options['capped'],'boolean');
+        if (isset($options['capped'])&&!is_bool($options['capped'])) {
+            throw InvalidArgumentException::invalidType('"capped" option', $options['capped'], 'boolean');
         }
 
-        if(isset($options['flags'])&&!is_integer($options['flags'])){
-            throw InvalidArgumentException::invalidType('"flags" option',$options['flags'],'integer');
+        if (isset($options['flags'])&&!is_integer($options['flags'])) {
+            throw InvalidArgumentException::invalidType('"flags" option', $options['flags'], 'integer');
         }
 
-        if(isset($options['indexOptionDefaults'])&&!is_array($options['indexOptionDefaults'])&&!is_object($options['indexOptionDefaults'])){
-            throw InvalidArgumentException::invalidType('"indexOptionDefaults" option',$options['indexOptionDefaults'],'array or object');
+        if (isset($options['indexOptionDefaults'])&&!is_array($options['indexOptionDefaults'])&&!is_object($options['indexOptionDefaults'])) {
+            throw InvalidArgumentException::invalidType('"indexOptionDefaults" option', $options['indexOptionDefaults'], 'array or object');
         }
 
-        if(isset($options['max'])&&!is_integer($options['max'])){
-            throw InvalidArgumentException::invalidType('"max" option',$options['max'],'integer');
+        if (isset($options['max'])&&!is_integer($options['max'])) {
+            throw InvalidArgumentException::invalidType('"max" option', $options['max'], 'integer');
         }
 
-        if(isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])){
-            throw InvalidArgumentException::invalidType('"maxTimeMS" option',$options['maxTimeMS'],'integer');
+        if (isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
-        if(isset($options['size'])&&!is_integer($options['size'])){
-            throw InvalidArgumentException::invalidType('"size" option',$options['size'],'integer');
+        if (isset($options['size'])&&!is_integer($options['size'])) {
+            throw InvalidArgumentException::invalidType('"size" option', $options['size'], 'integer');
         }
 
-        if(isset($options['storageEngine'])&&!is_array($options['storageEngine'])&&!is_object($options['storageEngine'])){
-            throw InvalidArgumentException::invalidType('"storageEngine" option',$options['storageEngine'],'array or object');
+        if (isset($options['storageEngine'])&&!is_array($options['storageEngine'])&&!is_object($options['storageEngine'])) {
+            throw InvalidArgumentException::invalidType('"storageEngine" option', $options['storageEngine'], 'array or object');
         }
 
-        if(isset($options['typeMap'])&&!is_array($options['typeMap'])){
-            throw InvalidArgumentException::invalidType('"typeMap" option',$options['typeMap'],'array');
+        if (isset($options['typeMap'])&&!is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
-        if(isset($options['validationAction'])&&!is_string($options['validationAction'])){
-            throw InvalidArgumentException::invalidType('"validationAction" option',$options['validationAction'],'string');
+        if (isset($options['validationAction'])&&!is_string($options['validationAction'])) {
+            throw InvalidArgumentException::invalidType('"validationAction" option', $options['validationAction'], 'string');
         }
 
-        if(isset($options['validationLevel'])&&!is_string($options['validationLevel'])){
-            throw InvalidArgumentException::invalidType('"validationLevel" option',$options['validationLevel'],'string');
+        if (isset($options['validationLevel'])&&!is_string($options['validationLevel'])) {
+            throw InvalidArgumentException::invalidType('"validationLevel" option', $options['validationLevel'], 'string');
         }
 
-        if(isset($options['validator'])&&!is_array($options['validator'])&&!is_object($options['validator'])){
-            throw InvalidArgumentException::invalidType('"validator" option',$options['validator'],'array or object');
+        if (isset($options['validator'])&&!is_array($options['validator'])&&!is_object($options['validator'])) {
+            throw InvalidArgumentException::invalidType('"validator" option', $options['validator'], 'array or object');
         }
 
         $this->databaseName  =(string)$databaseName;
@@ -136,9 +136,9 @@ class CreateCollection implements Executable
      */
     public function execute(Server $server)
     {
-        $cursor=$server->executeCommand($this->databaseName,$this->createCommand());
+        $cursor=$server->executeCommand($this->databaseName, $this->createCommand());
 
-        if(isset($this->options['typeMap'])){
+        if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
         }
 
@@ -154,8 +154,7 @@ class CreateCollection implements Executable
     {
         $cmd=['create'=>$this->collectionName];
 
-        foreach(
-            [
+        foreach ([
                 'autoIndexId',
                 'capped',
                 'flags',
@@ -164,22 +163,21 @@ class CreateCollection implements Executable
                 'size',
                 'validationAction',
                 'validationLevel'
-            ] as $option
-        ){
-            if(isset($this->options[ $option ])){
+            ] as $option) {
+            if (isset($this->options[ $option ])) {
                 $cmd[ $option ]=$this->options[ $option ];
             }
         }
 
-        if(isset($this->options['indexOptionDefaults'])){
+        if (isset($this->options['indexOptionDefaults'])) {
             $cmd['indexOptionDefaults']=(object)$this->options['indexOptionDefaults'];
         }
 
-        if(isset($this->options['storageEngine'])){
+        if (isset($this->options['storageEngine'])) {
             $cmd['storageEngine']=(object)$this->options['storageEngine'];
         }
 
-        if(isset($this->options['validator'])){
+        if (isset($this->options['validator'])) {
             $cmd['validator']=(object)$this->options['validator'];
         }
 

@@ -42,18 +42,18 @@ class Delete implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,$filter,$limit,array $options=[])
+    public function __construct($databaseName, $collectionName, $filter, $limit, array $options = [])
     {
-        if(!is_array($filter)&&!is_object($filter)){
-            throw InvalidArgumentException::invalidType('$filter',$filter,'array or object');
+        if (!is_array($filter)&&!is_object($filter)) {
+            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
-        if($limit!==0&&$limit!==1){
+        if ($limit!==0&&$limit!==1) {
             throw new InvalidArgumentException('$limit must be 0 or 1');
         }
 
-        if(isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern){
-            throw InvalidArgumentException::invalidType('"writeConcern" option',$options['writeConcern'],'MongoDB\Driver\WriteConcern');
+        if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         $this->databaseName  =(string)$databaseName;
@@ -75,10 +75,10 @@ class Delete implements Executable
     public function execute(Server $server)
     {
         $bulk=new Bulk();
-        $bulk->delete($this->filter,['limit'=>$this->limit]);
+        $bulk->delete($this->filter, ['limit'=>$this->limit]);
 
         $writeConcern=isset($this->options['writeConcern'])?$this->options['writeConcern']:null;
-        $writeResult =$server->executeBulkWrite($this->databaseName.'.'.$this->collectionName,$bulk,$writeConcern);
+        $writeResult =$server->executeBulkWrite($this->databaseName.'.'.$this->collectionName, $bulk, $writeConcern);
 
         return new DeleteResult($writeResult);
     }

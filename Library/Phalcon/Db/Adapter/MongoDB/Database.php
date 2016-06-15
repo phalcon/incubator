@@ -61,26 +61,26 @@ class Database
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(Manager $manager,$databaseName,array $options=[])
+    public function __construct(Manager $manager, $databaseName, array $options = [])
     {
-        if(strlen($databaseName)<1){
+        if (strlen($databaseName)<1) {
             throw new InvalidArgumentException('$databaseName is invalid: '.$databaseName);
         }
 
-        if(isset($options['readConcern'])&&!$options['readConcern'] instanceof ReadConcern){
-            throw InvalidArgumentException::invalidType('"readConcern" option',$options['readConcern'],'MongoDB\Driver\ReadConcern');
+        if (isset($options['readConcern'])&&!$options['readConcern'] instanceof ReadConcern) {
+            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
         }
 
-        if(isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference){
-            throw InvalidArgumentException::invalidType('"readPreference" option',$options['readPreference'],'MongoDB\Driver\ReadPreference');
+        if (isset($options['readPreference'])&&!$options['readPreference'] instanceof ReadPreference) {
+            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
-        if(isset($options['typeMap'])&&!is_array($options['typeMap'])){
-            throw InvalidArgumentException::invalidType('"typeMap" option',$options['typeMap'],'array');
+        if (isset($options['typeMap'])&&!is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
-        if(isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern){
-            throw InvalidArgumentException::invalidType('"writeConcern" option',$options['writeConcern'],'MongoDB\Driver\WriteConcern');
+        if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         $this->manager       =$manager;
@@ -149,17 +149,17 @@ class Database
      * @return Cursor
      * @throws InvalidArgumentException
      */
-    public function command($command,array $options=[])
+    public function command($command, array $options = [])
     {
-        if(!isset($options['readPreference'])){
+        if (!isset($options['readPreference'])) {
             $options['readPreference']=$this->readPreference;
         }
 
-        if(!isset($options['typeMap'])){
+        if (!isset($options['typeMap'])) {
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new DatabaseCommand($this->databaseName,$command,$options);
+        $operation=new DatabaseCommand($this->databaseName, $command, $options);
         $server   =$this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
@@ -175,13 +175,13 @@ class Database
      *
      * @return array|object Command result document
      */
-    public function createCollection($collectionName,array $options=[])
+    public function createCollection($collectionName, array $options = [])
     {
-        if(!isset($options['typeMap'])){
+        if (!isset($options['typeMap'])) {
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new CreateCollection($this->databaseName,$collectionName,$options);
+        $operation=new CreateCollection($this->databaseName, $collectionName, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -196,13 +196,13 @@ class Database
      *
      * @return array|object Command result document
      */
-    public function drop(array $options=[])
+    public function drop(array $options = [])
     {
-        if(!isset($options['typeMap'])){
+        if (!isset($options['typeMap'])) {
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new DropDatabase($this->databaseName,$options);
+        $operation=new DropDatabase($this->databaseName, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -218,13 +218,13 @@ class Database
      *
      * @return array|object Command result document
      */
-    public function dropCollection($collectionName,array $options=[])
+    public function dropCollection($collectionName, array $options = [])
     {
-        if(!isset($options['typeMap'])){
+        if (!isset($options['typeMap'])) {
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new DropCollection($this->databaseName,$collectionName,$options);
+        $operation=new DropCollection($this->databaseName, $collectionName, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -249,9 +249,9 @@ class Database
      *
      * @return CollectionInfoIterator
      */
-    public function listCollections(array $options=[])
+    public function listCollections(array $options = [])
     {
-        $operation=new ListCollections($this->databaseName,$options);
+        $operation=new ListCollections($this->databaseName, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -267,7 +267,7 @@ class Database
      *
      * @return Collection
      */
-    public function selectCollection($collectionName,array $options=[])
+    public function selectCollection($collectionName, array $options = [])
     {
         $options+=[
             'readConcern'   =>$this->readConcern,
@@ -276,7 +276,7 @@ class Database
             'writeConcern'  =>$this->writeConcern,
         ];
 
-        return new Collection($this->manager,$this->databaseName,$collectionName,$options);
+        return new Collection($this->manager, $this->databaseName, $collectionName, $options);
     }
 
     /**
@@ -288,7 +288,7 @@ class Database
      *
      * @return Database
      */
-    public function withOptions(array $options=[])
+    public function withOptions(array $options = [])
     {
         $options+=[
             'readConcern'   =>$this->readConcern,
@@ -297,6 +297,6 @@ class Database
             'writeConcern'  =>$this->writeConcern,
         ];
 
-        return new Database($this->manager,$this->databaseName,$options);
+        return new Database($this->manager, $this->databaseName, $options);
     }
 }

@@ -104,7 +104,7 @@ class IndexInfo implements ArrayAccess
      */
     public function isTtl()
     {
-        return array_key_exists('expireAfterSeconds',$this->info);
+        return array_key_exists('expireAfterSeconds', $this->info);
     }
 
     /**
@@ -129,7 +129,7 @@ class IndexInfo implements ArrayAccess
      */
     public function offsetExists($key)
     {
-        return array_key_exists($key,$this->info);
+        return array_key_exists($key, $this->info);
     }
 
     /**
@@ -157,7 +157,7 @@ class IndexInfo implements ArrayAccess
      * @see http://php.net/arrayaccess.offsetset
      * @throws BadMethodCallException
      */
-    public function offsetSet($key,$value)
+    public function offsetSet($key, $value)
     {
         throw BadMethodCallException::classIsImmutable(__CLASS__);
     }

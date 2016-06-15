@@ -35,10 +35,10 @@ class DropCollection implements Executable
      * @param string $collectionName Collection name
      * @param array  $options Command options
      */
-    public function __construct($databaseName,$collectionName,array $options=[])
+    public function __construct($databaseName, $collectionName, array $options = [])
     {
-        if(isset($options['typeMap'])&&!is_array($options['typeMap'])){
-            throw InvalidArgumentException::invalidType('"typeMap" option',$options['typeMap'],'array');
+        if (isset($options['typeMap'])&&!is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
         $this->databaseName  =(string)$databaseName;
@@ -57,21 +57,21 @@ class DropCollection implements Executable
      */
     public function execute(Server $server)
     {
-        try{
-            $cursor=$server->executeCommand($this->databaseName,new Command(['drop'=>$this->collectionName]));
-        } catch(RuntimeException $e){
+        try {
+            $cursor=$server->executeCommand($this->databaseName, new Command(['drop'=>$this->collectionName]));
+        } catch (RuntimeException $e) {
             /* The server may return an error if the collection does not exist.
              * Check for an error message (unfortunately, there isn't a code)
              * and NOP instead of throwing.
              */
-            if($e->getMessage()===self::$errorMessageNamespaceNotFound){
+            if ($e->getMessage()===self::$errorMessageNamespaceNotFound) {
                 return (object)['ok'=>0,'errmsg'=>self::$errorMessageNamespaceNotFound];
             }
 
             throw $e;
         }
 
-        if(isset($this->options['typeMap'])){
+        if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
         }
 

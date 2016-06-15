@@ -54,32 +54,32 @@ class WritableStream
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(CollectionWrapper $collectionWrapper,$filename,array $options=[])
+    public function __construct(CollectionWrapper $collectionWrapper, $filename, array $options = [])
     {
         $options+=[
             '_id'           =>new ObjectId,
             'chunkSizeBytes'=>self::$defaultChunkSizeBytes,
         ];
 
-        if(isset($options['aliases'])&&!Functions::is_string_array($options['aliases'])){
-            throw InvalidArgumentException::invalidType('"aliases" option',$options['aliases'],'array of strings');
+        if (isset($options['aliases'])&&!Functions::is_string_array($options['aliases'])) {
+            throw InvalidArgumentException::invalidType('"aliases" option', $options['aliases'], 'array of strings');
         }
 
-        if(isset($options['chunkSizeBytes'])&&!is_integer($options['chunkSizeBytes'])){
-            throw InvalidArgumentException::invalidType('"chunkSizeBytes" option',$options['chunkSizeBytes'],'integer');
+        if (isset($options['chunkSizeBytes'])&&!is_integer($options['chunkSizeBytes'])) {
+            throw InvalidArgumentException::invalidType('"chunkSizeBytes" option', $options['chunkSizeBytes'], 'integer');
         }
 
-        if(isset($options['contentType'])&&!is_string($options['contentType'])){
-            throw InvalidArgumentException::invalidType('"contentType" option',$options['contentType'],'string');
+        if (isset($options['contentType'])&&!is_string($options['contentType'])) {
+            throw InvalidArgumentException::invalidType('"contentType" option', $options['contentType'], 'string');
         }
 
-        if(isset($options['metadata'])&&!is_array($options['metadata'])&&!is_object($options['metadata'])){
-            throw InvalidArgumentException::invalidType('"metadata" option',$options['metadata'],'array or object');
+        if (isset($options['metadata'])&&!is_array($options['metadata'])&&!is_object($options['metadata'])) {
+            throw InvalidArgumentException::invalidType('"metadata" option', $options['metadata'], 'array or object');
         }
 
         $this->chunkSize        =$options['chunkSizeBytes'];
         $this->collectionWrapper=$collectionWrapper;
-        $this->buffer           =fopen('php://temp','w+');
+        $this->buffer           =fopen('php://temp', 'w+');
         $this->ctx              =hash_init('md5');
 
         $this->file=[
@@ -88,7 +88,7 @@ class WritableStream
                         'filename'  =>(string)$filename,
                         // TODO: This is necessary until PHPC-536 is implemented
                         'uploadDate'=>new UTCDateTime(floor(microtime(true)*1000)),
-                    ]+array_intersect_key($options,['aliases'=>1,'contentType'=>1,'metadata'=>1]);
+                    ]+array_intersect_key($options, ['aliases'=>1,'contentType'=>1,'metadata'=>1]);
     }
 
     /**
@@ -96,7 +96,7 @@ class WritableStream
      */
     public function close()
     {
-        if($this->isClosed){
+        if ($this->isClosed) {
             // TODO: Should this be an error condition? e.g. BadMethodCallException
             return;
         }
@@ -104,7 +104,7 @@ class WritableStream
         rewind($this->buffer);
         $cached=stream_get_contents($this->buffer);
 
-        if(strlen($cached)>0){
+        if (strlen($cached)>0) {
             $this->insertChunk($cached);
         }
 
@@ -151,23 +151,23 @@ class WritableStream
      */
     public function insertChunks($toWrite)
     {
-        if($this->isClosed){
+        if ($this->isClosed) {
             // TODO: Should this be an error condition? e.g. BadMethodCallException
             return;
         }
 
         $readBytes=0;
 
-        while($readBytes!=strlen($toWrite)){
-            $addToBuffer=substr($toWrite,$readBytes,$this->chunkSize-$this->bufferLength);
-            fwrite($this->buffer,$addToBuffer);
+        while ($readBytes!=strlen($toWrite)) {
+            $addToBuffer=substr($toWrite, $readBytes, $this->chunkSize-$this->bufferLength);
+            fwrite($this->buffer, $addToBuffer);
             $readBytes+=strlen($addToBuffer);
             $this->bufferLength+=strlen($addToBuffer);
 
-            if($this->bufferLength==$this->chunkSize){
+            if ($this->bufferLength==$this->chunkSize) {
                 rewind($this->buffer);
                 $this->insertChunk(stream_get_contents($this->buffer));
-                ftruncate($this->buffer,0);
+                ftruncate($this->buffer, 0);
                 $this->bufferLength=0;
             }
         }
@@ -190,11 +190,11 @@ class WritableStream
      */
     public function uploadFromStream($source)
     {
-        if(!is_resource($source)||get_resource_type($source)!="stream"){
-            throw InvalidArgumentException::invalidType('$source',$source,'resource');
+        if (!is_resource($source)||get_resource_type($source)!="stream") {
+            throw InvalidArgumentException::invalidType('$source', $source, 'resource');
         }
 
-        while($data=$this->readChunk($source)){
+        while ($data=$this->readChunk($source)) {
             $this->insertChunk($data);
         }
 
@@ -209,7 +209,7 @@ class WritableStream
 
     private function fileCollectionInsert()
     {
-        if($this->isClosed){
+        if ($this->isClosed) {
             // TODO: Should this be an error condition? e.g. BadMethodCallException
             return;
         }
@@ -226,7 +226,7 @@ class WritableStream
 
     private function insertChunk($data)
     {
-        if($this->isClosed){
+        if ($this->isClosed) {
             // TODO: Should this be an error condition? e.g. BadMethodCallException
             return;
         }
@@ -234,10 +234,10 @@ class WritableStream
         $toUpload=[
             'files_id'=>$this->file['_id'],
             'n'       =>$this->chunkOffset,
-            'data'    =>new Binary($data,Binary::TYPE_GENERIC),
+            'data'    =>new Binary($data, Binary::TYPE_GENERIC),
         ];
 
-        hash_update($this->ctx,$data);
+        hash_update($this->ctx, $data);
 
         $this->collectionWrapper->insertChunk($toUpload);
         $this->length+=strlen($data);
@@ -246,9 +246,9 @@ class WritableStream
 
     private function readChunk($source)
     {
-        try{
-            $data=fread($source,$this->chunkSize);
-        } catch(DriverException $e){
+        try {
+            $data=fread($source, $this->chunkSize);
+        } catch (DriverException $e) {
             $this->abort();
             throw $e;
         }

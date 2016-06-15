@@ -30,13 +30,13 @@ class StreamWrapper
      *
      * @param string $protocol Protocol to use for stream_wrapper_register()
      */
-    public static function register($protocol='gridfs')
+    public static function register($protocol = 'gridfs')
     {
-        if(in_array($protocol,stream_get_wrappers())){
+        if (in_array($protocol, stream_get_wrappers())) {
             stream_wrapper_unregister($protocol);
         }
 
-        stream_wrapper_register($protocol,get_called_class(),\STREAM_IS_URL);
+        stream_wrapper_register($protocol, get_called_class(), \STREAM_IS_URL);
     }
 
     /**
@@ -70,16 +70,16 @@ class StreamWrapper
      * @param integer $options Additional flags set by the streams API
      * @param string  $openedPath Not used
      */
-    public function stream_open($path,$mode,$options,&$openedPath)
+    public function stream_open($path, $mode, $options, &$openedPath)
     {
         $this->initProtocol($path);
         $this->mode=$mode;
 
-        if($mode==='r'){
+        if ($mode==='r') {
             return $this->initReadableStream();
         }
 
-        if($mode==='w'){
+        if ($mode==='w') {
             return $this->initWritableStream();
         }
 
@@ -183,7 +183,7 @@ class StreamWrapper
      */
     private function initProtocol($path)
     {
-        $parts         =explode('://',$path,2);
+        $parts         =explode('://', $path, 2);
         $this->protocol=$parts[0]?:'gridfs';
     }
 
@@ -197,7 +197,7 @@ class StreamWrapper
     {
         $context=stream_context_get_options($this->context);
 
-        $this->stream=new ReadableStream($context[ $this->protocol ]['collectionWrapper'],$context[ $this->protocol ]['file']);
+        $this->stream=new ReadableStream($context[ $this->protocol ]['collectionWrapper'], $context[ $this->protocol ]['file']);
 
         return true;
     }
@@ -212,7 +212,7 @@ class StreamWrapper
     {
         $context=stream_context_get_options($this->context);
 
-        $this->stream=new WritableStream($context[ $this->protocol ]['collectionWrapper'],$context[ $this->protocol ]['filename'],$context[ $this->protocol ]['options']);
+        $this->stream=new WritableStream($context[ $this->protocol ]['collectionWrapper'], $context[ $this->protocol ]['filename'], $context[ $this->protocol ]['options']);
 
         return true;
     }

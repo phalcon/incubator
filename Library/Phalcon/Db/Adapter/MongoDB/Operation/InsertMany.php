@@ -46,21 +46,21 @@ class InsertMany implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,array $documents,array $options=[])
+    public function __construct($databaseName, $collectionName, array $documents, array $options = [])
     {
-        if(empty($documents)){
+        if (empty($documents)) {
             throw new InvalidArgumentException('$documents is empty');
         }
 
         $expectedIndex=0;
 
-        foreach($documents as $i=>$document){
-            if($i!==$expectedIndex){
-                throw new InvalidArgumentException(sprintf('$documents is not a list (unexpected index: "%s")',$i));
+        foreach ($documents as $i => $document) {
+            if ($i!==$expectedIndex) {
+                throw new InvalidArgumentException(sprintf('$documents is not a list (unexpected index: "%s")', $i));
             }
 
-            if(!is_array($document)&&!is_object($document)){
-                throw InvalidArgumentException::invalidType(sprintf('$documents[%d]',$i),$document,'array or object');
+            if (!is_array($document)&&!is_object($document)) {
+                throw InvalidArgumentException::invalidType(sprintf('$documents[%d]', $i), $document, 'array or object');
             }
 
             $expectedIndex+=1;
@@ -68,16 +68,16 @@ class InsertMany implements Executable
 
         $options+=['ordered'=>true];
 
-        if(isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])){
-            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option',$options['bypassDocumentValidation'],'boolean');
+        if (isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])) {
+            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
-        if(!is_bool($options['ordered'])){
-            throw InvalidArgumentException::invalidType('"ordered" option',$options['ordered'],'boolean');
+        if (!is_bool($options['ordered'])) {
+            throw InvalidArgumentException::invalidType('"ordered" option', $options['ordered'], 'boolean');
         }
 
-        if(isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern){
-            throw InvalidArgumentException::invalidType('"writeConcern" option',$options['writeConcern'],'MongoDB\Driver\WriteConcern');
+        if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         $this->databaseName  =(string)$databaseName;
@@ -99,26 +99,26 @@ class InsertMany implements Executable
     {
         $options=['ordered'=>$this->options['ordered']];
 
-        if(isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server,self::$wireVersionForDocumentLevelValidation)){
+        if (isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
             $options['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 
         $bulk       =new Bulk($options);
         $insertedIds=[];
 
-        foreach($this->documents as $i=>$document){
+        foreach ($this->documents as $i => $document) {
             $insertedId=$bulk->insert($document);
 
-            if($insertedId!==null){
+            if ($insertedId!==null) {
                 $insertedIds[ $i ]=$insertedId;
-            } else{
+            } else {
                 $insertedIds[ $i ]=Functions::extract_id_from_inserted_document($document);
             }
         }
 
         $writeConcern=isset($this->options['writeConcern'])?$this->options['writeConcern']:null;
-        $writeResult =$server->executeBulkWrite($this->databaseName.'.'.$this->collectionName,$bulk,$writeConcern);
+        $writeResult =$server->executeBulkWrite($this->databaseName.'.'.$this->collectionName, $bulk, $writeConcern);
 
-        return new InsertManyResult($writeResult,$insertedIds);
+        return new InsertManyResult($writeResult, $insertedIds);
     }
 }

@@ -54,14 +54,14 @@ class Update implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,$filter,$update,array $options=[])
+    public function __construct($databaseName, $collectionName, $filter, $update, array $options = [])
     {
-        if(!is_array($filter)&&!is_object($filter)){
-            throw InvalidArgumentException::invalidType('$filter',$filter,'array or object');
+        if (!is_array($filter)&&!is_object($filter)) {
+            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
-        if(!is_array($update)&&!is_object($update)){
-            throw InvalidArgumentException::invalidType('$update',$filter,'array or object');
+        if (!is_array($update)&&!is_object($update)) {
+            throw InvalidArgumentException::invalidType('$update', $filter, 'array or object');
         }
 
         $options+=[
@@ -69,24 +69,24 @@ class Update implements Executable
             'upsert'=>false,
         ];
 
-        if(isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])){
-            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option',$options['bypassDocumentValidation'],'boolean');
+        if (isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])) {
+            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
-        if(!is_bool($options['multi'])){
-            throw InvalidArgumentException::invalidType('"multi" option',$options['multi'],'boolean');
+        if (!is_bool($options['multi'])) {
+            throw InvalidArgumentException::invalidType('"multi" option', $options['multi'], 'boolean');
         }
 
-        if($options['multi']&&!Functions::is_first_key_operator($update)){
+        if ($options['multi']&&!Functions::is_first_key_operator($update)) {
             throw new InvalidArgumentException('"multi" option cannot be true if $update is a replacement document');
         }
 
-        if(!is_bool($options['upsert'])){
-            throw InvalidArgumentException::invalidType('"upsert" option',$options['upsert'],'boolean');
+        if (!is_bool($options['upsert'])) {
+            throw InvalidArgumentException::invalidType('"upsert" option', $options['upsert'], 'boolean');
         }
 
-        if(isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern){
-            throw InvalidArgumentException::invalidType('"writeConcern" option',$options['writeConcern'],'MongoDB\Driver\WriteConcern');
+        if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         $this->databaseName  =(string)$databaseName;
@@ -114,15 +114,15 @@ class Update implements Executable
 
         $bulkOptions=[];
 
-        if(isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server,self::$wireVersionForDocumentLevelValidation)){
+        if (isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
             $bulkOptions['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 
         $bulk=new Bulk($bulkOptions);
-        $bulk->update($this->filter,$this->update,$updateOptions);
+        $bulk->update($this->filter, $this->update, $updateOptions);
 
         $writeConcern=isset($this->options['writeConcern'])?$this->options['writeConcern']:null;
-        $writeResult =$server->executeBulkWrite($this->databaseName.'.'.$this->collectionName,$bulk,$writeConcern);
+        $writeResult =$server->executeBulkWrite($this->databaseName.'.'.$this->collectionName, $bulk, $writeConcern);
 
         return new UpdateResult($writeResult);
     }

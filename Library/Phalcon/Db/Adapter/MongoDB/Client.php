@@ -47,15 +47,15 @@ class Client
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($uri='mongodb://localhost:27017',array $uriOptions=[],array $driverOptions=[])
+    public function __construct($uri = 'mongodb://localhost:27017', array $uriOptions = [], array $driverOptions = [])
     {
         $driverOptions+=['typeMap'=>self::$defaultTypeMap];
 
-        if(isset($driverOptions['typeMap'])&&!is_array($driverOptions['typeMap'])){
-            throw InvalidArgumentException::invalidType('"typeMap" driver option',$driverOptions['typeMap'],'array');
+        if (isset($driverOptions['typeMap'])&&!is_array($driverOptions['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" driver option', $driverOptions['typeMap'], 'array');
         }
 
-        $this->manager=new Manager($uri,$uriOptions,$driverOptions);
+        $this->manager=new Manager($uri, $uriOptions, $driverOptions);
         $this->uri    =(string)$uri;
         $this->typeMap=isset($driverOptions['typeMap'])?$driverOptions['typeMap']:null;
     }
@@ -114,13 +114,13 @@ class Client
      *
      * @return array|object Command result document
      */
-    public function dropDatabase($databaseName,array $options=[])
+    public function dropDatabase($databaseName, array $options = [])
     {
-        if(!isset($options['typeMap'])){
+        if (!isset($options['typeMap'])) {
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new DropDatabase($databaseName,$options);
+        $operation=new DropDatabase($databaseName, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -132,7 +132,7 @@ class Client
      * @see ListDatabases::__construct() for supported options
      * @return DatabaseInfoIterator
      */
-    public function listDatabases(array $options=[])
+    public function listDatabases(array $options = [])
     {
         $operation=new ListDatabases($options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
@@ -151,11 +151,11 @@ class Client
      *
      * @return Collection
      */
-    public function selectCollection($databaseName,$collectionName,array $options=[])
+    public function selectCollection($databaseName, $collectionName, array $options = [])
     {
         $options+=['typeMap'=>$this->typeMap];
 
-        return new Collection($this->manager,$databaseName,$collectionName,$options);
+        return new Collection($this->manager, $databaseName, $collectionName, $options);
     }
 
     /**
@@ -168,10 +168,10 @@ class Client
      *
      * @return Database
      */
-    public function selectDatabase($databaseName,array $options=[])
+    public function selectDatabase($databaseName, array $options = [])
     {
         $options+=['typeMap'=>$this->typeMap];
 
-        return new Database($this->manager,$databaseName,$options);
+        return new Database($this->manager, $databaseName, $options);
     }
 }

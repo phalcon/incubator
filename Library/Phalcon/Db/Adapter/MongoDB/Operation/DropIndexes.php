@@ -35,16 +35,16 @@ class DropIndexes implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,$indexName,array $options=[])
+    public function __construct($databaseName, $collectionName, $indexName, array $options = [])
     {
         $indexName=(string)$indexName;
 
-        if($indexName===''){
+        if ($indexName==='') {
             throw new InvalidArgumentException('$indexName cannot be empty');
         }
 
-        if(isset($options['typeMap'])&&!is_array($options['typeMap'])){
-            throw InvalidArgumentException::invalidType('"typeMap" option',$options['typeMap'],'array');
+        if (isset($options['typeMap'])&&!is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
         $this->databaseName  =(string)$databaseName;
@@ -69,9 +69,9 @@ class DropIndexes implements Executable
             'index'      =>$this->indexName,
         ];
 
-        $cursor=$server->executeCommand($this->databaseName,new Command($cmd));
+        $cursor=$server->executeCommand($this->databaseName, new Command($cmd));
 
-        if(isset($this->options['typeMap'])){
+        if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
         }
 

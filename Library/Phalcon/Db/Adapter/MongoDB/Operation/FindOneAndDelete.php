@@ -41,23 +41,23 @@ class FindOneAndDelete implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,$filter,array $options=[])
+    public function __construct($databaseName, $collectionName, $filter, array $options = [])
     {
-        if(!is_array($filter)&&!is_object($filter)){
-            throw InvalidArgumentException::invalidType('$filter',$filter,'array or object');
+        if (!is_array($filter)&&!is_object($filter)) {
+            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
-        if(isset($options['projection'])&&!is_array($options['projection'])&&!is_object($options['projection'])){
-            throw InvalidArgumentException::invalidType('"projection" option',$options['projection'],'array or object');
+        if (isset($options['projection'])&&!is_array($options['projection'])&&!is_object($options['projection'])) {
+            throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'array or object');
         }
 
-        if(isset($options['projection'])){
+        if (isset($options['projection'])) {
             $options['fields']=$options['projection'];
         }
 
         unset($options['projection']);
 
-        $this->findAndModify=new FindAndModify($databaseName,$collectionName,['query' =>$filter,
+        $this->findAndModify=new FindAndModify($databaseName, $collectionName, ['query' =>$filter,
                                                                               'remove'=>true
                                                                              ]+$options);
     }

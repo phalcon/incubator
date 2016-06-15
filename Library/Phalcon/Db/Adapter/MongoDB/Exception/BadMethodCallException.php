@@ -13,7 +13,7 @@ class BadMethodCallException extends \BadMethodCallException implements Exceptio
      */
     public static function classIsImmutable($class)
     {
-        return new static(sprintf('%s is immutable',$class));
+        return new static(sprintf('%s is immutable', $class));
     }
 
     /**
@@ -25,6 +25,6 @@ class BadMethodCallException extends \BadMethodCallException implements Exceptio
      */
     public static function unacknowledgedWriteResultAccess($method)
     {
-        return new static(sprintf('%s should not be called for an unacknowledged write result',$method));
+        return new static(sprintf('%s should not be called for an unacknowledged write result', $method));
     }
 }

@@ -15,7 +15,7 @@ class CorruptFileException extends RuntimeException
      */
     public static function missingChunk($expectedIndex)
     {
-        return new static(sprintf('Chunk not found for index "%d"',$expectedIndex));
+        return new static(sprintf('Chunk not found for index "%d"', $expectedIndex));
     }
 
     /**
@@ -26,9 +26,9 @@ class CorruptFileException extends RuntimeException
      *
      * @return self
      */
-    public static function unexpectedIndex($index,$expectedIndex)
+    public static function unexpectedIndex($index, $expectedIndex)
     {
-        return new static(sprintf('Expected chunk to have index "%d" but found "%d"',$expectedIndex,$index));
+        return new static(sprintf('Expected chunk to have index "%d" but found "%d"', $expectedIndex, $index));
     }
 
     /**
@@ -39,8 +39,8 @@ class CorruptFileException extends RuntimeException
      *
      * @return self
      */
-    public static function unexpectedSize($size,$expectedSize)
+    public static function unexpectedSize($size, $expectedSize)
     {
-        return new static(sprintf('Expected chunk to have size "%d" but found "%d"',$expectedSize,$size));
+        return new static(sprintf('Expected chunk to have size "%d" but found "%d"', $expectedSize, $size));
     }
 }

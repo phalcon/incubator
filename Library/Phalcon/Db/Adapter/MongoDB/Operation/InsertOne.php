@@ -42,18 +42,18 @@ class InsertOne implements Executable
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName,$collectionName,$document,array $options=[])
+    public function __construct($databaseName, $collectionName, $document, array $options = [])
     {
-        if(!is_array($document)&&!is_object($document)){
-            throw InvalidArgumentException::invalidType('$document',$document,'array or object');
+        if (!is_array($document)&&!is_object($document)) {
+            throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
         }
 
-        if(isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])){
-            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option',$options['bypassDocumentValidation'],'boolean');
+        if (isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])) {
+            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
-        if(isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern){
-            throw InvalidArgumentException::invalidType('"writeConcern" option',$options['writeConcern'],'MongoDB\Driver\WriteConcern');
+        if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         $this->databaseName  =(string)$databaseName;
@@ -75,20 +75,20 @@ class InsertOne implements Executable
     {
         $options=[];
 
-        if(isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server,self::$wireVersionForDocumentLevelValidation)){
+        if (isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
             $options['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 
         $bulk      =new Bulk($options);
         $insertedId=$bulk->insert($this->document);
 
-        if($insertedId===null){
+        if ($insertedId===null) {
             $insertedId=Functions::extract_id_from_inserted_document($this->document);
         }
 
         $writeConcern=isset($this->options['writeConcern'])?$this->options['writeConcern']:null;
-        $writeResult =$server->executeBulkWrite($this->databaseName.'.'.$this->collectionName,$bulk,$writeConcern);
+        $writeResult =$server->executeBulkWrite($this->databaseName.'.'.$this->collectionName, $bulk, $writeConcern);
 
-        return new InsertOneResult($writeResult,$insertedId);
+        return new InsertOneResult($writeResult, $insertedId);
     }
 }

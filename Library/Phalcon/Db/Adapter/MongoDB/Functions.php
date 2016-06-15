@@ -27,7 +27,7 @@ class Functions
      */
     public static function extract_id_from_inserted_document($document)
     {
-        if($document instanceof Serializable){
+        if ($document instanceof Serializable) {
             return self::extract_id_from_inserted_document($document->bsonSerialize());
         }
 
@@ -47,17 +47,17 @@ class Functions
      */
     public static function generate_index_name($document)
     {
-        if(is_object($document)){
+        if (is_object($document)) {
             $document=get_object_vars($document);
         }
 
-        if(!is_array($document)){
-            throw InvalidArgumentException::invalidType('$document',$document,'array or object');
+        if (!is_array($document)) {
+            throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
         }
 
         $name='';
 
-        foreach($document as $field=>$type){
+        foreach ($document as $field => $type) {
             $name.=($name!=''?'_':'').$field.'_'.$type;
         }
 
@@ -78,12 +78,12 @@ class Functions
      */
     public static function is_first_key_operator($document)
     {
-        if(is_object($document)){
+        if (is_object($document)) {
             $document=get_object_vars($document);
         }
 
-        if(!is_array($document)){
-            throw InvalidArgumentException::invalidType('$document',$document,'array or object');
+        if (!is_array($document)) {
+            throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
         }
 
         $firstKey=(string)key($document);
@@ -107,7 +107,7 @@ class Functions
     {
         $lastOp=end($pipeline);
 
-        if($lastOp===false){
+        if ($lastOp===false) {
             return false;
         }
 
@@ -130,7 +130,7 @@ class Functions
     {
         $document=[];
 
-        if($readConcern->getLevel()!==null){
+        if ($readConcern->getLevel()!==null) {
             $document['level']=$readConcern->getLevel();
         }
 
@@ -147,7 +147,7 @@ class Functions
      *
      * @return boolean
      */
-    public static function server_supports_feature(Server $server,$feature)
+    public static function server_supports_feature(Server $server, $feature)
     {
         $info          =$server->getInfo();
         $maxWireVersion=isset($info['maxWireVersion'])?(integer)$info['maxWireVersion']:0;
@@ -158,16 +158,15 @@ class Functions
 
     public static function is_string_array($input)
     {
-        if(!is_array($input)){
+        if (!is_array($input)) {
             return false;
         }
-        foreach($input as $item){
-            if(!is_string($item)){
+        foreach ($input as $item) {
+            if (!is_string($item)) {
                 return false;
             }
         }
 
         return true;
     }
-
 }
