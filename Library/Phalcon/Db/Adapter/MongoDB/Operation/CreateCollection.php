@@ -4,7 +4,7 @@ namespace Phalcon\Db\Adapter\MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
-use MongoDB\Exception\InvalidArgumentException;
+use Phalcon\Db\Adapter\MongoDB\Exception\InvalidArgumentException;
 
 /**
  * Operation for the create command.

@@ -2,11 +2,11 @@
 
 namespace Phalcon\Db\Adapter\MongoDB\Operation;
 
-use MongoDB\BulkWriteResult;
+use Phalcon\Db\Adapter\MongoDB\BulkWriteResult;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Exception\InvalidArgumentException;
+use Phalcon\Db\Adapter\MongoDB\Exception\InvalidArgumentException;
 use Phalcon\Db\Adapter\MongoDB\Functions;
 
 /**

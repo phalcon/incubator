@@ -6,8 +6,8 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Model\IndexInput;
+use Phalcon\Db\Adapter\MongoDB\Exception\InvalidArgumentException;
+use Phalcon\Db\Adapter\MongoDB\Model\IndexInput;
 use Phalcon\Db\Adapter\MongoDB\Functions;
 
 /**

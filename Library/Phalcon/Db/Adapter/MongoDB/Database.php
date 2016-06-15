@@ -11,7 +11,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use Phalcon\Db\Adapter\MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Model\CollectionInfoIterator;
+use Phalcon\Db\Adapter\MongoDB\Model\CollectionInfoIterator;
 use Phalcon\Db\Adapter\MongoDB\Operation\CreateCollection;
 use Phalcon\Db\Adapter\MongoDB\Operation\DatabaseCommand;
 use Phalcon\Db\Adapter\MongoDB\Operation\DropCollection;
