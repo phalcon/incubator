@@ -79,7 +79,7 @@ class CreateIndexes implements Executable
      */
     public function execute(Server $server)
     {
-        if (Functions::server_supports_feature($server, self::$wireVersionForCommand)) {
+        if (Functions::serverSupportsFeature($server, self::$wireVersionForCommand)) {
             $this->executeCommand($server);
         } else {
             $this->executeLegacy($server);

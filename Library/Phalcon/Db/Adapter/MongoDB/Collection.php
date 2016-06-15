@@ -165,7 +165,7 @@ class Collection
      */
     public function aggregate(array $pipeline, array $options = [])
     {
-        $hasOutStage=Functions::is_last_pipeline_operator_out($pipeline);
+        $hasOutStage=Functions::isLastPipelineOperatorOut($pipeline);
 
         /* A "majority" read concern is not compatible with the $out stage, so
          * avoid providing the Collection's read concern if it would conflict.
@@ -515,7 +515,7 @@ class Collection
     {
         $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if (!isset($options['writeConcern'])&&Functions::server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
+        if (!isset($options['writeConcern'])&&Functions::serverSupportsFeature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
             $options['writeConcern']=$this->writeConcern;
         }
 
@@ -549,7 +549,7 @@ class Collection
     {
         $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if (!isset($options['writeConcern'])&&Functions::server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
+        if (!isset($options['writeConcern'])&&Functions::serverSupportsFeature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
             $options['writeConcern']=$this->writeConcern;
         }
 
@@ -583,7 +583,7 @@ class Collection
     {
         $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if (!isset($options['writeConcern'])&&Functions::server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
+        if (!isset($options['writeConcern'])&&Functions::serverSupportsFeature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
             $options['writeConcern']=$this->writeConcern;
         }
 

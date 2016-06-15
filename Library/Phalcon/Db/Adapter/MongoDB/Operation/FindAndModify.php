@@ -188,11 +188,11 @@ class FindAndModify implements Executable
             $cmd['maxTimeMS']=$this->options['maxTimeMS'];
         }
 
-        if (isset($this->options['bypassDocumentValidation'])&&Functions::server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature($server, self::$wireVersionForDocumentLevelValidation)) {
             $cmd['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 
-        if (isset($this->options['writeConcern'])&&Functions::server_supports_feature($server, self::$wireVersionForWriteConcern)) {
+        if (isset($this->options['writeConcern'])&&Functions::serverSupportsFeature($server, self::$wireVersionForWriteConcern)) {
             $cmd['writeConcern']=$this->options['writeConcern'];
         }
 

@@ -52,7 +52,7 @@ class IndexInput implements Serializable
         }
 
         if (!isset($index['name'])) {
-            $index['name']=Functions::generate_index_name($index['key']);
+            $index['name']=Functions::generateIndexName($index['key']);
         }
 
         if (!is_string($index['name'])) {

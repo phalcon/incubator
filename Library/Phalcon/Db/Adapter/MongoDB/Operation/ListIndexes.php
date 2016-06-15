@@ -65,7 +65,7 @@ class ListIndexes implements Executable
      */
     public function execute(Server $server)
     {
-        return Functions::server_supports_feature($server, self::$wireVersionForCommand)?$this->executeCommand($server):$this->executeLegacy($server);
+        return Functions::serverSupportsFeature($server, self::$wireVersionForCommand)?$this->executeCommand($server):$this->executeLegacy($server);
     }
 
     /**

@@ -61,7 +61,7 @@ class WritableStream
             'chunkSizeBytes'=>self::$defaultChunkSizeBytes,
         ];
 
-        if (isset($options['aliases'])&&!Functions::is_string_array($options['aliases'])) {
+        if (isset($options['aliases'])&&!Functions::isStringArray($options['aliases'])) {
             throw InvalidArgumentException::invalidType('"aliases" option', $options['aliases'], 'array of strings');
         }
 

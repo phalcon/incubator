@@ -45,7 +45,7 @@ class UpdateOne implements Executable
             throw InvalidArgumentException::invalidType('$update', $update, 'array or object');
         }
 
-        if (!Functions::is_first_key_operator($update)) {
+        if (!Functions::isFirstKeyOperator($update)) {
             throw new InvalidArgumentException('First key in $update argument is not an update operator');
         }
 
