@@ -203,17 +203,17 @@ class FindAndModify implements Executable
         }
 
         if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature(
-                $server,
-                self::$wireVersionForDocumentLevelValidation
-            )
+            $server,
+            self::$wireVersionForDocumentLevelValidation
+        )
         ) {
             $cmd['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
         }
 
         if (isset($this->options['writeConcern'])&&Functions::serverSupportsFeature(
-                $server,
-                self::$wireVersionForWriteConcern
-            )
+            $server,
+            self::$wireVersionForWriteConcern
+        )
         ) {
             $cmd['writeConcern']=$this->options['writeConcern'];
         }

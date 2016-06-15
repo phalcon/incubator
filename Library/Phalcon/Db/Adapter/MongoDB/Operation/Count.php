@@ -157,9 +157,9 @@ class Count implements Executable
         }
 
         if (isset($this->options['readConcern'])&&Functions::serverSupportsFeature(
-                $server,
-                self::$wireVersionForReadConcern
-            )
+            $server,
+            self::$wireVersionForReadConcern
+        )
         ) {
             $cmd['readConcern']=Functions::readConcernAsDocument($this->options['readConcern']);
         }
