@@ -7,7 +7,7 @@ use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
-//use MongoDB\Operation\Find;
+use Phalcon\Db\Adapter\MongoDB\Operation\Find;
 use Phalcon\Db\Adapter\MongoDB\Exception\InvalidArgumentException;
 use Phalcon\Db\Adapter\MongoDB\GridFS\Exception\FileNotFoundException;
 use stdClass;

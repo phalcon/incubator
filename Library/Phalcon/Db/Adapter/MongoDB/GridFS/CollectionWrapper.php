@@ -2,8 +2,8 @@
 
 namespace Phalcon\Db\Adapter\MongoDB\GridFS;
 
-use MongoDB\Collection;
-use MongoDB\UpdateResult;
+use Phalcon\Db\Adapter\MongoDB\Collection;
+use Phalcon\Db\Adapter\MongoDB\UpdateResult;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;

@@ -6,7 +6,7 @@ use MongoDB\BSON\Binary;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Driver\Exception\Exception as DriverException;
-use MongoDB\Exception\InvalidArgumentException;
+use Phalcon\Db\Adapter\MongoDB\Exception\InvalidArgumentException;
 use Phalcon\Db\Adapter\MongoDB\Functions;
 
 /**
