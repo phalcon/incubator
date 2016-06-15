@@ -14,7 +14,7 @@ use ArrayObject;
  *
  * @api
  */
-class BSONDocument extends ArrayObject implements Serializable, Unserializable
+class BSONDocument extends ArrayObject implements Serializable,Unserializable
 {
     /**
      * Constructor.
@@ -24,9 +24,9 @@ class BSONDocument extends ArrayObject implements Serializable, Unserializable
      *
      * @see http://php.net/arrayobject.construct
      */
-    public function __construct($input = [], $flags = ArrayObject::ARRAY_AS_PROPS, $iterator_class = 'ArrayIterator')
+    public function __construct($input=[],$flags=ArrayObject::ARRAY_AS_PROPS,$iterator_class='ArrayIterator')
     {
-        parent::__construct($input, $flags, $iterator_class);
+        parent::__construct($input,$flags,$iterator_class);
     }
 
     /**
@@ -34,12 +34,14 @@ class BSONDocument extends ArrayObject implements Serializable, Unserializable
      *
      * @see http://php.net/oop5.magic#object.set-state
      * @see http://php.net/var-export
+     *
      * @param array $properties
+     *
      * @return self
      */
     public static function __set_state(array $properties)
     {
-        $document = new static;
+        $document=new static;
         $document->exchangeArray($properties);
 
         return $document;
@@ -53,17 +55,18 @@ class BSONDocument extends ArrayObject implements Serializable, Unserializable
      */
     public function bsonSerialize()
     {
-        return (object) $this->getArrayCopy();
+        return (object)$this->getArrayCopy();
     }
 
     /**
      * Unserialize the document to BSON.
      *
      * @see http://php.net/mongodb-bson-unserializable.bsonunserialize
+     *
      * @param array $data Array data
      */
     public function bsonUnserialize(array $data)
     {
-        parent::__construct($data, ArrayObject::ARRAY_AS_PROPS);
+        parent::__construct($data,ArrayObject::ARRAY_AS_PROPS);
     }
 }

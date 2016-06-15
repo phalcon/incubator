@@ -20,8 +20,8 @@ class DeleteResult
      */
     public function __construct(WriteResult $writeResult)
     {
-        $this->writeResult = $writeResult;
-        $this->isAcknowledged = $writeResult->isAcknowledged();
+        $this->writeResult   =$writeResult;
+        $this->isAcknowledged=$writeResult->isAcknowledged();
     }
 
     /**
@@ -35,7 +35,7 @@ class DeleteResult
      */
     public function getDeletedCount()
     {
-        if ($this->isAcknowledged) {
+        if($this->isAcknowledged){
             return $this->writeResult->getDeletedCount();
         }
 

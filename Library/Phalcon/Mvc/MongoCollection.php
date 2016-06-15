@@ -38,434 +38,447 @@ use Phalcon\Mvc\Collection as PhalconCollection;
  * Class MongoCollection
  * @package Phalcon\Mvc
  */
-abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSON\Unserializable{
+abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSON\Unserializable
+{
 
-	static protected $_disableEvents;
+    static protected $_disableEvents;
 
-	/**
-	 * Sets a value for the _id property, creates a MongoId object if needed
-	 *
-	 * @param mixed id
-	 */
-	function setId( $id ){
-		
-		$mongoId = null;
+    /**
+     * Sets a value for the _id property, creates a MongoId object if needed
+     *
+     * @param mixed id
+     */
+    function setId($id)
+    {
 
-		if( ! is_object( $id ) ){
+        $mongoId=null;
 
-			if( $this->_modelsManager->isUsingImplicitObjectIds( $this ) ){
-				$mongoId = new \MongoDB\BSON\ObjectID( $id ); //\MongoId( $id );
-			} else {
-				$mongoId = $id;
-			}
+        if(!is_object($id)){
 
-		} else {
-			$mongoId = $id;
-		}
+            if($this->_modelsManager->isUsingImplicitObjectIds($this)){
+                $mongoId=new \MongoDB\BSON\ObjectID($id); //\MongoId( $id );
+            } else{
+                $mongoId=$id;
+            }
 
-		$this->_id = $mongoId;
+        } else{
+            $mongoId=$id;
+        }
 
-	}
+        $this->_id=$mongoId;
 
-	/**
-	 * Creates/Updates a collection based on the values in the attributes
-	 */
-	public function save(){
+    }
 
-		$dependencyInjector = $this->_dependencyInjector;
+    /**
+     * Creates/Updates a collection based on the values in the attributes
+     */
+    public function save()
+    {
 
-		if( ! is_object( $dependencyInjector ) ){
-			throw new Exception("A dependency injector container is required to obtain the services related to the ORM");
-		}
+        $dependencyInjector=$this->_dependencyInjector;
 
-		$source = $this->getSource();
+        if(!is_object($dependencyInjector)){
+            throw new Exception("A dependency injector container is required to obtain the services related to the ORM");
+        }
 
-		if( empty( $source ) ){
-			throw new Exception("Method getSource() returns empty string");
-		}
+        $source=$this->getSource();
 
-		$connection = $this->getConnection();
+        if(empty($source)){
+            throw new Exception("Method getSource() returns empty string");
+        }
 
-		$collection = $connection->selectCollection( $source );
+        $connection=$this->getConnection();
 
-		$exists = $this->_exists( $collection );
+        $collection=$connection->selectCollection($source);
 
-		if( $exists === false ){
-			$this->_operationMade = self::OP_CREATE;
-		} else {
-			$this->_operationMade = self::OP_UPDATE;
-		}
+        $exists=$this->_exists($collection);
 
-		/**
-		 * The messages added to the validator are reset here
-		 */
-		$this->_errorMessages = [];
+        if($exists===false){
+            $this->_operationMade=self::OP_CREATE;
+        } else{
+            $this->_operationMade=self::OP_UPDATE;
+        }
 
-		$disableEvents = self::$_disableEvents;
+        /**
+         * The messages added to the validator are reset here
+         */
+        $this->_errorMessages=[];
 
-		/**
-		 * Execute the preSave hook
-		 */
-		if( $this->_preSave( $dependencyInjector, $disableEvents, $exists ) === false ){
-			return false;
-		}
+        $disableEvents=self::$_disableEvents;
 
-		$data = $this->toArray();
+        /**
+         * Execute the preSave hook
+         */
+        if($this->_preSave($dependencyInjector,$disableEvents,$exists)===false){
+            return false;
+        }
 
-		$success = false;
+        $data=$this->toArray();
 
-		/**
-		 * We always use safe stores to get the success state
-		 * Save the document
-		 */
-		$status = $collection->insertOne( $data, [ 'w' => true ] );
+        $success=false;
 
-		if( $status->isAcknowledged() ){
+        /**
+         * We always use safe stores to get the success state
+         * Save the document
+         */
+        $status=$collection->insertOne($data,['w'=>true]);
 
-			$success == true;
+        if($status->isAcknowledged()){
 
-			if( $exists === false ){
-				$this->_id = $status->getInsertedId();
-			}
+            $success==true;
 
-		} else {
+            if($exists===false){
+                $this->_id=$status->getInsertedId();
+            }
 
-			$success = false;
+        } else{
 
-		}
+            $success=false;
 
-		/**
-		 * Call the postSave hooks
-		 */
-		return $this->_postSave( $disableEvents, $success, $exists );
+        }
 
-	}
+        /**
+         * Call the postSave hooks
+         */
+        return $this->_postSave($disableEvents,$success,$exists);
 
-	public static function findById( $id ){
-//		var className, collection, mongoId;
+    }
 
-		if( is_object( $id ) ){
-			$classname = get_called_class();
-			$collection = new $classname();
+    public static function findById($id)
+    {
+        //		var className, collection, mongoId;
 
-			if( $collection->getCollectionManager()->isUsingImplicitObjectIds( $collection ) ){
-				$mongoId = new ObjectID( $id );
-			} else {
-				$mongoId = $id;
-			}
+        if(is_object($id)){
+            $classname =get_called_class();
+            $collection=new $classname();
 
-		} else {
-			$mongoId = $id;
-		}
+            if($collection->getCollectionManager()->isUsingImplicitObjectIds($collection)){
+                $mongoId=new ObjectID($id);
+            } else{
+                $mongoId=$id;
+            }
 
-		return static::findFirst( [ ["_id" => $mongoId ] ] );
-	}
+        } else{
+            $mongoId=$id;
+        }
 
-	public static function findFirst( array $parameters = null ){
+        return static::findFirst([["_id"=>$mongoId]]);
+    }
 
-		$className = get_called_class();
+    public static function findFirst(array $parameters=null)
+    {
 
-		$collection = new $className();
+        $className=get_called_class();
 
-		$connection = $collection->getConnection();
+        $collection=new $className();
 
-		return static::_getResultset( $parameters, $collection, $connection, true );
+        $connection=$collection->getConnection();
 
-	}
+        return static::_getResultset($parameters,$collection,$connection,true);
 
-	/**
-	 * Returns a collection resultset
-	 *
-	 * @param array params
-	 * @param \Phalcon\Mvc\Collection collection
-	 * @param \MongoDb connection
-	 * @param boolean unique
-	 * @return array
-	 */
-	protected static function _getResultset( $params, \Phalcon\Mvc\CollectionInterface $collection, $connection, $unique ){
-//		var source, mongoCollection, conditions, base, documentsCursor,
-//			fields, skip, limit, sort, document, collections, className;
+    }
 
-		/**
-		 * Check if "class" clause was defined
-		 */
-		if( isset( $params['class'] ) ){
+    /**
+     * Returns a collection resultset
+     *
+     * @param                         array params
+     * @param \Phalcon\Mvc\Collection collection
+     * @param \MongoDb                connection
+     * @param                         boolean unique
+     *
+     * @return array
+     */
+    protected static function _getResultset($params,\Phalcon\Mvc\CollectionInterface $collection,$connection,$unique)
+    {
+        //		var source, mongoCollection, conditions, base, documentsCursor,
+        //			fields, skip, limit, sort, document, collections, className;
 
-			$classname = $params['class'];
+        /**
+         * Check if "class" clause was defined
+         */
+        if(isset($params['class'])){
 
-			$base = new $classname();
+            $classname=$params['class'];
 
-			if( ! $base instanceof CollectionInterface || $base instanceof Document ){
-				throw new Exception("Object of class '" . $classname . "' must be an implementation of Phalcon\\Mvc\\CollectionInterface or an instance of Phalcon\\Mvc\\Collection\\Document");
-			}
+            $base=new $classname();
 
-		} else {
-			$base = $collection;
-		}
+            if(!$base instanceof CollectionInterface||$base instanceof Document){
+                throw new Exception("Object of class '".$classname."' must be an implementation of Phalcon\\Mvc\\CollectionInterface or an instance of Phalcon\\Mvc\\Collection\\Document");
+            }
 
-		$source = $collection->getSource();
+        } else{
+            $base=$collection;
+        }
 
-		if( empty( $source ) ){
-			throw new Exception("Method getSource() returns empty string");
-		}
+        $source=$collection->getSource();
 
-		/**
-		 * @var \Phalcon\Db\Adapter\MongoDB\Collection $mongoCollection
-		 */
-		$mongoCollection = $connection->selectCollection( $source );
+        if(empty($source)){
+            throw new Exception("Method getSource() returns empty string");
+        }
 
-		if( ! is_object( $mongoCollection ) ){
-			throw new Exception("Couldn't select mongo collection");
-		}
+        /**
+         * @var \Phalcon\Db\Adapter\MongoDB\Collection $mongoCollection
+         */
+        $mongoCollection=$connection->selectCollection($source);
 
-		$conditions = [];
+        if(!is_object($mongoCollection)){
+            throw new Exception("Couldn't select mongo collection");
+        }
 
-		if( isset( $params[0] ) || isset( $params['conditions'] ) ){
-			$conditions = ( isset( $params[0] ) ) ? $params[0] : $params['conditions'] ;
-		}
+        $conditions=[];
 
-		/**
-		 * Convert the string to an array
-		 */
-		if( ! is_array( $conditions ) ){
-			throw new Exception("Find parameters must be an array");
-		}
-		
-		$options = [];
+        if(isset($params[0])||isset($params['conditions'])){
+            $conditions=(isset($params[0]))?$params[0]:$params['conditions'];
+        }
 
-		/**
-		 * Check if a "limit" clause was defined
-		 */
-		if( isset( $params['limit'] ) ){
+        /**
+         * Convert the string to an array
+         */
+        if(!is_array($conditions)){
+            throw new Exception("Find parameters must be an array");
+        }
 
-			$limit = $params['limit'];
+        $options=[];
 
-			$options['limit'] = (int)$limit;
+        /**
+         * Check if a "limit" clause was defined
+         */
+        if(isset($params['limit'])){
 
-			if( $unique ){
-				$options['limit'] = 1;
-			}
+            $limit=$params['limit'];
 
-		}
+            $options['limit']=(int)$limit;
 
-		/**
-		 * Check if a "sort" clause was defined
-		 */
-		if( isset( $params['sort'] ) ){
+            if($unique){
+                $options['limit']=1;
+            }
 
-			$sort = $params["sort"];
+        }
 
-			$options['sort'] = $sort;
+        /**
+         * Check if a "sort" clause was defined
+         */
+        if(isset($params['sort'])){
 
-		}
+            $sort=$params["sort"];
 
-		/**
-		 * Check if a "skip" clause was defined
-		 */
-		if( isset( $params['skip'] ) ){
+            $options['sort']=$sort;
 
-			$skip = $params["skip"];
+        }
 
-			$options['skip'] = (int)$skip;
+        /**
+         * Check if a "skip" clause was defined
+         */
+        if(isset($params['skip'])){
 
-		}
+            $skip=$params["skip"];
 
-		if( isset( $params['fields'] ) && is_array( $params['fields'] ) && ! empty( $params['fields'] ) ){
+            $options['skip']=(int)$skip;
 
-			$options['projection'] = [];
+        }
 
-			foreach( $params['fields'] as $field ){
-				$options['projection'][$field] = 1;
-			}
+        if(isset($params['fields'])&&is_array($params['fields'])&&!empty($params['fields'])){
 
-		}
+            $options['projection']=[];
 
-		/**
-		 * Perform the find
-		 */
-		$cursor = $mongoCollection->find( $conditions, $options );
+            foreach($params['fields'] as $field){
+                $options['projection'][ $field ]=1;
+            }
 
-		$cursor->setTypeMap( [ 'root' => get_called_class(), 'document' => 'object' ] );
+        }
 
+        /**
+         * Perform the find
+         */
+        $cursor=$mongoCollection->find($conditions,$options);
 
-		if( $unique === true ){
+        $cursor->setTypeMap(['root'=>get_called_class(),'document'=>'object']);
 
-			/**
-			 * Iterate through and return the first one.
-			 */
-			foreach( $cursor as $document ){
-				return $document;
-			}
 
-		}
+        if($unique===true){
 
-		/**
-		 * Requesting a complete resultset
-		 */
-		$collections = [];
+            /**
+             * Iterate through and return the first one.
+             */
+            foreach($cursor as $document){
+                return $document;
+            }
 
+        }
 
-		foreach( $cursor as $document ){
-			/**
-			 * Assign the values to the base object
-			 */
-			$collections[] = $document;
-		}
+        /**
+         * Requesting a complete resultset
+         */
+        $collections=[];
 
-		return $collections;
 
-	}
+        foreach($cursor as $document){
+            /**
+             * Assign the values to the base object
+             */
+            $collections[]=$document;
+        }
 
-	/**
-	 * Deletes a model instance. Returning true on success or false otherwise.
-	 *
-	 * <code>
-	 *	$robot = Robots::findFirst();
-	 *	$robot->delete();
-	 *
-	 *	foreach (Robots::find() as $robot) {
-	 *		$robot->delete();
-	 *	}
-	 * </code>
-	 */
-	public function delete(){
-//		var disableEvents, status, id, connection, source,
-//			collection, mongoId, success, ok;
+        return $collections;
 
-		if( ! $id = $this->_id ){
-			throw new Exception("The document cannot be deleted because it doesn't exist");
-		}
+    }
 
+    /**
+     * Deletes a model instance. Returning true on success or false otherwise.
+     *
+     * <code>
+     *    $robot = Robots::findFirst();
+     *    $robot->delete();
+     *
+     *    foreach (Robots::find() as $robot) {
+     *        $robot->delete();
+     *    }
+     * </code>
+     */
+    public function delete()
+    {
+        //		var disableEvents, status, id, connection, source,
+        //			collection, mongoId, success, ok;
 
-		$disableEvents = self::$_disableEvents;
+        if(!$id=$this->_id){
+            throw new Exception("The document cannot be deleted because it doesn't exist");
+        }
 
-		if ( ! $disableEvents ){
-			if( $this->fireEventCancel("beforeDelete") === false ){
-				return false;
-			}
-		}
 
-		if( $this->_skipped === true ){
-			return true;
-		}
+        $disableEvents=self::$_disableEvents;
 
-		$connection = $this->getConnection();
+        if(!$disableEvents){
+            if($this->fireEventCancel("beforeDelete")===false){
+                return false;
+            }
+        }
 
-		$source = $this->getSource();
-		if( empty( $source ) ){
-			throw new Exception("Method getSource() returns empty string");
-		}
+        if($this->_skipped===true){
+            return true;
+        }
 
-		/**
-		 * Get the Collection
-		 *
-		 * @var AdapterCollection $collection
-		 */
-		$collection = $connection->selectCollection($source);
+        $connection=$this->getConnection();
 
-		if( is_object( $id ) ){
-			$mongoId = $id;
-		} else {
+        $source=$this->getSource();
+        if(empty($source)){
+            throw new Exception("Method getSource() returns empty string");
+        }
 
-			if( $this->_modelsManager->isUsingImplicitObjectIds( $this ) ){
-				$mongoId = new ObjectID( $id );
-			} else {
-				$mongoId = $id;
-			}
+        /**
+         * Get the Collection
+         *
+         * @var AdapterCollection $collection
+         */
+        $collection=$connection->selectCollection($source);
 
-		}
+        if(is_object($id)){
+            $mongoId=$id;
+        } else{
 
+            if($this->_modelsManager->isUsingImplicitObjectIds($this)){
+                $mongoId=new ObjectID($id);
+            } else{
+                $mongoId=$id;
+            }
 
-		$success = false;
+        }
 
-		/**
-		 * Remove the instance
-		 */
-		$status = $collection->deleteOne( [ '_id' => $mongoId ], [ 'w' => true ] );
 
-		if( $status->isAcknowledged() ){
+        $success=false;
 
-			$success = true;
+        /**
+         * Remove the instance
+         */
+        $status=$collection->deleteOne(['_id'=>$mongoId],['w'=>true]);
 
-			$this->fireEvent("afterDelete");
+        if($status->isAcknowledged()){
 
-		}
+            $success=true;
 
-		return $success;
+            $this->fireEvent("afterDelete");
 
-	}
+        }
 
-	/**
-	 * Checks if the document exists in the collection
-	 *
-	 * @param \MongoCollection collection
-	 * @return boolean
-	 */
-	protected function _exists( $collection ){
-		//var id, mongoId;
+        return $success;
 
-		if( ! $id = $this->_id ){
-			return false;
-		}
+    }
 
-		if( is_object( $id ) ){
-			$mongoId = $id;
-		} else {
+    /**
+     * Checks if the document exists in the collection
+     *
+     * @param \MongoCollection collection
+     *
+     * @return boolean
+     */
+    protected function _exists($collection)
+    {
+        //var id, mongoId;
 
-			/**
-			 * Check if the model use implicit ids
-			 */
-			if( $this->_modelsManager->isUsingImplicitObjectIds( $this ) ){
-				$mongoId = new ObjectID( $id );
-			} else {
-				$mongoId = $id;
-			}
+        if(!$id=$this->_id){
+            return false;
+        }
 
-		}
+        if(is_object($id)){
+            $mongoId=$id;
+        } else{
 
-		/**
-		 * Perform the count using the function provided by the driver
-		 */
-		return $collection->count( [ "_id" => $mongoId ] ) > 0;
+            /**
+             * Check if the model use implicit ids
+             */
+            if($this->_modelsManager->isUsingImplicitObjectIds($this)){
+                $mongoId=new ObjectID($id);
+            } else{
+                $mongoId=$id;
+            }
 
-	}
+        }
 
-	/**
-	 * Fires an internal event that cancels the operation
-	 */
-	public function fireEventCancel( $eventName ){
-		/**
-		 * Check if there is a method with the same name of the event
-		 */
-		if( method_exists( $this, $eventName ) ){
-			if( $this->{eventName}() === false ){
-				return false;
-			}
-		}
+        /**
+         * Perform the count using the function provided by the driver
+         */
+        return $collection->count(["_id"=>$mongoId])>0;
 
-		/**
-		 * Send a notification to the events manager
-		 */
-		if( $this->_modelsManager->notifyEvent($eventName, $this) === false ){
-			return false;
-		}
+    }
 
-		return true;
-	}
+    /**
+     * Fires an internal event that cancels the operation
+     */
+    public function fireEventCancel($eventName)
+    {
+        /**
+         * Check if there is a method with the same name of the event
+         */
+        if(method_exists($this,$eventName)){
+            if($this->{eventName}()===false){
+                return false;
+            }
+        }
 
-	/**
-	 * Pass the values from the BSON document back to the object.
-	 * @param array $data
-	 */
-	public function bsonUnserialize(array $data){
+        /**
+         * Send a notification to the events manager
+         */
+        if($this->_modelsManager->notifyEvent($eventName,$this)===false){
+            return false;
+        }
 
-		$this->setDI( Di::getDefault() );
-		$this->_modelsManager = Di::getDefault()->getShared( 'collectionManager' );
+        return true;
+    }
 
-		foreach( $data as $key => $val ){
-			$this->{$key} = $val;
-		}
+    /**
+     * Pass the values from the BSON document back to the object.
+     *
+     * @param array $data
+     */
+    public function bsonUnserialize(array $data)
+    {
 
-	}
+        $this->setDI(Di::getDefault());
+        $this->_modelsManager=Di::getDefault()->getShared('collectionManager');
+
+        foreach($data as $key=>$val){
+            $this->{$key}=$val;
+        }
+
+    }
 
 }

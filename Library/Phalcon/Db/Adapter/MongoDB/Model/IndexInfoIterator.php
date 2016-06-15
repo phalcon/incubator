@@ -12,11 +12,12 @@ use Iterator;
  * @api
  * @see MongoDB\Collection::listIndexes()
  */
-interface IndexInfoIterator extends Iterator {
-	/**
-	 * Return the current element as a IndexInfo instance.
-	 *
-	 * @return IndexInfo
-	 */
-	public function current();
+interface IndexInfoIterator extends Iterator
+{
+    /**
+     * Return the current element as a IndexInfo instance.
+     *
+     * @return IndexInfo
+     */
+    public function current();
 }

@@ -20,11 +20,11 @@ class InsertManyResult
      * @param WriteResult $writeResult
      * @param mixed[]     $insertedIds
      */
-    public function __construct(WriteResult $writeResult, array $insertedIds)
+    public function __construct(WriteResult $writeResult,array $insertedIds)
     {
-        $this->writeResult = $writeResult;
-        $this->insertedIds = $insertedIds;
-        $this->isAcknowledged = $writeResult->isAcknowledged();
+        $this->writeResult   =$writeResult;
+        $this->insertedIds   =$insertedIds;
+        $this->isAcknowledged=$writeResult->isAcknowledged();
     }
 
     /**
@@ -38,7 +38,7 @@ class InsertManyResult
      */
     public function getInsertedCount()
     {
-        if ($this->isAcknowledged) {
+        if($this->isAcknowledged){
             return $this->writeResult->getInsertedCount();
         }
 
