@@ -135,6 +135,7 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 ### Database
 * [Phalcon\Db\Adapter\Cacheable\Mysql](Library/Phalcon/Db) - MySQL adapter that aggressively caches all the queries executed (@phalcon)
 * [Phalcon\Db\Adapter\Factory](Library/Phalcon/Db/Adapter/Factory.php) - Phalcon DB adapters Factory (@Kachit)
+* [Phalcon\Db\Adapter\MongoDB](Library/Phalcon/Db/Adapter/MongoDB) - Database adapter for the new MongoDB extension (@tigerstrikemedia)
 
 ### Http
 * [Phalcon\Http](Library/Phalcon/Http) - Uri utility (@tugrul)
@@ -188,6 +189,9 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 * [Phalcon\Validation\Validator\Decimal](Library/Phalcon/Validation/Validator) - Allows to validate if a field has a valid number in proper decimal format (negative and decimal numbers allowed) (@sergeyklay)
 * [Phalcon\Validation\Validator\MongoId](Library/Phalcon/Validation/Validator) - Validate MongoId value (@Kachit)
 * [Phalcon\Validation\Validator\PasswordStrength](Library/Phalcon/Validation/Validator) - Validates password strength (@davihu)
+
+### MVC
+* [Phalcon\Mvc\MongoCollection](Library/Phalcon/MVC/MongoCollection) - Collection class for the new MongoDB Extension (@tigerstrikemedia)
 
 ## License
 
