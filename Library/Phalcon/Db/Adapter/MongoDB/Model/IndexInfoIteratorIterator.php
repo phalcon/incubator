@@ -17,15 +17,17 @@ use IteratorIterator;
  * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
  * @see http://docs.mongodb.org/manual/reference/system-collections/
  */
-class IndexInfoIteratorIterator extends IteratorIterator implements IndexInfoIterator {
-	/**
-	 * Return the current element as an IndexInfo instance.
-	 *
-	 * @see IndexInfoIterator::current()
-	 * @see http://php.net/iterator.current
-	 * @return IndexInfo
-	 */
-	public function current() {
-		return new IndexInfo( parent::current() );
-	}
+class IndexInfoIteratorIterator extends IteratorIterator implements IndexInfoIterator
+{
+    /**
+     * Return the current element as an IndexInfo instance.
+     *
+     * @see IndexInfoIterator::current()
+     * @see http://php.net/iterator.current
+     * @return IndexInfo
+     */
+    public function current()
+    {
+        return new IndexInfo(parent::current());
+    }
 }

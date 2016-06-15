@@ -33,8 +33,8 @@ class CollectionInfoLegacyIterator extends FilterIterator implements CollectionI
         /* FilterIterator requires an Iterator, so wrap all other Traversables
          * with an IteratorIterator as a convenience.
          */
-        if ( ! $iterator instanceof Iterator) {
-            $iterator = new IteratorIterator($iterator);
+        if(!$iterator instanceof Iterator){
+            $iterator=new IteratorIterator($iterator);
         }
 
         parent::__construct($iterator);
@@ -48,24 +48,24 @@ class CollectionInfoLegacyIterator extends FilterIterator implements CollectionI
      */
     public function accept()
     {
-        $info = parent::current();
+        $info=parent::current();
 
-        if ( ! isset($info['name']) || ! is_string($info['name'])) {
+        if(!isset($info['name'])||!is_string($info['name'])){
             return false;
         }
 
         // Reject names with "$" characters (e.g. indexes, oplog)
-        if (strpos($info['name'], '$') !== false) {
+        if(strpos($info['name'],'$')!==false){
             return false;
         }
 
-        $firstDot = strpos($info['name'], '.');
+        $firstDot=strpos($info['name'],'.');
 
         /* Legacy collection names are a namespace and should be prefixed with
          * the database name and a dot. Reject values that omit this prefix or
          * are empty beyond it.
          */
-        if ($firstDot === false || $firstDot + 1 == strlen($info['name'])) {
+        if($firstDot===false||$firstDot+1==strlen($info['name'])){
             return false;
         }
 
@@ -81,13 +81,13 @@ class CollectionInfoLegacyIterator extends FilterIterator implements CollectionI
      */
     public function current()
     {
-        $info = parent::current();
+        $info=parent::current();
 
         // Trim the database prefix up to and including the first dot
-        $firstDot = strpos($info['name'], '.');
+        $firstDot=strpos($info['name'],'.');
 
-        if ($firstDot !== false) {
-            $info['name'] = (string) substr($info['name'], $firstDot + 1);
+        if($firstDot!==false){
+            $info['name']=(string)substr($info['name'],$firstDot+1);
         }
 
         return new CollectionInfo($info);

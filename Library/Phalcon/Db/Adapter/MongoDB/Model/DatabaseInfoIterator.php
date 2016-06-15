@@ -12,11 +12,12 @@ use Iterator;
  * @api
  * @see MongoDB\Client::listDatabases()
  */
-interface DatabaseInfoIterator extends Iterator {
-	/**
-	 * Return the current element as a DatabaseInfo instance.
-	 *
-	 * @return DatabaseInfo
-	 */
-	public function current();
+interface DatabaseInfoIterator extends Iterator
+{
+    /**
+     * Return the current element as a DatabaseInfo instance.
+     *
+     * @return DatabaseInfo
+     */
+    public function current();
 }

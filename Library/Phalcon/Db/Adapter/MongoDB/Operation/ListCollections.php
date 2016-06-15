@@ -20,7 +20,7 @@ use Phalcon\Db\Adapter\MongoDB\Model\CollectionInfoLegacyIterator;
  */
 class ListCollections implements Executable
 {
-    private static $wireVersionForCommand = 3;
+    private static $wireVersionForCommand=3;
 
     private $databaseName;
     private $options;
@@ -36,35 +36,36 @@ class ListCollections implements Executable
      *    run.
      *
      * @param string $databaseName Database name
-     * @param array  $options      Command options
+     * @param array  $options Command options
+     *
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, array $options = [])
+    public function __construct($databaseName,array $options=[])
     {
-        if (isset($options['filter']) && ! is_array($options['filter']) && ! is_object($options['filter'])) {
-            throw InvalidArgumentException::invalidType('"filter" option', $options['filter'], 'array or object');
+        if(isset($options['filter'])&&!is_array($options['filter'])&&!is_object($options['filter'])){
+            throw InvalidArgumentException::invalidType('"filter" option',$options['filter'],'array or object');
         }
 
-        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+        if(isset($options['maxTimeMS'])&&!is_integer($options['maxTimeMS'])){
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option',$options['maxTimeMS'],'integer');
         }
 
-        $this->databaseName = (string) $databaseName;
-        $this->options = $options;
+        $this->databaseName=(string)$databaseName;
+        $this->options     =$options;
     }
 
     /**
      * Execute the operation.
      *
      * @see Executable::execute()
+     *
      * @param Server $server
+     *
      * @return CollectionInfoIterator
      */
     public function execute(Server $server)
     {
-        return Functions::server_supports_feature($server, self::$wireVersionForCommand)
-            ? $this->executeCommand($server)
-            : $this->executeLegacy($server);
+        return Functions::server_supports_feature($server,self::$wireVersionForCommand)?$this->executeCommand($server):$this->executeLegacy($server);
     }
 
     /**
@@ -72,22 +73,23 @@ class ListCollections implements Executable
      * listCollections command.
      *
      * @param Server $server
+     *
      * @return CollectionInfoCommandIterator
      */
     private function executeCommand(Server $server)
     {
-        $cmd = ['listCollections' => 1];
+        $cmd=['listCollections'=>1];
 
-        if ( ! empty($this->options['filter'])) {
-            $cmd['filter'] = (object) $this->options['filter'];
+        if(!empty($this->options['filter'])){
+            $cmd['filter']=(object)$this->options['filter'];
         }
 
-        if (isset($this->options['maxTimeMS'])) {
-            $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
+        if(isset($this->options['maxTimeMS'])){
+            $cmd['maxTimeMS']=$this->options['maxTimeMS'];
         }
 
-        $cursor = $server->executeCommand($this->databaseName, new Command($cmd));
-        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
+        $cursor=$server->executeCommand($this->databaseName,new Command($cmd));
+        $cursor->setTypeMap(['root'=>'array','document'=>'array']);
 
         return new CollectionInfoCommandIterator($cursor);
     }
@@ -97,27 +99,26 @@ class ListCollections implements Executable
      * "system.namespaces" collection (MongoDB <3.0).
      *
      * @param Server $server
+     *
      * @return CollectionInfoLegacyIterator
      * @throws InvalidArgumentException if filter.name is not a string.
      */
     private function executeLegacy(Server $server)
     {
-        $filter = empty($this->options['filter']) ? [] : (array) $this->options['filter'];
+        $filter=empty($this->options['filter'])?[]:(array)$this->options['filter'];
 
-        if (array_key_exists('name', $filter)) {
-            if ( ! is_string($filter['name'])) {
-                throw InvalidArgumentException::invalidType('filter name for MongoDB <3.0', $filter['name'], 'string');
+        if(array_key_exists('name',$filter)){
+            if(!is_string($filter['name'])){
+                throw InvalidArgumentException::invalidType('filter name for MongoDB <3.0',$filter['name'],'string');
             }
 
-            $filter['name'] = $this->databaseName . '.' . $filter['name'];
+            $filter['name']=$this->databaseName.'.'.$filter['name'];
         }
 
-        $options = isset($this->options['maxTimeMS'])
-            ? ['modifiers' => ['$maxTimeMS' => $this->options['maxTimeMS']]]
-            : [];
+        $options=isset($this->options['maxTimeMS'])?['modifiers'=>['$maxTimeMS'=>$this->options['maxTimeMS']]]:[];
 
-        $cursor = $server->executeQuery($this->databaseName . '.system.namespaces', new Query($filter, $options));
-        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
+        $cursor=$server->executeQuery($this->databaseName.'.system.namespaces',new Query($filter,$options));
+        $cursor->setTypeMap(['root'=>'array','document'=>'array']);
 
         return new CollectionInfoLegacyIterator($cursor);
     }

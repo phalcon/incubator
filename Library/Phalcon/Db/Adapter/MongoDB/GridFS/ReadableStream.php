@@ -16,27 +16,28 @@ class ReadableStream
     private $buffer;
     private $bufferEmpty;
     private $bufferFresh;
-    private $bytesSeen = 0;
-    private $chunkOffset = 0;
+    private $bytesSeen=0;
+    private $chunkOffset=0;
     private $chunksIterator;
     private $file;
-    private $firstCheck = true;
-    private $iteratorEmpty = false;
+    private $firstCheck=true;
+    private $iteratorEmpty=false;
     private $numChunks;
 
     /**
      * Constructs a readable GridFS stream.
      *
      * @param CollectionWrapper $collectionWrapper GridFS collection wrapper
-     * @param stdClass          $file              GridFS file document
+     * @param stdClass          $file GridFS file document
+     *
      * @throws CorruptFileException
      */
-    public function __construct(CollectionWrapper $collectionWrapper, stdClass $file)
+    public function __construct(CollectionWrapper $collectionWrapper,stdClass $file)
     {
-        $this->file = $file;
+        $this->file=$file;
 
-        $this->chunksIterator = $collectionWrapper->getChunksIteratorByFilesId($this->file->_id);
-        $this->numChunks = ($file->length >= 0) ? ceil($file->length / $file->chunkSize) : 0;
+        $this->chunksIterator=$collectionWrapper->getChunksIteratorByFilesId($this->file->_id);
+        $this->numChunks     =($file->length>=0)?ceil($file->length/$file->chunkSize):0;
         $this->initEmptyBuffer();
     }
 
@@ -50,36 +51,37 @@ class ReadableStream
      *
      * Note: this method may return a string smaller than the requested length
      * if data is not available to be read.
-     * 
+     *
      * @param integer $numBytes Number of bytes to read
-     * @return string 
+     *
+     * @return string
      */
     public function downloadNumBytes($numBytes)
     {
-        if ($this->bufferFresh) {
+        if($this->bufferFresh){
             rewind($this->buffer);
-            $this->bufferFresh = false;
+            $this->bufferFresh=false;
         }
 
         // TODO: Should we be checking for fread errors here?
-        $output = fread($this->buffer, $numBytes);
+        $output=fread($this->buffer,$numBytes);
 
-        if (strlen($output) == $numBytes) {
+        if(strlen($output)==$numBytes){
             return $output;
         }
 
         $this->initEmptyBuffer();
 
-        $bytesLeft = $numBytes - strlen($output);
+        $bytesLeft=$numBytes-strlen($output);
 
-        while (strlen($output) < $numBytes && $this->advanceChunks()) {
-            $bytesLeft = $numBytes - strlen($output);
-            $output .= substr($this->chunksIterator->current()->data->getData(), 0, $bytesLeft);
+        while(strlen($output)<$numBytes&&$this->advanceChunks()){
+            $bytesLeft=$numBytes-strlen($output);
+            $output.=substr($this->chunksIterator->current()->data->getData(),0,$bytesLeft);
         }
 
-        if ( ! $this->iteratorEmpty && $this->file->length > 0 && $bytesLeft < strlen($this->chunksIterator->current()->data->getData())) {
-            fwrite($this->buffer, substr($this->chunksIterator->current()->data->getData(), $bytesLeft));
-            $this->bufferEmpty = false;
+        if(!$this->iteratorEmpty&&$this->file->length>0&&$bytesLeft<strlen($this->chunksIterator->current()->data->getData())){
+            fwrite($this->buffer,substr($this->chunksIterator->current()->data->getData(),$bytesLeft));
+            $this->bufferEmpty=false;
         }
 
         return $output;
@@ -89,17 +91,18 @@ class ReadableStream
      * Writes the contents of this GridFS file to a writable stream.
      *
      * @param resource $destination Writable stream
+     *
      * @throws InvalidArgumentException
      */
     public function downloadToStream($destination)
     {
-        if ( ! is_resource($destination) || get_resource_type($destination) != "stream") {
-            throw InvalidArgumentException::invalidType('$destination', $destination, 'resource');
+        if(!is_resource($destination)||get_resource_type($destination)!="stream"){
+            throw InvalidArgumentException::invalidType('$destination',$destination,'resource');
         }
 
-        while ($this->advanceChunks()) {
+        while($this->advanceChunks()){
             // TODO: Should we be checking for fwrite errors here?
-            fwrite($destination, $this->chunksIterator->current()->data->getData());
+            fwrite($destination,$this->chunksIterator->current()->data->getData());
         }
     }
 
@@ -120,43 +123,41 @@ class ReadableStream
 
     public function isEOF()
     {
-        return ($this->iteratorEmpty && $this->bufferEmpty);
+        return ($this->iteratorEmpty&&$this->bufferEmpty);
     }
 
     private function advanceChunks()
     {
-        if ($this->chunkOffset >= $this->numChunks) {
-            $this->iteratorEmpty = true;
+        if($this->chunkOffset>=$this->numChunks){
+            $this->iteratorEmpty=true;
 
             return false;
         }
 
-        if ($this->firstCheck) {
+        if($this->firstCheck){
             $this->chunksIterator->rewind();
-            $this->firstCheck = false;
-        } else {
+            $this->firstCheck=false;
+        } else{
             $this->chunksIterator->next();
         }
 
-        if ( ! $this->chunksIterator->valid()) {
+        if(!$this->chunksIterator->valid()){
             throw CorruptFileException::missingChunk($this->chunkOffset);
         }
 
-        if ($this->chunksIterator->current()->n != $this->chunkOffset) {
-            throw CorruptFileException::unexpectedIndex($this->chunksIterator->current()->n, $this->chunkOffset);
+        if($this->chunksIterator->current()->n!=$this->chunkOffset){
+            throw CorruptFileException::unexpectedIndex($this->chunksIterator->current()->n,$this->chunkOffset);
         }
 
-        $actualChunkSize = strlen($this->chunksIterator->current()->data->getData());
+        $actualChunkSize=strlen($this->chunksIterator->current()->data->getData());
 
-        $expectedChunkSize = ($this->chunkOffset == $this->numChunks - 1)
-            ? ($this->file->length - $this->bytesSeen)
-            : $this->file->chunkSize;
+        $expectedChunkSize=($this->chunkOffset==$this->numChunks-1)?($this->file->length-$this->bytesSeen):$this->file->chunkSize;
 
-        if ($actualChunkSize != $expectedChunkSize) {
-            throw CorruptFileException::unexpectedSize($actualChunkSize, $expectedChunkSize);
+        if($actualChunkSize!=$expectedChunkSize){
+            throw CorruptFileException::unexpectedSize($actualChunkSize,$expectedChunkSize);
         }
 
-        $this->bytesSeen += $actualChunkSize;
+        $this->bytesSeen+=$actualChunkSize;
         $this->chunkOffset++;
 
         return true;
@@ -164,12 +165,12 @@ class ReadableStream
 
     private function initEmptyBuffer()
     {
-        if (isset($this->buffer)) {
+        if(isset($this->buffer)){
             fclose($this->buffer);
         }
 
-        $this->buffer = fopen("php://temp", "w+");
-        $this->bufferEmpty = true;
-        $this->bufferFresh = true;
+        $this->buffer     =fopen("php://temp","w+");
+        $this->bufferEmpty=true;
+        $this->bufferFresh=true;
     }
 }

@@ -25,13 +25,13 @@ class IndexInfo implements ArrayAccess
     private $info;
 
     /**
-    * Constructor.
-    *
-    * @param array $info Index info
-    */
+     * Constructor.
+     *
+     * @param array $info Index info
+     */
     public function __construct(array $info)
     {
-        $this->info = $info;
+        $this->info=$info;
     }
 
     /**
@@ -52,7 +52,7 @@ class IndexInfo implements ArrayAccess
      */
     public function getKey()
     {
-        return (array) $this->info['key'];
+        return (array)$this->info['key'];
     }
 
     /**
@@ -62,7 +62,7 @@ class IndexInfo implements ArrayAccess
      */
     public function getName()
     {
-        return (string) $this->info['name'];
+        return (string)$this->info['name'];
     }
 
     /**
@@ -72,7 +72,7 @@ class IndexInfo implements ArrayAccess
      */
     public function getNamespace()
     {
-        return (string) $this->info['ns'];
+        return (string)$this->info['ns'];
     }
 
     /**
@@ -82,7 +82,7 @@ class IndexInfo implements ArrayAccess
      */
     public function getVersion()
     {
-        return (integer) $this->info['v'];
+        return (integer)$this->info['v'];
     }
 
     /**
@@ -93,7 +93,7 @@ class IndexInfo implements ArrayAccess
      */
     public function isSparse()
     {
-        return ! empty($this->info['sparse']);
+        return !empty($this->info['sparse']);
     }
 
     /**
@@ -104,7 +104,7 @@ class IndexInfo implements ArrayAccess
      */
     public function isTtl()
     {
-        return array_key_exists('expireAfterSeconds', $this->info);
+        return array_key_exists('expireAfterSeconds',$this->info);
     }
 
     /**
@@ -115,19 +115,21 @@ class IndexInfo implements ArrayAccess
      */
     public function isUnique()
     {
-        return ! empty($this->info['unique']);
+        return !empty($this->info['unique']);
     }
 
     /**
      * Check whether a field exists in the index information.
      *
      * @see http://php.net/arrayaccess.offsetexists
+     *
      * @param mixed $key
+     *
      * @return boolean
      */
     public function offsetExists($key)
     {
-        return array_key_exists($key, $this->info);
+        return array_key_exists($key,$this->info);
     }
 
     /**
@@ -139,12 +141,14 @@ class IndexInfo implements ArrayAccess
      *
      * @see http://php.net/arrayaccess.offsetget
      * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst#getting-full-index-information
+     *
      * @param mixed $key
+     *
      * @return mixed
      */
     public function offsetGet($key)
     {
-        return $this->info[$key];
+        return $this->info[ $key ];
     }
 
     /**
@@ -153,7 +157,7 @@ class IndexInfo implements ArrayAccess
      * @see http://php.net/arrayaccess.offsetset
      * @throws BadMethodCallException
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($key,$value)
     {
         throw BadMethodCallException::classIsImmutable(__CLASS__);
     }

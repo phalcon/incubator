@@ -12,13 +12,14 @@ use MongoDB\Driver\Server;
  *
  * @internal
  */
-interface Executable {
-	/**
-	 * Execute the operation.
-	 *
-	 * @param Server $server
-	 *
-	 * @return mixed
-	 */
-	public function execute( Server $server );
+interface Executable
+{
+    /**
+     * Execute the operation.
+     *
+     * @param Server $server
+     *
+     * @return mixed
+     */
+    public function execute(Server $server);
 }

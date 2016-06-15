@@ -20,8 +20,8 @@ class UpdateResult
      */
     public function __construct(WriteResult $writeResult)
     {
-        $this->writeResult = $writeResult;
-        $this->isAcknowledged = $writeResult->isAcknowledged();
+        $this->writeResult   =$writeResult;
+        $this->isAcknowledged=$writeResult->isAcknowledged();
     }
 
     /**
@@ -35,7 +35,7 @@ class UpdateResult
      */
     public function getMatchedCount()
     {
-        if ($this->isAcknowledged) {
+        if($this->isAcknowledged){
             return $this->writeResult->getMatchedCount();
         }
 
@@ -56,7 +56,7 @@ class UpdateResult
      */
     public function getModifiedCount()
     {
-        if ($this->isAcknowledged) {
+        if($this->isAcknowledged){
             return $this->writeResult->getModifiedCount();
         }
 
@@ -74,7 +74,7 @@ class UpdateResult
      */
     public function getUpsertedCount()
     {
-        if ($this->isAcknowledged) {
+        if($this->isAcknowledged){
             return $this->writeResult->getUpsertedCount();
         }
 
@@ -94,9 +94,9 @@ class UpdateResult
      */
     public function getUpsertedId()
     {
-        if ($this->isAcknowledged) {
-            foreach ($this->writeResult->getUpsertedIds() as $id) {
-               return $id;
+        if($this->isAcknowledged){
+            foreach($this->writeResult->getUpsertedIds() as $id){
+                return $id;
             }
 
             return null;

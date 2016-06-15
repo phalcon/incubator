@@ -14,19 +14,21 @@ use ArrayObject;
  *
  * @api
  */
-class BSONArray extends ArrayObject implements Serializable, Unserializable
+class BSONArray extends ArrayObject implements Serializable,Unserializable
 {
     /**
      * Factory method for var_export().
      *
      * @see http://php.net/oop5.magic#object.set-state
      * @see http://php.net/var-export
+     *
      * @param array $properties
+     *
      * @return self
      */
     public static function __set_state(array $properties)
     {
-        $array = new static;
+        $array=new static;
         $array->exchangeArray($properties);
 
         return $array;
@@ -50,6 +52,7 @@ class BSONArray extends ArrayObject implements Serializable, Unserializable
      * Unserialize the document to BSON.
      *
      * @see http://php.net/mongodb-bson-unserializable.bsonunserialize
+     *
      * @param array $data Array data
      */
     public function bsonUnserialize(array $data)
