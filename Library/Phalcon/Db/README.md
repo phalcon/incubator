@@ -84,3 +84,51 @@ $di->set('mongo', function() {
     return $mongo->selectDB('sitemap');
 });
 ```
+
+## MongoDB\Client
+
+Enables the use of the new MongoDB PHP extension
+
+This will enable use of a mongo database using PHP7 with Phalcon 2.1
+
+```php
+/**
+ * Initialise the mongo DB connection.
+ */
+$di->set( 'mongo', function () use ( $config ) {
+
+    if ( !$config->database->mongo->username || !$config->database->mongo->password ) {
+        $mongo = new Phalcon\Db\Adapter\MongoDB\Client( 'mongodb://' . $config->database->mongo->host );
+    } else {
+        $mongo = new Phalcon\Db\Adapter\MongoDB\Client( "mongodb://" . $config->database->mongo->username . ":" . $config->database->mongo->password . "@" . $config->database->mongo->host );
+    }
+
+    return $mongo->selectDatabase( $config->database->mongo->dbname );
+
+}, true );
+
+/**
+ * Collection Manager is required for MongoDB
+ */
+$di->set('collectionManager', function () {
+    return new \Phalcon\Mvc\Collection\Manager();
+}, true);
+
+
+/**
+ * Example Collection
+ */
+class UserCollection extends \Phalcon\Mvc\MongoCollection{
+	
+	var $name;
+	
+	var $email;
+	
+	var $password;
+
+	function getSource(){
+		return 'users';
+	}
+
+}
+```
