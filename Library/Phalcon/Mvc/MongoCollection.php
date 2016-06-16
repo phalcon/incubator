@@ -122,8 +122,7 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
          * We always use safe stores to get the success state
          * Save the document
          */
-        switch( $this->_operationMade ){
-
+        switch ($this->_operationMade) {
             case self::OP_CREATE:
                 $status=$collection->insertOne($data);
                 break;
@@ -133,9 +132,8 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
                 break;
 
             default:
-                throw new \Phalcon\Mvc\Application\Exception( 'Invalid operation requested for MongoCollection->save()' );
+                throw new \Phalcon\Mvc\Application\Exception('Invalid operation requested for MongoCollection->save()');
                 break;
-
         }
 
         if ($status->isAcknowledged()) {
@@ -299,7 +297,7 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
             /**
              * Loooking for only the first result.
              */
-            return current( $cursor->toArray() );
+            return current($cursor->toArray());
         }
 
         /**
