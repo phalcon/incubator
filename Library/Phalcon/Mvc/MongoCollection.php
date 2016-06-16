@@ -122,7 +122,21 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
          * We always use safe stores to get the success state
          * Save the document
          */
-        $status=$collection->insertOne($data, ['w'=>true]);
+        switch( $this->_operationMade ){
+
+            case self::OP_CREATE:
+                $status=$collection->insertOne($data);
+                break;
+
+            case self::OP_UPDATE:
+                $status=$collection->updateOne(['_id'=>$this->_id], ['$set' => $this->toArray()]);
+                break;
+
+            default:
+                throw new \Phalcon\Mvc\Application\Exception( 'Invalid operation requested for MongoCollection->save()' );
+                break;
+
+        }
 
         if ($status->isAcknowledged()) {
             $success==true;
@@ -282,13 +296,10 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
 
 
         if ($unique===true) {
-
             /**
-             * Iterate through and return the first one.
+             * Loooking for only the first result.
              */
-            foreach ($cursor as $document) {
-                return $document;
-            }
+            return current( $cursor->toArray() );
         }
 
         /**
@@ -428,7 +439,7 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
          * Check if there is a method with the same name of the event
          */
         if (method_exists($this, $eventName)) {
-            if ($this->{eventName}()===false) {
+            if ($this->{$eventName}()===false) {
                 return false;
             }
         }
@@ -456,6 +467,10 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
 
         foreach ($data as $key => $val) {
             $this->{$key}=$val;
+        }
+
+        if (method_exists($this, "afterFetch")) {
+            $this->afterFetch();
         }
 
     }
