@@ -55,14 +55,14 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
 
         $mongoId=null;
 
-        if (!is_object($id)) {
+        if (is_object($id)) {
+            $mongoId=$id;
+        } else {
             if ($this->_modelsManager->isUsingImplicitObjectIds($this)) {
-                $mongoId=new \MongoDB\BSON\ObjectID($id); //\MongoId( $id );
+                $mongoId=new ObjectID($id);
             } else {
                 $mongoId=$id;
             }
-        } else {
-            $mongoId=$id;
         }
 
         $this->_id=$mongoId;
@@ -155,7 +155,8 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
 
     public static function findById($id)
     {
-        if (is_object($id)) {
+
+        if (!is_object($id)) {
             $classname =get_called_class();
             $collection=new $classname();
 
