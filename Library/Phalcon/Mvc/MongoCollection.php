@@ -55,14 +55,14 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
 
         $mongoId=null;
 
-        if (!is_object($id)) {
+        if (is_object($id)) {
+            $mongoId=$id;
+        } else {
             if ($this->_modelsManager->isUsingImplicitObjectIds($this)) {
-                $mongoId=new \MongoDB\BSON\ObjectID($id); //\MongoId( $id );
+                $mongoId=new ObjectID($id);
             } else {
                 $mongoId=$id;
             }
-        } else {
-            $mongoId=$id;
         }
 
         $this->_id=$mongoId;
@@ -122,7 +122,19 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
          * We always use safe stores to get the success state
          * Save the document
          */
-        $status=$collection->insertOne($data, ['w'=>true]);
+        switch ($this->_operationMade) {
+            case self::OP_CREATE:
+                $status=$collection->insertOne($data);
+                break;
+
+            case self::OP_UPDATE:
+                $status=$collection->updateOne(['_id'=>$this->_id], ['$set' => $this->toArray()]);
+                break;
+
+            default:
+                throw new \Phalcon\Mvc\Application\Exception('Invalid operation requested for MongoCollection->save()');
+                break;
+        }
 
         if ($status->isAcknowledged()) {
             $success==true;
@@ -143,7 +155,8 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
 
     public static function findById($id)
     {
-        if (is_object($id)) {
+
+        if (!is_object($id)) {
             $classname =get_called_class();
             $collection=new $classname();
 
@@ -282,13 +295,10 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
 
 
         if ($unique===true) {
-
             /**
-             * Iterate through and return the first one.
+             * Loooking for only the first result.
              */
-            foreach ($cursor as $document) {
-                return $document;
-            }
+            return current($cursor->toArray());
         }
 
         /**
@@ -428,7 +438,7 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
          * Check if there is a method with the same name of the event
          */
         if (method_exists($this, $eventName)) {
-            if ($this->{eventName}()===false) {
+            if ($this->{$eventName}()===false) {
                 return false;
             }
         }
@@ -441,6 +451,12 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
         }
 
         return true;
+    }
+
+    public static function summatory($field, $conditions = null, $finalize = null){
+        throw new \Phalcon\Mvc\Application\Exception(
+            'The summatory() method is not implemented in the new Mvc MongoCollection'
+        );
     }
 
     /**
@@ -456,6 +472,10 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
 
         foreach ($data as $key => $val) {
             $this->{$key}=$val;
+        }
+
+        if (method_exists($this, "afterFetch")) {
+            $this->afterFetch();
         }
 
     }
