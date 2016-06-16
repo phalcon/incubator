@@ -453,6 +453,12 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
         return true;
     }
 
+    public static function summatory($field, $conditions = null, $finalize = null){
+        throw new \Phalcon\Mvc\Application\Exception(
+            'The summatory() method is not implemented in the new Mvc MongoCollection'
+        );
+    }
+
     /**
      * Pass the values from the BSON document back to the object.
      *
