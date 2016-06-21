@@ -1,4 +1,20 @@
 <?php
+/*
+  +------------------------------------------------------------------------+
+  | Phalcon Framework                                                      |
+  +------------------------------------------------------------------------+
+  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
+  +------------------------------------------------------------------------+
+  | This source file is subject to the New BSD License that is bundled     |
+  | with this package in the file docs/LICENSE.txt.                        |
+  |                                                                        |
+  | If you did not receive a copy of the license and are unable to         |
+  | obtain it through the world-wide-web, please send an email             |
+  | to license@phalconphp.com so we can send you a copy immediately.       |
+  +------------------------------------------------------------------------+
+  | Authors: Patrick Florek <patrick.florek@gmail.com>                     |
+  +------------------------------------------------------------------------+
+*/
 
 /**
  * reCaptcha validator
@@ -31,7 +47,7 @@ class ReCaptcha extends Validator
     /**
      * API request URL
      */
-    CONST RECAPTCHA_URL = 'https://www.google.com/recaptcha/api/siteverify';
+    const RECAPTCHA_URL = 'https://www.google.com/recaptcha/api/siteverify';
 
     /**
      * Response error code reference
@@ -58,7 +74,6 @@ class ReCaptcha extends Validator
         $remoteIp = $request->getClientAddress(false);
 
         if (!empty($value)) {
-
             $curl = curl_init(self::RECAPTCHA_URL);
             curl_setopt_array($curl, array(
                 CURLOPT_RETURNTRANSFER => true,
@@ -72,7 +87,6 @@ class ReCaptcha extends Validator
         }
 
         if (empty($response['success'])) {
-
             $label = $this->getOption('label');
             if (empty($label)) {
                 $label = $validation->getLabel($attribute);
