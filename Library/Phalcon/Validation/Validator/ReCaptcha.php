@@ -17,12 +17,16 @@
 */
 
 /**
- * reCaptcha validator
+ * The reCAPTCHA Validator
+ *
+ * @link https://www.google.com/recaptcha/intro/index.html
+ * @link https://developers.google.com/recaptcha/
  *
  * @package Phalcon\Validation\Validator
  */
 namespace Phalcon\Validation\Validator;
 
+use Phalcon\Validation;
 use Phalcon\Http\Request;
 use Phalcon\Validation\Message;
 use Phalcon\Validation\Validator;
@@ -32,12 +36,14 @@ use Phalcon\Validation\Validator;
  *
  * Verifies a value to a reCAPTCHA challenge
  *
- *<code>
- *$validator->add('g-recaptcha-response', new \Phalcon\Validation\Validator(array(
- *   'message' => 'The captcha is not valid',
- *   'secret'  => 'your_site_key'
- *)));
- *</code>
+ * <code>
+ * use Phalcon\Validation\Validator;
+ *
+ * $validator->add('g-recaptcha-response', new Validator([
+ *    'message' => 'The captcha is not valid',
+ *    'secret'  => 'your_site_key'
+ * ]));
+ * </code>
  *
  * @link https://developers.google.com/recaptcha/intro
  * @package Phalcon\Validation\Validator
@@ -53,20 +59,22 @@ class ReCaptcha extends Validator
      * Response error code reference
      * @var array $messages
      */
-    protected $messages = array(
+    protected $messages = [
         'missing-input-secret'   => 'The secret parameter is missing.',
         'invalid-input-secret'   => 'The secret parameter is invalid or malformed.',
         'missing-input-response' => 'The response parameter is missing.',
         'invalid-input-response' => 'The response parameter is invalid or malformed.',
-    );
+    ];
 
     /**
-     * @param \Phalcon\Validation $validation
-     * @param string              $attribute
+     * {@inheritdoc}
+     *
+     * @param Validation $validation
+     * @param string     $attribute
      *
      * @return bool
      */
-    public function validate(\Phalcon\Validation $validation, $attribute)
+    public function validate(Validation $validation, $attribute)
     {
         $secret   = $this->getOption('secret');
         $value    = $validation->getValue($attribute);
@@ -75,13 +83,14 @@ class ReCaptcha extends Validator
 
         if (!empty($value)) {
             $curl = curl_init(self::RECAPTCHA_URL);
-            curl_setopt_array($curl, array(
+            curl_setopt_array($curl, [
                 CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POSTFIELDS     => array(
+                CURLOPT_POSTFIELDS     => [
                     'secret'   => $secret,
                     'response' => $value,
-                    'remoteip' => $remoteIp)
-            ));
+                    'remoteip' => $remoteIp
+                ]
+            ]);
             $response = json_decode(curl_exec($curl), true);
             curl_close($curl);
         }
@@ -93,7 +102,7 @@ class ReCaptcha extends Validator
             }
 
             $message      = $this->getOption('message');
-            $replacePairs = array(':field', $label);
+            $replacePairs = [':field', $label];
             if (empty($message) && !empty($response['error-codes'])) {
                 $message = $this->messages[$response['error-codes']];
             }
@@ -105,6 +114,7 @@ class ReCaptcha extends Validator
             $validation->appendMessage(new Message(strtr($message, $replacePairs), $attribute, 'ReCaptcha'));
             return false;
         }
+
         return true;
     }
 }
