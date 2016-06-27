@@ -171,7 +171,7 @@ class AerospikeTest extends Test
             'object' => [$key . '_test1', (object) ['key' => 'value']],
             'array'  => [$key . '_test1', ['key' => 'value']],
             'null'   => [$key . '_test1', null],
-            'int'    => [$key . '_test1', PHP_INT_MAX],
+            'int'    => [$key . '_test1', 9223372036854775807],
             'float'  => [$key . '_test1', 3.14],
             'class'  => [$key . '_test1', new \stdClass()],
         ];
@@ -233,8 +233,8 @@ class AerospikeTest extends Test
                     'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
                     'lifetime' => 23,
                     'options' => [
-                        \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
-                        \Aerospike::OPT_WRITE_TIMEOUT   => 1500
+                        1 => 1250,
+                        3  => 1500
                     ]
                 ],
                 [
@@ -243,8 +243,8 @@ class AerospikeTest extends Test
                     'prefix' => '',
                     'persistent' => false,
                     'options' => [
-                        \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
-                        \Aerospike::OPT_WRITE_TIMEOUT   => 1500
+                        1 => 1250,
+                        3 => 1500
                     ]
                 ]
             ],
