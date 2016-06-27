@@ -37,6 +37,9 @@ install:
   - composer self-update
   - travis_retry composer install --ignore-platform-reqs --prefer-source --no-interaction
   - travis_retry composer require --ignore-platform-reqs "duncan3dc/fork-helper:*"
+  # Pull images
+  - docker pull phalconphp/php:${TRAVIS_PHP_VERSION}
+  - docker pull phalconphp/zephir:${TRAVIS_PHP_VERSION}
 
 before_script:
   - docker-compose -p incubator up -d
