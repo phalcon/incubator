@@ -37,7 +37,9 @@ if [ ! -f ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.so ]; then
     cd ${PHALCON_SRC_PATH}
 
     zephir "fullclean"
-    zephir "builddev"
+
+    [[ "${TRAVIS_PHP_VERSION}" == "7" ]] || zephir "builddev";
+    [[ "${TRAVIS_PHP_VERSION}" != "7" ]] || zephir "builddev --backend=ZendEngine3";
 
     if [ ! -f $(pwd)/ext/modules/phalcon.so ]; then
         echo "Unable to compile Phalcon."
