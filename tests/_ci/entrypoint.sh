@@ -20,7 +20,7 @@ NC="\033[0m"
 
 echo -e "\nWelcome to the Docker testing container."
 
-export PHP_EXTENSION_DIR=`php-config --extension-dir`
+PHP_EXTENSION_DIR=`php-config --extension-dir`
 echo -e "PHP extension path: ${PURPLE}${PHP_EXTENSION_DIR}${NC}\n"
 
 ln -sf /ext/phalcon.so ${PHP_EXTENSION_DIR}/phalcon.so
@@ -29,8 +29,10 @@ ln -sf /ext/phalcon.so ${PHP_EXTENSION_DIR}/phalcon.so
 [[ "${TRAVIS_PHP_VERSION}" == "7" ]] || (rm -f /etc/php/${TRAVIS_PHP_VERSION}/cli/conf.d/50-phalcon.ini; ln -s /app/tests/_ci/phalcon.ini /etc/php/${TRAVIS_PHP_VERSION}/cli/conf.d/50-phalcon.ini);
 [[ "${TRAVIS_PHP_VERSION}" != "7" ]] || (rm -f /etc/php/7.0/cli/conf.d/50-phalcon.ini; ln -s /app/tests/_ci/phalcon.ini /etc/php/7.0/cli/conf.d/50-phalcon.ini);
 
-export PHALCON_VERSION=`php --ri phalcon | grep "Version =" | awk '{print $3}'`
+PHP_FULL_VERSION=`php -r 'echo phpversion();'`
+PHALCON_VERSION=`php --ri phalcon | grep "Version =" | awk '{print $3}'`
 
+echo -e "${GREEN}PHP${NC}         version ${YELLOW}${TRAVIS_PHP_VERSION}${NC} (${PHP_FULL_VERSION})"
 echo -e "${GREEN}Phalcon${NC}     version ${YELLOW}${PHALCON_VERSION}${NC}"
 /app/vendor/bin/codecept --version
 
