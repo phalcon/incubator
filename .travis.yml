@@ -4,26 +4,33 @@ php:
   - 5.4
   - 5.5
   - 5.6
+  - 7
 
 sudo: required
 dist: trusty
 
+env:
+  global:
+    - DOCKER_COMPOSE_VERSION="1.7.0" PHALCON_SRC_PATH="${TRAVIS_BUILD_DIR}/cphalcon"
+  matrix:
+    - PHALCON_VERSION="2.1.x"
+
 before_install:
   - sudo service memcached stop
   - sudo service docker stop
-
-install:
-  - git clone --depth=1 --branch=2.1.x https://github.com/phalcon/cphalcon.git "${TRAVIS_BUILD_DIR}/cphalcon"
   # Fix Hash Sum mismatch
   - sudo apt-get purge -y google-chrome-stable
   - sudo rm -f /etc/apt/sources.list.d/google*
+
+install:
+  - git clone --depth=1 --branch=${PHALCON_VERSION} https://github.com/phalcon/cphalcon.git ${PHALCON_SRC_PATH}
   # Install Docker
   - sudo apt-get update -qq
   - sudo apt-get install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y --force-yes docker-engine
   - sudo service docker restart
   # Install Docker Compose
   - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/1.6.2/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   # Install Dependencies
@@ -32,12 +39,12 @@ install:
   - travis_retry composer require --ignore-platform-reqs "duncan3dc/fork-helper:*"
 
 before_script:
-  - stty cols 160
+  # - stty cols 160
   - docker-compose -p incubator up -d
   - sleep 1
 
 script:
-  - PHALCON_SRC_PATH="${TRAVIS_BUILD_DIR}/cphalcon" bash tests/build.sh
+  - bash tests/build.sh
 
 notifications:
   email:
