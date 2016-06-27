@@ -41,13 +41,15 @@ class AerospikeTest extends Test
      */
     protected function _before()
     {
-        if (!extension_loaded('aerospike')) {
-            $this->markTestSkipped(
-                'The aerospike module is not available.'
-            );
-        } else {
-            $this->getModule('Aerospike')->_reconfigure(['set' => 'cache']);
+        if (PHP_MAJOR_VERSION == 7) {
+            $this->markTestSkipped('The Aerospike module is not available for PHP 7 yet.');
         }
+
+        if (!extension_loaded('aerospike')) {
+            $this->markTestSkipped('The Aerospike module is not available.');
+        }
+
+        $this->getModule('Aerospike')->_reconfigure(['set' => 'cache']);
     }
 
     /**
