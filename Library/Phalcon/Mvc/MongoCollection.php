@@ -137,7 +137,7 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
         }
 
         if ($status->isAcknowledged()) {
-            $success==true;
+            $success=true;
 
             if ($exists===false) {
                 $this->_id=$status->getInsertedId();
