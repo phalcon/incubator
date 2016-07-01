@@ -8,7 +8,12 @@
     "authors": [
         {
             "name": "Phalcon Team",
-            "email": "team@phalconphp.com"
+            "email": "team@phalconphp.com",
+            "homepage": "http://phalconphp.com/en/team"
+        },
+        {
+            "name": "Contributors",
+            "homepage": "https://github.com/phalcon/incubator/graphs/contributors"
         }
     ],
     "support": {
