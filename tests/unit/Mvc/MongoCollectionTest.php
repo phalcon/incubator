@@ -15,7 +15,7 @@ class CollectionsTest extends Test
     protected function _before()
     {
 
-        if( ! extension_loaded( 'MongoDB' ) ){
+        if (!extension_loaded('MongoDB')) {
             $this->markTestSkipped("MongoDB extension not loaded, test skipped");
             return;
         }
@@ -23,7 +23,7 @@ class CollectionsTest extends Test
         Di::reset();
         $di = new DI();
         $di->set('mongo', function(){
-            $mongo = new MongoClient( 'mongodb://' . TEST_MONGODB_HOST . ':27017');
+            $mongo = new MongoClient( 'mongodb://' . TEST_MONGODB_HOST . ':' . TEST_MONGODB_PORT );
             return $mongo->selectDatabase( 'phalcon_test' );
         });
         $di->set('collectionManager', function(){
@@ -46,28 +46,28 @@ class CollectionsTest extends Test
         $car->manufacturer = 'Porsche';
         $car->model = '911 GT3';
         $car->rank = 2;
-        $car->value=450000;
+        $car->value = 450000;
         $car->save();
 
         $car = new Cars();
         $car->manufacturer = 'Ferrari';
         $car->model = '488 GTB';
         $car->rank = 3;
-        $car->value=400000;
+        $car->value = 400000;
         $car->save();
 
         $car = new Cars();
         $car->manufacturer = 'Porsche';
         $car->model = '918 Spyder';
         $car->rank = 4;
-        $car->value=350000;
+        $car->value = 350000;
         $car->save();
 
         $car = new Cars();
         $car->manufacturer = 'Ferrari';
         $car->model = 'LaFerrari';
         $car->rank = 5;
-        $car->value=300000;
+        $car->value = 300000;
         $car->save();
 
     }

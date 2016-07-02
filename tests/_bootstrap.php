@@ -60,3 +60,4 @@ define('TEST_DB_CHARSET', getenv('TEST_DB_CHARSET') ?: 'utf8');
 
 // MongoDB
 define('TEST_MONGODB_HOST', getenv('TEST_MONGODB_HOST') ?: 'mongodb' );
+define('TEST_MONGODB_PORT', getenv('TEST_MONGODB_PORT') ?: '27017' );
