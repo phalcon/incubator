@@ -2,20 +2,10 @@
 namespace Phalcon\Mvc;
 
 use MongoDB\BSON\ObjectID;
-use MongoDB\Driver\Cursor;
-use MongoDB\Driver\Manager;
 use Phalcon\Db\Adapter\MongoDB\Collection as AdapterCollection;
-//use Phalcon\Db\Adapter\MongoDB\Collection;
-use Phalcon\Db\Adapter\MongoDB\Operation\Find;
 use Phalcon\Di;
-use Phalcon\DiInterface;
 use Phalcon\Mvc\Collection\Document;
-use Phalcon\Di\InjectionAwareInterface;
-use Phalcon\Mvc\Collection\ManagerInterface;
-use Phalcon\Mvc\Collection\BehaviorInterface;
 use Phalcon\Mvc\Collection\Exception;
-use Phalcon\Mvc\Model\MessageInterface;
-use Phalcon\Text;
 use Phalcon\Mvc\Collection as PhalconCollection;
 
 /**
@@ -23,14 +13,27 @@ use Phalcon\Mvc\Collection as PhalconCollection;
  * test Behaviours
  * test all events are being triggered.
  *
- * functions:
- * findById($id)
- * findFirst($params)
- * find($params)
- * count($params)
- * aggregate($params)
- * summatory($field, $conditions, $finalize) Collection::group() Doesn't exist.
+ * Tested Using Unit Tests:
+ * save()
  * delete()
+ * find()
+ * count()
+ * findById()
+ * findFirst()
+ * aggregate()
+ *
+ * Tests To Write
+ * --------------
+ * -- Validation Functionality
+ *
+ * -- Behaviours
+ *
+ * -- Events
+ *
+ *
+ * functions not included here:
+ * summatory($field, $conditions, $finalize) Collection::group() Doesn't exist.
+ *
  */
 
 /**
@@ -281,8 +284,8 @@ abstract class MongoCollection extends PhalconCollection implements \MongoDB\BSO
         if (isset($params['fields'])&&is_array($params['fields'])&&!empty($params['fields'])) {
             $options['projection']=[];
 
-            foreach ($params['fields'] as $field) {
-                $options['projection'][ $field ]=1;
+            foreach ($params['fields'] as $key => $show) {
+                $options['projection'][$key]=$show;
             }
         }
 
