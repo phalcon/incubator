@@ -1,46 +1,33 @@
 <?php
+namespace Phalcon\Test\Mvc;
 
+use Phalcon\Di;
+use Phalcon\Mvc\Collection\Manager;
 use Phalcon\Mvc\Model\Message as ModelMessage;
 use Phalcon\Mvc\MongoCollection;
 use Phalcon\Db\Adapter\MongoDB\Client as MongoClient;
+use Codeception\TestCase\Test;
+use Phalcon\Test\Collections\Cars;
 
-class CollectionsTest extends PHPUnit_Framework_TestCase
+class CollectionsTest extends Test
 {
-    public function __construct()
-    {
-        spl_autoload_register(array($this, 'collectionsAutoloader'));
-    }
 
-    public function __destruct()
+    protected function _before()
     {
-        spl_autoload_unregister(array($this, 'collectionsAutoloader'));
-    }
-
-    public function collectionsAutoloader($className)
-    {
-        if (file_exists('tests/unit/collections/' . $className . '.php')) {
-            require 'tests/unit/collections/' . $className . '.php';
-        }
-    }
-
-    public function setUp()
-    {
-
-        parent::setUp();
 
         if( ! extension_loaded( 'MongoDB' ) ){
             $this->markTestSkipped("MongoDB extension not loaded, test skipped");
             return;
         }
 
-        Phalcon\DI::reset();
-        $di = new Phalcon\DI();
+        Di::reset();
+        $di = new DI();
         $di->set('mongo', function(){
             $mongo = new MongoClient( 'mongodb://' . TEST_MONGODB_HOST . ':27017');
             return $mongo->selectDatabase( 'phalcon_test' );
         });
         $di->set('collectionManager', function(){
-            return new Phalcon\Mvc\Collection\Manager();
+            return new Manager();
         });
 
     }
