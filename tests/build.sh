@@ -15,7 +15,7 @@
 
 docker_bin="$(which docker.io 2> /dev/null || which docker 2> /dev/null)"
 
-[ -z "${TRAVIS_PHP_VERSION}" ] && echo "Need to set TRAVIS_PHP_VERSION variable. Fox example: 'export TRAVIS_PHP_VERSION=7'" && exit 1;
+[ -z "${TRAVIS_PHP_VERSION}" ] && echo "Need to set TRAVIS_PHP_VERSION variable. Fox example: 'export TRAVIS_PHP_VERSION=7.0'" && exit 1;
 [ -z "${PHALCON_SRC_PATH}" ] && echo "Need to set PHALCON_SRC_PATH variable. Fox example: 'export PHALCON_SRC_PATH=/home/user/src/phalcon'" && exit 1;
 [ -z "${TEST_BT_HOST}" ] && TEST_BT_HOST="incubator_beanstalkd"
 [ -z "${TRAVIS_BUILD_DIR}" ] && TRAVIS_BUILD_DIR=$(cd $(dirname "$1") && pwd -P)/$(basename "$1")
@@ -38,8 +38,8 @@ if [ ! -f ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.so ]; then
 
     zephir "fullclean"
 
-    [[ "${TRAVIS_PHP_VERSION}" == "7" ]] || zephir "builddev";
-    [[ "${TRAVIS_PHP_VERSION}" != "7" ]] || zephir "builddev --backend=ZendEngine3";
+    [[ "${TRAVIS_PHP_VERSION}" == "7.0" ]] || zephir "builddev";
+    [[ "${TRAVIS_PHP_VERSION}" != "7.0" ]] || zephir "builddev --backend=ZendEngine3";
 
     if [ ! -f $(pwd)/ext/modules/phalcon.so ]; then
         echo "Unable to compile Phalcon."
