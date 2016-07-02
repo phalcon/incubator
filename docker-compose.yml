@@ -45,3 +45,12 @@ services:
       - "3001:3001"
       - "3002:3002"
       - "3003:3003"
+
+  mongodb:
+    restart: always
+    image: mongo:latest
+    container_name: incubator_mongo
+    expose:
+      - "27017"
+    ports:
+      - "27017:27017"
