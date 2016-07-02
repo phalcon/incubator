@@ -23,14 +23,14 @@
     },
     "require": {
         "php": ">=5.4",
-        "ext-phalcon": ">=2.0.4",
+        "ext-phalcon": "~2.1",
         "swiftmailer/swiftmailer": "~5.2"
     },
     "require-dev": {
         "phpdocumentor/reflection-docblock": "^2.0.4",
         "phpunit/phpunit": "4.8.*",
         "squizlabs/php_codesniffer": "~2.6",
-        "codeception/codeception": "~2.1",
+        "codeception/codeception": "~2.2",
         "codeception/mockery-module": "~0.2",
         "codeception/aerospike-module": "~0.1",
         "codeception/specify": "~0.4",
