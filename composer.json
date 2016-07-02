@@ -48,7 +48,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Phalcon\\Test\\": "tests/unit/"
+            "Phalcon\\Test\\": "tests/unit/",
+            "Phalcon\\Test\\Collections\\": "tests/_data/collections"
         }
     }
 }
