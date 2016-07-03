@@ -82,6 +82,9 @@ class CollectionsTest extends Test
                 $car->delete();
             }
         }
+
+        Di::reset();
+
     }
 
     public function testCollectionsSave()
@@ -296,21 +299,21 @@ class CollectionsTest extends Test
         $this->loadData();
 
         $data = Cars::aggregate([
-            [ 
-                '$match' => [ 'manufacturer' => 'Ferrari' ] 
+            [
+                '$match' => [ 'manufacturer' => 'Ferrari' ]
             ],
-            [ 
-                '$group' => [ 
+            [
+                '$group' => [
                     '_id' => '$manufacturer',
-                    'total' => [ '$sum' =>'$value' ] 
-                ] 
+                    'total' => [ '$sum' =>'$value' ]
+                ]
             ]
         ]);
 
         $this->assertInstanceOf( 'MongoDB\Driver\Cursor', $data );
 
         $results = $data->toArray();
-        
+
         $this->assertEquals( 'Ferrari', $results[0]['_id'] );
         $this->assertEquals( 700000, $results[0]['total'] );
 
