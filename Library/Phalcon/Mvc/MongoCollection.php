@@ -9,34 +9,6 @@ use Phalcon\Mvc\Collection\Exception;
 use Phalcon\Mvc\Collection as PhalconCollection;
 
 /**
- * test Validation
- * test Behaviours
- * test all events are being triggered.
- *
- * Tested Using Unit Tests:
- * save()
- * delete()
- * find()
- * count()
- * findById()
- * findFirst()
- * aggregate()
- *
- * Tests To Write
- * --------------
- * -- Validation Functionality
- *
- * -- Behaviours
- *
- * -- Events
- *
- *
- * functions not included here:
- * summatory($field, $conditions, $finalize) Collection::group() Doesn't exist.
- *
- */
-
-/**
  * Class MongoCollection
  *
  * @package Phalcon\Mvc
