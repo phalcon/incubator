@@ -57,3 +57,7 @@ define('TEST_DB_USER', getenv('TEST_DB_USER') ?: 'root');
 define('TEST_DB_PASSWD', getenv('TEST_DB_PASSWD') ?: '');
 define('TEST_DB_NAME', getenv('TEST_DB_NAME') ?: 'incubator_tests');
 define('TEST_DB_CHARSET', getenv('TEST_DB_CHARSET') ?: 'utf8');
+
+// MongoDB
+define('TEST_MONGODB_HOST', getenv('TEST_MONGODB_HOST') ?: 'mongodb' );
+define('TEST_MONGODB_PORT', getenv('TEST_MONGODB_PORT') ?: '27017' );

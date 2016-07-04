@@ -73,6 +73,5 @@ ${docker_bin} run -it --rm \
   -v ${TRAVIS_BUILD_DIR}/codeception.yml:/app/codeception.yml \
   -v ${TRAVIS_BUILD_DIR}/tests:/app/tests \
   -v ${TRAVIS_BUILD_DIR}/Library:/app/Library \
-  -v ${TRAVIS_BUILD_DIR}/vendor:/app/vendor \
   -v ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.so:/ext/phalcon.so \
   phalconphp/php:${TRAVIS_PHP_VERSION} bash

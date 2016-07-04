@@ -51,6 +51,12 @@ Incubator is built under [Travis CI][4] service.
 Every commit pushed to this repository will queue a build into the continuous integration service and will run all tests
 to ensure that everything is going well and the project is stable.
 
+## MongoDB
+
+Tests for the new MongoCollection include the functions `save()` `delete()` `find()` `findFirst()` `findById()` and `aggregate()` functions.
+
+Tests still need to be written to incorporate the Validation, Behaviours and Events functionality.
+
 [1]: https://docs.docker.com/
 [2]: https://docs.docker.com/compose/
 [3]: http://codeception.com/
