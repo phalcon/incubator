@@ -56,29 +56,36 @@ class UniquenessTest extends Test
 
     private function getDbStub()
     {
+        codecept_debug('getDbStub');
         return Stub::makeEmpty(
             'Phalcon\Db\Adapter\Pdo',
-            array(
+            [
                 'fetchOne' => function ($sql, $fetchMode, $params) {
-                    if ($sql == 'SELECT COUNT(*) as count FROM users WHERE login = ?') {
-                        if ($params[0] == 'login_taken') {
-                            return ['count' => 1];
-                        } else {
-                            return ['count' => 0];
-                        }
+                    if (
+                        $sql !== 'SELECT COUNT(*) AS count FROM "users" WHERE "login" = ? AND "id" != ?' &&
+                        $sql !== 'SELECT COUNT(*) AS count FROM "users" WHERE "login" = ?'
+                    ) {
+                        return null;
                     }
 
-                    return null;
+                    if ($params[0] == 'login_taken') {
+                        return ['count' => 1];
+                    } else {
+                        return ['count' => 0];
+                    }
+                },
+                'escapeIdentifier' => function ($identifier) {
+                    return "\"{$identifier}\"";
                 }
-            )
+            ]
         );
     }
 
     /**
      * @expectedException        \Phalcon\Validation\Exception
-     * @expectedExceptionMessage Validator Uniquness require connection to database
+     * @expectedExceptionMessage Validator Uniqueness require connection to database
      */
-    public function testShouldCatchExceptionWhenValidateUniqunessWithoutDbAndDefaultDI()
+    public function testShouldCatchExceptionWhenValidateUniquenessWithoutDbAndDefaultDI()
     {
         $uniquenessOptions = [
             'table' => 'users',
@@ -92,7 +99,7 @@ class UniquenessTest extends Test
      * @expectedException        \Phalcon\Validation\Exception
      * @expectedExceptionMessage Validator require column option to be set
      */
-    public function testShouldCatchExceptionWhenValidateUniqunessWithoutColumnOption()
+    public function testShouldCatchExceptionWhenValidateUniquenessWithoutColumnOption()
     {
         new Uniqueness(['table' => 'users'], $this->getDbStub());
     }
