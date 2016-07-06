@@ -28,7 +28,7 @@ function zephir() {
         --privileged=true \
         -e ZEND_DONT_UNLOAD_MODULES=1 \
         -v $(pwd):/zephir \
-        phalconphp/zephir:${TRAVIS_PHP_VERSION} "/usr/local/bin/zephir $1"
+        phalconphp/zephir:${TRAVIS_PHP_VERSION} "$1"
 }
 
 if [ ! -f ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.so ]; then
