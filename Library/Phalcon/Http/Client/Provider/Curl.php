@@ -26,6 +26,7 @@ use Phalcon\Http\Request\Method;
 class Curl extends Request
 {
     private $handle = null;
+    private $responseHeader = '';
 
     public static function isAvailable()
     {
@@ -39,6 +40,10 @@ class Curl extends Request
         }
 
         $this->handle = curl_init();
+        if (!is_resource($this->handle)) {
+            throw new HttpException(curl_error($this->handle), 'curl');
+        }
+
         $this->initOptions();
         parent::__construct();
     }
@@ -56,6 +61,13 @@ class Curl extends Request
         return $request;
     }
 
+    public function headerFunction($ch, $headerLine)
+    {
+        $this->responseHeader .= $headerLine;
+
+        return strlen($headerLine);
+    }
+
     private function initOptions()
     {
         $this->setOptions([
@@ -68,7 +80,7 @@ class Curl extends Request
             CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
             CURLOPT_USERAGENT       => 'Phalcon HTTP/' . self::VERSION . ' (Curl)',
             CURLOPT_CONNECTTIMEOUT  => 30,
-            CURLOPT_TIMEOUT         => 30
+            CURLOPT_TIMEOUT         => 30,
         ]);
     }
 
@@ -104,6 +116,7 @@ class Curl extends Request
             $header[] = 'Expect:';
         }
 
+        $this->setOption(CURLOPT_HEADERFUNCTION, [$this, 'headerFunction']);
         $this->setOption(CURLOPT_HTTPHEADER, $header);
 
         $content = curl_exec($this->handle);
@@ -112,15 +125,13 @@ class Curl extends Request
             throw new HttpException(curl_error($this->handle), $errno);
         }
 
-        $headerSize = curl_getinfo($this->handle, CURLINFO_HEADER_SIZE);
-
         $response = new Response();
-        $response->header->parse(substr($content, 0, $headerSize));
+        $response->header->parse($this->responseHeader);
 
         if ($fullResponse) {
-            $response->body = $content;
+            $response->body = $this->responseHeader . $content;
         } else {
-            $response->body = substr($content, $headerSize);
+            $response->body = $content;
         }
 
         return $response;
@@ -152,6 +163,47 @@ class Curl extends Request
         if (!empty($params)) {
             $this->setOption(CURLOPT_POSTFIELDS, $params);
         }
+    }
+
+    /**
+     * Setup authentication
+     *
+     * @param string $user
+     * @param string $pass
+     * @param string $auth
+     */
+    public function setAuth($user, $pass, $auth = 'basic')
+    {
+        $this->setOption(CURLOPT_HTTPAUTH, constant('CURLAUTH_'.strtoupper($auth)));
+        $this->setOption(CURLOPT_USERPWD, $user.":".$pass);
+    }
+
+    /**
+     * Set cookies for this session
+     *
+     * @param array $cookies
+     * @link http://curl.haxx.se/docs/manpage.html
+     * @link http://www.nczonline.net/blog/2009/05/05/http-cookies-explained/
+     */
+    public function setCookies(array $cookies)
+    {
+        if (empty($cookies)) {
+            return;
+        }
+
+        $cookieList = [];
+        foreach ($cookies as $cookieName => $cookieValue) {
+            $cookie = urlencode($cookieName);
+
+            if (isset($cookieValue)) {
+                $cookie .= '=';
+                $cookie .= urlencode($cookieValue);
+            }
+
+            $cookieList[] = $cookie;
+        }
+
+        $this->setOption(CURLOPT_COOKIE, implode(';', $cookieList));
     }
 
     public function setProxy($host, $port = 8080, $user = null, $pass = null)
