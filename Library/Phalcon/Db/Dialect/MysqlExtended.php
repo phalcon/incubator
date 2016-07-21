@@ -30,7 +30,7 @@ class MysqlExtended extends Mysql
     /**
      * Transforms an intermediate representation for a expression into a database system valid expression
      *
-     * @param array  $expression
+     * @param array $expression
      * @param string $escapeChar
      *
      * @return string
@@ -83,7 +83,7 @@ class MysqlExtended extends Mysql
                     return 'MATCH(' . join(', ', $arguments) . ') AGAINST (' .
                     $this->getSqlExpression($expression["arguments"][$length]) . ')';
                     break;
-                    
+
                 case 'FULLTEXT_MATCH_BMODE':
                     if (count($expression["arguments"]) < 2) {
                         throw new \Exception('FULLTEXT_MATCH requires 2 parameters');
@@ -98,14 +98,14 @@ class MysqlExtended extends Mysql
                     return 'MATCH(' . join(', ', $arguments) . ') AGAINST (' .
                     $this->getSqlExpression($expression["arguments"][$length]) . ' IN BOOLEAN MODE)';
                     break;
-                
+
                 case 'REGEXP':
                     if (count($expression['arguments']) != 2) {
                         throw new \Exception('REGEXP requires 2 parameters');
                     }
-        
+
                     return $this->getSqlExpression($expression['arguments'][0]) .
-                        " REGEXP (" . $this->getSqlExpression($expression['arguments'][1]) .")";
+                    ' REGEXP (' . $this->getSqlExpression($expression['arguments'][1]) . ')';
                     break;
             }
         }
