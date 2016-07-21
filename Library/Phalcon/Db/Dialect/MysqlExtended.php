@@ -39,7 +39,7 @@ class MysqlExtended extends Mysql
     public function getSqlExpression(array $expression, $escapeChar = null, $bindCounts = null)
     {
         if ($expression["type"] == 'functionCall') {
-            switch ($expression["name"]) {
+            switch (strtoupper($expression["name"])) {
                 case 'DATE_INTERVAL':
                     if (count($expression["arguments"]) != 2) {
                         throw new \Exception('DATE_INTERVAL requires 2 parameters');
@@ -82,7 +82,8 @@ class MysqlExtended extends Mysql
 
                     return 'MATCH(' . join(', ', $arguments) . ') AGAINST (' .
                     $this->getSqlExpression($expression["arguments"][$length]) . ')';
-
+                    break;
+                    
                 case 'FULLTEXT_MATCH_BMODE':
                     if (count($expression["arguments"]) < 2) {
                         throw new \Exception('FULLTEXT_MATCH requires 2 parameters');
@@ -96,6 +97,16 @@ class MysqlExtended extends Mysql
 
                     return 'MATCH(' . join(', ', $arguments) . ') AGAINST (' .
                     $this->getSqlExpression($expression["arguments"][$length]) . ' IN BOOLEAN MODE)';
+                    break;
+                
+                case 'REGEXP':
+                    if (count($expression['arguments']) != 2) {
+                        throw new \Exception('REGEXP requires 2 parameters');
+                    }
+        
+                    return $this->getSqlExpression($expression['arguments'][0]) .
+                        " REGEXP (" . $this->getSqlExpression($expression['arguments'][1]) .")";
+                    break;
             }
         }
 
