@@ -76,6 +76,11 @@ $data = $this->modelsManager->executeQuery(
 	'SELECT id, name FROM App\Models\Customers WHERE FULLTEXT_MATCH_BMODE(name, description, "+CEO")'
 );
 
+// SELECT `customers`.`id`, `customers`.`name` FROM `customers` WHERE `customers`.`name` REGEXP('^John')
+$data = $this->modelsManager->executeQuery(
+	'SELECT id, name FROM App\Models\Customers WHERE REGEXP(name, '^John')'
+);
+
 ```
 
 Mongo\Client
