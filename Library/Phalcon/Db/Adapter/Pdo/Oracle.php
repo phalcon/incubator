@@ -23,7 +23,9 @@ namespace Phalcon\Db\Adapter\Pdo;
 use Phalcon\Db;
 use Phalcon\Db\Column;
 use Phalcon\Db\RawValue;
+use Phalcon\Db\Adapter\Pdo;
 use Phalcon\Db\ColumnInterface;
+use Phalcon\Db\AdapterInterface;
 
 /**
  * Phalcon\Db\Adapter\Pdo\Oracle
@@ -42,10 +44,8 @@ use Phalcon\Db\ColumnInterface;
  *
  * @property \Phalcon\Db\Dialect\Oracle _dialect
  * @package Phalcon\Db\Adapter\Pdo
- * @todo Must me renamed to 'class Oracle extends PdoAdapter implements AdapterInterface'
- * @todo after removing Oracle from Phalcon
  */
-class OracleExtended extends Oracle
+class Oracle extends Pdo implements AdapterInterface
 {
     // @codingStandardsIgnoreStart
     protected $_type = 'oci';
