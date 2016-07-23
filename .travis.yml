@@ -21,6 +21,7 @@ before_install:
   # Fix Hash Sum mismatch
   - sudo apt-get purge -y google-chrome-stable
   - sudo rm -f /etc/apt/sources.list.d/google*
+  - phpenv config-rm xdebug.ini
 
 install:
   - git clone --depth=1 --branch=${PHALCON_VERSION} https://github.com/phalcon/cphalcon.git ${PHALCON_SRC_PATH}
