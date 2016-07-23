@@ -25,7 +25,23 @@ use Phalcon\Db\Exception;
 /**
  * Phalcon\Db\Dialect\MysqlExtended
  *
- * Generates database specific SQL for the MySQL RDBMS. Extended version.
+ * Generates database specific SQL for the MySQL RDBMS.
+ *
+ * This is an extended MySQL dialect that introduces workarounds for some common MySQL-only functions like
+ * search based on FULLTEXT indexes and operations with date intervals.
+ *
+ * <code>
+ * use Phalcon\Db\Adapter\Pdo\Mysql;
+ * use Phalcon\Db\Adapter\Pdo\MysqlExtended;
+ *
+ * $connection = new Mysql([
+ *     'host'         => 'localhost',
+ *     'username'     => 'root',
+ *     'password'     => 'secret',
+ *     'dbname'       => 'enigma',
+ *     'dialectClass' => MysqlExtended::class
+ * ]);
+ * </code>
  *
  * @package Phalcon\Db\Dialect
  */

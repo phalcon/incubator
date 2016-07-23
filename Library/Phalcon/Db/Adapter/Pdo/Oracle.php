@@ -30,7 +30,7 @@ use Phalcon\Db\AdapterInterface;
 /**
  * Phalcon\Db\Adapter\Pdo\Oracle
  *
- * Specific functions for the Oracle database system.
+ * Specific functions for the Oracle RDBMS.
  *
  * <code>
  * use Phalcon\Db\Adapter\Pdo\Oracle;
