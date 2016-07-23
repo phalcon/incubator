@@ -20,21 +20,42 @@
 
 namespace Phalcon\Db\Dialect;
 
+use Phalcon\Db\Exception;
+
 /**
- * Phalcon\Db\Adapter\Dialect\MysqlExtended
+ * Phalcon\Db\Dialect\MysqlExtended
  *
- * Every query executed via this adapter is automatically cached
+ * Generates database specific SQL for the MySQL RDBMS.
+ *
+ * This is an extended MySQL dialect that introduces workarounds for some common MySQL-only functions like
+ * search based on FULLTEXT indexes and operations with date intervals.
+ *
+ * <code>
+ * use Phalcon\Db\Adapter\Pdo\Mysql;
+ * use Phalcon\Db\Adapter\Pdo\MysqlExtended;
+ *
+ * $connection = new Mysql([
+ *     'host'         => 'localhost',
+ *     'username'     => 'root',
+ *     'password'     => 'secret',
+ *     'dbname'       => 'enigma',
+ *     'dialectClass' => MysqlExtended::class
+ * ]);
+ * </code>
+ *
+ * @package Phalcon\Db\Dialect
  */
 class MysqlExtended extends Mysql
 {
     /**
-     * Transforms an intermediate representation for a expression into a database system valid expression
+     * Transforms an intermediate representation for a expression into a database system valid expression.
      *
      * @param array $expression
      * @param string $escapeChar
-     *
+     * @param mixed $bindCounts
      * @return string
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function getSqlExpression(array $expression, $escapeChar = null, $bindCounts = null)
     {
@@ -42,7 +63,7 @@ class MysqlExtended extends Mysql
             switch (strtoupper($expression["name"])) {
                 case 'DATE_INTERVAL':
                     if (count($expression["arguments"]) != 2) {
-                        throw new \Exception('DATE_INTERVAL requires 2 parameters');
+                        throw new Exception('DATE_INTERVAL requires 2 parameters');
                     }
 
                     switch ($expression["arguments"][1]['value']) {
@@ -57,7 +78,7 @@ class MysqlExtended extends Mysql
 
                 case 'FULLTEXT_MATCH':
                     if (count($expression["arguments"]) < 2) {
-                        throw new \Exception('FULLTEXT_MATCH requires 2 parameters');
+                        throw new Exception('FULLTEXT_MATCH requires 2 parameters');
                     }
 
                     $arguments = [];
@@ -72,7 +93,7 @@ class MysqlExtended extends Mysql
 
                 case 'FULLTEXT_MATCH_BMODE':
                     if (count($expression["arguments"]) < 2) {
-                        throw new \Exception('FULLTEXT_MATCH requires 2 parameters');
+                        throw new Exception('FULLTEXT_MATCH requires 2 parameters');
                     }
 
                     $arguments = [];
@@ -87,7 +108,7 @@ class MysqlExtended extends Mysql
 
                 case 'REGEXP':
                     if (count($expression['arguments']) != 2) {
-                        throw new \Exception('REGEXP requires 2 parameters');
+                        throw new Exception('REGEXP requires 2 parameters');
                     }
 
                     return $this->getSqlExpression($expression['arguments'][0]) .
@@ -96,6 +117,6 @@ class MysqlExtended extends Mysql
             }
         }
 
-        return parent::getSqlExpression($expression, $escapeChar);
+        return parent::getSqlExpression($expression, $escapeChar, $bindCounts);
     }
 }
