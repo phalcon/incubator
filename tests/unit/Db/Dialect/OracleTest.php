@@ -4,8 +4,7 @@ namespace Phalcon\Test\Db\Dialect;
 
 use UnitTester;
 use Codeception\TestCase\Test;
-// @todo Must be renamed to 'Phalcon\Db\Dialect\Oracle' after removing Oracle dialect from Phalcon
-use Phalcon\Db\Dialect\OracleExtended;
+use Phalcon\Db\Dialect\Oracle;
 
 /**
  * \Phalcon\Test\Db\Dialect\OracleTest
@@ -34,7 +33,7 @@ class OracleTest extends Test
 
     public function testDescribeColumnsForSchemaWithDots()
     {
-        $dialect = new OracleExtended();
+        $dialect = new Oracle();
 
         $sql = $dialect->describeColumns('table', 'database.name.with.dots');
 

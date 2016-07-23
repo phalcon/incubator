@@ -22,6 +22,7 @@ namespace Phalcon\Db\Dialect;
 
 use Phalcon\Text;
 use Phalcon\Db\Column;
+use Phalcon\Db\Dialect;
 use Phalcon\Db\Exception;
 use Phalcon\Db\IndexInterface;
 use Phalcon\Db\ColumnInterface;
@@ -33,9 +34,8 @@ use Phalcon\Db\ReferenceInterface;
  * Generates database specific SQL for the Oracle RDBMS.
  *
  * @package Phalcon\Db\Dialect
- * @todo Must be renamed to 'Oracle extends \Phalcon\Db\Dialect' after removing Oracle dialect from Phalcon
  */
-class OracleExtended extends Oracle
+class Oracle extends Dialect
 {
     // @codingStandardsIgnoreStart
     protected $_escapeChar = "'";
