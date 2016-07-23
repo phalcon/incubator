@@ -319,7 +319,7 @@ class OracleExtended extends Oracle
      * List all tables in database.
      *
      * <code>
-     *     print_r($dialect->listTables('blog'));
+     * print_r($dialect->listTables('blog'));
      * </code>
      *
      * @param string $schemaName
@@ -343,8 +343,8 @@ class OracleExtended extends Oracle
      * Generates SQL checking for the existence of a schema.table
      *
      * <code>
-     *     echo $dialect->tableExists('posts', 'blog');
-     *     echo $dialect->tableExists('posts');
+     * echo $dialect->tableExists('posts', 'blog');
+     * echo $dialect->tableExists('posts');
      * </code>
      *
      * @param string $tableName
