@@ -23,7 +23,7 @@
     },
     "require": {
         "php": ">=5.4",
-        "ext-phalcon": "~2.1",
+        "ext-phalcon": "~3.0",
         "swiftmailer/swiftmailer": "~5.2"
     },
     "require-dev": {
