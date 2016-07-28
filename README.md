@@ -29,7 +29,7 @@ Then create the `composer.json` file as follows:
 ```json
 {
     "require": {
-        "phalcon/incubator": "^2.1"
+        "phalcon/incubator": "~3.0"
     }
 }
 ```
