@@ -13,6 +13,7 @@ env:
     - DOCKER_COMPOSE_VERSION="1.7.0" PHALCON_SRC_PATH="${TRAVIS_BUILD_DIR}/cphalcon"
   matrix:
     - PHALCON_VERSION="3.0.x"
+    - PHALCON_VERSION="v3.0.0"
 
 before_install:
   - sudo service memcached stop
