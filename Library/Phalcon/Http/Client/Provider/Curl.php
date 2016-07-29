@@ -26,6 +26,7 @@ use Phalcon\Http\Request\Method;
 class Curl extends Request
 {
     private $handle = null;
+    private $responseHeader = '';
 
     public static function isAvailable()
     {
@@ -39,6 +40,10 @@ class Curl extends Request
         }
 
         $this->handle = curl_init();
+        if (!is_resource($this->handle)) {
+            throw new HttpException(curl_error($this->handle), 'curl');
+        }
+
         $this->initOptions();
         parent::__construct();
     }
@@ -56,9 +61,16 @@ class Curl extends Request
         return $request;
     }
 
+    public function headerFunction($ch, $headerLine)
+    {
+        $this->responseHeader .= $headerLine;
+
+        return strlen($headerLine);
+    }
+
     private function initOptions()
     {
-        $this->setOptions(array(
+        $this->setOptions([
             CURLOPT_RETURNTRANSFER  => true,
             CURLOPT_AUTOREFERER     => true,
             CURLOPT_FOLLOWLOCATION  => true,
@@ -68,8 +80,8 @@ class Curl extends Request
             CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
             CURLOPT_USERAGENT       => 'Phalcon HTTP/' . self::VERSION . ' (Curl)',
             CURLOPT_CONNECTTIMEOUT  => 30,
-            CURLOPT_TIMEOUT         => 30
-        ));
+            CURLOPT_TIMEOUT         => 30,
+        ]);
     }
 
     public function setOption($option, $value)
@@ -92,18 +104,19 @@ class Curl extends Request
         $this->setOption(CURLOPT_CONNECTTIMEOUT, $timeout);
     }
 
-    private function send($customHeader = array(), $fullResponse = false)
+    protected function send($customHeader = [], $fullResponse = false)
     {
         if (!empty($customHeader)) {
             $header = $customHeader;
         } else {
-            $header = array();
+            $header = [];
             if (count($this->header) > 0) {
                 $header = $this->header->build();
             }
             $header[] = 'Expect:';
         }
 
+        $this->setOption(CURLOPT_HEADERFUNCTION, [$this, 'headerFunction']);
         $this->setOption(CURLOPT_HTTPHEADER, $header);
 
         $content = curl_exec($this->handle);
@@ -112,15 +125,13 @@ class Curl extends Request
             throw new HttpException(curl_error($this->handle), $errno);
         }
 
-        $headerSize = curl_getinfo($this->handle, CURLINFO_HEADER_SIZE);
-
         $response = new Response();
-        $response->header->parse(substr($content, 0, $headerSize));
+        $response->header->parse($this->responseHeader);
 
         if ($fullResponse) {
-            $response->body = $content;
+            $response->body = $this->responseHeader . $content;
         } else {
-            $response->body = substr($content, $headerSize);
+            $response->body = $content;
         }
 
         return $response;
@@ -134,7 +145,7 @@ class Curl extends Request
      *
      * @return void
      */
-    private function initPostFields($params, $useEncoding = true)
+    protected function initPostFields($params, $useEncoding = true)
     {
         if (is_array($params)) {
             foreach ($params as $param) {
@@ -154,12 +165,53 @@ class Curl extends Request
         }
     }
 
+    /**
+     * Setup authentication
+     *
+     * @param string $user
+     * @param string $pass
+     * @param string $auth
+     */
+    public function setAuth($user, $pass, $auth = 'basic')
+    {
+        $this->setOption(CURLOPT_HTTPAUTH, constant('CURLAUTH_'.strtoupper($auth)));
+        $this->setOption(CURLOPT_USERPWD, $user.":".$pass);
+    }
+
+    /**
+     * Set cookies for this session
+     *
+     * @param array $cookies
+     * @link http://curl.haxx.se/docs/manpage.html
+     * @link http://www.nczonline.net/blog/2009/05/05/http-cookies-explained/
+     */
+    public function setCookies(array $cookies)
+    {
+        if (empty($cookies)) {
+            return;
+        }
+
+        $cookieList = [];
+        foreach ($cookies as $cookieName => $cookieValue) {
+            $cookie = urlencode($cookieName);
+
+            if (isset($cookieValue)) {
+                $cookie .= '=';
+                $cookie .= urlencode($cookieValue);
+            }
+
+            $cookieList[] = $cookie;
+        }
+
+        $this->setOption(CURLOPT_COOKIE, implode(';', $cookieList));
+    }
+
     public function setProxy($host, $port = 8080, $user = null, $pass = null)
     {
-        $this->setOptions(array(
+        $this->setOptions([
             CURLOPT_PROXY     => $host,
             CURLOPT_PROXYPORT => $port
-        ));
+        ]);
 
         if (!empty($user) && is_string($user)) {
             $pair = $user;
@@ -170,7 +222,7 @@ class Curl extends Request
         }
     }
 
-    public function get($uri, $params = array(), $customHeader = array(), $fullResponse = false)
+    public function get($uri, $params = [], $customHeader = [], $fullResponse = false)
     {
         $uri = $this->resolveUri($uri);
 
@@ -178,16 +230,16 @@ class Curl extends Request
             $uri->extendQuery($params);
         }
 
-        $this->setOptions(array(
+        $this->setOptions([
             CURLOPT_URL           => $uri->build(),
             CURLOPT_HTTPGET       => true,
             CURLOPT_CUSTOMREQUEST => Method::GET,
-        ));
+        ]);
 
         return $this->send($customHeader, $fullResponse);
     }
 
-    public function head($uri, $params = array(), $customHeader = array(), $fullResponse = false)
+    public function head($uri, $params = [], $customHeader = [], $fullResponse = false)
     {
         $uri = $this->resolveUri($uri);
 
@@ -195,16 +247,16 @@ class Curl extends Request
             $uri->extendQuery($params);
         }
 
-        $this->setOptions(array(
+        $this->setOptions([
             CURLOPT_URL           => $uri->build(),
             CURLOPT_HTTPGET       => true,
             CURLOPT_CUSTOMREQUEST => Method::HEAD,
-        ));
+        ]);
 
         return $this->send($customHeader, $fullResponse);
     }
 
-    public function delete($uri, $params = array(), $customHeader = array(), $fullResponse = false)
+    public function delete($uri, $params = [], $customHeader = [], $fullResponse = false)
     {
         $uri = $this->resolveUri($uri);
 
@@ -212,35 +264,48 @@ class Curl extends Request
             $uri->extendQuery($params);
         }
 
-        $this->setOptions(array(
+        $this->setOptions([
             CURLOPT_URL           => $uri->build(),
             CURLOPT_HTTPGET       => true,
             CURLOPT_CUSTOMREQUEST => Method::DELETE,
-        ));
+        ]);
 
         return $this->send($customHeader, $fullResponse);
     }
 
-    public function post($uri, $params = array(), $useEncoding = true, $customHeader = array(), $fullResponse = false)
+    public function post($uri, $params = [], $useEncoding = true, $customHeader = [], $fullResponse = false)
     {
-        $this->setOptions(array(
+        $this->setOptions([
             CURLOPT_URL           => $this->resolveUri($uri),
             CURLOPT_POST          => true,
             CURLOPT_CUSTOMREQUEST => Method::POST,
-        ));
+        ]);
 
         $this->initPostFields($params, $useEncoding);
 
         return $this->send($customHeader, $fullResponse);
     }
 
-    public function put($uri, $params = array(), $useEncoding = true, $customHeader = array(), $fullResponse = false)
+    public function put($uri, $params = [], $useEncoding = true, $customHeader = [], $fullResponse = false)
     {
-        $this->setOptions(array(
+        $this->setOptions([
             CURLOPT_URL           => $this->resolveUri($uri),
             CURLOPT_POST          => true,
             CURLOPT_CUSTOMREQUEST => Method::PUT,
-        ));
+        ]);
+
+        $this->initPostFields($params, $useEncoding);
+
+        return $this->send($customHeader, $fullResponse);
+    }
+
+    public function patch($uri, $params = [], $useEncoding = true, $customHeader = [], $fullResponse = false)
+    {
+        $this->setOptions([
+            CURLOPT_URL           => $this->resolveUri($uri),
+            CURLOPT_POST          => true,
+            CURLOPT_CUSTOMREQUEST => Method::PATCH,
+        ]);
 
         $this->initPostFields($params, $useEncoding);
 

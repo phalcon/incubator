@@ -1,0 +1,56 @@
+version: '2'
+
+services:
+  redis:
+    restart: always
+    image: redis:3.2
+    container_name: incubator_redis
+    expose:
+      - "6379"
+    ports:
+      - "6379:6379"
+
+  mysql:
+    restart: always
+    image: mysql:5.7
+    container_name: incubator_mysql
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: incubator_tests
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+
+  memcached:
+    restart: always
+    image: memcached:1.4
+    container_name: incubator_memcached
+    ports:
+      - "11211:11211"
+
+  queue:
+    restart: always
+    image: phalconphp/beanstalkd:1.10
+    container_name: incubator_beanstalkd
+    ports:
+      - "11302:11302"
+
+  aerospike:
+    restart: always
+    image: aerospike/aerospike-server
+    container_name: incubator_aerospike
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+      - "3002:3002"
+      - "3003:3003"
+
+  mongodb:
+    restart: always
+    image: mongo:latest
+    container_name: incubator_mongo
+    expose:
+      - "27017"
+    ports:
+      - "27017:27017"

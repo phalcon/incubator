@@ -1,97 +1,53 @@
 language: php
 
 php:
-  - 5.4
   - 5.5
   - 5.6
+  - 7.0
 
 sudo: required
-dist: precise
-group: edge
-
-services:
-  - memcached
-  - mysql
-  - mongodb
+dist: trusty
 
 env:
   global:
-    - TEST_BT_HOST="127.0.0.1"
-    - TEST_BT_PORT="11300"
-    - TEST_MC_HOST="127.0.0.1"
-    - TEST_MC_PORT="11211"
-    - TEST_AS_HOST="127.0.0.1"
-    - TEST_AS_PORT="3000"
-    - TEST_DB_HOST="127.0.0.1"
-    - TEST_DB_PORT="3306"
-    - TEST_DB_USER="root"
-    - TEST_DB_PASSWD=""
-    - TEST_DB_NAME="incubator_tests"
-    - TEST_DB_CHARSET="utf8"
+    - DOCKER_COMPOSE_VERSION="1.7.0" PHALCON_SRC_PATH="${TRAVIS_BUILD_DIR}/cphalcon"
   matrix:
-    - PHALCON_VERSION="2.0.13"
-    - PHALCON_VERSION="2.0.12"
-    - PHALCON_VERSION="2.0.11"
-    - PHALCON_VERSION="2.0.10"
-    - PHALCON_VERSION="2.0.9"
-    - PHALCON_VERSION="2.0.8"
-    - PHALCON_VERSION="2.0.7"
-    - PHALCON_VERSION="2.0.6"
-    - PHALCON_VERSION="2.0.5"
-    - PHALCON_VERSION="2.0.4"
+    - PHALCON_VERSION="3.0.x"
+    - PHALCON_VERSION="v3.0.0"
 
 before_install:
+  - sudo service memcached stop
+  - sudo service docker stop
+  # Fix Hash Sum mismatch
+  - sudo apt-get purge -y google-chrome-stable
+  - sudo rm -f /etc/apt/sources.list.d/google*
   - phpenv config-rm xdebug.ini
-  - bash tests/_ci/setup_beanstalkd.sh
-  - beanstalkd -v
-  - beanstalkd -l ${TEST_BT_HOST} -p ${TEST_BT_PORT} & # start queue listener
-  - sleep 5
-  - cd $TRAVIS_BUILD_DIR
-  - pecl channel-update pecl.php.net
-  - (CFLAGS="-O1 -g3 -fno-strict-aliasing"; pecl install yaml < /dev/null &)
-  - phpenv config-add tests/_ci/yaml.ini
-  - pecl install mongo < /dev/null &
-  - phpenv config-add tests/_ci/mongo.ini
-  - phpenv config-add tests/_ci/memcached.ini
-  - wget -O aerospike.tgz 'http://aerospike.com/download/server/latest/artifact/ubuntu12'
-  - tar -xvf aerospike.tgz
-  - cd aerospike-server-community-*-ubuntu12*
-  - sudo ./asinstall
-  - sudo service aerospike start
-  - sudo service aerospike status
-  - sleep 5
-  - cd $TRAVIS_BUILD_DIR
 
 install:
+  - git clone --depth=1 --branch=${PHALCON_VERSION} https://github.com/phalcon/cphalcon.git ${PHALCON_SRC_PATH}
+  # Install Docker
+  - sudo apt-get update -qq
+  - sudo apt-get install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y --force-yes docker-engine
+  - sudo service docker restart
+  # Install Docker Compose
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  # Install Dependencies
   - composer self-update
-  - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b phalcon-v${PHALCON_VERSION}
-  - (cd cphalcon/ext; export CFLAGS="-g0 -O0 -std=gnu90"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j2 &> /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null)
-  - php --ri phalcon
-  - travis_retry composer require aerospike/aerospike-client-php "*"
-  - find vendor/aerospike/aerospike-client-php/ -name "*.sh" -exec chmod +x {} \;
-  - cd vendor/aerospike/aerospike-client-php
-  - sudo $(which composer) run-script -q post-install-cmd
-  - cd $TRAVIS_BUILD_DIR
-  - echo "extension=${TRAVIS_BUILD_DIR}/vendor/aerospike/aerospike-client-php/src/aerospike/modules/aerospike.so" | tee -a tests/_ci/aerospike.ini
-  - phpenv config-add tests/_ci/aerospike.ini
-  - php -m
-  - travis_retry composer install --prefer-source --no-interaction
+  - travis_retry composer install --ignore-platform-reqs --prefer-source --no-interaction
+  - travis_retry composer require --ignore-platform-reqs "duncan3dc/fork-helper:*"
+  # Pull images
+  - docker pull phalconphp/php:${TRAVIS_PHP_VERSION}
+  - docker pull phalconphp/zephir:${TRAVIS_PHP_VERSION}
 
 before_script:
-  - stty cols 160
-  - mysql -e 'create database incubator_tests charset=utf8mb4 collate=utf8mb4_unicode_ci;'
+  - docker-compose -p incubator up -d
+  - sleep 1
 
 script:
-  - vendor/bin/phpcs --standard=PSR2 --colors --extensions=php --encoding=utf-8 Library/
-  - vendor/bin/codecept build
-  - vendor/bin/codecept run
-
-addons:
-  apt:
-    packages:
-      - libyaml-dev
-      - libssl-dev
-      - autoconf
+  - bash tests/build.sh
 
 notifications:
   email:

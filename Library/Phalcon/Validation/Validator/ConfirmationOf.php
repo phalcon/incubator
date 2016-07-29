@@ -13,15 +13,15 @@
   | obtain it through the world-wide-web, please send an email             |
   | to license@phalconphp.com so we can send you a copy immediately.       |
   +------------------------------------------------------------------------+
-  | Authors: David Hubner <david.hubner@gmail.com>                         |
+  | Authors: David Hubner <david.hubner@gmail.com>                             |
   +------------------------------------------------------------------------+
  */
 
 namespace Phalcon\Validation\Validator;
 
 use Phalcon\Validation;
-use Phalcon\Validation\Exception;
 use Phalcon\Validation\Validator;
+use Phalcon\Validation\Exception;
 
 /**
  * Validates confirmation of other field value

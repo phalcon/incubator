@@ -33,11 +33,21 @@ use Phalcon\Acl\RoleInterface;
  */
 class Redis extends Adapter
 {
-    /** @var bool  */
+    /**
+     * @var bool
+     */
     protected $setNXAccess = true;
 
-    /** @var \Redis */
+    /**
+     * @var \Redis
+     */
     protected $redis;
+
+    /**
+     * Default action for no arguments is allow
+     * @var int
+     */
+    protected $noArgumentsDefaultAction = Acl::ALLOW;
 
     public function __construct($redis = null)
     {
@@ -91,7 +101,7 @@ class Redis extends Adapter
      * {@inheritdoc}
      *
      * @param  string $roleName
-     * @param  string $roleToInherit
+     * @param  \Phalcon\Acl\Role|string $roleToInherit
      * @throws \Phalcon\Acl\Exception
      */
     public function addInherit($roleName, $roleToInherit)
@@ -102,6 +112,10 @@ class Redis extends Adapter
             throw new Exception(
                 sprintf("Role '%s' does not exist in the role list", $roleName)
             );
+        }
+
+        if ($roleToInherit instanceof Role) {
+            $roleToInherit = $roleToInherit->getName();
         }
 
         $this->redis->sAdd("rolesInherits:$roleName", $roleToInherit);
@@ -115,8 +129,8 @@ class Redis extends Adapter
      * $acl->addResource(new Phalcon\Acl\Resource('customers'), 'search');
      * $acl->addResource('customers', 'search');
      * //Add a resource  with an access list
-     * $acl->addResource(new Phalcon\Acl\Resource('customers'), array('create', 'search'));
-     * $acl->addResource('customers', array('create', 'search'));
+     * $acl->addResource(new Phalcon\Acl\Resource('customers'), ['create', 'search']);
+     * $acl->addResource('customers', ['create', 'search']);
      * </code>
      *
      * @param  \Phalcon\Acl\Resource|string $resource
@@ -128,7 +142,7 @@ class Redis extends Adapter
         if (!is_object($resource)) {
             $resource = new Resource($resource, ucwords($resource) . " Resource");
         }
-        $this->redis->hMset("resources", array($resource->getName() => $resource->getDescription()));
+        $this->redis->hMset("resources", [$resource->getName() => $resource->getDescription()]);
 
         if ($accessList) {
             return $this->addResourceAccess($resource->getName(), $accessList);
@@ -193,7 +207,7 @@ class Redis extends Adapter
      */
     public function getResources()
     {
-        $resources = array();
+        $resources = [];
 
         foreach ($this->redis->hGetAll("resources") as $name => $desc) {
             $resources[] = new Resource($name, $desc);
@@ -209,7 +223,7 @@ class Redis extends Adapter
      */
     public function getRoles()
     {
-        $roles = array();
+        $roles = [];
 
         foreach ($this->redis->hGetAll("roles") as $name => $desc) {
             $roles[] = new Role($name, $desc);
@@ -244,7 +258,7 @@ class Redis extends Adapter
             $accessList = (array)$accessList;
         }
         array_unshift($accessList, "resourcesAccesses:$resource");
-        call_user_func_array(array($this->redis, 'sRem'), $accessList);
+        call_user_func_array([$this->redis, 'sRem'], $accessList);
     }
 
     /**
@@ -255,7 +269,7 @@ class Redis extends Adapter
      * //Allow access to guests to search on customers
      * $acl->allow('guests', 'customers', 'search');
      * //Allow access to guests to search or create on customers
-     * $acl->allow('guests', 'customers', array('search', 'create'));
+     * $acl->allow('guests', 'customers', ['search', 'create']);
      * //Allow access to any role to browse on products
      * $acl->allow('*', 'products', 'browse');
      * //Allow access to any role to browse on any resource
@@ -265,8 +279,9 @@ class Redis extends Adapter
      * @param string $role
      * @param string $resource
      * @param array|string $access
+     * @param mixed $func
      */
-    public function allow($role, $resource, $access)
+    public function allow($role, $resource, $access, $func = null)
     {
         if ($role !== '*' && $resource !== '*') {
             $this->allowOrDeny($role, $resource, $access, Acl::ALLOW);
@@ -321,7 +336,7 @@ class Redis extends Adapter
      * //Deny access to guests to search on customers
      * $acl->deny('guests', 'customers', 'search');
      * //Deny access to guests to search or create on customers
-     * $acl->deny('guests', 'customers', array('search', 'create'));
+     * $acl->deny('guests', 'customers', ['search', 'create']);
      * //Deny access to any role to browse on products
      * $acl->deny('*', 'products', 'browse');
      * //Deny access to any role to browse on any resource
@@ -331,9 +346,10 @@ class Redis extends Adapter
      * @param  string $roleName
      * @param  string $resourceName
      * @param  array|string $access
+     * @param  mixed $func
      * @return boolean
      */
-    public function deny($role, $resource, $access)
+    public function deny($role, $resource, $access, $func = null)
     {
         if ($role === '*' || empty($role)) {
             $this->rolePermission($resource, $access, Acl::DENY);
@@ -357,10 +373,10 @@ class Redis extends Adapter
      * @param string $role
      * @param string $resource
      * @param string $access
-     *
+     * @param array  $parameters
      * @return bool
      */
-    public function isAllowed($role, $resource, $access)
+    public function isAllowed($role, $resource, $access, array $parameters = null)
     {
         if ($this->redis->sIsMember("accessList:$role:$resource:" . Acl::ALLOW, $access)) {
             return Acl::ALLOW;
@@ -380,6 +396,28 @@ class Redis extends Adapter
          */
 
         return $this->getDefaultAction();
+    }
+
+    /**
+     * Returns the default ACL access level for no arguments provided
+     * in isAllowed action if there exists func for accessKey
+     *
+     * @return int
+     */
+    public function getNoArgumentsDefaultAction()
+    {
+        return $this->noArgumentsDefaultAction;
+    }
+
+    /**
+     * Sets the default access level for no arguments provided
+     * in isAllowed action if there exists func for accessKey
+     *
+     * @param int $defaultAccess Phalcon\Acl::ALLOW or Phalcon\Acl::DENY
+     */
+    public function setNoArgumentsDefaultAction($defaultAccess)
+    {
+        $this->noArgumentsDefaultAction = intval($defaultAccess);
     }
 
     /**
@@ -407,7 +445,7 @@ class Redis extends Adapter
         $accessList = "accessList:$roleName:$resourceName";
 
         // remove first if exists
-        foreach (array(1, 2) as $act) {
+        foreach ([1, 2] as $act) {
             $this->redis->sRem("$accessList:$act", $accessName);
             $this->redis->sRem("$accessList:$act", "*");
         }

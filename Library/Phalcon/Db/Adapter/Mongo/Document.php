@@ -21,7 +21,7 @@ class Document
 {
     protected $collection;
 
-    public function __construct($collection, $doc = array())
+    public function __construct($collection, $doc = [])
     {
         $this->collection = $collection;
         $this->extract(new \RecursiveArrayIterator($doc));
@@ -30,7 +30,7 @@ class Document
     private function extract($iterator, $className = null)
     {
         if (is_numeric($iterator->key())) {
-            $container = array();
+            $container = [];
         } else {
             if (empty($className)) {
                 $container = $this;

@@ -7,7 +7,7 @@ use Codeception\TestCase\Test;
 use UnitTester;
 
 /**
- * \Phalcon\Test\Db\Adapter\Factory
+ * \Phalcon\Test\Db\Adapter\FactoryTest
  * Tests for Phalcon\Db\Adapter\Factory component
  *
  * @copyright (c) 2011-2016 Phalcon Team
@@ -49,13 +49,6 @@ class FactoryTest extends Test
             'dbname'   => TEST_DB_NAME,
             'charset'  => TEST_DB_CHARSET,
         ];
-    }
-
-    /**
-     * executed after each test
-     */
-    protected function _after()
-    {
     }
 
     public function testLoadMysqlAdapter()

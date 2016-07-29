@@ -32,6 +32,8 @@ class AerospikeTest extends Test
      */
     protected $tester;
 
+    protected $ns = 'test';
+    protected $set = 'session';
     protected $keys = [];
 
     /**
@@ -39,13 +41,19 @@ class AerospikeTest extends Test
      */
     protected function _before()
     {
-        if (!extension_loaded('aerospike')) {
-            $this->markTestSkipped(
-                'The aerospike module is not available.'
-            );
-        } else {
-            $this->getModule('Aerospike')->_reconfigure(['set' => 'session']);
+        if (PHP_MAJOR_VERSION == 7) {
+            $this->markTestSkipped('The Aerospike module is not available for PHP 7 yet.');
         }
+
+        if (!extension_loaded('aerospike')) {
+            $this->markTestSkipped('The Aerospike module is not available.');
+        }
+
+        $this->getModule('Aerospike')->_reconfigure([
+            'set'  => $this->set,
+            'addr' => TEST_AS_HOST,
+            'port' => TEST_AS_PORT
+        ]);
     }
 
     /**
@@ -54,24 +62,6 @@ class AerospikeTest extends Test
     protected function _after()
     {
         $this->cleanup();
-    }
-
-    private function getConfig()
-    {
-        return [
-            'hosts' => [
-                ['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]
-            ],
-            'persistent' => false,
-            'namespace'  => 'test',
-            'prefix'     => '',
-            'lifetime'   => 10,
-            'uniqueId'   => 'some-unique-id',
-            'options' => [
-                \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
-                \Aerospike::OPT_WRITE_TIMEOUT => 1500
-            ]
-        ];
     }
 
     public function testShouldWriteSession()
@@ -87,13 +77,13 @@ class AerospikeTest extends Test
             ]
         );
 
-        $session->write($sessionId, $data);
-        $this->tester->seeInAerospike($sessionId, base64_encode($data));
+        $this->assertTrue($session->write($sessionId, $data));
+        $this->tester->seeInAerospike($sessionId, serialize($data));
     }
 
     public function testShouldReadSession()
     {
-        $sessionId = 'abcdef123458';
+        $sessionId = 'some_session_key';
         $session = new SessionHandler($this->getConfig());
 
         $data = serialize(
@@ -104,11 +94,10 @@ class AerospikeTest extends Test
             ]
         );
 
-        $this->tester->haveInAerospike($sessionId, base64_encode($data));
+        $this->tester->haveInAerospike($sessionId, serialize($data));
         $this->keys[] = $sessionId;
 
-        $expected = $session->read($sessionId);
-        $this->assertEquals($data, $expected);
+        $this->assertEquals($data, $session->read($sessionId));
     }
 
     public function testShouldDestroySession()
@@ -124,14 +113,21 @@ class AerospikeTest extends Test
             ]
         );
 
-        $this->tester->haveInAerospike($sessionId, base64_encode($data));
+        $this->tester->haveInAerospike($sessionId, serialize($data));
         $session->destroy($sessionId);
         $this->tester->dontSeeInAerospike($sessionId);
     }
 
     private function cleanup()
     {
-        $aerospike = new Aerospike(['hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]]], false);
+        $aerospike = new Aerospike(
+            [
+                'hosts' => [
+                    ['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]
+                ]
+            ],
+            false
+        );
 
         foreach ($this->keys as $i => $key) {
             $aerospike->remove($this->buildKey($aerospike, $key));
@@ -142,9 +138,28 @@ class AerospikeTest extends Test
     private function buildKey(Aerospike $aerospike, $key)
     {
         return $aerospike->initKey(
-            'test',
-            'cache',
+            $this->ns,
+            $this->set,
             $key
         );
+    }
+
+    private function getConfig()
+    {
+        return [
+            'hosts' => [
+                ['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]
+            ],
+            'persistent' => false,
+            'namespace'  => $this->ns,
+            'set'        => $this->set,
+            'prefix'     => '',
+            'lifetime'   => 10,
+            'uniqueId'   => 'some-unique-id',
+            'options' => [
+                \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
+                \Aerospike::OPT_WRITE_TIMEOUT => 1500
+            ]
+        ];
     }
 }

@@ -20,7 +20,7 @@ namespace Phalcon\Annotations\Adapter;
 
 use Phalcon\Cache\Backend\Libmemcached as CacheBackend;
 use Phalcon\Cache\Frontend\Data as CacheFrontend;
-use Phalcon\Mvc\Model\Exception;
+use Phalcon\Annotations\Exception;
 use Memcached as MemcachedGeneric;
 use Phalcon\Annotations\Adapter;
 
@@ -31,7 +31,15 @@ use Phalcon\Annotations\Adapter;
  * This adapter is suitable for production.
  *
  *<code>
- * $annotations = new \Phalcon\Annotations\Adapter\Memcached();
+ * use Phalcon\Annotations\Adapter\Memcached;
+ *
+ * $annotations = new Memcached([
+ *     'lifetime' => 8600,
+ *     'host'     => 'localhost',
+ *     'port'     => 11211,
+ *     'weight'   => 1,
+ *     'prefix'   => 'prefix.',
+ * ]);
  *</code>
  *
  * @package Phalcon\Annotations\Adapter
@@ -55,23 +63,19 @@ class Memcached extends Base
     /**
      * Memcached backend instance.
      *
-     * @var \Phalcon\Cache\Backend\Libmemcached
+     * @var CacheBackend
      */
     protected $memcached = null;
 
     /**
      * {@inheritdoc}
      *
-     * @param null|array $options options array
+     * @param array $options options array
      *
-     * @throws \Phalcon\Mvc\Model\Exception
+     * @throws Exception
      */
-    public function __construct($options = null)
+    public function __construct(array $options)
     {
-        if (!is_array($options)) {
-            throw new Exception('No configuration given');
-        }
-
         if (!isset($options['host'])) {
             throw new Exception('No host given in options');
         }
@@ -89,26 +93,27 @@ class Memcached extends Base
 
     /**
      * {@inheritdoc}
-     * @return \Phalcon\Cache\Backend\Libmemcached
+     *
+     * @return CacheBackend
      */
     protected function getCacheBackend()
     {
         if (null === $this->memcached) {
             $this->memcached = new CacheBackend(
-                new CacheFrontend(array('lifetime' => $this->options['lifetime'])),
-                array(
-                    'servers' => array(
-                        array(
+                new CacheFrontend(['lifetime' => $this->options['lifetime']]),
+                [
+                    'servers' => [
+                        [
                             'host' => $this->options['host'],
                             'port' => $this->options['port'],
                             'weight' => $this->options['weight']
-                        ),
-                    ),
-                    'client' => array(
+                        ],
+                    ],
+                    'client' => [
                         MemcachedGeneric::OPT_HASH => MemcachedGeneric::HASH_MD5,
                         MemcachedGeneric::OPT_PREFIX_KEY => $this->options['prefix']
-                    )
-                )
+                    ]
+                ]
             );
         }
 
@@ -120,7 +125,6 @@ class Memcached extends Base
      * {@inheritdoc}
      *
      * @param string $key
-     *
      * @return string
      */
     protected function prepareKey($key)

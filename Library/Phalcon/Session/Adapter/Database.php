@@ -46,7 +46,7 @@ class Database extends Adapter implements AdapterInterface
     {
         if (!isset($options['db']) || !$options['db'] instanceof DbAdapter) {
             throw new Exception(
-                'Parameter "db" is required and it must be an instance of Phalcon\Acl\AdapterInterface'
+                'Parameter "db" is required and it must be an instance of Phalcon\Db\AdapterInterface'
             );
         }
 

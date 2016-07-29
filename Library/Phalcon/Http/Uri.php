@@ -20,7 +20,7 @@ namespace Phalcon\Http;
 
 class Uri
 {
-    private $parts = array();
+    private $parts = [];
 
     public function __construct($uri = null)
     {
@@ -31,7 +31,7 @@ class Uri
         if (is_string($uri)) {
             $this->parts = parse_url($uri);
             if (!empty($this->parts['query'])) {
-                $query = array();
+                $query = [];
                 parse_str($this->parts['query'], $query);
                 $this->parts['query'] = $query;
             }
@@ -139,7 +139,7 @@ class Uri
 
         $this->parts = array_merge(
             $this->parts,
-            array_diff_key($uri->parts, array_flip(array('query', 'path')))
+            array_diff_key($uri->parts, array_flip(['query', 'path']))
         );
 
         if (!empty($uri->parts['query'])) {
@@ -155,8 +155,8 @@ class Uri
 
     public function extendQuery($params)
     {
-        $query = empty($this->parts['query']) ? array() : $this->parts['query'];
-        $params = empty($params) ? array() : $params;
+        $query = empty($this->parts['query']) ? [] : $this->parts['query'];
+        $params = empty($params) ? [] : $params;
         $this->parts['query'] = array_merge($query, $params);
 
         return $this;

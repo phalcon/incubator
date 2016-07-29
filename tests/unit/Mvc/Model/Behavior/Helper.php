@@ -4,7 +4,6 @@ namespace Phalcon\Test\Mvc\Model\Behavior;
 
 use Mockery;
 use Phalcon\Di;
-use Phalcon\Mvc\ModelInterface;
 use UnitTester;
 use ReflectionProperty;
 use CategoriesManyRoots;
@@ -14,7 +13,6 @@ use Phalcon\Mvc\Model\Manager;
 use Codeception\TestCase\Test;
 use Phalcon\Mvc\Model\Metadata;
 use Phalcon\Db\Adapter\Pdo\Mysql;
-use Codeception\Specify\Config as SpecifyConfig;
 use Phalcon\Mvc\Model\Behavior\NestedSet as NestedSetBehavior;
 
 /**
@@ -75,8 +73,6 @@ class Helper extends Test
         if ($this->previousDependencyInjector instanceof DiInterface) {
             Di::setDefault($di);
         }
-
-        SpecifyConfig::setDeepClone(false);
 
         $this->truncateTable(CategoriesManyRoots::$table);
     }

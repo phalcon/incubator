@@ -8,7 +8,12 @@
     "authors": [
         {
             "name": "Phalcon Team",
-            "email": "team@phalconphp.com"
+            "email": "team@phalconphp.com",
+            "homepage": "http://phalconphp.com/en/team"
+        },
+        {
+            "name": "Contributors",
+            "homepage": "https://github.com/phalcon/incubator/graphs/contributors"
         }
     ],
     "support": {
@@ -17,13 +22,15 @@
         "forum": "https://forum.phalconphp.com/"
     },
     "require": {
-        "php": ">=5.4",
-        "ext-phalcon": "^2.0",
+        "php": ">=5.5",
+        "ext-phalcon": "^3.0",
         "swiftmailer/swiftmailer": "~5.2"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "~2.5",
-        "codeception/codeception": "~2.1",
+        "phpdocumentor/reflection-docblock": "^2.0.4",
+        "phpunit/phpunit": "4.8.*",
+        "squizlabs/php_codesniffer": "~2.6",
+        "codeception/codeception": "~2.2",
         "codeception/mockery-module": "~0.2",
         "codeception/aerospike-module": "~0.1",
         "codeception/specify": "~0.4",
@@ -31,14 +38,18 @@
     },
     "suggest": {
         "ext-aerospike": "*",
+        "sergeyklay/aerospike-php-stubs": "The most complete Aerospike PHP stubs which allows autocomplete in modern IDEs",
         "duncan3dc/fork-helper": "To use extended class to access the beanstalk queue service"
     },
     "autoload": {
-        "psr-4": { "Phalcon\\": "Library/Phalcon/" }
+        "psr-4": {
+            "Phalcon\\": "Library/Phalcon/"
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "Phalcon\\Test\\": "tests/unit/"
+            "Phalcon\\Test\\": "tests/unit/",
+            "Phalcon\\Test\\Collections\\": "tests/_data/collections"
         }
     }
 }

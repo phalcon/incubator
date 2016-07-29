@@ -114,7 +114,9 @@ class Database extends Backend implements BackendInterface
      * @param  string $content
      * @param  int    $lifetime
      * @param  bool   $stopBuffer
-     * @throws \Phalcon\Cache\Exception
+     * @return bool
+     *
+     * @throws Exception
      */
     public function save($keyName = null, $content = null, $lifetime = null, $stopBuffer = true)
     {
@@ -145,16 +147,16 @@ class Database extends Backend implements BackendInterface
 
         // Check if the cache already exist
         $sql   = "SELECT data, lifetime FROM {$this->table} WHERE key_name = ?";
-        $cache = $this->db->fetchOne($sql, Db::FETCH_ASSOC, array($prefixedKey));
+        $cache = $this->db->fetchOne($sql, Db::FETCH_ASSOC, [$prefixedKey]);
 
         if (!$cache) {
-            $this->db->execute("INSERT INTO {$this->table} VALUES (?, ?, ?)", [
+            $status = $this->db->execute("INSERT INTO {$this->table} VALUES (?, ?, ?)", [
                 $prefixedKey,
                 $frontend->beforeStore($cachedContent),
                 $lifetime
             ]);
         } else {
-            $this->db->execute(
+            $status = $this->db->execute(
                 "UPDATE {$this->table} SET data = ?, lifetime = ? WHERE key_name = ?",
                 [
                     $frontend->beforeStore($cachedContent),
@@ -162,6 +164,10 @@ class Database extends Backend implements BackendInterface
                     $prefixedKey
                 ]
             );
+        }
+
+        if (!$status) {
+            throw new Exception('Failed storing data in database');
         }
 
         if ($stopBuffer) {
@@ -173,6 +179,8 @@ class Database extends Backend implements BackendInterface
         }
 
         $this->_started = false;
+
+        return $status;
     }
 
     /**

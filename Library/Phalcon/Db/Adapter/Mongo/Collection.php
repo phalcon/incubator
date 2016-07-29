@@ -32,37 +32,37 @@ class Collection extends \MongoCollection
         return $this->db->selectCollection($name);
     }
 
-    public function find($query = array(), $fields = array())
+    public function find($query = [], $fields = [])
     {
         return $this->findAsObject('Sonucu\Mongo\Document', $query, $fields);
     }
 
-    public function findAsObject($className, $query = array(), $fields = array())
+    public function findAsObject($className, $query = [], $fields = [])
     {
         return new Cursor($this, $className, $query, $fields);
     }
 
-    public function findOne($query = array(), $fields = array())
+    public function findOne($query = [], $fields = [])
     {
         return $this->findOneAsObject('Sonucu\Mongo\Document', $query, $fields);
     }
 
-    public function findOneAsObject($className, $query = array(), $fields = array())
+    public function findOneAsObject($className, $query = [], $fields = [])
     {
         return new $className($this, parent::findOne($query, $fields));
     }
 
-    public function insert(Document $doc, $options = array())
+    public function insert(Document $doc, $options = [])
     {
         //TODO: iterate props and create db refs
     }
 
-    public function batchInsert(array $col, $options = array())
+    public function batchInsert(array $col, $options = [])
     {
         //TODO: iterate props and create db refs
     }
 
-    public function save(Document $doc, $options = array())
+    public function save(Document $doc, $options = [])
     {
         //TODO: iterate props and create db refs
     }

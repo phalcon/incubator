@@ -28,7 +28,7 @@ abstract class Request
     protected $baseUri;
     public $header = null;
 
-    const VERSION = '0.0.1';
+    const VERSION = '0.0.2';
 
     public function __construct()
     {
@@ -46,7 +46,7 @@ abstract class Request
             return new Stream();
         }
 
-        throw new ProviderException('There isn\'t any available provider');
+        throw new ProviderException("There isn't any available provider");
     }
 
     public function setBaseUri($baseUri)

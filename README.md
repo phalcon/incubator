@@ -24,22 +24,22 @@ Install Composer in a common location or in your project:
 curl -s http://getcomposer.org/installer | php
 ```
 
-If you are using Phalcon 2.0.x, create the `composer.json` file as follows:
+Then create the `composer.json` file as follows:
+
+```json
+{
+    "require": {
+        "phalcon/incubator": "~3.0"
+    }
+}
+```
+
+If you are still using Phalcon 2.0.x, create the `composer.json` file as follows:
 
 ```json
 {
     "require": {
         "phalcon/incubator": "^2.0"
-    }
-}
-```
-
-If you are still using Phalcon 1.3.x, create a `composer.json` with the following instead:
-
-```json
-{
-    "require": {
-        "phalcon/incubator": "^1.3"
     }
 }
 ```
@@ -59,15 +59,15 @@ Just clone the repository in a common location or inside your project:
 git clone https://github.com/phalcon/incubator.git
 ```
 
-For a specific Git branch (eg 1.3.5) please use:
+For a specific Git branch (eg 2.0.13) please use:
 
 ```
-git clone -b 1.3.5 git@github.com:phalcon/incubator.git
+git clone -b 2.0.13 git@github.com:phalcon/incubator.git
 ```
 
 ## Autoloading from the Incubator
 
-Add or register the following namespace strategy to your Phalcon\Loader in order
+Add or register the following namespace strategy to your `Phalcon\Loader` in order
 to load classes from the incubator repository:
 
 ```php
@@ -99,6 +99,8 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ### Annotations
 * [Phalcon\Annotations\Adapter\Memcached](Library/Phalcon/Annotations/Adapter) - Memcached adapter for storing annotations (@igusev)
+* [Phalcon\Annotations\Adapter\Redis](Library/Phalcon/Annotations/Adapter) - Redis adapter for storing annotations (@sergeyklay)
+* [Phalcon\Annotations\Adapter\Aerospike](Library/Phalcon/Annotations/Adapter) - Aerospike adapter for storing annotations (@sergeyklay)
 
 ### Behaviors
 * [Phalcon\Mvc\Model\Behavior\Blameable](Library/Phalcon/Mvc/Model/Behavior) - logs with every created or updated row in your database who created and who updated it (@phalcon)
@@ -111,45 +113,52 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ### Config
 * [Phalcon\Config\Loader](Library/Phalcon/Config) - Dynamic config loader by file extension (@Kachit)
+* [Phalcon\Config\Adapter\Xml](Library/Phalcon/Config) - Reads xml files and converts them to Phalcon\Config objects. (@sergeyklay)
 
 ### Console
 * [Phalcon\Cli\Console\Extended](Library/Phalcon/Cli/Console) - Extended Console application that uses annotations in order to create automatically a help description (@sarrubia)
 * [Phalcon\Cli\Environment](Library/Phalcon/Cli/Environment) - This component provides functionality that helps writing CLI oriented code that has runtime-specific execution params (@sergeyklay)
 
+### Crypt
+* [Phalcon\Legacy\Crypt](Library/Phalcon/Legacy) - Port of Phalcon 2.0.x (legacy) `Phalcon\Crypt` (@sergeyklay)
+
 ### Database
-* [Phalcon\Db\Adapter\Cacheable\Mysql](Library/Phalcon/Db) - MySQL adapter that aggressively caches all the queries executed (@phalcon)
-* [Phalcon\Db\Adapter\Factory](Library/Phalcon/Db/Adapter/Factory.php) - Phalcon DB adapters Factory (@Kachit)
+
+#### Adapter
+* [Phalcon\Db\Adapter\Cacheable\Mysql](Library/Phalcon/Db/Adapter) - MySQL adapter that aggressively caches all the queries executed (@phalcon)
+* [Phalcon\Db\Adapter\Factory](Library/Phalcon/Db/Adapter) - Phalcon DB adapters Factory (@Kachit)
+* [Phalcon\Db\Adapter\MongoDB](Library/Phalcon/Db/Adapter) - Database adapter for the new MongoDB extension (@tigerstrikemedia)
+* [Phalcon\Db\Adapter\Pdo\Oracle](Library/Phalcon/Db/Adapter) - Database adapter for the Oracle for the Oracle RDBMS. (@sergeyklay)
+
+#### Dialect
+* [Phalcon\Db\Dialect\MysqlExtended](Library/Phalcon/Db/Dialect) - Generates database specific SQL for the MySQL RDBMS. Extended version. (@phalcon)
+* [Phalcon\Db\Dialect\Oracle](Library/Phalcon/Db/Dialect) - Generates database specific SQL for the Oracle RDBMS. (@sergeyklay)
 
 ### Http
 * [Phalcon\Http](Library/Phalcon/Http) - Uri utility (@tugrul)
-* [Phalcon\Http\Client](Library/Phalcon/Http\Client) - Http Request and Response (@tugrul)
-
-### Loader
-* [Phalcon\Loader\Extended](Library/Phalcon/Loader/Extended.php) - This component extends `Phalcon\Loader` and added ability to set multiple directories per namespace (@sergeyklay)
-* [Phalcon\Loader\PSR](Library/Phalcon/Loader/PSR.php) - Implements PSR-0 autoloader for your apps (@Piyush)
+* [Phalcon\Http\Client](Library/Phalcon/Http/Client) - Http Request and Response (@tugrul)
 
 ### Logger
-* [Phalcon\Logger\Adapter\Database](Library/Phalcon/Logger) - Adapter to store logs in a database table (!phalcon)
+* [Phalcon\Logger\Adapter\Database](Library/Phalcon/Logger) - Adapter to store logs in a database table (@phalcon)
 * [Phalcon\Logger\Adapter\Firelogger](Library/Phalcon/Logger) - Adapter to log messages in the Firelogger console in Firebug (@phalcon)
-* [Phalcon\Logger\Adapter\Udplogger](Library/Phalcon/Logger) - Adapter to log messages using UDP protocol to external server (@vitalypanait)
 * [Phalcon\Logger\Adapter\File\Multiple](Library/Phalcon/Logger) - Adapter to log to multiple files (@rlaffers)
 
 ### Mailer
 * [Phalcon\Mailer\Manager](Library/Phalcon/Mailer) - Mailer wrapper over SwiftMailer (@KorsaR-ZN)
+
+### Model MetaData Adapters
+* [Phalcon\Mvc\Model\MetaData\Wincache](Library/Phalcon/Mvc/Model/MetaData) - Adapter for the Wincache php extension
+
+### MVC
+* [Phalcon\Mvc\MongoCollection](Library/Phalcon/MVC/MongoCollection) - Collection class for the new MongoDB Extension (@tigerstrikemedia)
 
 ### Template Engines
 * [Phalcon\Mvc\View\Engine\Mustache](Library/Phalcon/Mvc/View/Engine) - Adapter for Mustache (@phalcon)
 * [Phalcon\Mvc\View\Engine\Twig](Library/Phalcon/Mvc/View/Engine) - Adapter for Twig (@phalcon)
 * [Phalcon\Mvc\View\Engine\Smarty](Library/Phalcon/Mvc/View/Engine) - Adapter for Smarty (@phalcon)
 
-### ORM Validators
-* [Phalcon\Mvc\Model\Validator\ConfirmationOf](Library/Phalcon/Mvc/Model/Validator) - Allows to validate if a field has a confirmation field with the same value (@suxxes)
-* [Phalcon\Mvc\Model\Validator\CardNumber](Library/Phalcon/Mvc/Model/Validator) - Allows to validate credit card number using Luhn algorithm (@parshikov)
-* [Phalcon\Mvc\Model\Validator\Decimal](Library/Phalcon/Mvc/Model/Validator) - Allows to validate if a field has a valid number in proper decimal format (negative and decimal numbers allowed) (@sergeyklay)
-* [Phalcon\Mvc\Model\Validator\Between](Library/Phalcon/Mvc/Model/Validator) - Validates that a value is between a range of two values (@sergeyklay)
-
 ### Error Handling
-* [Phalcon\Error](Library/Phalcon/Error) - Error handler used to centralize the error handling and displaying clean error pages (theDisco)
+* [Phalcon\Error](Library/Phalcon/Error) - Error handler used to centralize the error handling and displaying clean error pages (@theDisco)
 * [Phalcon\Utils\PrettyExceptions](https://github.com/phalcon/pretty-exceptions) - Pretty Exceptions is an utility to show exceptions/errors/warnings/notices using a nicely visualization. (@phalcon / @kenjikobe)
 
 ### Queue
@@ -175,7 +184,10 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 * [Phalcon\Avatar\Gravatar](Library/Phalcon/Avatar) - Provides an easy way to retrieve a user's profile image from Gravatar site based on a given email address (@sergeyklay)
 
 ### Validators
+* [Phalcon\Validation\Validator\CardNumber](Library/Phalcon/Validation/Validator) - Allows to validate credit card number using Luhn algorithm (@parshikov)
+* [Phalcon\Validation\Validator\ReCaptcha](Library/Phalcon/Validation/Validator) - The reCAPTCHA Validator (@pflorek)
 * [Phalcon\Validation\Validator\ConfirmationOf](Library/Phalcon/Validation/Validator) - Validates confirmation of other field value (@davihu)
+* [Phalcon\Validation\Validator\Decimal](Library/Phalcon/Validation/Validator) - Allows to validate if a field has a valid number in proper decimal format (negative and decimal numbers allowed) (@sergeyklay)
 * [Phalcon\Validation\Validator\MongoId](Library/Phalcon/Validation/Validator) - Validate MongoId value (@Kachit)
 * [Phalcon\Validation\Validator\PasswordStrength](Library/Phalcon/Validation/Validator) - Validates password strength (@davihu)
 

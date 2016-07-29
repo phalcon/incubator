@@ -11,32 +11,35 @@ Request class to make request to URI
 ```php
 use Phalcon\Http\Client\Request;
 
-$provider  = Request::getProvider(); // get available provider Curl or Stream
+// get available provider Curl or Stream
+$provider = Request::getProvider();
 
 $provider->setBaseUri('http://example.com/api/');
 
 $provider->header->set('Accept', 'application/json');
 
-$response = $provider->get('me/images', array(
+// GET request to http://example.com/api/me/images?access_token=1234 and return response
+$response = $provider->get('me/images', [
     'access_token' => 1234
-)); // GET request to http://example.com/api/me/images?access_token=1234 and return response
+]);
 
 echo $response->body;
 
-$response = $provider->post('me/images', array(
+// POST multipart/form-data request to http://example.com/api/me/images
+$response = $provider->post('me/images', [
     'access_token' => 1234,
     'image' => '@/home/mine/myimage.jpg'
-)); // POST multipart/form-data request to http://example.com/api/me/images 
+]);
 
 echo $response->body;
 echo $response->header->get('Content-Type');
 echo $response->header->statusCode;
 
-$response = $provider->delete('me/images', array(
+// DELETE request to http://example.com/api/me/images
+$response = $provider->delete('me/images', [
     'access_token' => 1234,
     'image_id' => '321'
-)); // DELETE request to http://example.com/api/me/images 
+]);
 
 echo $response->body;
-
 ```

@@ -38,8 +38,8 @@ class Assets extends \Twig_TokenParser
         $this->parser->getStream()->expect(\Twig_Token::BLOCK_END_TYPE);
 
         return new Node(
-            array('arguments' => $arguments),
-            array('methodName' => $methodName),
+            ['arguments' => $arguments],
+            ['methodName' => $methodName],
             $token->getLine(),
             $this->getTag()
         );

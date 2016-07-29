@@ -10,4 +10,3 @@ composer.phar
 Vagrantfile
 /build
 /tests/_support/_generated/*.php
-sample.db

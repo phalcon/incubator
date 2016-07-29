@@ -33,7 +33,7 @@ class Environment extends \Twig_Environment
      * @param \Twig_LoaderInterface $loader
      * @param array                 $options
      */
-    public function __construct(DiInterface $di, \Twig_LoaderInterface $loader = null, $options = array())
+    public function __construct(DiInterface $di, \Twig_LoaderInterface $loader = null, $options = [])
     {
         $this->di = $di;
 

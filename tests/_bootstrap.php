@@ -25,24 +25,39 @@ if (extension_loaded('xdebug')) {
 
 clearstatcache();
 
-define('INCUBATOR_FIXTURES', __DIR__ . '/_fixtures/');
+$root = realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR;
+
+defined('TESTS_PATH')   || define('TESTS_PATH', $root);
+defined('PROJECT_PATH') || define('PROJECT_PATH', dirname(TESTS_PATH) . DIRECTORY_SEPARATOR);
+defined('PATH_DATA')    || define('PATH_DATA', $root .  '_data' . DIRECTORY_SEPARATOR);
+defined('PATH_CACHE')   || define('PATH_CACHE', $root . '_cache' . DIRECTORY_SEPARATOR);
+defined('PATH_OUTPUT')  || define('PATH_OUTPUT', $root .  '_output' . DIRECTORY_SEPARATOR);
+defined('INCUBATOR_FIXTURES') || define('INCUBATOR_FIXTURES', $root .  '_fixtures' . DIRECTORY_SEPARATOR);
 
 // Memcached
-define('TEST_MC_HOST', getenv('TEST_MC_HOST') ?: '127.0.0.1');
+define('TEST_MC_HOST', getenv('TEST_MC_HOST') ?: 'memcached');
 define('TEST_MC_PORT', getenv('TEST_MC_PORT') ?: 11211);
 
+// Redis
+define('TEST_RS_HOST', getenv('TEST_RS_HOST') ?: 'redis');
+define('TEST_RS_PORT', getenv('TEST_RS_PORT') ?: 6379);
+
 // Beanstalk
-define('TEST_BT_HOST', getenv('TEST_BT_HOST') ?: '127.0.0.1');
+define('TEST_BT_HOST', getenv('TEST_BT_HOST') ?: 'queue');
 define('TEST_BT_PORT', getenv('TEST_BT_PORT') ?: 11300);
 
 // Aerospike
-define('TEST_AS_HOST', getenv('TEST_AS_HOST') ?: '127.0.0.1');
+define('TEST_AS_HOST', getenv('TEST_AS_HOST') ?: 'aerospike');
 define('TEST_AS_PORT', getenv('TEST_AS_PORT') ?: 3000);
 
-// Database
-define('TEST_DB_HOST', getenv('TEST_DB_HOST') ?: '127.0.0.1');
+// MySQL
+define('TEST_DB_HOST', getenv('TEST_DB_HOST') ?: 'mysql');
 define('TEST_DB_PORT', getenv('TEST_DB_PORT') ?: 3306);
 define('TEST_DB_USER', getenv('TEST_DB_USER') ?: 'root');
 define('TEST_DB_PASSWD', getenv('TEST_DB_PASSWD') ?: '');
 define('TEST_DB_NAME', getenv('TEST_DB_NAME') ?: 'incubator_tests');
 define('TEST_DB_CHARSET', getenv('TEST_DB_CHARSET') ?: 'utf8');
+
+// MongoDB
+define('TEST_MONGODB_HOST', getenv('TEST_MONGODB_HOST') ?: 'mongodb' );
+define('TEST_MONGODB_PORT', getenv('TEST_MONGODB_PORT') ?: '27017' );
