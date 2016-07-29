@@ -19,9 +19,9 @@
 
 namespace Phalcon\Validation\Validator;
 
-use Phalcon\Validation,
-    Phalcon\Validation\Validator,
-    Phalcon\Validation\Exception;
+use Phalcon\Validation;
+use Phalcon\Validation\Validator;
+use Phalcon\Validation\Exception;
 
 /**
  * Validates confirmation of other field value
@@ -33,7 +33,7 @@ use Phalcon\Validation,
  *     'allowEmpty' => {bool - allow empty value}
  * ])
  * </code>
- * 
+ *
  * @package Phalcon\Validation\Validator
  */
 class ConfirmationOf extends Validator

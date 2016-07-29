@@ -31,7 +31,7 @@ use Phalcon\Validation;
  *     'allowEmpty' => {bool - allow empty value}
  * ])
  * </code>
- * 
+ *
  * @package Phalcon\Validation\Validator
  */
 class PasswordStrength extends Validation\Validator
