@@ -66,7 +66,8 @@ class Handler
             static::handle(new Error($options));
         });
 
-        set_exception_handler(function (\Exception $e) {
+        set_exception_handler(function ($e) {
+            /** @var \Exception|\Error $e */
             $options = [
                 'type'        => $e->getCode(),
                 'message'     => $e->getMessage(),
