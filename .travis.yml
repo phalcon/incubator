@@ -44,6 +44,7 @@ install:
   - docker pull phalconphp/zephir:${TRAVIS_PHP_VERSION}
 
 before_script:
+  - stty cols 160
   - docker-compose -p incubator up -d
   - sleep 1
 
