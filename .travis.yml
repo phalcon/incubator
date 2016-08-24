@@ -14,6 +14,7 @@ env:
   matrix:
     - PHALCON_VERSION="3.0.x"
     - PHALCON_VERSION="v3.0.0"
+    - PHALCON_VERSION="v3.0.1"
 
 before_install:
   - sudo service memcached stop
@@ -43,6 +44,7 @@ install:
   - docker pull phalconphp/zephir:${TRAVIS_PHP_VERSION}
 
 before_script:
+  - stty cols 160
   - docker-compose -p incubator up -d
   - sleep 1
 

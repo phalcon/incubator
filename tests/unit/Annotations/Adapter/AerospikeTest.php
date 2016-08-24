@@ -7,6 +7,7 @@ use ReflectionMethod;
 use ReflectionProperty;
 use Codeception\TestCase\Test;
 use Phalcon\Annotations\Adapter\Aerospike;
+use Phalcon\Cache\Backend\Aerospike as CacheBackend;
 
 /**
  * \Phalcon\Test\Annotations\Adapter\AerospikeTest
@@ -27,9 +28,6 @@ use Phalcon\Annotations\Adapter\Aerospike;
  */
 class AerospikeTest extends Test
 {
-    const BASE_CLASS = '\Phalcon\Annotations\Adapter\Aerospike';
-    const BACKEND_CLASS ='\Phalcon\Cache\Backend\Aerospike';
-
     /**
      * UnitTester Object
      * @var UnitTester
@@ -41,35 +39,24 @@ class AerospikeTest extends Test
      */
     protected function _before()
     {
-        if (PHP_MAJOR_VERSION == 7) {
-            $this->markTestSkipped('The Aerospike module is not available for PHP 7 yet.');
-        }
-
         if (!extension_loaded('aerospike')) {
             $this->markTestSkipped('The Aerospike module is not available.');
         }
     }
 
-    /**
-     * executed after each test
-     */
-    protected function _after()
-    {
-    }
-
     public function testHasAerospikeProperty()
     {
-        $this->assertClassHasAttribute('aerospike', self::BASE_CLASS);
+        $this->assertClassHasAttribute('aerospike', Aerospike::class);
     }
 
     public function testHasNamespaceProperty()
     {
-        $this->assertClassHasAttribute('namespace', self::BASE_CLASS);
+        $this->assertClassHasAttribute('namespace', Aerospike::class);
     }
 
     public function testHasSetProperty()
     {
-        $this->assertClassHasAttribute('set', self::BASE_CLASS);
+        $this->assertClassHasAttribute('set', Aerospike::class);
     }
 
     /**
@@ -104,13 +91,13 @@ class AerospikeTest extends Test
 
         $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
         $reflectedMethod->setAccessible(true);
-        $this->assertInstanceOf(self::BACKEND_CLASS, $reflectedMethod->invoke($object));
+        $this->assertInstanceOf(CacheBackend::class, $reflectedMethod->invoke($object));
     }
 
     public function testShouldGetCacheBackendThroughReflectionSetter()
     {
         $object = new Aerospike(['hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]]]);
-        $mock = $this->getMock(self::BACKEND_CLASS, [], [], '', false);
+        $mock = $this->getMock(CacheBackend::class, [], [], '', false);
 
         $reflectedProperty = new ReflectionProperty(get_class($object), 'aerospike');
         $reflectedProperty->setAccessible(true);
@@ -118,7 +105,7 @@ class AerospikeTest extends Test
 
         $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
         $reflectedMethod->setAccessible(true);
-        $this->assertInstanceOf(self::BACKEND_CLASS, $reflectedMethod->invoke($object));
+        $this->assertInstanceOf(CacheBackend::class, $reflectedMethod->invoke($object));
     }
 
     /**
