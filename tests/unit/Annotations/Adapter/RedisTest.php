@@ -7,6 +7,7 @@ use ReflectionMethod;
 use ReflectionProperty;
 use Codeception\TestCase\Test;
 use Phalcon\Annotations\Adapter\Redis;
+use Phalcon\Cache\Backend\Redis as CacheBackend;
 
 /**
  * \Phalcon\Test\Annotations\Adapter\RedisTest
@@ -27,9 +28,6 @@ use Phalcon\Annotations\Adapter\Redis;
  */
 class RedisTest extends Test
 {
-    const BASE_CLASS = '\Phalcon\Annotations\Adapter\Redis';
-    const BACKEND_CLASS ='\Phalcon\Cache\Backend\Redis';
-
     /**
      * UnitTester Object
      * @var UnitTester
@@ -55,7 +53,7 @@ class RedisTest extends Test
 
     public function testHasRedis()
     {
-        $this->assertClassHasAttribute('redis', self::BASE_CLASS);
+        $this->assertClassHasAttribute('redis', Redis::class);
     }
 
     /**
@@ -90,13 +88,13 @@ class RedisTest extends Test
 
         $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
         $reflectedMethod->setAccessible(true);
-        $this->assertInstanceOf(self::BACKEND_CLASS, $reflectedMethod->invoke($object));
+        $this->assertInstanceOf(CacheBackend::class, $reflectedMethod->invoke($object));
     }
 
     public function testShouldGetCacheBackendThroughReflectionSetter()
     {
         $object = new Redis(['host' => TEST_RS_HOST]);
-        $mock = $this->getMock(self::BACKEND_CLASS, [], [], '', false);
+        $mock = $this->getMock(CacheBackend::class, [], [], '', false);
 
         $reflectedProperty = new ReflectionProperty(get_class($object), 'redis');
         $reflectedProperty->setAccessible(true);
@@ -104,7 +102,7 @@ class RedisTest extends Test
 
         $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
         $reflectedMethod->setAccessible(true);
-        $this->assertInstanceOf(self::BACKEND_CLASS, $reflectedMethod->invoke($object));
+        $this->assertInstanceOf(CacheBackend::class, $reflectedMethod->invoke($object));
     }
 
     /**

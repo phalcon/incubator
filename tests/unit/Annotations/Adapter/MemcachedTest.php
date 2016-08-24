@@ -3,11 +3,12 @@
 namespace Phalcon\Test\Annotations\Adapter;
 
 use stdClass;
+use UnitTester;
 use ReflectionMethod;
 use ReflectionProperty;
-use Phalcon\Annotations\Adapter\Memcached;
 use Codeception\TestCase\Test;
-use UnitTester;
+use Phalcon\Cache\Backend\Libmemcached;
+use Phalcon\Annotations\Adapter\Memcached;
 
 /**
  * \Phalcon\Test\Annotations\Adapter\MemcachedTest
@@ -28,9 +29,6 @@ use UnitTester;
  */
 class MemcachedTest extends Test
 {
-    const BASE_CLASS = '\Phalcon\Annotations\Adapter\Memcached';
-    const LIBMEMCACHED_CLASS  ='\Phalcon\Cache\Backend\Libmemcached';
-
     /**
      * UnitTester Object
      * @var UnitTester
@@ -48,13 +46,6 @@ class MemcachedTest extends Test
     }
 
     /**
-     * executed after each test
-     */
-    protected function _after()
-    {
-    }
-
-    /**
      * @expectedException        \Phalcon\Annotations\Exception
      * @expectedExceptionMessage No host given in options
      */
@@ -65,17 +56,17 @@ class MemcachedTest extends Test
 
     public function testHasDefaultPort()
     {
-        $this->assertClassHasStaticAttribute('defaultPort', self::BASE_CLASS);
+        $this->assertClassHasStaticAttribute('defaultPort', Memcached::class);
     }
 
     public function testHasDefaultWeight()
     {
-        $this->assertClassHasStaticAttribute('defaultWeight', self::BASE_CLASS);
+        $this->assertClassHasStaticAttribute('defaultWeight', Memcached::class);
     }
 
     public function testHasMemcached()
     {
-        $this->assertClassHasAttribute('memcached', self::BASE_CLASS);
+        $this->assertClassHasAttribute('memcached', Memcached::class);
     }
 
     /**
@@ -110,13 +101,13 @@ class MemcachedTest extends Test
 
         $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
         $reflectedMethod->setAccessible(true);
-        $this->assertInstanceOf(self::LIBMEMCACHED_CLASS, $reflectedMethod->invoke($object));
+        $this->assertInstanceOf(Libmemcached::class, $reflectedMethod->invoke($object));
     }
 
     public function testShouldGetCacheBackendThroughReflectionSetter()
     {
         $object = new Memcached(['host' => TEST_MC_HOST]);
-        $mock = $this->getMock(self::LIBMEMCACHED_CLASS, [], [], '', false);
+        $mock = $this->getMock(Libmemcached::class, [], [], '', false);
 
         $reflectedProperty = new ReflectionProperty(get_class($object), 'memcached');
         $reflectedProperty->setAccessible(true);
@@ -124,7 +115,7 @@ class MemcachedTest extends Test
 
         $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
         $reflectedMethod->setAccessible(true);
-        $this->assertInstanceOf(self::LIBMEMCACHED_CLASS, $reflectedMethod->invoke($object));
+        $this->assertInstanceOf(Libmemcached::class, $reflectedMethod->invoke($object));
     }
 
     /**
