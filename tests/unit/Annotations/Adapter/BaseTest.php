@@ -2,11 +2,12 @@
 
 namespace Phalcon\Test\Annotations\Adapter;
 
+use UnitTester;
 use ReflectionProperty;
+use Codeception\TestCase\Test;
+use Phalcon\Annotations\Adapter\Base;
 use Phalcon\Cache\Backend\Memory as CacheBackend;
 use Phalcon\Cache\Frontend\Data as CacheFrontend;
-use Codeception\TestCase\Test;
-use UnitTester;
 
 /**
  * \Phalcon\Test\Annotations\Adapter\BaseTest
@@ -27,32 +28,16 @@ use UnitTester;
  */
 class BaseTest extends Test
 {
-    const BASE_CLASS = '\Phalcon\Annotations\Adapter\Base';
-
     /**
      * UnitTester Object
      * @var UnitTester
      */
     protected $tester;
 
-    /**
-     * executed before each test
-     */
-    protected function _before()
-    {
-    }
-
-    /**
-     * executed after each test
-     */
-    protected function _after()
-    {
-    }
-
     protected function getObject($options)
     {
         return $this->getMockForAbstractClass(
-            self::BASE_CLASS,
+            Base::class,
             ['options' => $options],
             '',
             true,
@@ -114,17 +99,17 @@ class BaseTest extends Test
 
     public function testHasDefaultLifetime()
     {
-        $this->assertClassHasStaticAttribute('defaultLifetime', self::BASE_CLASS);
+        $this->assertClassHasStaticAttribute('defaultLifetime', Base::class);
     }
 
     public function testHasDefaultPrefix()
     {
-        $this->assertClassHasStaticAttribute('defaultPrefix', self::BASE_CLASS);
+        $this->assertClassHasStaticAttribute('defaultPrefix', Base::class);
     }
 
     public function testHasOptions()
     {
-        $this->assertClassHasAttribute('options', self::BASE_CLASS);
+        $this->assertClassHasAttribute('options', Base::class);
     }
 
     public function providerReadWrite()
