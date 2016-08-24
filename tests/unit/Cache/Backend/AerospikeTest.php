@@ -41,10 +41,6 @@ class AerospikeTest extends Test
      */
     protected function _before()
     {
-        if (PHP_MAJOR_VERSION == 7) {
-            $this->markTestSkipped('The Aerospike module is not available for PHP 7 yet.');
-        }
-
         if (!extension_loaded('aerospike')) {
             $this->markTestSkipped('The Aerospike module is not available.');
         }
@@ -82,6 +78,8 @@ class AerospikeTest extends Test
         $this->assertEquals(2, $cache->increment('increment'));
         $this->assertEquals(4, $cache->increment('increment', 2));
         $this->assertEquals(14, $cache->increment('increment', 10));
+
+        $cache->delete('increment');
     }
 
     public function testShouldDecrementValue()
@@ -92,6 +90,8 @@ class AerospikeTest extends Test
         $this->assertEquals(99, $cache->decrement('decrement'));
         $this->assertEquals(97, $cache->decrement('decrement', 2));
         $this->assertEquals(87, $cache->decrement('decrement', 10));
+
+        $cache->delete('decrement');
     }
 
     public function testShouldGetKeys()

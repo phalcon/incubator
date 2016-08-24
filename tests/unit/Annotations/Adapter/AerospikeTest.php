@@ -7,6 +7,7 @@ use ReflectionMethod;
 use ReflectionProperty;
 use Codeception\TestCase\Test;
 use Phalcon\Annotations\Adapter\Aerospike;
+use Phalcon\Cache\Backend\Aerospike as CacheBackend;
 
 /**
  * \Phalcon\Test\Annotations\Adapter\AerospikeTest
@@ -27,8 +28,8 @@ use Phalcon\Annotations\Adapter\Aerospike;
  */
 class AerospikeTest extends Test
 {
-    const BASE_CLASS = '\Phalcon\Annotations\Adapter\Aerospike';
-    const BACKEND_CLASS ='\Phalcon\Cache\Backend\Aerospike';
+    const BASE_CLASS = Aerospike::class;
+    const BACKEND_CLASS = CacheBackend::class;
 
     /**
      * UnitTester Object
@@ -41,10 +42,6 @@ class AerospikeTest extends Test
      */
     protected function _before()
     {
-        if (PHP_MAJOR_VERSION == 7) {
-            $this->markTestSkipped('The Aerospike module is not available for PHP 7 yet.');
-        }
-
         if (!extension_loaded('aerospike')) {
             $this->markTestSkipped('The Aerospike module is not available.');
         }
