@@ -168,7 +168,7 @@ abstract class UnitTestCase extends TestCase implements InjectionAwareInterface
     public function getConfig()
     {
         if (!$this->config instanceof Config && $this->getDI()->has('config')) {
-            return $this->getDI()->has('config');
+            return $this->getDI()->get('config');
         }
 
         return $this->config;
