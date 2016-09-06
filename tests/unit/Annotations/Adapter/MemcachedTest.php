@@ -5,7 +5,6 @@ namespace Phalcon\Test\Annotations\Adapter;
 use stdClass;
 use UnitTester;
 use ReflectionMethod;
-use ReflectionProperty;
 use Codeception\TestCase\Test;
 use Phalcon\Cache\Backend\Libmemcached;
 use Phalcon\Annotations\Adapter\Memcached;
@@ -107,11 +106,11 @@ class MemcachedTest extends Test
     public function testShouldGetCacheBackendThroughReflectionSetter()
     {
         $object = new Memcached(['host' => TEST_MC_HOST]);
-        $mock = $this->getMock(Libmemcached::class, [], [], '', false);
+        $mock = $this->getMockBuilder(Libmemcached::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $reflectedProperty = new ReflectionProperty(get_class($object), 'memcached');
-        $reflectedProperty->setAccessible(true);
-        $reflectedProperty->setValue($object, $mock);
+        $this->tester->setProtectedProperty($object, 'memcached', $mock);
 
         $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
         $reflectedMethod->setAccessible(true);
@@ -139,10 +138,8 @@ class MemcachedTest extends Test
     public function testShouldCreateMemcachedAdapterInstanceAndSetOptions($options, $expected)
     {
         $object = new Memcached($options);
-        $reflectedProperty = new ReflectionProperty(get_class($object), 'options');
-        $reflectedProperty->setAccessible(true);
 
-        $this->assertEquals($expected, $reflectedProperty->getValue($object));
+        $this->assertEquals($expected, $this->tester->getProtectedProperty($object, 'options'));
     }
 
     public function providerReadWrite()
