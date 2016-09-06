@@ -26,6 +26,8 @@ echo -e "PHP extension path: ${PURPLE}${PHP_EXTENSION_DIR}${NC}\n"
 ln -sf /ext/phalcon.so ${PHP_EXTENSION_DIR}/phalcon.so
 
 rm -f /etc/php/${TRAVIS_PHP_VERSION}/cli/conf.d/50-phalcon.ini
+rm -f /etc/php/${TRAVIS_PHP_VERSION}/cli/conf.d/20-phalcon.ini
+
 ln -s /app/tests/_ci/phalcon.ini /etc/php/${TRAVIS_PHP_VERSION}/cli/conf.d/50-phalcon.ini
 
 PHP_FULL_VERSION=`php -r 'echo phpversion();'`
