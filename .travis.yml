@@ -25,14 +25,14 @@ before_install:
   - phpenv config-rm xdebug.ini
 
 install:
-  - git clone --depth=1 --branch=${PHALCON_VERSION} https://github.com/phalcon/cphalcon.git ${PHALCON_SRC_PATH}
+  - git clone --depth=1 -q --branch=${PHALCON_VERSION} https://github.com/phalcon/cphalcon.git ${PHALCON_SRC_PATH}
   # Install Docker
   - sudo apt-get update -qq
   - sudo apt-get install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y --force-yes docker-engine
   - sudo service docker restart
   # Install Docker Compose
   - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - curl -s -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   # Install Dependencies
@@ -54,6 +54,6 @@ script:
 notifications:
   email:
     recipients:
-      - serghei@phalconphp.com
+      - build@phalconphp.com
     on_success: change
     on_failure: always
