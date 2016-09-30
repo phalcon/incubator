@@ -43,7 +43,7 @@ echo -e ""
 /app/vendor/bin/phpcs --standard=PSR2 --colors --extensions=php --encoding=utf-8 Library/
 result_phpcs=$?
 
-/app/vendor/bin/codecept run -vvv "${RUN_ARGS}"
+/app/vendor/bin/codecept run "${RUN_ARGS}"
 result_codecept=$?
 
 if [ ${result_codecept} -ne 0 -o ${result_phpcs} -ne 0 ];
