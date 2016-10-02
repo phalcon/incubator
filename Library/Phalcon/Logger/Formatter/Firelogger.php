@@ -1,19 +1,35 @@
 <?php
+
+/*
+  +------------------------------------------------------------------------+
+  | Phalcon Framework                                                      |
+  +------------------------------------------------------------------------+
+  | Copyright (c) 2011-2016 Phalcon Team (https://www.phalconphp.com)      |
+  +------------------------------------------------------------------------+
+  | This source file is subject to the New BSD License that is bundled     |
+  | with this package in the file LICENSE.txt.                             |
+  |                                                                        |
+  | If you did not receive a copy of the license and are unable to         |
+  | obtain it through the world-wide-web, please send an email             |
+  | to license@phalconphp.com so we can send you a copy immediately.       |
+  +------------------------------------------------------------------------+
+  | Authors: Richard Laffers <rlaffers@gmail.com>                          |
+  +------------------------------------------------------------------------+
+*/
+
 namespace Phalcon\Logger\Formatter;
 
-use \Phalcon\Logger\Exception;
-use \Phalcon\Logger as Logger;
+use Phalcon\Logger\Formatter;
+use Phalcon\Logger as Logger;
+use Phalcon\Logger\FormatterInterface;
 
 /**
  * Phalcon\Logger\Formatter\Firelogger
  * Formats messages to be sent to Firelogger
  *
- * @link    http://firelogger.binaryage.com/
- * @version 0.1
- * @author  Richard Laffers <rlaffers@gmail.com>
- * @license The BSD 3-Clause License {@link http://opensource.org/licenses/BSD-3-Clause}
+ * @link http://firelogger.binaryage.com/
  */
-class Firelogger extends \Phalcon\Logger\Formatter implements \Phalcon\Logger\FormatterInterface
+class Firelogger extends Formatter implements FormatterInterface
 {
     /**
      * Holds name of this logger.

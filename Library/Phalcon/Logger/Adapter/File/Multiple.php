@@ -1,5 +1,22 @@
 <?php
 
+/*
+  +------------------------------------------------------------------------+
+  | Phalcon Framework                                                      |
+  +------------------------------------------------------------------------+
+  | Copyright (c) 2011-2016 Phalcon Team (https://www.phalconphp.com)      |
+  +------------------------------------------------------------------------+
+  | This source file is subject to the New BSD License that is bundled     |
+  | with this package in the file LICENSE.txt.                             |
+  |                                                                        |
+  | If you did not receive a copy of the license and are unable to         |
+  | obtain it through the world-wide-web, please send an email             |
+  | to license@phalconphp.com so we can send you a copy immediately.       |
+  +------------------------------------------------------------------------+
+  | Authors: Richard Laffers <rlaffers@gmail.com>                          |
+  +------------------------------------------------------------------------+
+*/
+
 namespace Phalcon\Logger\Adapter\File;
 
 use Phalcon\Logger\Exception as LoggerException;
@@ -13,10 +30,6 @@ use Phalcon\Logger\AdapterInterface;
  * Adapter to save logs into multiple log files based on their level.
  *
  * TODO Implement transactions.
- *
- * @version 0.1
- * @author Richard Laffers <richard.laffers@movys.sk>
- * @license The BSD 3-Clause License {@link http://opensource.org/licenses/BSD-3-Clause}
  */
 class Multiple extends FileLogger implements AdapterInterface
 {
