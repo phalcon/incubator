@@ -19,7 +19,8 @@
 
 namespace Phalcon\Queue\Beanstalk;
 
-use duncan3dc\Helpers\Fork;
+use duncan3dc\Forker\Exception as ForkException;
+use duncan3dc\Forker\Fork;
 use Phalcon\Logger\Adapter as LoggerAdapter;
 use Phalcon\Queue\Beanstalk as Base;
 
@@ -134,8 +135,13 @@ class Extended extends Base
         declare (ticks = 1);
         set_time_limit(0);
 
-        $fork = new Fork();
-        $fork->ignoreErrors = $ignoreErrors;
+        # Check if we are using Fork1.0 (php < 7)
+        if (class_exists('duncan3dc\Helpers\Fork')) {
+            $fork = new \duncan3dc\Helpers\Fork;
+            $fork->ignoreErrors = $ignoreErrors;
+        } else {
+            $fork = new Fork;
+        }
 
         foreach ($this->workers as $tube => $worker) {
             $that = clone $this;
@@ -186,7 +192,13 @@ class Extended extends Base
             });
         }
 
-        $fork->wait();
+        try {
+            $fork->wait();
+        } catch (ForkException $e) {
+            if (!$ignoreErrors) {
+                throw $e;
+            }
+        }
     }
 
     /**
