@@ -38,7 +38,7 @@ install:
   # Install Dependencies
   - composer self-update
   - travis_retry composer install --ignore-platform-reqs --prefer-source --no-interaction
-  - travis_retry composer require --ignore-platform-reqs "duncan3dc/fork-helper:*"
+  - travis_retry composer require --ignore-platform-reqs duncan3dc/fork-helper:$(if [[ "${TRAVIS_PHP_VERSION:0:1}" = "7" ]]; then echo "^2.0"; else echo "^1.0"; fi)
   # Pull images
   - docker pull phalconphp/php:${TRAVIS_PHP_VERSION}
   - docker pull phalconphp/zephir:${TRAVIS_PHP_VERSION}
