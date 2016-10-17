@@ -19,7 +19,7 @@
 
 namespace Phalcon\Queue\Beanstalk;
 
-use duncan3dc\Helpers\Fork;
+use duncan3dc\Forker\Fork;
 use Phalcon\Logger\Adapter as LoggerAdapter;
 use Phalcon\Queue\Beanstalk as Base;
 
