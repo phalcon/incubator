@@ -118,6 +118,8 @@ class Curl extends Request
             $header[] = 'Expect:';
         }
 
+        $this->responseHeader = '';
+
         $this->setOption(CURLOPT_HEADERFUNCTION, [$this, 'headerFunction']);
         $this->setOption(CURLOPT_HTTPHEADER, $header);
 
@@ -131,9 +133,9 @@ class Curl extends Request
         $response->header->parse($this->responseHeader);
 
         if ($fullResponse) {
-            $response->body = $this->responseHeader . $content;
-        } else {
             $response->body = $content;
+        } else {
+            $response->body = substr($content, strlen($this->responseHeader));
         }
 
         return $response;
