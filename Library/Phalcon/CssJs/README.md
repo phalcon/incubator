@@ -8,6 +8,7 @@ To use this class do the following:
 Add an CssJSManger section to your Phalcon\Config in your DI.
 ```
     'CssJsManager' => [
+        'name' => 'CssJsManagerDemo',
         'publicDir' => BASE_PATH . '/public/',
         'merge' => true,
         'cache' => true,
@@ -54,7 +55,7 @@ In your BaseController add (or extend) the following eventhandler.
             $fn = $dispatcher->getControllerName();
         }
         else {
-            $fn = $config->application->name;
+            $fn = $config->CssJSManager->name;
         }
         $view->js = $cssJsManger->jsAsHtml ($fn);
         $view->css = $cssJsManger->cssAsHtml ($fn);
@@ -82,6 +83,7 @@ Update your view(s) like below.
 
 	</body>
 </html>
+
 ```
 
 In your controllers add when needed a CSS or JS resource to the manager like:
