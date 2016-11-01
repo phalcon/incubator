@@ -53,12 +53,25 @@ class Header implements \Countable
     }
 
     /**
-     * @param array $fields
+     * Adds multiple headers.
+     *
+     * <code>
+     * $headers = [
+     *     'X-Foo' => 'bar',
+     *     'Content-Type' => 'application/json',
+     * ];
+     * $curl->addMultiple($headers);
+     * </code>
+     *
+     * @param array $fields An array of name => value pairs.
+     *
      * @return $this
      */
     public function addMultiple(array $fields)
     {
-        $this->fields = array_combine($this->fields, $fields);
+        if (!empty($fields)) {
+            $this->fields = array_merge($this->fields, $fields);
+        }
         return $this;
     }
 
