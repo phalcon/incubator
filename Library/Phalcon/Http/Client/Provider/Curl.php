@@ -106,7 +106,26 @@ class Curl extends Request
         $this->setOption(CURLOPT_CONNECTTIMEOUT, $timeout);
     }
 
-    protected function send($customHeader = [], $fullResponse = false)
+    /**
+     * Sends the request and returns the response.
+     *
+     * <code>
+     * // using custom headers:
+     * $customHeader = array(
+     *     0 => 'Accept: text/plain',
+     *     1 => 'X-Foo: bar',
+     *     2 => 'X-Bar: baz',
+     * );
+     * $response = $this->send($customHeader);
+     * </code>
+     *
+     * @param array $customHeader An array of values. If not empty then previously added headers gets ignored.
+     * @param bool  $fullResponse If true returns the full response (including headers).
+     *
+     * @return Response
+     * @throws HttpException
+     */
+    protected function send(array $customHeader = [], $fullResponse = false)
     {
         if (!empty($customHeader)) {
             $header = $customHeader;
@@ -115,8 +134,9 @@ class Curl extends Request
             if (count($this->header) > 0) {
                 $header = $this->header->build();
             }
-            $header[] = 'Expect:';
         }
+        $header[] = 'Expect:';
+        $header = array_unique($header, SORT_STRING);
 
         $this->responseHeader = '';
 
