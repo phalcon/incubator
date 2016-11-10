@@ -179,11 +179,7 @@ class Aerospike extends Backend implements BackendInterface
 
         $aKey = $this->buildKey($prefixedKey);
 
-        if (is_numeric($cachedContent)) {
-            $bins = ['value' => $cachedContent];
-        } else {
-            $bins = ['value' => $this->_frontend->beforeStore($cachedContent)];
-        }
+        $bins['value'] = $cachedContent;
 
         $status = $this->db->put(
             $aKey,
@@ -261,11 +257,7 @@ class Aerospike extends Backend implements BackendInterface
 
         $cachedContent = $cache['bins']['value'];
 
-        if (is_numeric($cachedContent)) {
-            return $cachedContent;
-        }
-
-        return $this->_frontend->afterRetrieve($cachedContent);
+        return $cachedContent;
     }
 
     /**
