@@ -145,6 +145,8 @@ class Curl extends Request
 
         $content = curl_exec($this->handle);
 
+        $this->setOption(CURLOPT_HEADERFUNCTION, null);
+
         if ($errno = curl_errno($this->handle)) {
             throw new HttpException(curl_error($this->handle), $errno);
         }
