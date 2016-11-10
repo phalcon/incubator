@@ -144,7 +144,10 @@ class Curl extends Request
         $this->setOption(CURLOPT_HTTPHEADER, $header);
 
         $content = curl_exec($this->handle);
-
+      
+        // fix out of memory problem / __destruct does not get called (still ref) #/issues/689
+        $this->setOption(CURLOPT_HEADERFUNCTION, null);
+      
         if ($errno = curl_errno($this->handle)) {
             throw new HttpException(curl_error($this->handle), $errno);
         }
