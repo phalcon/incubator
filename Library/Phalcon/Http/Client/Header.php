@@ -24,7 +24,7 @@ use Phalcon\Http\Response\StatusCode;
 class Header implements \Countable
 {
     private $fields = [];
-    public $version = '1.0';
+    public $version = '1.0.1';
     public $statusCode = 0;
     public $statusMessage = '';
     public $status = '';
@@ -54,12 +54,24 @@ class Header implements \Countable
     }
 
     /**
-     * @param array $fields
+     * Adds multiple headers.
+     *
+     * <code>
+     * $headers = [
+     *     'X-Foo' => 'bar',
+     *     'Content-Type' => 'application/json',
+     * ];
+     *
+     * $curl->addMultiple($headers);
+     * </code>
+     *
+     * @param  array $fields An array of name => value pairs.
      * @return $this
      */
     public function addMultiple(array $fields)
     {
-        $this->fields = array_combine($this->fields, $fields);
+        $this->fields = array_merge($this->fields, $fields);
+
         return $this;
     }
 
