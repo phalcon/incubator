@@ -43,6 +43,7 @@ echo -e ""
 /app/vendor/bin/phpcs --standard=PSR2 --colors --extensions=php --encoding=utf-8 Library/
 result_phpcs=$?
 
+echo -e "Run: /app/vendor/bin/codecept run ${RUN_ARGS}"
 /app/vendor/bin/codecept run "${RUN_ARGS}"
 result_codecept=$?
 
