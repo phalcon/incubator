@@ -1,5 +1,5 @@
 {
-    "name": "sgenov/incubator",
+    "name": "phalcon/incubator",
     "type": "library",
     "description": "Adapters, prototypes or functionality that can be potentially incorporated to the C-framework.",
     "keywords": ["framework", "phalcon", "incubator"],
