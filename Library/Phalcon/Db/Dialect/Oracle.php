@@ -33,6 +33,18 @@ use Phalcon\Db\ReferenceInterface;
  *
  * Generates database specific SQL for the Oracle RDBMS.
  *
+ * <code>
+ * use Phalcon\Db\Adapter\Pdo\Oracle;
+ * use Phalcon\Db\Adapter\Pdo\Oracle as Connection;
+ *
+ * $connection = new Connection([
+ *     'dbname'       => '//localhost/enigma',
+ *     'username'     => 'oracle',
+ *     'password'     => 'secret',
+ *     'dialectClass' => Oracle::class,
+ * ]);
+ * </code>
+ *
  * @package Phalcon\Db\Dialect
  */
 class Oracle extends Dialect
