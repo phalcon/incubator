@@ -72,7 +72,7 @@ class AerospikeTest extends Test
             ];
 
         $this->assertTrue($session->write($sessionId, $data));
-        $this->tester->seeInAerospike($sessionId, serialize($data));
+        $this->tester->seeInAerospike($sessionId, $data);
     }
 
     public function testShouldReadSession()
@@ -86,7 +86,7 @@ class AerospikeTest extends Test
                 'xyz' => 'zyx'
             ];
 
-        $this->tester->haveInAerospike($sessionId, serialize($data));
+        $this->tester->haveInAerospike($sessionId, $data);
         $this->keys[] = $sessionId;
 
         $this->assertEquals($data, $session->read($sessionId));
@@ -103,7 +103,7 @@ class AerospikeTest extends Test
                 'zyx' => 'xyz'
             ];
 
-        $this->tester->haveInAerospike($sessionId, serialize($data));
+        $this->tester->haveInAerospike($sessionId, $data);
         $session->destroy($sessionId);
         $this->tester->dontSeeInAerospike($sessionId);
     }
