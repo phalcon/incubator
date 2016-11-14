@@ -65,13 +65,11 @@ class AerospikeTest extends Test
         $sessionId = 'abcdef123458';
         $session = new SessionHandler($this->getConfig());
 
-        $data = serialize(
-            [
+        $data = [
                 321   => microtime(true),
                 'def' => '678',
                 'xyz' => 'zyx'
-            ]
-        );
+            ];
 
         $this->assertTrue($session->write($sessionId, $data));
         $this->tester->seeInAerospike($sessionId, serialize($data));
@@ -82,13 +80,11 @@ class AerospikeTest extends Test
         $sessionId = 'some_session_key';
         $session = new SessionHandler($this->getConfig());
 
-        $data = serialize(
-            [
+        $data = [
                 321   => microtime(true),
                 'def' => '678',
                 'xyz' => 'zyx'
-            ]
-        );
+            ];
 
         $this->tester->haveInAerospike($sessionId, serialize($data));
         $this->keys[] = $sessionId;
@@ -101,13 +97,11 @@ class AerospikeTest extends Test
         $sessionId = 'abcdef123457';
         $session = new SessionHandler($this->getConfig());
 
-        $data = serialize(
-            [
+        $data = [
                 'abc' => 345,
                 'def' => ['foo' => 'bar'],
                 'zyx' => 'xyz'
-            ]
-        );
+            ];
 
         $this->tester->haveInAerospike($sessionId, serialize($data));
         $session->destroy($sessionId);
