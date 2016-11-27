@@ -10,11 +10,10 @@ dist: trusty
 
 env:
   global:
-    - DOCKER_COMPOSE_VERSION="1.7.0" PHALCON_SRC_PATH="${TRAVIS_BUILD_DIR}/cphalcon"
+    - DOCKER_COMPOSE_VERSION="1.8.1" PHALCON_SRC_PATH="${TRAVIS_BUILD_DIR}/cphalcon"
   matrix:
     - PHALCON_VERSION="3.0.x"
-    - PHALCON_VERSION="v3.0.0"
-    - PHALCON_VERSION="v3.0.1"
+    - PHALCON_VERSION="v3.0.2"
 
 before_install:
   - sudo service memcached stop
@@ -46,6 +45,8 @@ install:
 before_script:
   - stty cols 160
   - docker-compose -p incubator up -d
+  - docker-compose -p incubator ps
+  - docker logs incubator_aerospike
   - sleep 1
 
 script:

@@ -38,7 +38,7 @@ services:
 
   aerospike:
     restart: always
-    image: aerospike
+    image: aerospike:3.10.1
     container_name: incubator_aerospike
     expose:
       - "3000"
@@ -50,8 +50,6 @@ services:
       - "3001:3001"
       - "3002:3002"
       - "3003:3003"
-    volumes:
-        - ./tests/_ci/aerospike.conf:/etc/aerospike/aerospike.conf
 
   mongodb:
     restart: always
