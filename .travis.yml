@@ -10,11 +10,10 @@ dist: trusty
 
 env:
   global:
-    - DOCKER_COMPOSE_VERSION="1.7.0" PHALCON_SRC_PATH="${TRAVIS_BUILD_DIR}/cphalcon"
+    - DOCKER_COMPOSE_VERSION="1.8.1" PHALCON_SRC_PATH="${TRAVIS_BUILD_DIR}/cphalcon"
   matrix:
     - PHALCON_VERSION="3.0.x"
-    - PHALCON_VERSION="v3.0.0"
-    - PHALCON_VERSION="v3.0.1"
+    - PHALCON_VERSION="v3.0.2"
 
 before_install:
   - sudo service memcached stop
@@ -25,20 +24,20 @@ before_install:
   - phpenv config-rm xdebug.ini
 
 install:
-  - git clone --depth=1 --branch=${PHALCON_VERSION} https://github.com/phalcon/cphalcon.git ${PHALCON_SRC_PATH}
+  - git clone --depth=1 -q --branch=${PHALCON_VERSION} https://github.com/phalcon/cphalcon.git ${PHALCON_SRC_PATH}
   # Install Docker
   - sudo apt-get update -qq
   - sudo apt-get install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y --force-yes docker-engine
   - sudo service docker restart
   # Install Docker Compose
   - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - curl -s -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   # Install Dependencies
   - composer self-update
   - travis_retry composer install --ignore-platform-reqs --prefer-source --no-interaction
-  - travis_retry composer require --ignore-platform-reqs "duncan3dc/fork-helper:*"
+  - travis_retry composer require --ignore-platform-reqs duncan3dc/fork-helper:$(if [[ "${TRAVIS_PHP_VERSION:0:1}" = "7" ]]; then echo "^2.0"; else echo "^1.0"; fi)
   # Pull images
   - docker pull phalconphp/php:${TRAVIS_PHP_VERSION}
   - docker pull phalconphp/zephir:${TRAVIS_PHP_VERSION}
@@ -46,6 +45,8 @@ install:
 before_script:
   - stty cols 160
   - docker-compose -p incubator up -d
+  - docker-compose -p incubator ps
+  - docker logs incubator_aerospike
   - sleep 1
 
 script:
@@ -54,6 +55,6 @@ script:
 notifications:
   email:
     recipients:
-      - serghei@phalconphp.com
+      - build@phalconphp.com
     on_success: change
     on_failure: always

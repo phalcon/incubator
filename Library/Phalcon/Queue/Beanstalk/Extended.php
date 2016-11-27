@@ -1,25 +1,26 @@
 <?php
 
 /*
- +------------------------------------------------------------------------+
- | Phalcon Framework                                                      |
- +------------------------------------------------------------------------+
- | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
- +------------------------------------------------------------------------+
- | This source file is subject to the New BSD License that is bundled     |
- | with this package in the file docs/LICENSE.txt.                        |
- |                                                                        |
- | If you did not receive a copy of the license and are unable to         |
- | obtain it through the world-wide-web, please send an email             |
- | to license@phalconphp.com so we can send you a copy immediately.       |
- +------------------------------------------------------------------------+
- | Authors: Nikita Vershinin <endeveit@gmail.com>                         |
- +------------------------------------------------------------------------+
- */
+  +------------------------------------------------------------------------+
+  | Phalcon Framework                                                      |
+  +------------------------------------------------------------------------+
+  | Copyright (c) 2011-2016 Phalcon Team (https://www.phalconphp.com)      |
+  +------------------------------------------------------------------------+
+  | This source file is subject to the New BSD License that is bundled     |
+  | with this package in the file LICENSE.txt.                             |
+  |                                                                        |
+  | If you did not receive a copy of the license and are unable to         |
+  | obtain it through the world-wide-web, please send an email             |
+  | to license@phalconphp.com so we can send you a copy immediately.       |
+  +------------------------------------------------------------------------+
+  | Authors: Nikita Vershinin <endeveit@gmail.com>                         |
+  +------------------------------------------------------------------------+
+*/
 
 namespace Phalcon\Queue\Beanstalk;
 
-use duncan3dc\Helpers\Fork;
+use duncan3dc\Forker\Exception as ForkException;
+use duncan3dc\Forker\Fork;
 use Phalcon\Logger\Adapter as LoggerAdapter;
 use Phalcon\Queue\Beanstalk as Base;
 
@@ -134,22 +135,31 @@ class Extended extends Base
         declare (ticks = 1);
         set_time_limit(0);
 
-        $fork = new Fork();
-        $fork->ignoreErrors = $ignoreErrors;
+        # Check if we are using Fork1.0 (php < 7)
+        if (class_exists('duncan3dc\Helpers\Fork')) {
+            $fork = new \duncan3dc\Helpers\Fork;
+            $fork->ignoreErrors = $ignoreErrors;
+        } else {
+            $fork = new Fork;
+        }
 
         foreach ($this->workers as $tube => $worker) {
             $that = clone $this;
 
             // Run the worker in separate process.
-            $fork->call(function () use ($tube, $worker, $that, $ignoreErrors) {
+            $fork->call(function () use ($tube, $worker, $that, $fork, $ignoreErrors) {
                 $that->connect();
 
                 do {
                     $job = $that->reserveFromTube($tube);
 
                     if ($job && ($job instanceof Job)) {
-                        try {
+                        $fork->call(function () use ($worker, $job) {
                             call_user_func($worker, $job);
+                        });
+
+                        try {
+                            $fork->wait();
 
                             try {
                                 $job->delete();
@@ -186,7 +196,13 @@ class Extended extends Base
             });
         }
 
-        $fork->wait();
+        try {
+            $fork->wait();
+        } catch (ForkException $e) {
+            if (!$ignoreErrors) {
+                throw $e;
+            }
+        }
     }
 
     /**
@@ -290,7 +306,7 @@ class Extended extends Base
     public function getJobStats($job_id)
     {
         $result = null;
-        $lines = $this->getResponseLines('stats-job ' . (int)$job_id);
+        $lines = $this->getResponseLines('stats-job ' . (int) $job_id);
 
         if (!empty($lines)) {
             foreach ($lines as $line) {
@@ -317,7 +333,7 @@ class Extended extends Base
     public function ignoreTube($tube)
     {
         $result = null;
-        $lines  = $this->getWatchingResponse('ignore ' . $this->getTubeName($tube));
+        $lines = $this->getWatchingResponse('ignore ' . $this->getTubeName($tube));
 
         if (!empty($lines)) {
             list($name, $value) = explode(' ', $lines);
@@ -361,7 +377,7 @@ class Extended extends Base
         $this->write(trim($cmd));
 
         $response = $this->read();
-        $matches  = [];
+        $matches = [];
 
         if (!preg_match('#^(OK (\d+))#mi', $response, $matches)) {
             throw new \RuntimeException(sprintf(
@@ -390,12 +406,12 @@ class Extended extends Base
      */
     protected function getWatchingResponse($cmd)
     {
-        $result  = null;
+        $result = null;
         $nbBytes = $this->write($cmd);
 
         if ($nbBytes && ($nbBytes > 0)) {
             $response = $this->read($nbBytes);
-            $matches  = [];
+            $matches = [];
 
             if (!preg_match('#^WATCHING (\d+).*?#', $response, $matches)) {
                 throw new \RuntimeException(sprintf(

@@ -121,11 +121,11 @@ class AerospikeTest extends Test
 
         $data = [1, 2, 3, 4, 5];
         $cache->save('test-data', $data);
-        $this->tester->seeInAerospike('test-data', serialize($data));
+        $this->tester->seeInAerospike('test-data', $data);
 
         $data = "sure, nothing interesting";
         $cache->save('test-data', $data);
-        $this->tester->seeInAerospike('test-data', serialize($data));
+        $this->tester->seeInAerospike('test-data', $data);
     }
 
     public function testShouldDeleteData()

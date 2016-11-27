@@ -1,12 +1,13 @@
 <?php
+
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (https://www.phalconphp.com)      |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
-  | with this package in the file docs/LICENSE.txt.                        |
+  | with this package in the file LICENSE.txt.                             |
   |                                                                        |
   | If you did not receive a copy of the license and are unable to         |
   | obtain it through the world-wide-web, please send an email             |
@@ -19,17 +20,17 @@
 
 namespace Phalcon\Acl\Adapter;
 
-use Phalcon\Db;
+use Phalcon\Acl;
+use Phalcon\Acl\Role;
 use Phalcon\Acl\Adapter;
 use Phalcon\Acl\Exception;
 use Phalcon\Acl\Resource;
-use Phalcon\Acl;
-use Phalcon\Acl\Role;
 use Phalcon\Acl\RoleInterface;
 
 /**
- * Phalcon\Acl\Adapter\Database
- * Manages ACL lists in memory
+ * \Phalcon\Acl\Adapter\Redis
+ *
+ * Manages ACL lists in Redis Database
  */
 class Redis extends Adapter
 {
@@ -347,7 +348,6 @@ class Redis extends Adapter
      * @param  string $resourceName
      * @param  array|string $access
      * @param  mixed $func
-     * @return boolean
      */
     public function deny($role, $resource, $access, $func = null)
     {

@@ -10,16 +10,15 @@ these syntax you can use these functions:
 
 ```php
 use Phalcon\Db\Adapter\Pdo\Mysql;
-use Phalcon\Db\Adapter\Pdo\MysqlExtended;
+use Phalcon\Db\Dialect\MysqlExtended;
 
 $di->set('db', function() {
-    /** @var \Phalcon\DiInterface $this */
     return new Mysql([
-        'host'         => $this->getShared('config')->database->host,
-        'username'     => $this->getShared('config')->database->username,
-        'password'     => $this->getShared('config')->database->password,
-        'dbname'       => $this->getShared('config')->database->name,
-        'dialectClass' => MysqlExtended::class
+        'host'         => 'localhost',
+        'username'     => 'root',
+        'password'     => 'secret',
+        'dbname'       => 'enigma',
+        'dialectClass' => MysqlExtended::class,
     ]);
 });
 ```
@@ -53,3 +52,17 @@ $data = $this->modelsManager->executeQuery(
 ## Oracle
 
 Generates database specific SQL for the Oracle RDBMS.
+
+```php
+use Phalcon\Db\Adapter\Pdo\Oracle;
+use Phalcon\Db\Adapter\Pdo\Oracle as Connection;
+
+$di->set('db', function() {
+    return new Connection([
+        'dbname'       => '//localhost/enigma',
+        'username'     => 'oracle',
+        'password'     => 'secret',
+        'dialectClass' => Oracle::class,
+    ]);
+});
+```

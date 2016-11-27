@@ -1,12 +1,13 @@
 <?php
+
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (https://www.phalconphp.com)      |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
-  | with this package in the file docs/LICENSE.txt.                        |
+  | with this package in the file LICENSE.txt.                             |
   |                                                                        |
   | If you did not receive a copy of the license and are unable to         |
   | obtain it through the world-wide-web, please send an email             |
@@ -15,6 +16,7 @@
   | Author: Tuğrul Topuz <tugrultopuz@gmail.com>                           |
   +------------------------------------------------------------------------+
 */
+
 namespace Phalcon\Http\Client\Provider;
 
 use Phalcon\Http\Client\Exception as HttpException;
@@ -75,7 +77,7 @@ class Curl extends Request
             CURLOPT_AUTOREFERER     => true,
             CURLOPT_FOLLOWLOCATION  => true,
             CURLOPT_MAXREDIRS       => 20,
-            CURLOPT_HEADER          => true,
+            CURLOPT_HEADER          => false,
             CURLOPT_PROTOCOLS       => CURLPROTO_HTTP | CURLPROTO_HTTPS,
             CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
             CURLOPT_USERAGENT       => 'Phalcon HTTP/' . self::VERSION . ' (Curl)',
@@ -104,7 +106,26 @@ class Curl extends Request
         $this->setOption(CURLOPT_CONNECTTIMEOUT, $timeout);
     }
 
-    protected function send($customHeader = [], $fullResponse = false)
+    /**
+     * Sends the request and returns the response.
+     *
+     * <code>
+     * // using custom headers:
+     * $customHeader = array(
+     *     0 => 'Accept: text/plain',
+     *     1 => 'X-Foo: bar',
+     *     2 => 'X-Bar: baz',
+     * );
+     * $response = $this->send($customHeader);
+     * </code>
+     *
+     * @param array $customHeader An array of values. If not empty then previously added headers gets ignored.
+     * @param bool  $fullResponse If true returns the full response (including headers).
+     *
+     * @return Response
+     * @throws HttpException
+     */
+    protected function send(array $customHeader = [], $fullResponse = false)
     {
         if (!empty($customHeader)) {
             $header = $customHeader;
@@ -113,13 +134,18 @@ class Curl extends Request
             if (count($this->header) > 0) {
                 $header = $this->header->build();
             }
-            $header[] = 'Expect:';
         }
+        $header[] = 'Expect:';
+        $header = array_unique($header, SORT_STRING);
+
+        $this->responseHeader = '';
 
         $this->setOption(CURLOPT_HEADERFUNCTION, [$this, 'headerFunction']);
         $this->setOption(CURLOPT_HTTPHEADER, $header);
 
         $content = curl_exec($this->handle);
+
+        $this->setOption(CURLOPT_HEADERFUNCTION, null);
 
         if ($errno = curl_errno($this->handle)) {
             throw new HttpException(curl_error($this->handle), $errno);
@@ -129,9 +155,9 @@ class Curl extends Request
         $response->header->parse($this->responseHeader);
 
         if ($fullResponse) {
-            $response->body = $this->responseHeader . $content;
-        } else {
             $response->body = $content;
+        } else {
+            $response->body = substr($content, strlen($this->responseHeader));
         }
 
         return $response;

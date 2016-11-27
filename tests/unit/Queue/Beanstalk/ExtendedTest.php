@@ -123,10 +123,10 @@ class ExtendedTest extends Test
      */
     public function testShouldDoWork()
     {
-        if (!class_exists('\duncan3dc\Helpers\Fork')) {
+        if (!class_exists('\duncan3dc\Helpers\Fork') && !class_exists('\duncan3dc\Forker\Fork')) {
             $this->markTestSkipped(sprintf(
-                '%s used as a dependency \duncan3dc\Helpers\Fork. You can install it by using' .
-                'composer require "duncan3dc/fork-helper":"*"',
+                '%s uses fork-helper as a dependency. You can install it by running: ' .
+                'composer require duncan3dc/fork-helper',
                 get_class($this->client)
             ));
         }
@@ -144,7 +144,13 @@ class ExtendedTest extends Test
             'test-tube-2' => '2',
         ];
 
-        $fork = new \duncan3dc\Helpers\Fork();
+        # Check if we are using Fork1.0 (php < 7)
+        if (class_exists('duncan3dc\Helpers\Fork')) {
+            $fork = new \duncan3dc\Helpers\Fork;
+        } else {
+            $fork = new \duncan3dc\Forker\Fork;
+        }
+
         $fork->call(function () use ($expected) {
             foreach ($expected as $tube => $value) {
                 $this->client->addWorker($tube, function (Job $job) {

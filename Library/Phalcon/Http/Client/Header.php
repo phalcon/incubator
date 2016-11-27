@@ -1,12 +1,13 @@
 <?php
+
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (https://www.phalconphp.com)      |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
-  | with this package in the file docs/LICENSE.txt.                        |
+  | with this package in the file LICENSE.txt.                             |
   |                                                                        |
   | If you did not receive a copy of the license and are unable to         |
   | obtain it through the world-wide-web, please send an email             |
@@ -23,7 +24,7 @@ use Phalcon\Http\Response\StatusCode;
 class Header implements \Countable
 {
     private $fields = [];
-    public $version = '1.0';
+    public $version = '1.0.1';
     public $statusCode = 0;
     public $statusMessage = '';
     public $status = '';
@@ -53,12 +54,24 @@ class Header implements \Countable
     }
 
     /**
-     * @param array $fields
+     * Adds multiple headers.
+     *
+     * <code>
+     * $headers = [
+     *     'X-Foo' => 'bar',
+     *     'Content-Type' => 'application/json',
+     * ];
+     *
+     * $curl->addMultiple($headers);
+     * </code>
+     *
+     * @param  array $fields An array of name => value pairs.
      * @return $this
      */
     public function addMultiple(array $fields)
     {
-        $this->fields = array_combine($this->fields, $fields);
+        $this->fields = array_merge($this->fields, $fields);
+
         return $this;
     }
 

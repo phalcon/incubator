@@ -83,11 +83,11 @@ $loader->register();
 
 ## Testing
 
-See [TESTING.md](docs/TESTING.md)
+See [TESTING.md](TESTING.md)
 
 # Contributing
 
-See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
+See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Contributions Index
 
@@ -193,4 +193,5 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ## License
 
-Incubator is open-sourced software licensed under the [New BSD License](docs/LICENSE.md). © Phalcon Framework Team and contributors
+Incubator is open-sourced software licensed under the [New BSD License](LICENSE.txt).<br>
+© 2011-2016, Phalcon Framework Team

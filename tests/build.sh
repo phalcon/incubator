@@ -2,7 +2,7 @@
 #
 #  Phalcon Framework
 #
-#  Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)
+#  Copyright (c) 2011-2016 Phalcon Team (https://www.phalconphp.com)
 #
 #  This source file is subject to the New BSD License that is bundled
 #  with this package in the file LICENSE.txt.
@@ -13,12 +13,23 @@
 #
 #  Authors: Serghei Iakovlev <serghei@phalconphp.com>
 
-docker_bin="$(which docker.io 2> /dev/null || which docker 2> /dev/null)"
+docker_bin="$(which docker 2> /dev/null)"
 
-[ -z "${TRAVIS_PHP_VERSION}" ] && echo "Need to set TRAVIS_PHP_VERSION variable. Fox example: 'export TRAVIS_PHP_VERSION=7.0'" && exit 1;
-[ -z "${PHALCON_SRC_PATH}" ] && echo "Need to set PHALCON_SRC_PATH variable. Fox example: 'export PHALCON_SRC_PATH=/home/user/src/phalcon'" && exit 1;
-[ -z "${TEST_BT_HOST}" ] && TEST_BT_HOST="incubator_beanstalkd"
-[ -z "${TRAVIS_BUILD_DIR}" ] && TRAVIS_BUILD_DIR=$(cd $(dirname "$1") && pwd -P)/$(basename "$1")
+if [ -z "${TEST_BT_HOST}" ]; then
+    TEST_BT_HOST="incubator_beanstalkd"
+fi
+
+if [ -z "${TRAVIS_BUILD_DIR}" ]; then
+    export TRAVIS_BUILD_DIR=$(cd $(dirname "$1") && pwd -P)/$(basename "$1")
+fi
+
+if [ -z "${TRAVIS_PHP_VERSION}" ]; then
+    export TRAVIS_PHP_VERSION=7.0
+fi
+
+if [ -z "${PHALCON_SRC_PATH}" ]; then
+    export PHALCON_SRC_PATH=$(cd $(dirname "$TRAVIS_BUILD_DIR") && pwd -P)/cphalcon
+fi
 
 RUN_ARGS="$@"
 shift
@@ -33,7 +44,6 @@ function zephir() {
 
 if [ ! -f ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.so ]; then
     echo "Phalcon extension not loaded, compiling it..."
-
     cd ${PHALCON_SRC_PATH}
 
     zephir "fullclean"
@@ -52,13 +62,15 @@ if [ ! -f ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.so ]; then
 fi
 
 if [ ! -f ${TRAVIS_BUILD_DIR}/tests/_ci/entrypoint.sh ]; then
-    echo "Unable locate docker entry point."
+    echo "Unable locate docker entrypoint.sh"
     exit 1;
 fi
 
 chmod +x ${TRAVIS_BUILD_DIR}/tests/_ci/entrypoint.sh
 
-if [ -z ${TRAVIS} ]; then ${docker_bin} restart ${TEST_BT_HOST}; fi
+if [ -z ${TRAVIS} ]; then
+    ${docker_bin} restart ${TEST_BT_HOST};
+fi
 
 ${docker_bin} run -it --rm \
   --entrypoint /entrypoint.sh \

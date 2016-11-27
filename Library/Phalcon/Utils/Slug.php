@@ -1,25 +1,24 @@
 <?php
+
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (https://www.phalconphp.com)      |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
-  | with this package in the file docs/LICENSE.txt.                        |
+  | with this package in the file LICENSE.txt.                             |
   |                                                                        |
   | If you did not receive a copy of the license and are unable to         |
   | obtain it through the world-wide-web, please send an email             |
   | to license@phalconphp.com so we can send you a copy immediately.       |
-  |                                                                        |
-  | The code below is inspired by Matteo Spinelli's (cubiq.org) blog post  |
-  | http://cubiq.org/the-perfect-php-clean-url-generator                   |
   +------------------------------------------------------------------------+
   | Authors: Andres Gutierrez <andres@phalconphp.com>                      |
   |          Nikolaos Dimopoulos <nikos@niden.net>                         |
   |          Ilgıt Yıldırım <ilgityildirim@gmail.com>                      |
   +------------------------------------------------------------------------+
 */
+
 namespace Phalcon\Utils;
 
 use Phalcon\Exception;
