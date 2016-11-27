@@ -15,6 +15,7 @@ env:
     - PHALCON_VERSION="3.0.x"
     - PHALCON_VERSION="v3.0.0"
     - PHALCON_VERSION="v3.0.1"
+    - PHALCON_VERSION="v3.0.2"
 
 before_install:
   - sudo service memcached stop
