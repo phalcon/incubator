@@ -290,7 +290,7 @@ class Aerospike extends Backend implements BackendInterface
 
         foreach ($keys as $aKey) {
             if (!$this->delete($aKey)) {
-             $success = false;
+                $success = false;
             }
         }
 
