@@ -276,6 +276,25 @@ class Aerospike extends Backend implements BackendInterface
 
         return $status == \Aerospike::OK;
     }
+ 
+    /**
+     * {@inheritdoc}
+     *
+     * @return boolean
+     */
+    public function flush() {
+        $kyes = [];
+
+        $keys = $this->queryKeys();
+
+        $success = true;
+
+        foreach($keys as $aKey) {
+            if (!$this->delete($aKey)) $success = false;
+        }
+
+        return $success;
+    }
 
     /**
      * {@inheritdoc}
