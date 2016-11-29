@@ -282,13 +282,16 @@ class Aerospike extends Backend implements BackendInterface
      *
      * @return boolean
      */
-    public function flush() {
+    public function flush()
+    {
         $keys = $this->queryKeys();
 
         $success = true;
 
         foreach($keys as $aKey) {
-            if (!$this->delete($aKey)) $success = false;
+            if (!$this->delete($aKey)) {
+             $success = false;
+            }
         }
 
         return $success;
