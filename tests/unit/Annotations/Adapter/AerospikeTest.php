@@ -6,6 +6,7 @@ use UnitTester;
 use ReflectionMethod;
 use ReflectionProperty;
 use Codeception\TestCase\Test;
+use Phalcon\Annotations\Exception;
 use Phalcon\Annotations\Adapter\Aerospike;
 use Phalcon\Cache\Backend\Aerospike as CacheBackend;
 
@@ -66,7 +67,7 @@ class AerospikeTest extends Test
      */
     public function testShouldReadAndWriteToAerospikeWithoutPrefix($key, $data)
     {
-        $object = new Aerospike(['hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]]]);
+        $object = new Aerospike(['hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]]]);
         $object->write($key, $data);
 
         $this->assertEquals($data, $object->read($key));
@@ -79,7 +80,7 @@ class AerospikeTest extends Test
      */
     public function testShouldReadAndWriteToAerospikeWithPrefix($key, $data)
     {
-        $object = new Aerospike(['hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]], 'prefix' => 'test_']);
+        $object = new Aerospike(['hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]], 'prefix' => 'test_']);
         $object->write($key, $data);
 
         $this->assertEquals($data, $object->read($key));
@@ -87,7 +88,7 @@ class AerospikeTest extends Test
 
     public function testShouldGetCacheBackendThroughGetter()
     {
-        $object = new Aerospike(['hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]]]);
+        $object = new Aerospike(['hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]]]);
 
         $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
         $reflectedMethod->setAccessible(true);
@@ -96,7 +97,7 @@ class AerospikeTest extends Test
 
     public function testShouldGetCacheBackendThroughReflectionSetter()
     {
-        $object = new Aerospike(['hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]]]);
+        $object = new Aerospike(['hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]]]);
         $mock = $this->getMock(CacheBackend::class, [], [], '', false);
 
         $reflectedProperty = new ReflectionProperty(get_class($object), 'aerospike');
@@ -114,7 +115,7 @@ class AerospikeTest extends Test
      */
     public function testShouldPrepareKey($key)
     {
-        $object = new Aerospike(['hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]]]);
+        $object = new Aerospike(['hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]]]);
         $reflectedMethod = new ReflectionMethod(get_class($object), 'prepareKey');
         $reflectedMethod->setAccessible(true);
 
@@ -126,7 +127,7 @@ class AerospikeTest extends Test
      * @param array $options
      * @param array $expected
      */
-    public function testShouldCreateRedisAdapterInstanceAndSetOptions($options, $expected)
+    public function testShouldCreateAerospikeAdapterInstanceAndSetOptions($options, $expected)
     {
         $object = new Aerospike($options);
         $reflectedProperty = new ReflectionProperty(get_class($object), 'options');
@@ -138,12 +139,10 @@ class AerospikeTest extends Test
     /**
      * @dataProvider providerInvalidConstructor
      * @param array $options
-     * @param string  $exceptionName
-     * @param string $exceptionMessage
      */
-    public function testShouldCatchExceptionWhenInvalidParamsPassed($options, $exceptionName, $exceptionMessage)
+    public function testShouldCatchExceptionWhenInvalidParamsPassed($options)
     {
-        $this->setExpectedException($exceptionName, $exceptionMessage);
+        $this->setExpectedException(Exception::class, 'No hosts given in options');
 
         new Aerospike($options);
     }
@@ -178,23 +177,15 @@ class AerospikeTest extends Test
         return [
             [
                 [],
-                'Phalcon\Annotations\Exception',
-                'No hosts given in options'
             ],
             [
                 ['hosts' => null],
-                'Phalcon\Annotations\Exception',
-                'No hosts given in options'
             ],
             [
                 ['hosts' => []],
-                'Phalcon\Annotations\Exception',
-                'No hosts given in options'
             ],
             [
                 ['hosts' => [[]]],
-                'Phalcon\Cache\Exception',
-                'Aerospike failed to connect [-2]: Unable to find host parameter'
             ]
         ];
     }
@@ -204,11 +195,11 @@ class AerospikeTest extends Test
         return [
             [
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                     'lifetime' => 23
                 ],
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                     'lifetime' => 23,
                     'prefix' => '',
                     'persistent' => false,
@@ -217,7 +208,7 @@ class AerospikeTest extends Test
             ],
             [
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                     'lifetime' => 23,
                     'options' => [
                         1 => 1250,
@@ -225,7 +216,7 @@ class AerospikeTest extends Test
                     ]
                 ],
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                     'lifetime' => 23,
                     'prefix' => '',
                     'persistent' => false,
@@ -237,12 +228,12 @@ class AerospikeTest extends Test
             ],
             [
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                     'lifetime' => 23,
                     'persistent' => true
                 ],
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                     'lifetime' => 23,
                     'prefix' => '',
                     'persistent' => true,
@@ -251,11 +242,11 @@ class AerospikeTest extends Test
             ],
             [
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                     'prefix' => 'test_'
                 ],
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                     'lifetime' => 8600,
                     'prefix' => 'test_',
                     'persistent' => false,
@@ -264,11 +255,11 @@ class AerospikeTest extends Test
             ],
             [
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                     'randomValue' => 'test_'
                 ],
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                     'randomValue' => 'test_',
                     'lifetime' => 8600,
                     'prefix' => '',
@@ -278,11 +269,11 @@ class AerospikeTest extends Test
             ],
             [
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                     123 => 'test_'
                 ],
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                     123 => 'test_',
                     'lifetime' => 8600,
                     'prefix' => '',
@@ -292,12 +283,12 @@ class AerospikeTest extends Test
             ],
             [
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                     'lifetime' => 24,
                     'prefix' => 'test_',
                 ],
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                     'lifetime' => 24,
                     'prefix' => 'test_',
                     'persistent' => false,
@@ -306,10 +297,10 @@ class AerospikeTest extends Test
             ],
             [
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                 ],
                 [
-                    'hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]],
+                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
                     'lifetime' => 8600,
                     'prefix' => '',
                     'persistent' => false,
