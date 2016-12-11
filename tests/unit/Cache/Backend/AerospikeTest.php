@@ -94,10 +94,20 @@ class AerospikeTest extends Test
 
         $this->assertEquals(['a', 'bcd', 'long-key'], $keys);
         $this->assertEquals(['long-key'], $cache->queryKeys('long'));
+    }
 
-        $cache->delete('a');
-        $cache->delete('long-key');
-        $cache->delete('bcd');
+    public function testShouldFlushAllData()
+    {
+        $cache = $this->getAdapter();
+
+        $data = "sure, nothing interesting";
+        $cache->save('test-data-flush', $data);
+        $cache->save('test-data-flush2', $data);
+
+        $cache->flush();
+
+        $this->tester->dontSeeInAerospike('test-data-flush');
+        $this->tester->dontSeeInAerospike('test-data-flush2');
     }
 
     public function testShouldSaveData()
