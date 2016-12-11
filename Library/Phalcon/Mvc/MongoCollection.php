@@ -62,7 +62,11 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
     }
 
     /**
-     * Creates/Updates a collection based on the values in the attributes
+     * {@inheritdoc}
+     *
+     * @return bool
+     *
+     * @throws Exception
      */
     public function save()
     {
@@ -70,7 +74,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
 
         if (!is_object($dependencyInjector)) {
             throw new Exception(
-                "A dependency injector container is required to obtain the services related to the ORM"
+                "A dependency injector container is required to obtain the services related to the ODM"
             );
         }
 
@@ -122,7 +126,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
                 break;
 
             default:
-                throw new Exception('Invalid operation requested for MongoCollection->save()');
+                throw new Exception('Invalid operation requested for ' . __METHOD__);
         }
 
         $success = false;
@@ -141,6 +145,11 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         return $this->_postSave($disableEvents, $success, $exists);
     }
 
+    /**
+     * @param mixed $id
+     *
+     * @return array
+     */
     public static function findById($id)
     {
         if (!is_object($id)) {
@@ -180,13 +189,12 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
      *
      * @return array
      * @throws Exception
+     * @codingStandardsIgnoreStart
      */
-    // @codingStandardsIgnoreStart
     protected static function _getResultset($params, CollectionInterface $collection, $connection, $unique)
     {
-        // @codingStandardsIgnoreEnd
-
         /**
+         * @codingStandardsIgnoreEnd
          * Check if "class" clause was defined
          */
         if (isset($params['class'])) {
@@ -196,8 +204,12 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
 
             if (!$base instanceof CollectionInterface || $base instanceof Document) {
                 throw new Exception(
-                    "Object of class '".$classname."' must be an implementation of 
-                    Phalcon\\Mvc\\CollectionInterface or an instance of Phalcon\\Mvc\\Collection\\Document"
+                    sprintf(
+                        'Object of class "%s" must be an implementation of %s or an instance of %s',
+                        get_class($classname),
+                        CollectionInterface::class,
+                        Document::class
+                    )
                 );
             }
         } else {
@@ -376,15 +388,13 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
     /**
      * Checks if the document exists in the collection
      *
-     * @param \MongoCollection collection
-     *
+     * @param  \MongoCollection $collection
      * @return boolean
+     * @codingStandardsIgnoreStart
      */
-    // @codingStandardsIgnoreStart
     protected function _exists($collection)
     {
         // @codingStandardsIgnoreStart
-
         if (!$id = $this->_id) {
             return false;
         }
