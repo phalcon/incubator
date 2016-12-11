@@ -30,3 +30,9 @@ coverage:
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
+
+# Get params from .env file
+params:
+    - tests/.env
+
+error_level: "E_ALL"

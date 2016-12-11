@@ -23,7 +23,7 @@ class CollectionsTest extends Test
         Di::reset();
         $di = new DI();
         $di->set('mongo', function(){
-            $mongo = new MongoClient( 'mongodb://' . TEST_MONGODB_HOST . ':' . TEST_MONGODB_PORT );
+            $mongo = new MongoClient( 'mongodb://' . env('TEST_MONGODB_HOST', '127.0.0.1') . ':' . env('TEST_MONGODB_PORT', 27017) );
             return $mongo->selectDatabase( 'phalcon_test' );
         });
         $di->set('collectionManager', function(){
