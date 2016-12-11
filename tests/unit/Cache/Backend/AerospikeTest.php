@@ -34,8 +34,6 @@ class AerospikeTest extends Test
      */
     protected $tester;
 
-    protected $keys = [];
-
     /**
      * executed before each test
      */
@@ -48,17 +46,9 @@ class AerospikeTest extends Test
         $this->getModule('Aerospike')->_reconfigure(['set' => 'cache']);
     }
 
-    /**
-     * executed after each test
-     */
-    protected function _after()
-    {
-        $this->cleanup();
-    }
-
     public function testShouldGetAerospikeInstance()
     {
-        $this->assertInstanceOf('\Aerospike', $this->getAdapter()->getDb());
+        $this->assertInstanceOf(\Aerospike::class, $this->getAdapter()->getDb());
     }
 
     /**
@@ -78,8 +68,6 @@ class AerospikeTest extends Test
         $this->assertEquals(2, $cache->increment('increment'));
         $this->assertEquals(4, $cache->increment('increment', 2));
         $this->assertEquals(14, $cache->increment('increment', 10));
-
-        $cache->delete('increment');
     }
 
     public function testShouldDecrementValue()
@@ -90,8 +78,6 @@ class AerospikeTest extends Test
         $this->assertEquals(99, $cache->decrement('decrement'));
         $this->assertEquals(97, $cache->decrement('decrement', 2));
         $this->assertEquals(87, $cache->decrement('decrement', 10));
-
-        $cache->delete('decrement');
     }
 
     public function testShouldGetKeys()
@@ -103,21 +89,20 @@ class AerospikeTest extends Test
         $cache->save('long-key', 'long-val', 10);
         $cache->save('bcd', 3, 10);
 
-        $this->keys[] = 'a';
-        $this->keys[] = 'long-key';
-        $this->keys[] = 'bcd';
-
         $keys = $cache->queryKeys();
         sort($keys);
 
         $this->assertEquals(['a', 'bcd', 'long-key'], $keys);
         $this->assertEquals(['long-key'], $cache->queryKeys('long'));
+
+        $cache->delete('a');
+        $cache->delete('long-key');
+        $cache->delete('bcd');
     }
 
     public function testShouldSaveData()
     {
         $cache = $this->getAdapter();
-        $this->keys[] = 'test-data';
 
         $data = [1, 2, 3, 4, 5];
         $cache->save('test-data', $data);
@@ -130,13 +115,13 @@ class AerospikeTest extends Test
 
     public function testShouldDeleteData()
     {
-        $cache = $this->getAdapter();
-        $this->keys[] = 'test-data';
+        $cache = $this->getAdapter(20);
 
         $data = rand(0, 99);
         $this->tester->haveInAerospike('test-data', $data);
 
         $this->assertTrue($cache->delete('test-data'));
+
         $this->tester->dontSeeInAerospike('test-data');
     }
 
@@ -150,7 +135,6 @@ class AerospikeTest extends Test
         ob_start();
 
         $content = $cache->start('test-output');
-        $this->keys[] = 'test-output';
         $this->assertNull($content);
 
         echo $time;
@@ -177,7 +161,7 @@ class AerospikeTest extends Test
         if ($lifetime) {
             $frontCache = new CacheData(['lifetime' => $lifetime]);
         } else {
-            $frontCache = new CacheData;
+            $frontCache = new CacheData();
         }
 
         $cache = new CacheAerospike($frontCache, $this->getConfig());
@@ -189,30 +173,11 @@ class AerospikeTest extends Test
     {
         return [
             'hosts' => [
-                ['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]
+                ['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]
             ],
             'persistent' => false, // important
             'namespace'  => 'test',
             'prefix'     => ''
         ];
-    }
-
-    private function cleanup()
-    {
-        $aerospike = new Aerospike(['hosts' => [['addr' => TEST_AS_HOST, 'port' => TEST_AS_PORT]]], false);
-
-        foreach ($this->keys as $i => $key) {
-            $aerospike->remove($this->buildKey($aerospike, $key));
-            unset($this->keys[$i]);
-        }
-    }
-
-    private function buildKey(Aerospike $aerospike, $key)
-    {
-        return $aerospike->initKey(
-            'test',
-            'cache',
-            $key
-        );
     }
 }

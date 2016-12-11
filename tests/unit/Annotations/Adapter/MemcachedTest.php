@@ -75,7 +75,7 @@ class MemcachedTest extends Test
      */
     public function testShouldReadAndWriteToMemcachedWithoutPrefix($key, $data)
     {
-        $object = new Memcached(['host' => TEST_MC_HOST]);
+        $object = new Memcached(['host' => env('TEST_MC_HOST', '127.0.0.1')]);
         $object->write($key, $data);
 
         $this->assertEquals($data, $object->read($key));
@@ -88,7 +88,7 @@ class MemcachedTest extends Test
      */
     public function testShouldReadAndWriteToMemcachedWithPrefix($key, $data)
     {
-        $object = new Memcached(['host' => TEST_MC_HOST, 'prefix' => 'test_']);
+        $object = new Memcached(['host' => env('TEST_MC_HOST', '127.0.0.1'), 'prefix' => 'test_']);
         $object->write($key, $data);
 
         $this->assertEquals($data, $object->read($key));
@@ -96,7 +96,7 @@ class MemcachedTest extends Test
 
     public function testShouldGetCacheBackendThroughGetter()
     {
-        $object = new Memcached(['host' => TEST_MC_HOST]);
+        $object = new Memcached(['host' => env('TEST_MC_HOST', '127.0.0.1')]);
 
         $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
         $reflectedMethod->setAccessible(true);
@@ -105,7 +105,7 @@ class MemcachedTest extends Test
 
     public function testShouldGetCacheBackendThroughReflectionSetter()
     {
-        $object = new Memcached(['host' => TEST_MC_HOST]);
+        $object = new Memcached(['host' => env('TEST_MC_HOST', '127.0.0.1')]);
         $mock = $this->getMockBuilder(Libmemcached::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -123,7 +123,7 @@ class MemcachedTest extends Test
      */
     public function testShouldPrepareKey($key)
     {
-        $object = new Memcached(['host' => TEST_MC_HOST]);
+        $object = new Memcached(['host' => env('TEST_MC_HOST', '127.0.0.1')]);
         $reflectedMethod = new ReflectionMethod(get_class($object), 'prepareKey');
         $reflectedMethod->setAccessible(true);
 
@@ -170,14 +170,14 @@ class MemcachedTest extends Test
         return [
             [
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                     'weight' => 1,
                     'lifetime' => 23
                 ],
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                     'weight' => 1,
                     'lifetime' => 23,
                     'prefix' => ''
@@ -185,14 +185,14 @@ class MemcachedTest extends Test
             ],
             [
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                     'weight' => 1,
                     'prefix' => 'test_'
                 ],
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                     'weight' => 1,
                     'lifetime' => 8600,
                     'prefix' => 'test_'
@@ -200,14 +200,14 @@ class MemcachedTest extends Test
             ],
             [
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                     'weight' => 1,
                     'randomValue' => 'test_'
                 ],
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                     'weight' => 1,
                     'randomValue' => 'test_',
                     'lifetime' => 8600,
@@ -216,14 +216,14 @@ class MemcachedTest extends Test
             ],
             [
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                     'weight' => 1,
                     123 => 'test_'
                 ],
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                     'weight' => 1,
                     123 => 'test_',
                     'lifetime' => 8600,
@@ -232,15 +232,15 @@ class MemcachedTest extends Test
             ],
             [
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                     'weight' => 1,
                     'lifetime' => 24,
                     'prefix' => 'test_'
                 ],
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                     'weight' => 1,
                     'lifetime' => 24,
                     'prefix' => 'test_'
@@ -248,13 +248,13 @@ class MemcachedTest extends Test
             ],
             [
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                     'weight' => 1
                 ],
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                     'weight' => 1,
                     'lifetime' => 8600,
                     'prefix' => ''
@@ -262,12 +262,12 @@ class MemcachedTest extends Test
             ],
             [
                 [
-                    'host' => TEST_MC_HOST,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
                     'weight' => 1
                 ],
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                     'weight' => 1,
                     'lifetime' => 8600,
                     'prefix' => ''
@@ -275,12 +275,12 @@ class MemcachedTest extends Test
             ],
             [
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                 ],
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                     'weight' => 1,
                     'lifetime' => 8600,
                     'prefix' => ''
@@ -288,11 +288,11 @@ class MemcachedTest extends Test
             ],
             [
                 [
-                    'host' => TEST_MC_HOST,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
                 ],
                 [
-                    'host' => TEST_MC_HOST,
-                    'port' => TEST_MC_PORT,
+                    'host' => env('TEST_MC_HOST', '127.0.0.1'),
+                    'port' => env('TEST_MC_PORT', 11211),
                     'weight' => 1,
                     'lifetime' => 8600,
                     'prefix' => ''
