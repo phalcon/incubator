@@ -9,6 +9,7 @@ use Codeception\TestCase\Test;
 use Phalcon\Mvc\MongoCollection;
 use Phalcon\Test\Collections\Cars;
 use Phalcon\Mvc\Collection\Manager;
+use Phalcon\Test\Collections\Heroes;
 use Phalcon\Db\Adapter\MongoDB\Client;
 
 /**
@@ -285,6 +286,21 @@ class CollectionsTest extends Test
         $this->assertEquals(700000, $results[0]['total']);
 
         $this->clearData();
+    }
+
+    /**
+     * @test
+     * @issue 696
+     */
+    public function shouldInsertNewDocument()
+    {
+        $hero = new Heroes();
+        $hero->name = 'Phalcon contributor';
+
+        $this->assertTrue($hero->create());
+        $this->assertInstanceOf(MongoCollection::class, $hero);
+        $this->assertInstanceOf(ObjectID::class, $hero->getId());
+        $this->assertSame('Phalcon contributor', $hero->name);
     }
 
     protected function loadData()

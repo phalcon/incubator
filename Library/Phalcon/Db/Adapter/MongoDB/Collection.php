@@ -34,14 +34,18 @@ use Phalcon\Db\Adapter\MongoDB\Operation\UpdateMany;
 use Phalcon\Db\Adapter\MongoDB\Operation\UpdateOne;
 use Traversable;
 
+use Phalcon\Db\Adapter\MongoDB\Model\BSONArray;
+use Phalcon\Db\Adapter\MongoDB\Model\BSONDocument;
+
 class Collection
 {
-    private static $defaultTypeMap=[
-        'array'   =>'Phalcon\Db\Adapter\MongoDB\Model\BSONArray',
-        'document'=>'Phalcon\Db\Adapter\MongoDB\Model\BSONDocument',
-        'root'    =>'Phalcon\Db\Adapter\MongoDB\Model\BSONDocument',
+    private static $defaultTypeMap = [
+        'array'    => BSONArray::class,
+        'document' => BSONDocument::class,
+        'root'     => BSONDocument::class,
     ];
-    private static $wireVersionForFindAndModifyWriteConcern=4;
+
+    private static $wireVersionForFindAndModifyWriteConcern = 4;
 
     private $collectionName;
     private $databaseName;
@@ -698,9 +702,23 @@ class Collection
     }
 
     /**
+     * Inserts the document.
+     *
+     * @param  array|object $document The document to insert
+     * @param  array        $options Command options [Optional]
+     * @return mixed
+     */
+    public function insert($document, array $options = [])
+    {
+        return $this->insertOne($document, $options);
+    }
+
+    /**
      * Returns information for all indexes for the collection.
      *
      * @see ListIndexes::__construct() for supported options
+     *
+     * @param  array $options Command options [Optional]
      * @return IndexInfoIterator
      */
     public function listIndexes(array $options = [])
