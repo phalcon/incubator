@@ -75,6 +75,7 @@ install:
   - phpenv config-add tests/_ci/memcached.ini
   - pecl channel-update pecl.php.net
   - if [[ "${PHP_MAJOR:0:1}" = "7" ]]; then printf "\n" | pecl install yaml-2.0.0 > /dev/null 2>&1; else printf "\n" | pecl install yaml > /dev/null 2>&1; fi;
+  - cat /etc/default/beanstalkd
 
 before_script:
   - stty cols 160
