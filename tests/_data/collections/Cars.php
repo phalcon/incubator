@@ -1,6 +1,25 @@
 <?php
+
 namespace Phalcon\Test\Collections;
 
-class Cars extends \Phalcon\Mvc\MongoCollection
+use MongoDB\BSON\ObjectID;
+use Phalcon\Mvc\MongoCollection;
+
+/**
+ * Phalcon\Test\Collections\Cars
+ *
+ * @property string $manufacturer
+ * @property string $model
+ * @property string $rank
+ * @property int $value
+ * @method ObjectID getId()
+ *
+ * @package Phalcon\Test\Collections
+ */
+class Cars extends MongoCollection
 {
+    public function initialize()
+    {
+        $this->setSource('cars');
+    }
 }
