@@ -23,6 +23,7 @@
 namespace Phalcon\Error;
 
 use Phalcon\Di;
+use Phalcon\DiInterface;
 use Phalcon\Logger\Formatter;
 use Phalcon\Logger;
 use Phalcon\Logger\AdapterInterface;
@@ -92,21 +93,26 @@ class Handler
     /**
      * Logs the error and dispatches an error controller.
      *
-     * @param  \Phalcon\Error\Error $error
-     * @return mixed
+     * @param Error $error
      */
     public static function handle(Error $error)
     {
         $di = Di::getDefault();
+
+        $type = static::getErrorType($error->type());
+        $message = "$type: {$error->message()} in {$error->file()} on line {$error->line()}";
+
+        if (!$di instanceof DiInterface) {
+            echo $message;
+            return;
+        }
+
         $config = $di->getShared('config')->error->toArray();
 
         $logger = $config['logger'];
         if (!$logger instanceof AdapterInterface) {
             $logger = new FileLogger($logger);
         }
-
-        $type = static::getErrorType($error->type());
-        $message = "$type: {$error->message()} in {$error->file()} on line {$error->line()}";
 
         if (isset($config['formatter'])) {
             $formatter = null;
@@ -172,7 +178,8 @@ class Handler
                     $view->render($config['controller'], $config['action'], $dispatcher->getParams());
                     $view->finish();
 
-                    return $response->setContent($view->getContent())->send();
+                    $response->setContent($view->getContent())->send();
+                    return;
                 } else {
                     echo $message;
                 }
