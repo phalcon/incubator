@@ -8,18 +8,15 @@ use Phalcon\Mvc\MongoCollection;
 /**
  * Phalcon\Test\Collections\Cars
  *
- * @property string $manufacturer
- * @property string $model
- * @property string $rank
- * @property int $value
+ * @property string $name
  * @method ObjectID getId()
  *
  * @package Phalcon\Test\Collections
  */
-class Cars extends MongoCollection
+class Heroes extends MongoCollection
 {
     public function initialize()
     {
-        $this->setSource('cars');
+        $this->setSource('heroes');
     }
 }

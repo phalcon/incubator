@@ -317,9 +317,8 @@ class Aerospike extends Backend implements BackendInterface
         }
 
         $aKey = $this->buildKey($prefixedKey);
-        $status = $this->db->exists($aKey, $cache);
 
-        return $status == \Aerospike::ERR_RECORD_NOT_FOUND;
+        return $this->db->exists($aKey, $cache) == \Aerospike::OK;
     }
 
     /**

@@ -21,9 +21,11 @@ namespace Phalcon\Mvc;
 
 use Phalcon\Di;
 use MongoDB\BSON\ObjectID;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\BSON\Unserializable;
 use Phalcon\Mvc\Collection\Document;
 use Phalcon\Mvc\Collection\Exception;
+use Phalcon\Db\Adapter\MongoDB\InsertOneResult;
 use Phalcon\Mvc\Collection as PhalconCollection;
 use Phalcon\Db\Adapter\MongoDB\Collection as AdapterCollection;
 
@@ -40,29 +42,31 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
     // @codingStandardsIgnoreEnd
 
     /**
-     * Sets a value for the _id property, creates a MongoId object if needed
+     * {@inheritdoc}
      *
      * @param mixed $id
      */
     public function setId($id)
     {
-        $mongoId = null;
-
         if (is_object($id)) {
-            $mongoId = $id;
-        } else {
-            if ($this->_modelsManager->isUsingImplicitObjectIds($this)) {
-                $mongoId = new ObjectID($id);
-            } else {
-                $mongoId = $id;
-            }
+            $this->_id = $id;
+            return;
         }
 
-        $this->_id = $mongoId;
+        if ($this->_modelsManager->isUsingImplicitObjectIds($this)) {
+            $this->_id = new ObjectID($id);
+            return;
+        }
+
+        $this->_id = $id;
     }
 
     /**
-     * Creates/Updates a collection based on the values in the attributes
+     * {@inheritdoc}
+     *
+     * @return bool
+     *
+     * @throws Exception
      */
     public function save()
     {
@@ -70,7 +74,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
 
         if (!is_object($dependencyInjector)) {
             throw new Exception(
-                "A dependency injector container is required to obtain the services related to the ORM"
+                "A dependency injector container is required to obtain the services related to the ODM"
             );
         }
 
@@ -122,7 +126,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
                 break;
 
             default:
-                throw new Exception('Invalid operation requested for MongoCollection->save()');
+                throw new Exception('Invalid operation requested for ' . __METHOD__);
         }
 
         $success = false;
@@ -141,6 +145,13 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         return $this->_postSave($disableEvents, $success, $exists);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @param mixed $id
+     *
+     * @return array
+     */
     public static function findById($id)
     {
         if (!is_object($id)) {
@@ -160,6 +171,12 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         return static::findFirst([["_id" => $mongoId]]);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @param  array|null $parameters
+     * @return array
+     */
     public static function findFirst(array $parameters = null)
     {
         $className = get_called_class();
@@ -173,6 +190,8 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
     }
 
     /**
+     * {@inheritdoc}
+     *
      * @param array               $params
      * @param CollectionInterface $collection
      * @param \MongoDb            $connection
@@ -180,13 +199,12 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
      *
      * @return array
      * @throws Exception
+     * @codingStandardsIgnoreStart
      */
-    // @codingStandardsIgnoreStart
     protected static function _getResultset($params, CollectionInterface $collection, $connection, $unique)
     {
-        // @codingStandardsIgnoreEnd
-
         /**
+         * @codingStandardsIgnoreEnd
          * Check if "class" clause was defined
          */
         if (isset($params['class'])) {
@@ -196,8 +214,12 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
 
             if (!$base instanceof CollectionInterface || $base instanceof Document) {
                 throw new Exception(
-                    "Object of class '".$classname."' must be an implementation of 
-                    Phalcon\\Mvc\\CollectionInterface or an instance of Phalcon\\Mvc\\Collection\\Document"
+                    sprintf(
+                        'Object of class "%s" must be an implementation of %s or an instance of %s',
+                        get_class($classname),
+                        CollectionInterface::class,
+                        Document::class
+                    )
                 );
             }
         } else {
@@ -304,7 +326,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
     }
 
     /**
-     * Deletes a model instance. Returning true on success or false otherwise.
+     * {@inheritdoc}
      *
      * <code>
      *    $robot = Robots::findFirst();
@@ -374,17 +396,15 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
     }
 
     /**
-     * Checks if the document exists in the collection
+     * {@inheritdoc}
      *
-     * @param \MongoCollection collection
-     *
+     * @param  \MongoCollection $collection
      * @return boolean
+     * @codingStandardsIgnoreStart
      */
-    // @codingStandardsIgnoreStart
     protected function _exists($collection)
     {
         // @codingStandardsIgnoreStart
-
         if (!$id = $this->_id) {
             return false;
         }
@@ -409,7 +429,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
     }
 
     /**
-     * Fires an internal event that cancels the operation
+     * {@inheritdoc}
      *
      * @param string $eventName
      * @return bool
@@ -435,13 +455,69 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         return true;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @todo
+     * @param string $field
+     * @param null $conditions
+     * @param null $finalize
+     *
+     * @throws Exception
+     */
     public static function summatory($field, $conditions = null, $finalize = null)
     {
         throw new Exception('The summatory() method is not implemented in the new Mvc MongoCollection');
     }
 
     /**
-     * Pass the values from the BSON document back to the object.
+     * {@inheritdoc}
+     *
+     * @return bool
+     */
+    public function create()
+    {
+        /** @var \Phalcon\Db\Adapter\MongoDB\Collection $collection */
+        $collection = $this->prepareCU();
+
+        /**
+         * Check the dirty state of the current operation to update the current operation
+         */
+        $this->_operationMade = self::OP_CREATE;
+
+        /**
+         * The messages added to the validator are reset here
+         */
+        $this->_errorMessages = [];
+
+        /**
+         * Execute the preSave hook
+         */
+        if ($this->_preSave($this->_dependencyInjector, self::$_disableEvents, false) === false) {
+            return false;
+        }
+
+        $data = $this->toArray();
+        $success = false;
+
+        /**
+         * We always use safe stores to get the success state
+         * Save the document
+         */
+        $result = $collection->insert($data, ['writeConcern' => new WriteConcern(1)]);
+        if ($result instanceof InsertOneResult && $result->getInsertedId()) {
+            $success = true;
+            $this->_id = $result->getInsertedId();
+        }
+
+        /**
+         * Call the postSave hooks
+         */
+        return $this->_postSave(self::$_disableEvents, $success, false);
+    }
+
+    /**
+     * {@inheritdoc}
      *
      * @param array $data
      */
