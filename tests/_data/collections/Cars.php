@@ -18,8 +18,8 @@ use Phalcon\Mvc\MongoCollection;
  */
 class Cars extends MongoCollection
 {
-    public function initialize()
+    public function getSource()
     {
-        $this->setSource('cars');
+        return 'cars';
     }
 }
