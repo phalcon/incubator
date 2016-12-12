@@ -138,7 +138,7 @@ class Curl extends Request
     {
         if (is_array($params)) {
             foreach ($params as $param) {
-                if (is_string($param) && preg_match('/^@/', $param)) {
+                if (is_string($param) && strpos($param, '@') === 0) {
                     $useEncoding = false;
                     break;
                 }
