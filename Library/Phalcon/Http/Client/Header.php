@@ -21,6 +21,11 @@ namespace Phalcon\Http\Client;
 
 use Phalcon\Http\Response\StatusCode;
 
+/**
+ * Phalcon\Http\Client\Header
+ *
+ * @package Phalcon\Http\Client
+ */
 class Header implements \Countable
 {
     private $fields = [];
@@ -77,11 +82,19 @@ class Header implements \Countable
 
     /**
      * @param string $name
+     * @param mixed  $default
+     *
      * @return mixed
      */
-    public function get($name)
+    public function get($name, $default = null)
     {
-        return $this->fields[$name];
+        foreach ($this->fields as $key => $value) {
+            if (strcmp(strtolower($key), strtolower($name)) === 0) {
+                return $value;
+            }
+        }
+
+        return $default;
     }
 
     /**
@@ -101,8 +114,8 @@ class Header implements \Countable
      */
     public function has($name)
     {
-        foreach ($this->getAll() as $key => $value) {
-            if (0 === strcmp(strtolower($key), strtolower($name))) {
+        foreach ($this->fields as $key => $value) {
+            if (strcmp(strtolower($key), strtolower($name)) === 0) {
                 return true;
             }
         }
