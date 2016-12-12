@@ -188,6 +188,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 * [Phalcon\Validation\Validator\MongoId](Library/Phalcon/Validation/Validator) - Validate MongoId value (@Kachit)
 * [Phalcon\Validation\Validator\PasswordStrength](Library/Phalcon/Validation/Validator) - Validates password strength (@davihu)
 
+### Traits
+
+* [Phalcon\Traits\ConfigurableTrait](Library/Phalcon/Traits) - Allows to define parameters which can be set by passing them to the class constructor (@sergeyklay)
+
 ## License
 
 Incubator is open-sourced software licensed under the [New BSD License](https://github.com/phalcon/incubator/blob/master/LICENSE.txt).<br>
