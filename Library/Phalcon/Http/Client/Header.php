@@ -24,7 +24,7 @@ use Phalcon\Http\Response\StatusCode;
 class Header implements \Countable
 {
     private $fields = [];
-    public $version = '1.0.1';
+    public $version = '1.0.2';
     public $statusCode = 0;
     public $statusMessage = '';
     public $status = '';
