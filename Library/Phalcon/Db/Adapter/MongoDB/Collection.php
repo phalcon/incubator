@@ -1,48 +1,45 @@
 <?php
 
+/*
+  +------------------------------------------------------------------------+
+  | Phalcon Framework                                                      |
+  +------------------------------------------------------------------------+
+  | Copyright (c) 2011-2016 Phalcon Team (https://www.phalconphp.com)      |
+  +------------------------------------------------------------------------+
+  | This source file is subject to the New BSD License that is bundled     |
+  | with this package in the file LICENSE.txt.                             |
+  |                                                                        |
+  | If you did not receive a copy of the license and are unable to         |
+  | obtain it through the world-wide-web, please send an email             |
+  | to license@phalconphp.com so we can send you a copy immediately.       |
+  +------------------------------------------------------------------------+
+  | Authors: Ben Casey <bcasey@tigerstrikemedia.com>                       |
+  +------------------------------------------------------------------------+
+*/
+
 namespace Phalcon\Db\Adapter\MongoDB;
 
-use MongoDB\Driver\Command;
+use Traversable;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
+use Phalcon\Db\Adapter\MongoDB\Model;
+use Phalcon\Db\Adapter\MongoDB\Operation;
 use Phalcon\Db\Adapter\MongoDB\Exception\InvalidArgumentException;
-use Phalcon\Db\Adapter\MongoDB\Model\IndexInfoIterator;
-use Phalcon\Db\Adapter\MongoDB\Model\IndexInput;
-use Phalcon\Db\Adapter\MongoDB\Operation\Aggregate;
-use Phalcon\Db\Adapter\MongoDB\Operation\BulkWrite;
-use Phalcon\Db\Adapter\MongoDB\Operation\CreateIndexes;
-use Phalcon\Db\Adapter\MongoDB\Operation\Count;
-use Phalcon\Db\Adapter\MongoDB\Operation\DeleteMany;
-use Phalcon\Db\Adapter\MongoDB\Operation\DeleteOne;
-use Phalcon\Db\Adapter\MongoDB\Operation\Distinct;
-use Phalcon\Db\Adapter\MongoDB\Operation\DropCollection;
-use Phalcon\Db\Adapter\MongoDB\Operation\DropIndexes;
-use Phalcon\Db\Adapter\MongoDB\Operation\Find;
-use Phalcon\Db\Adapter\MongoDB\Operation\FindOne;
-use Phalcon\Db\Adapter\MongoDB\Operation\FindOneAndDelete;
-use Phalcon\Db\Adapter\MongoDB\Operation\FindOneAndReplace;
-use Phalcon\Db\Adapter\MongoDB\Operation\FindOneAndUpdate;
-use Phalcon\Db\Adapter\MongoDB\Operation\InsertMany;
-use Phalcon\Db\Adapter\MongoDB\Operation\InsertOne;
-use Phalcon\Db\Adapter\MongoDB\Operation\ListIndexes;
-use Phalcon\Db\Adapter\MongoDB\Operation\ReplaceOne;
-use Phalcon\Db\Adapter\MongoDB\Operation\UpdateMany;
-use Phalcon\Db\Adapter\MongoDB\Operation\UpdateOne;
-use Traversable;
 
-use Phalcon\Db\Adapter\MongoDB\Model\BSONArray;
-use Phalcon\Db\Adapter\MongoDB\Model\BSONDocument;
-
+/**
+ * Phalcon\Db\Adapter\MongoDB\Collection
+ *
+ * @package Phalcon\Db\Adapter\MongoDB
+ */
 class Collection
 {
     private static $defaultTypeMap = [
-        'array'    => BSONArray::class,
-        'document' => BSONDocument::class,
-        'root'     => BSONDocument::class,
+        'array'    => Model\BSONArray::class,
+        'document' => Model\BSONDocument::class,
+        'root'     => Model\BSONDocument::class,
     ];
 
     private static $wireVersionForFindAndModifyWriteConcern = 4;
@@ -176,8 +173,6 @@ class Collection
      * a command cursor) does not yet support a custom type map
      * (depends on: https://jira.mongodb.org/browse/PHPC-314).
      *
-     * @see Aggregate::__construct() for supported options
-     *
      * @param array $pipeline List of pipeline operations
      * @param array $options Command options
      *
@@ -187,7 +182,8 @@ class Collection
     {
         $hasOutStage=Functions::isLastPipelineOperatorOut($pipeline);
 
-        /* A "majority" read concern is not compatible with the $out stage, so
+        /**
+         * A "majority" read concern is not compatible with the $out stage, so
          * avoid providing the Collection's read concern if it would conflict.
          */
         if (!isset($options['readConcern'])&&!($hasOutStage&&$this->readConcern->getLevel()===ReadConcern::MAJORITY)) {
@@ -206,16 +202,14 @@ class Collection
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new Aggregate($this->databaseName, $this->collectionName, $pipeline, $options);
-        $server   =$this->manager->selectServer($options['readPreference']);
+        $operation = new Operation\Aggregate($this->databaseName, $this->collectionName, $pipeline, $options);
+        $server    = $this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
     }
 
     /**
      * Executes multiple write operations.
-     *
-     * @see BulkWrite::__construct() for supported options
      *
      * @param array[] $operations List of write operations
      * @param array   $options Command options
@@ -228,7 +222,7 @@ class Collection
             $options['writeConcern']=$this->writeConcern;
         }
 
-        $operation=new BulkWrite($this->databaseName, $this->collectionName, $operations, $options);
+        $operation=new Operation\BulkWrite($this->databaseName, $this->collectionName, $operations, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -236,8 +230,6 @@ class Collection
 
     /**
      * Gets the number of documents matching the filter.
-     *
-     * @see Count::__construct() for supported options
      *
      * @param array|object $filter Query by which to filter documents
      * @param array        $options Command options
@@ -254,7 +246,7 @@ class Collection
             $options['readPreference']=$this->readPreference;
         }
 
-        $operation=new Count($this->databaseName, $this->collectionName, $filter, $options);
+        $operation=new Operation\Count($this->databaseName, $this->collectionName, $filter, $options);
         $server   =$this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
@@ -262,8 +254,6 @@ class Collection
 
     /**
      * Create a single index for the collection.
-     *
-     * @see Collection::createIndexes()
      *
      * @param array|object $key Document containing fields mapped to values,
      *                              which denote order or an index type
@@ -293,9 +283,6 @@ class Collection
      * If the "name" option is unspecified, a name will be generated from the
      * "key" document.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
-     * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
-     *
      * @param array[] $indexes List of index specifications
      *
      * @return string[] The names of the created indexes
@@ -303,7 +290,7 @@ class Collection
      */
     public function createIndexes(array $indexes)
     {
-        $operation=new CreateIndexes($this->databaseName, $this->collectionName, $indexes);
+        $operation=new Operation\CreateIndexes($this->databaseName, $this->collectionName, $indexes);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -311,9 +298,6 @@ class Collection
 
     /**
      * Deletes all documents matching the filter.
-     *
-     * @see DeleteMany::__construct() for supported options
-     * @see http://docs.mongodb.org/manual/reference/command/delete/
      *
      * @param array|object $filter Query by which to delete documents
      * @param array        $options Command options
@@ -326,7 +310,7 @@ class Collection
             $options['writeConcern']=$this->writeConcern;
         }
 
-        $operation=new DeleteMany($this->databaseName, $this->collectionName, $filter, $options);
+        $operation=new Operation\DeleteMany($this->databaseName, $this->collectionName, $filter, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -334,9 +318,6 @@ class Collection
 
     /**
      * Deletes at most one document matching the filter.
-     *
-     * @see DeleteOne::__construct() for supported options
-     * @see http://docs.mongodb.org/manual/reference/command/delete/
      *
      * @param array|object $filter Query by which to delete documents
      * @param array        $options Command options
@@ -349,7 +330,7 @@ class Collection
             $options['writeConcern']=$this->writeConcern;
         }
 
-        $operation=new DeleteOne($this->databaseName, $this->collectionName, $filter, $options);
+        $operation=new Operation\DeleteOne($this->databaseName, $this->collectionName, $filter, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -357,8 +338,6 @@ class Collection
 
     /**
      * Finds the distinct values for a specified field across the collection.
-     *
-     * @see Distinct::__construct() for supported options
      *
      * @param string       $fieldName Field for which to return distinct values
      * @param array|object $filter Query by which to filter documents
@@ -376,7 +355,7 @@ class Collection
             $options['readPreference']=$this->readPreference;
         }
 
-        $operation=new Distinct($this->databaseName, $this->collectionName, $fieldName, $filter, $options);
+        $operation=new Operation\Distinct($this->databaseName, $this->collectionName, $fieldName, $filter, $options);
         $server   =$this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
@@ -384,8 +363,6 @@ class Collection
 
     /**
      * Drop this collection.
-     *
-     * @see DropCollection::__construct() for supported options
      *
      * @param array $options Additional options
      *
@@ -397,7 +374,7 @@ class Collection
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new DropCollection($this->databaseName, $this->collectionName, $options);
+        $operation=new Operation\DropCollection($this->databaseName, $this->collectionName, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -405,8 +382,6 @@ class Collection
 
     /**
      * Drop a single index in the collection.
-     *
-     * @see DropIndexes::__construct() for supported options
      *
      * @param string $indexName Index name
      * @param array  $options Additional options
@@ -426,7 +401,7 @@ class Collection
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new DropIndexes($this->databaseName, $this->collectionName, $indexName, $options);
+        $operation=new Operation\DropIndexes($this->databaseName, $this->collectionName, $indexName, $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -434,8 +409,6 @@ class Collection
 
     /**
      * Drop all indexes in the collection.
-     *
-     * @see DropIndexes::__construct() for supported options
      *
      * @param array $options Additional options
      *
@@ -447,7 +420,7 @@ class Collection
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new DropIndexes($this->databaseName, $this->collectionName, '*', $options);
+        $operation=new Operation\DropIndexes($this->databaseName, $this->collectionName, '*', $options);
         $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -455,9 +428,6 @@ class Collection
 
     /**
      * Finds documents matching the query.
-     *
-     * @see Find::__construct() for supported options
-     * @see http://docs.mongodb.org/manual/core/read-operations-introduction/
      *
      * @param array|object $filter Query by which to filter documents
      * @param array        $options Additional options
@@ -478,7 +448,7 @@ class Collection
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new Find($this->databaseName, $this->collectionName, $filter, $options);
+        $operation=new Operation\Find($this->databaseName, $this->collectionName, $filter, $options);
         $server   =$this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
@@ -486,9 +456,6 @@ class Collection
 
     /**
      * Finds a single document matching the query.
-     *
-     * @see FindOne::__construct() for supported options
-     * @see http://docs.mongodb.org/manual/core/read-operations-introduction/
      *
      * @param array|object $filter Query by which to filter documents
      * @param array        $options Additional options
@@ -509,7 +476,7 @@ class Collection
             $options['typeMap']=$this->typeMap;
         }
 
-        $operation=new FindOne($this->databaseName, $this->collectionName, $filter, $options);
+        $operation=new Operation\FindOne($this->databaseName, $this->collectionName, $filter, $options);
         $server   =$this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
@@ -523,19 +490,15 @@ class Collection
      * Note: BSON deserialization of the returned document does not yet support
      * a custom type map (depends on: https://jira.mongodb.org/browse/PHPC-314).
      *
-     * @see FindOneAndDelete::__construct() for supported options
-     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-     *
-     * @param array|object $filter Query by which to filter documents
-     * @param array        $options Command options
-     *
+     * @param  array|object $filter  Query by which to filter documents
+     * @param  array        $options Command options [Optional]
      * @return object|null
      */
     public function findOneAndDelete($filter, array $options = [])
     {
-        $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if (!isset($options['writeConcern'])&&Functions::serverSupportsFeature(
+        if (!isset($options['writeConcern']) && Functions::serverSupportsFeature(
             $server,
             self::$wireVersionForFindAndModifyWriteConcern
         )
@@ -543,7 +506,7 @@ class Collection
             $options['writeConcern']=$this->writeConcern;
         }
 
-        $operation=new FindOneAndDelete($this->databaseName, $this->collectionName, $filter, $options);
+        $operation = new Operation\FindOneAndDelete($this->databaseName, $this->collectionName, $filter, $options);
 
         return $operation->execute($server);
     }
@@ -560,28 +523,30 @@ class Collection
      * Note: BSON deserialization of the returned document does not yet support
      * a custom type map (depends on: https://jira.mongodb.org/browse/PHPC-314).
      *
-     * @see FindOneAndReplace::__construct() for supported options
-     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-     *
-     * @param array|object $filter Query by which to filter documents
-     * @param array|object $replacement Replacement document
-     * @param array        $options Command options
-     *
+     * @param  array|object $filter      Query by which to filter documents
+     * @param  array|object $replacement Replacement document
+     * @param  array        $options     Command options [Optional]
      * @return object|null
      */
     public function findOneAndReplace($filter, $replacement, array $options = [])
     {
-        $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if (!isset($options['writeConcern'])&&Functions::serverSupportsFeature(
+        if (!isset($options['writeConcern']) && Functions::serverSupportsFeature(
             $server,
             self::$wireVersionForFindAndModifyWriteConcern
         )
         ) {
-            $options['writeConcern']=$this->writeConcern;
+            $options['writeConcern'] = $this->writeConcern;
         }
 
-        $operation=new FindOneAndReplace($this->databaseName, $this->collectionName, $filter, $replacement, $options);
+        $operation = new Operation\FindOneAndReplace(
+            $this->databaseName,
+            $this->collectionName,
+            $filter,
+            $replacement,
+            $options
+        );
 
         return $operation->execute($server);
     }
@@ -598,28 +563,30 @@ class Collection
      * Note: BSON deserialization of the returned document does not yet support
      * a custom type map (depends on: https://jira.mongodb.org/browse/PHPC-314).
      *
-     * @see FindOneAndReplace::__construct() for supported options
-     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-     *
-     * @param array|object $filter Query by which to filter documents
-     * @param array|object $update Update to apply to the matched document
-     * @param array        $options Command options
-     *
+     * @param  array|object $filter  Query by which to filter documents
+     * @param  array|object $update  Update to apply to the matched document
+     * @param  array        $options Command options [Optional]
      * @return object|null
      */
     public function findOneAndUpdate($filter, $update, array $options = [])
     {
-        $server=$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if (!isset($options['writeConcern'])&&Functions::serverSupportsFeature(
+        if (!isset($options['writeConcern']) && Functions::serverSupportsFeature(
             $server,
             self::$wireVersionForFindAndModifyWriteConcern
         )
         ) {
-            $options['writeConcern']=$this->writeConcern;
+            $options['writeConcern'] = $this->writeConcern;
         }
 
-        $operation=new FindOneAndUpdate($this->databaseName, $this->collectionName, $filter, $update, $options);
+        $operation = new Operation\FindOneAndUpdate(
+            $this->databaseName,
+            $this->collectionName,
+            $filter,
+            $update,
+            $options
+        );
 
         return $operation->execute($server);
     }
@@ -647,33 +614,28 @@ class Collection
     /**
      * Return the collection namespace.
      *
-     * @see https://docs.mongodb.org/manual/reference/glossary/#term-namespace
      * @return string
      */
     public function getNamespace()
     {
-        return $this->databaseName.'.'.$this->collectionName;
+        return $this->databaseName . '.' . $this->collectionName;
     }
 
     /**
      * Inserts multiple documents.
      *
-     * @see InsertMany::__construct() for supported options
-     * @see http://docs.mongodb.org/manual/reference/command/insert/
-     *
-     * @param array[]|object[] $documents The documents to insert
-     * @param array            $options Command options
-     *
+     * @param  array[]|object[] $documents The documents to insert
+     * @param  array            $options   Command options [Optional]
      * @return InsertManyResult
      */
     public function insertMany(array $documents, array $options = [])
     {
         if (!isset($options['writeConcern'])) {
-            $options['writeConcern']=$this->writeConcern;
+            $options['writeConcern'] = $this->writeConcern;
         }
 
-        $operation=new InsertMany($this->databaseName, $this->collectionName, $documents, $options);
-        $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $operation = new Operation\InsertMany($this->databaseName, $this->collectionName, $documents, $options);
+        $server    = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
     }
@@ -681,22 +643,18 @@ class Collection
     /**
      * Inserts one document.
      *
-     * @see InsertOne::__construct() for supported options
-     * @see http://docs.mongodb.org/manual/reference/command/insert/
-     *
      * @param array|object $document The document to insert
-     * @param array        $options Command options
-     *
+     * @param array        $options  Command options [Optional]
      * @return InsertOneResult
      */
     public function insertOne($document, array $options = [])
     {
         if (!isset($options['writeConcern'])) {
-            $options['writeConcern']=$this->writeConcern;
+            $options['writeConcern'] = $this->writeConcern;
         }
 
-        $operation=new InsertOne($this->databaseName, $this->collectionName, $document, $options);
-        $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $operation = new Operation\InsertOne($this->databaseName, $this->collectionName, $document, $options);
+        $server    = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
     }
@@ -705,7 +663,7 @@ class Collection
      * Inserts the document.
      *
      * @param  array|object $document The document to insert
-     * @param  array        $options Command options [Optional]
+     * @param  array        $options  Command options [Optional]
      * @return mixed
      */
     public function insert($document, array $options = [])
@@ -716,15 +674,13 @@ class Collection
     /**
      * Returns information for all indexes for the collection.
      *
-     * @see ListIndexes::__construct() for supported options
-     *
      * @param  array $options Command options [Optional]
-     * @return IndexInfoIterator
+     * @return Model\IndexInfoIterator
      */
     public function listIndexes(array $options = [])
     {
-        $operation=new ListIndexes($this->databaseName, $this->collectionName, $options);
-        $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $operation = new Operation\ListIndexes($this->databaseName, $this->collectionName, $options);
+        $server    = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
     }
@@ -732,23 +688,26 @@ class Collection
     /**
      * Replaces at most one document matching the filter.
      *
-     * @see ReplaceOne::__construct() for supported options
-     * @see http://docs.mongodb.org/manual/reference/command/update/
-     *
-     * @param array|object $filter Query by which to filter documents
-     * @param array|object $replacement Replacement document
-     * @param array        $options Command options
-     *
+     * @param  array|object $filter      Query by which to filter documents
+     * @param  array|object $replacement Replacement document
+     * @param  array        $options     Command options [Optional]
      * @return UpdateResult
      */
     public function replaceOne($filter, $replacement, array $options = [])
     {
         if (!isset($options['writeConcern'])) {
-            $options['writeConcern']=$this->writeConcern;
+            $options['writeConcern'] = $this->writeConcern;
         }
 
-        $operation=new ReplaceOne($this->databaseName, $this->collectionName, $filter, $replacement, $options);
-        $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $operation = new Operation\ReplaceOne(
+            $this->databaseName,
+            $this->collectionName,
+            $filter,
+            $replacement,
+            $options
+        );
+
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
     }
@@ -756,23 +715,19 @@ class Collection
     /**
      * Updates all documents matching the filter.
      *
-     * @see UpdateMany::__construct() for supported options
-     * @see http://docs.mongodb.org/manual/reference/command/update/
-     *
-     * @param array|object $filter Query by which to filter documents
-     * @param array|object $update Update to apply to the matched documents
-     * @param array        $options Command options
-     *
+     * @param  array|object $filter  Query by which to filter documents
+     * @param  array|object $update  Update to apply to the matched documents
+     * @param  array        $options Command options [Optional]
      * @return UpdateResult
      */
     public function updateMany($filter, $update, array $options = [])
     {
         if (!isset($options['writeConcern'])) {
-            $options['writeConcern']=$this->writeConcern;
+            $options['writeConcern'] = $this->writeConcern;
         }
 
-        $operation=new UpdateMany($this->databaseName, $this->collectionName, $filter, $update, $options);
-        $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $operation = new Operation\UpdateMany($this->databaseName, $this->collectionName, $filter, $update, $options);
+        $server    = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
     }
@@ -780,23 +735,19 @@ class Collection
     /**
      * Updates at most one document matching the filter.
      *
-     * @see UpdateOne::__construct() for supported options
-     * @see http://docs.mongodb.org/manual/reference/command/update/
-     *
-     * @param array|object $filter Query by which to filter documents
-     * @param array|object $update Update to apply to the matched document
-     * @param array        $options Command options
-     *
+     * @param  array|object $filter  Query by which to filter documents
+     * @param  array|object $update  Update to apply to the matched document
+     * @param  array        $options Command options [Optional]
      * @return UpdateResult
      */
     public function updateOne($filter, $update, array $options = [])
     {
         if (!isset($options['writeConcern'])) {
-            $options['writeConcern']=$this->writeConcern;
+            $options['writeConcern'] = $this->writeConcern;
         }
 
-        $operation=new UpdateOne($this->databaseName, $this->collectionName, $filter, $update, $options);
-        $server   =$this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $operation = new Operation\UpdateOne($this->databaseName, $this->collectionName, $filter, $update, $options);
+        $server    = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
     }
@@ -804,19 +755,16 @@ class Collection
     /**
      * Get a clone of this collection with different options.
      *
-     * @see Collection::__construct() for supported options
-     *
-     * @param array $options Collection constructor options
-     *
+     * @param  array $options Collection constructor options [Optional]
      * @return Collection
      */
     public function withOptions(array $options = [])
     {
-        $options+=[
-            'readConcern'   =>$this->readConcern,
-            'readPreference'=>$this->readPreference,
-            'typeMap'       =>$this->typeMap,
-            'writeConcern'  =>$this->writeConcern,
+        $options += [
+            'readConcern'    => $this->readConcern,
+            'readPreference' => $this->readPreference,
+            'typeMap'        => $this->typeMap,
+            'writeConcern'   => $this->writeConcern,
         ];
 
         return new Collection($this->manager, $this->databaseName, $this->collectionName, $options);

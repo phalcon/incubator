@@ -15,8 +15,8 @@ use Phalcon\Mvc\MongoCollection;
  */
 class Heroes extends MongoCollection
 {
-    public function initialize()
+    public function getSource()
     {
-        $this->setSource('heroes');
+        return 'heroes';
     }
 }
