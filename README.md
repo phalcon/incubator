@@ -97,6 +97,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 * [Phalcon\Annotations\Adapter\Memcached](Library/Phalcon/Annotations/Adapter) - Memcached adapter for storing annotations (@igusev)
 * [Phalcon\Annotations\Adapter\Redis](Library/Phalcon/Annotations/Adapter) - Redis adapter for storing annotations (@sergeyklay)
 * [Phalcon\Annotations\Adapter\Aerospike](Library/Phalcon/Annotations/Adapter) - Aerospike adapter for storing annotations (@sergeyklay)
+* [Phalcon\Annotations\Extended\Adapter\Apc](Library/Phalcon/Annotations/Extended/Adapter) - Extended Apc adapter for storing annotations in the APC(u) (@sergeyklay)
+* [Phalcon\Annotations\Extended\Adapter\Memory](Library/Phalcon/Annotations/Extended/Adapter) - Extended Memory adapter for storing annotations in the memory (@sergeyklay)
+* [Phalcon\Annotations\Extended\Adapter\Files](Library/Phalcon/Annotations/Extended/Adapter) - Extended Files adapter for storing annotations in files (@sergeyklay)
 
 ### Behaviors
 * [Phalcon\Mvc\Model\Behavior\Blameable](Library/Phalcon/Mvc/Model/Behavior) - logs with every created or updated row in your database who created and who updated it (@phalcon)
