@@ -21,6 +21,7 @@ namespace Phalcon\Test;
 
 use Phalcon\Di\InjectionAwareInterface;
 use PHPUnit\Framework\TestCase as TestCase;
+use Phalcon\Test\Traits\ResultSet;
 use Phalcon\Config;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Di;
@@ -35,6 +36,8 @@ use Phalcon\Escaper;
  */
 abstract class UnitTestCase extends TestCase implements InjectionAwareInterface
 {
+    use ResultSet;
+
     /**
      * Holds the configuration variables and other stuff
      * I can use the DI container but for tests like the Translate
