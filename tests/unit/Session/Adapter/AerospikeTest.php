@@ -57,7 +57,9 @@ class AerospikeTest extends Test
      */
     protected function _after()
     {
-        $this->cleanup();
+        if (extension_loaded('aerospike')) {
+            $this->cleanup();
+        }
     }
 
     public function testShouldWriteSession()
