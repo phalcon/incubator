@@ -280,6 +280,26 @@ class Aerospike extends Backend implements BackendInterface
     /**
      * {@inheritdoc}
      *
+     * @return boolean
+     */
+    public function flush()
+    {
+        $keys = $this->queryKeys();
+
+        $success = true;
+
+        foreach ($keys as $aKey) {
+            if (!$this->delete($aKey)) {
+                $success = false;
+            }
+        }
+
+        return $success;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @param string $keyName
      * @param int    $lifetime
      * @return boolean
@@ -297,9 +317,8 @@ class Aerospike extends Backend implements BackendInterface
         }
 
         $aKey = $this->buildKey($prefixedKey);
-        $status = $this->db->get($aKey, $cache);
 
-        return $status == \Aerospike::OK;
+        return $this->db->exists($aKey, $cache) == \Aerospike::OK;
     }
 
     /**

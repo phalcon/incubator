@@ -48,21 +48,17 @@ class ExtendedTest extends Test
      */
     protected function _before()
     {
-        if (!defined('TEST_BT_HOST') || !defined('TEST_BT_PORT')) {
-            $this->markTestSkipped('TEST_BT_HOST and/or TEST_BT_PORT env variables are not defined');
-        }
-
         $this->client = new Extended([
-            'host'   => TEST_BT_HOST,
-            'port'   => TEST_BT_PORT,
+            'host'   => env('TEST_BT_HOST', 6379),
+            'port'   => env('TEST_BT_PORT', 11300),
             'prefix' => 'PHPUnit_',
         ]);
 
         if (!$this->client->connect()) {
             $this->markTestSkipped(sprintf(
                 'Need a running beanstalkd server at %s:%d',
-                TEST_BT_HOST,
-                TEST_BT_PORT
+                env('TEST_BT_HOST', 6379),
+                env('TEST_BT_PORT', 11300)
             ));
         }
 
@@ -144,7 +140,7 @@ class ExtendedTest extends Test
             'test-tube-2' => '2',
         ];
 
-        # Check if we are using Fork1.0 (php < 7)
+        // Check if we are using Fork1.0 (php < 7)
         if (class_exists('duncan3dc\Helpers\Fork')) {
             $fork = new \duncan3dc\Helpers\Fork;
         } else {

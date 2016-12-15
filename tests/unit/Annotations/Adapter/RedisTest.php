@@ -63,7 +63,7 @@ class RedisTest extends Test
      */
     public function testShouldReadAndWriteToRedisWithoutPrefix($key, $data)
     {
-        $object = new Redis(['host' => TEST_RS_HOST]);
+        $object = new Redis(['host' => env('TEST_RS_HOST', 11211)]);
         $object->write($key, $data);
 
         $this->assertEquals($data, $object->read($key));
@@ -76,7 +76,7 @@ class RedisTest extends Test
      */
     public function testShouldReadAndWriteToRedisWithPrefix($key, $data)
     {
-        $object = new Redis(['host' => TEST_RS_HOST, 'prefix' => 'test_']);
+        $object = new Redis(['host' => env('TEST_RS_HOST', 11211), 'prefix' => 'test_']);
         $object->write($key, $data);
 
         $this->assertEquals($data, $object->read($key));
@@ -84,7 +84,7 @@ class RedisTest extends Test
 
     public function testShouldGetCacheBackendThroughGetter()
     {
-        $object = new Redis(['host' => TEST_RS_HOST]);
+        $object = new Redis(['host' => env('TEST_RS_HOST', 11211)]);
 
         $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
         $reflectedMethod->setAccessible(true);
@@ -93,7 +93,7 @@ class RedisTest extends Test
 
     public function testShouldGetCacheBackendThroughReflectionSetter()
     {
-        $object = new Redis(['host' => TEST_RS_HOST]);
+        $object = new Redis(['host' => env('TEST_RS_HOST', 11211)]);
         $mock = $this->getMock(CacheBackend::class, [], [], '', false);
 
         $reflectedProperty = new ReflectionProperty(get_class($object), 'redis');
@@ -111,7 +111,7 @@ class RedisTest extends Test
      */
     public function testShouldPrepareKey($key)
     {
-        $object = new Redis(['host' => TEST_RS_HOST]);
+        $object = new Redis(['host' => env('TEST_RS_HOST', 11211)]);
         $reflectedMethod = new ReflectionMethod(get_class($object), 'prepareKey');
         $reflectedMethod->setAccessible(true);
 
@@ -162,13 +162,13 @@ class RedisTest extends Test
         return [
             [
                 [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
+                    'host' => env('TEST_RS_HOST', 11211),
+                    'port' => env('TEST_RS_PORT', 6379),
                     'lifetime' => 23
                 ],
                 [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
+                    'host' => env('TEST_RS_HOST', 11211),
+                    'port' => env('TEST_RS_PORT', 6379),
                     'lifetime' => 23,
                     'prefix' => '',
                     'persistent' => false
@@ -176,14 +176,14 @@ class RedisTest extends Test
             ],
             [
                 [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
+                    'host' => env('TEST_RS_HOST', 11211),
+                    'port' => env('TEST_RS_PORT', 6379),
                     'lifetime' => 23,
                     'persistent' => true
                 ],
                 [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
+                    'host' => env('TEST_RS_HOST', 11211),
+                    'port' => env('TEST_RS_PORT', 6379),
                     'lifetime' => 23,
                     'prefix' => '',
                     'persistent' => true
@@ -191,13 +191,13 @@ class RedisTest extends Test
             ],
             [
                 [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
+                    'host' => env('TEST_RS_HOST', 11211),
+                    'port' => env('TEST_RS_PORT', 6379),
                     'prefix' => 'test_'
                 ],
                 [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
+                    'host' => env('TEST_RS_HOST', 11211),
+                    'port' => env('TEST_RS_PORT', 6379),
                     'lifetime' => 8600,
                     'prefix' => 'test_',
                     'persistent' => false
@@ -205,13 +205,13 @@ class RedisTest extends Test
             ],
             [
                 [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
+                    'host' => env('TEST_RS_HOST', 11211),
+                    'port' => env('TEST_RS_PORT', 6379),
                     'randomValue' => 'test_'
                 ],
                 [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
+                    'host' => env('TEST_RS_HOST', 11211),
+                    'port' => env('TEST_RS_PORT', 6379),
                     'randomValue' => 'test_',
                     'lifetime' => 8600,
                     'prefix' => '',
@@ -220,13 +220,13 @@ class RedisTest extends Test
             ],
             [
                 [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
+                    'host' => env('TEST_RS_HOST', 11211),
+                    'port' => env('TEST_RS_PORT', 6379),
                     123 => 'test_'
                 ],
                 [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
+                    'host' => env('TEST_RS_HOST', 11211),
+                    'port' => env('TEST_RS_PORT', 6379),
                     123 => 'test_',
                     'lifetime' => 8600,
                     'prefix' => '',
@@ -235,14 +235,14 @@ class RedisTest extends Test
             ],
             [
                 [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
+                    'host' => env('TEST_RS_HOST', 11211),
+                    'port' => env('TEST_RS_PORT', 6379),
                     'lifetime' => 24,
                     'prefix' => 'test_',
                 ],
                 [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
+                    'host' => env('TEST_RS_HOST', 11211),
+                    'port' => env('TEST_RS_PORT', 6379),
                     'lifetime' => 24,
                     'prefix' => 'test_',
                     'persistent' => false
@@ -250,12 +250,12 @@ class RedisTest extends Test
             ],
             [
                 [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
+                    'host' => env('TEST_RS_HOST', 11211),
+                    'port' => env('TEST_RS_PORT', 6379),
                 ],
                 [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
+                    'host' => env('TEST_RS_HOST', 11211),
+                    'port' => env('TEST_RS_PORT', 6379),
                     'lifetime' => 8600,
                     'prefix' => '',
                     'persistent' => false
@@ -263,11 +263,11 @@ class RedisTest extends Test
             ],
             [
                 [
-                    'host' => TEST_RS_HOST,
+                    'host' => env('TEST_RS_HOST', 11211),
                 ],
                 [
-                    'host' => TEST_RS_HOST,
-                    'port' => TEST_RS_PORT,
+                    'host' => env('TEST_RS_HOST', 11211),
+                    'port' => env('TEST_RS_PORT', 6379),
                     'lifetime' => 8600,
                     'prefix' => '',
                     'persistent' => false
@@ -278,7 +278,7 @@ class RedisTest extends Test
                 ],
                 [
                     'host' => '127.0.0.1',
-                    'port' => TEST_RS_PORT,
+                    'port' => env('TEST_RS_PORT', 6379),
                     'lifetime' => 8600,
                     'prefix' => '',
                     'persistent' => false

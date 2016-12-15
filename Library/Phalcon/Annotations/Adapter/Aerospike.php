@@ -79,7 +79,8 @@ class Aerospike extends Base
         if (!isset($options['hosts']) ||
             !is_array($options['hosts']) ||
             !isset($options['hosts'][0]) ||
-            !is_array($options['hosts'][0])
+            !is_array($options['hosts'][0]) ||
+            empty($options['hosts'][0])
         ) {
             throw new Exception('No hosts given in options');
         }

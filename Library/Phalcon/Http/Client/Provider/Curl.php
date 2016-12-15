@@ -143,6 +143,10 @@ class Curl extends Request
         $this->setOption(CURLOPT_HEADERFUNCTION, [$this, 'headerFunction']);
         $this->setOption(CURLOPT_HTTPHEADER, $header);
 
+        if ($fullResponse) {
+            $this->setOption(CURLOPT_HEADER, true);
+        }
+
         $content = curl_exec($this->handle);
 
         $this->setOption(CURLOPT_HEADERFUNCTION, null);
@@ -154,11 +158,7 @@ class Curl extends Request
         $response = new Response();
         $response->header->parse($this->responseHeader);
 
-        if ($fullResponse) {
-            $response->body = $content;
-        } else {
-            $response->body = substr($content, strlen($this->responseHeader));
-        }
+        $response->body = $content;
 
         return $response;
     }
@@ -175,7 +175,7 @@ class Curl extends Request
     {
         if (is_array($params)) {
             foreach ($params as $param) {
-                if (is_string($param) && preg_match('/^@/', $param)) {
+                if (is_string($param) && strpos($param, '@') === 0) {
                     $useEncoding = false;
                     break;
                 }

@@ -6,21 +6,17 @@ class_name: UnitTester
 modules:
     # enabled modules and helpers
     enabled:
-        - Asserts
-        - Db
-        - Mockery
         - Helper\Unit
-        - Aerospike
+        - Filesystem
+        - Asserts
+        - Mockery
+        - Apc
+        - Db
     config:
         Db:
-            dsn: 'mysql:host=mysql;dbname=incubator_tests'
-            user: 'root'
-            password: ''
+            dsn: "%TEST_DB_DSN%"
+            user: "%TEST_DB_USER%"
+            password: "%TEST_DB_PASSWD%"
             dump: tests/_data/dump.sql
-            populate: true
+            populate: false
             cleanup: false
-        Aerospike:
-            addr: 'aerospike'
-            port: 3000
-            set: 'cache'
-            namespace: 'test'
