@@ -59,13 +59,6 @@ trait ResultSet
         $sharedData->pos = 0;
         $sharedData->data = $dataSet;
 
-        $mockResultSet->method('rewind')
-            ->willReturnCallback(
-                function() use ($sharedData) {
-                    $sharedData->pos = 0;
-                }
-            );
-
         $mockResultSet->method('getFirst')
             ->willReturnCallback(function() use ($sharedData) {
                 if (empty($sharedData->data)) {
