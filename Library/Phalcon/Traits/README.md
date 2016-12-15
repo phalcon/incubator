@@ -15,12 +15,12 @@ class MyAdapter
     use ConfigurableTrait;
     
     protected $host;
-    protected $someParameter;
+    protected $viewsDir;
     protected $protectedParameter;
     
     protected $configurable = [
         'host',
-        'snake_cased'
+        'viewsDir'
     ];
     
     public function __construct(array $options)
@@ -33,9 +33,9 @@ class MyAdapter
         $this->host = $host;
     }
     
-    protected function setSnakeCased($someParameter)
+    protected function setViewsDir($viewsDir)
     {
-        $this->someParameter = $someParameter;
+        $this->viewsDir = $viewsDir;
     }
 }
 ```

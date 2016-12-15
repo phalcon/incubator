@@ -20,7 +20,6 @@
 namespace Phalcon\Traits;
 
 use Traversable;
-use Phalcon\Text;
 use InvalidArgumentException;
 
 /**
@@ -57,7 +56,7 @@ trait ConfigurableTrait
                 continue;
             }
 
-            $method = 'set' . Text::camelize($key);
+            $method = 'set' . ucfirst($key);
 
             if (method_exists($this, $method)) {
                 $this->$method($value);
