@@ -7,8 +7,10 @@ modules:
     # enabled modules and helpers
     enabled:
         - Helper\Unit
+        - Filesystem
         - Asserts
         - Mockery
+        - Apc
         - Db
     config:
         Db:

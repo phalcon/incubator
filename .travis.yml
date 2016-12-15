@@ -68,13 +68,7 @@ install:
   - ln -s ${TRAVIS_BUILD_DIR}/.temp ${TRAVIS_BUILD_DIR}/cphalcon/.temp
   - ( cd cphalcon; zephir fullclean && zephir generate $ZEND_BACKEND )
   - ( cd cphalcon/ext; export CFLAGS="-g3 -O1 -std=gnu90 -Wall -DZEPHIR_RELEASE=1"; /usr/bin/phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j3 &> /dev/null && make --silent install )
-  - phpenv config-add tests/_ci/phalcon.ini
-  - phpenv config-add tests/_ci/redis.ini
-  - if [[ "${PHP_MAJOR:0:1}" != "7" ]]; then phpenv config-add tests/_ci/mongo.ini; fi;
-  - phpenv config-add tests/_ci/mongodb.ini
-  - phpenv config-add tests/_ci/memcached.ini
-  - pecl channel-update pecl.php.net
-  - if [[ "${PHP_MAJOR:0:1}" = "7" ]]; then printf "\n" | pecl install yaml-2.0.0 > /dev/null 2>&1; else printf "\n" | pecl install yaml > /dev/null 2>&1; fi;
+  - ( bash tests/_ci/install_prereqs_$PHP_MAJOR.sh )
 
 before_script:
   - stty cols 160

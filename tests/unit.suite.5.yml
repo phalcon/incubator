@@ -7,9 +7,11 @@ modules:
     # enabled modules and helpers
     enabled:
         - Helper\Unit
+        - Filesystem
         - Aerospike
         - Asserts
         - Mockery
+        - Apc
         - Db
     config:
         Db:
