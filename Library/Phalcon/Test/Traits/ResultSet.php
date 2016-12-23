@@ -43,17 +43,17 @@ trait ResultSet
         $mockResultSet = $this->getMockBuilder($className)
             ->disableOriginalConstructor()
             ->setMethods(
-              [
-                'valid', 
-                'current', 
-                'key', 
-                'next', 
-                'toArray', 
-                'getFirst', 
-                'getLast', 
-                'serialize', 
-                'unserialize'
-              ]
+                [
+                    'valid',
+                    'current',
+                    'key',
+                    'next',
+                    'toArray',
+                    'getFirst',
+                    'getLast',
+                    'serialize',
+                    'unserialize'
+                ]
             )->getMockForAbstractClass();
 
         //Work Around For Final Count Method
