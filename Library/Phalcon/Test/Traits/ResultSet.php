@@ -81,7 +81,7 @@ trait ResultSet
             });
 
         $mockResultSet->method('getLast')
-            ->willReturnCallback(function ()  use ($sharedData) {
+            ->willReturnCallback(function () use ($sharedData) {
                 if (empty($sharedData->data)) {
                     return false;
                 }
@@ -105,7 +105,7 @@ trait ResultSet
 
         $mockResultSet->method('key')
             ->willReturnCallback(
-                function () use($sharedData) {
+                function () use ($sharedData) {
                     return array_keys($sharedData->data)[$sharedData->pos];
                 }
             );
