@@ -42,8 +42,19 @@ trait ResultSet
 
         $mockResultSet = $this->getMockBuilder($className)
             ->disableOriginalConstructor()
-            ->setMethods(['valid', 'current', 'key', 'next', 'toArray', 'getFirst', 'getLast', 'serialize', 'unserialize'])
-            ->getMockForAbstractClass();
+            ->setMethods(
+              [
+                'valid', 
+                'current', 
+                'key', 
+                'next', 
+                'toArray', 
+                'getFirst', 
+                'getLast', 
+                'serialize', 
+                'unserialize'
+              ]
+            )->getMockForAbstractClass();
 
         //Work Around For Final Count Method
         $reflectionMethod = new \ReflectionProperty('\Phalcon\Mvc\Model\Resultset', '_count');
@@ -52,7 +63,7 @@ trait ResultSet
 
         //Work Around For Final Seek
         $reflectionProperty = new \ReflectionProperty('\Phalcon\Mvc\Model\Resultset', '_rows');
-        $reflectionProperty->setAccessible(TRUE);
+        $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($mockResultSet, $dataSet);
 
         $sharedData = new \stdClass();
@@ -60,7 +71,7 @@ trait ResultSet
         $sharedData->data = $dataSet;
 
         $mockResultSet->method('getFirst')
-            ->willReturnCallback(function() use ($sharedData) {
+            ->willReturnCallback(function () use ($sharedData) {
                 if (empty($sharedData->data)) {
                     return false;
                 }
@@ -70,7 +81,7 @@ trait ResultSet
             });
 
         $mockResultSet->method('getLast')
-            ->willReturnCallback(function()  use ($sharedData) {
+            ->willReturnCallback(function ()  use ($sharedData) {
                 if (empty($sharedData->data)) {
                     return false;
                 }
@@ -80,28 +91,28 @@ trait ResultSet
 
         $mockResultSet->method('valid')
             ->willReturnCallback(
-                function() use ($sharedData) {
+                function () use ($sharedData) {
                     return $sharedData->pos < count($sharedData->data);
                 }
             );
 
         $mockResultSet->method('current')
             ->willReturnCallback(
-                function() use ($sharedData) {
+                function () use ($sharedData) {
                     return $sharedData->data[$sharedData->pos];
                 }
             );
 
         $mockResultSet->method('key')
             ->willReturnCallback(
-                function() use($sharedData) {
+                function () use($sharedData) {
                     return array_keys($sharedData->data)[$sharedData->pos];
                 }
             );
 
         $mockResultSet->method('next')
             ->willReturnCallback(
-                function() use ($sharedData) {
+                function () use ($sharedData) {
                     $sharedData->pos++;
                 }
             );
