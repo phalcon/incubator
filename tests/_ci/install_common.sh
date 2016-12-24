@@ -38,23 +38,23 @@ install_extension() {
 
 install_apcu() {
 	# See https://github.com/krakjoe/apcu/issues/203
-	git clone -q https://github.com/krakjoe/apcu -b v5.1.7 /tmp/apcu
+	git clone -q https://github.com/krakjoe/apcu -b v5.1.7 /tmp/apcu >/dev/null 2>&1
 	cd /tmp/apcu
 
 	phpize &> /dev/null
 	./configure &> /dev/null
 
-	make --silent -j4 &> /dev/null
+	make --silent -j2 &> /dev/null
 	make --silent install
 }
 
 install_apcu_bc() {
-	git clone -q https://github.com/krakjoe/apcu-bc /tmp/apcu-bc
+	git clone -q https://github.com/krakjoe/apcu-bc /tmp/apcu-bc >/dev/null 2>&1
 	cd /tmp/apcu-bc
 
 	phpize &> /dev/null
 	./configure &> /dev/null
 
-	make --silent -j4 &> /dev/null
+	make --silent -j2 &> /dev/null
 	make --silent install
 }
