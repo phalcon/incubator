@@ -49,7 +49,6 @@ phpenv config-add "${TRAVIS_BUILD_DIR}/tests/_ci/apc_bc.ini"
 printf "\n" | pecl install yaml-2.0.0 >/dev/null 2>&1
 
 phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.ini
-phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/redis.ini
 phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/mongodb.ini
 phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/memcached.ini
 
