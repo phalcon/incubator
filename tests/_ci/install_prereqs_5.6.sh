@@ -22,10 +22,8 @@ echo "apc.enable_cli=On" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.in
 
 printf "\n" | pecl install yaml > /dev/null 2>&1
 
-phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.ini
 phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/mongo.ini
 phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/mongodb.ini
 phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/memcached.ini
 
 printf "\n" | pecl upgrade imagick &> /dev/null
-phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/imagick.ini
