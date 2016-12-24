@@ -47,7 +47,7 @@ env:
     - ZEND_DONT_UNLOAD_MODULES=1
     - CC="ccache gcc"
     - PATH="$PATH:~/bin"
-    - PHALCON_VERSION="v3.0.2"
+    - PHALCON_VERSION="v3.0.3"
 
 before_install:
   - phpenv config-rm xdebug.ini || true
