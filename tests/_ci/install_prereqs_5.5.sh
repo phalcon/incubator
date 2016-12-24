@@ -27,3 +27,6 @@ phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/redis.ini
 phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/mongo.ini
 phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/mongodb.ini
 phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/memcached.ini
+
+printf "\n" | pecl upgrade imagick &> /dev/null
+phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/imagick.ini
