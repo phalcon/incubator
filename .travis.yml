@@ -70,6 +70,7 @@ install:
   - ( cd cphalcon; zephir fullclean && zephir generate $ZEND_BACKEND )
   - ( cd cphalcon/ext; export CFLAGS="-g3 -O1 -std=gnu90 -Wall -DZEPHIR_RELEASE=1"; /usr/bin/phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j2 &> /dev/null && make --silent install )
   - phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/redis.ini
+  - phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.ini
 
 before_script:
   - stty cols 160
