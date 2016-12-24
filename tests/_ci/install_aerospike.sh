@@ -21,8 +21,8 @@ mkdir -p /tmp/aerospike-ext
 sudo mkdir -p /usr/local/aerospike/{lua,usr-lua}
 sudo chmod -R ugoa+rwx /usr/local/aerospike
 
-ln -sf /usr/lib/x86_64-linux-gnu/libcrypto.so /usr/local/lib/libcrypto.so
-ln -sf /usr/lib/x86_64-linux-gnu/libcrypto.a /usr/local/lib/libcrypto.a
+sudo ln -sf /usr/lib/x86_64-linux-gnu/libcrypto.so /usr/local/lib/libcrypto.so
+sudo ln -sf /usr/lib/x86_64-linux-gnu/libcrypto.a /usr/local/lib/libcrypto.a
 
 cd /tmp/aerospike-ext
 wget -O aerospike.zip https://github.com/aerospike/aerospike-client-php/archive/master.zip

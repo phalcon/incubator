@@ -47,7 +47,7 @@ env:
     - ZEND_DONT_UNLOAD_MODULES=1
     - CC="ccache gcc"
     - PATH="$PATH:~/bin"
-    - PHALCON_VERSION="v3.0.2"
+    - PHALCON_VERSION="v3.0.3"
 
 before_install:
   - phpenv config-rm xdebug.ini || true
@@ -62,13 +62,18 @@ before_install:
 
 install:
   - ( bash tests/_ci/install_zephir.sh )
+  - ( bash tests/_ci/install_prereqs_$PHP_MAJOR.sh )
   # See https://github.com/aerospike/aerospike-client-php/issues/127
   - '[[ "${PHP_MAJOR:0:1}" == "7" ]] || bash ${TRAVIS_BUILD_DIR}/tests/_ci/install_aerospike.sh'
-  - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b ${PHALCON_VERSION}
+  - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b ${PHALCON_VERSION} >/dev/null 2>&1
   - ln -s ${TRAVIS_BUILD_DIR}/.temp ${TRAVIS_BUILD_DIR}/cphalcon/.temp
   - ( cd cphalcon; zephir fullclean && zephir generate $ZEND_BACKEND )
-  - ( cd cphalcon/ext; export CFLAGS="-g3 -O1 -std=gnu90 -Wall -DZEPHIR_RELEASE=1"; /usr/bin/phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j3 &> /dev/null && make --silent install )
-  - ( bash tests/_ci/install_prereqs_$PHP_MAJOR.sh )
+  - ( cd cphalcon/ext; export CFLAGS="-g3 -O1 -std=gnu90 -Wall -DZEPHIR_RELEASE=1"; /usr/bin/phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j2 &> /dev/null && make --silent install )
+  - phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/redis.ini
+  - phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.ini
+  # Debug
+  - php -m
+  - pecl list
 
 before_script:
   - stty cols 160
