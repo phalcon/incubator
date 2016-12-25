@@ -65,12 +65,7 @@ class Oracle extends Dialect
         $offset = 0;
 
         if (is_array($number)) {
-            //if (isset($number[1])) {
-                //$offset = intval(trim($number[1], $this->_escapeChar));
-                $offset = $number[1] !=NULL? $number[1]:0;
-            //}
-
-            //$limit = intval(trim($number[0], $this->_escapeChar)) + $offset;
+            $offset = $number[1] !=NULL? $number[1]:0;
             $limit = $number[0];
         } else {
             $limit = $number;
@@ -82,15 +77,11 @@ class Oracle extends Dialect
             $sqlQuery
         );
 
-        //if (0 != $limit) {
-            $sqlQuery .= sprintf(' WHERE ROWNUM <= %s', $limit);
-        //}
+        $sqlQuery .= sprintf(' WHERE ROWNUM <= %s', $limit);
 
         $sqlQuery .= ')';
 
-        //if (0 != $offset) {
-            $sqlQuery .= sprintf(' WHERE PHALCON_RN >= %s', $offset);
-        //}
+        $sqlQuery .= sprintf(' WHERE PHALCON_RN >= %s', $offset);
         return $sqlQuery;
     }
 
@@ -432,8 +423,6 @@ class Oracle extends Dialect
                 $sql
             );
         }
-
-        //$this->_escapeChar = "'";
 
         return $sql;
     }
