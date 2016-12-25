@@ -578,7 +578,6 @@ class Oracle extends Dialect
         return false;
     }
 
-
     /**
      * Prepares table for this RDBMS.
      *
