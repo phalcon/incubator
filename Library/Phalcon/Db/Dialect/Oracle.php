@@ -65,7 +65,7 @@ class Oracle extends Dialect
         $offset = 0;
 
         if (is_array($number)) {
-            $offset = $number[1] !=NULL? $number[1]:0;
+            $offset = $number[1] !=null? $number[1]:0;
             $limit = $number[0];
         } else {
             $limit = $number;
@@ -497,11 +497,11 @@ class Oracle extends Dialect
             $schema = $this->escapeSchema($schema);
 
             $queryBase=sprintf($sql, Text::upper($table), 'AND TC.OWNER = ' . Text::upper($schema));
-        }else {
+        } else {
             $queryBase=sprintf($sql, Text::upper($table), '');
-	}
+        }
         $this->_escapeChar = $oldEscapeChar;
-	return $queryBase;
+        return $queryBase;
     }
 
     /**
