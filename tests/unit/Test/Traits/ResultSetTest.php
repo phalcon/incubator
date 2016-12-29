@@ -1,6 +1,8 @@
 <?php
 namespace Phalcon\Test\Test\Traits;
 
+use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\Resultset\Simple;
 use Phalcon\Test\Traits\ResultSet;
 use Codeception\TestCase\Test;
 
@@ -26,24 +28,24 @@ class ResultSetTest extends Test
     use ResultSet;
 
     /** @var \Phalcon\Test\Traits\ResultSet  */
-    protected $testSubject = NULL;
+    protected $testSubject = null;
 
     public function setUp() {
         $this->testSubject = $this;
     }
 
     public function testCanMockResultSet() {
-        $mockModel = $this->getMockBuilder('\Phalcon\Mvc\Model')
+        $mockModel = $this->getMockBuilder(Model::class)
             ->setMockClassName('ClassA')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockSecondModel = $this->getMockBuilder('\Phalcon\Mvc\Model')
+        $mockSecondModel = $this->getMockBuilder(Model::class)
             ->setMockClassName('ClassB')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockThirdModel = $this->getMockBuilder('\Phalcon\Mvc\Model')
+        $mockThirdModel = $this->getMockBuilder(Model::class)
             ->setMockClassName('ClassC')
             ->disableOriginalConstructor()
             ->getMock();
@@ -75,7 +77,8 @@ class ResultSetTest extends Test
         $this->assertSame($mockData, $mockResultSet->toArray());
     }
 
-    public function testCanMockEmptyResultSet() {
+    public function testCanMockEmptyResultSet()
+    {
         /** @var \Phalcon\Mvc\Model\Resultset $mockResultSet */
         $mockResultSet = $this->testSubject->mockResultset([]);
 
@@ -84,8 +87,9 @@ class ResultSetTest extends Test
         $this->assertFalse($mockResultSet->getLast());
     }
 
-    public function testCanUseOtherResultSetClasses() {
-        $mockResultset = $this->mockResultset([], '\Phalcon\Mvc\Model\Resultset\Simple');
-        $this->assertInstanceOf('\Phalcon\Mvc\Model\Resultset\Simple', $mockResultset);
+    public function testCanUseOtherResultSetClasses()
+    {
+        $mockResultset = $this->mockResultset([], Simple::class);
+        $this->assertInstanceOf(Simple::class, $mockResultset);
     }
 }
