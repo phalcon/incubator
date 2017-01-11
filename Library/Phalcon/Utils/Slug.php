@@ -47,7 +47,8 @@ class Slug
         }
 
         // Save the old locale and set the new locale to UTF-8
-        $oldLocale = setlocale(LC_ALL, '0');
+        $oldLocaleString = setlocale(LC_ALL, '0');
+
         setlocale(LC_ALL, 'en_US.UTF-8');
 
         // Better to replace given $replace array as index => value
@@ -73,7 +74,16 @@ class Slug
         $clean = trim($clean, $delimiter);
 
         // Revert back to the old locale
-        setlocale(LC_ALL, $oldLocale);
+
+        $oldLocaleArray = explode(';', $oldLocaleString);
+        foreach ($oldLocaleArray as $oldLocale) {
+            $temp = explode('=', $oldLocale);
+            if (count($temp) == 2) {
+                setlocale($temp[0], $temp[1]);
+            } else {
+                setlocale(LC_ALL, $oldLocale);
+            }
+        }
 
         return $clean;
     }
