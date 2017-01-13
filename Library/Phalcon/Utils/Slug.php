@@ -34,7 +34,7 @@ class Slug
      * Creates a slug to be used for pretty URLs.
      *
      * @param  string $string
-     * @param  array  $replace
+     * @param  array $replace
      * @param  string $delimiter
      * @return string
      *
@@ -78,8 +78,11 @@ class Slug
         $oldLocaleArray = explode(';', $oldLocaleString);
         foreach ($oldLocaleArray as $oldLocale) {
             $temp = explode('=', $oldLocale);
+
             if (count($temp) == 2) {
-                setlocale($temp[0], $temp[1]);
+                if (in_array($temp[0], ['LC_ALL', 'LC_COLLATE', 'LC_CTYPE', 'LC_MONETARY', 'LC_NUMERIC', 'LC_TIME'])) {
+                    setlocale(constant($temp[0]), $temp[1]);
+                }
             } else {
                 setlocale(LC_ALL, $oldLocale);
             }
