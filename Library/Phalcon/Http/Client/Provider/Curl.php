@@ -201,7 +201,7 @@ class Curl extends Request
         foreach ($params as $value) {
             if (
                 (is_string($value) && strpos($value, '@') === 0)
-                or ($classCurlFile && $value instanceof $classCurlFile)
+                || ($classCurlFile && $value instanceof $classCurlFile)
             ) {
                 return false;
             }
