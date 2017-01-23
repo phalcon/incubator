@@ -176,7 +176,7 @@ class Curl extends Request
     protected function initPostFields($params, $useEncoding = true)
     {
         if (is_array($params)) {
-            if ($useEncoding and $this->canUseEncoding($params)) {
+            if ($useEncoding && $this->canUseEncoding($params)) {
                 $params = http_build_query($params);
             }
         }
@@ -185,7 +185,7 @@ class Curl extends Request
             $this->setOption(CURLOPT_POSTFIELDS, $params);
         }
     }
-  
+
     /**
      * Returns if can url-encode params.
      *
@@ -200,14 +200,14 @@ class Curl extends Request
             : null;
         foreach ($params as $value) {
             if (
-                (is_string($value) and strpos($value, '@') === 0)
-                or ($classCurlFile and is_a($value, $classCurlFile))
+                (is_string($value) && strpos($value, '@') === 0)
+                or ($classCurlFile && $value instanceof $classCurlFile)
             ) {
                 return false;
             }
         }
         return true;
-    }  
+    } 
 
     /**
      * Setup authentication
