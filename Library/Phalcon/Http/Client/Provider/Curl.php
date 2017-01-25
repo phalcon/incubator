@@ -193,7 +193,7 @@ class Curl extends Request
      *
      * @return bool
      */
-    private function canUseEncoding(array $params)
+    protected function canUseEncoding(array $params)
     {
         $classCurlFile = class_exists('\CURLFile')
             ? '\CURLFile'
