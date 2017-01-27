@@ -199,15 +199,14 @@ class Curl extends Request
             ? '\CURLFile'
             : null;
         foreach ($params as $value) {
-            if (
-                (is_string($value) && strpos($value, '@') === 0)
+            if ((is_string($value) && strpos($value, '@') === 0)
                 || ($classCurlFile && $value instanceof $classCurlFile)
             ) {
                 return false;
             }
         }
         return true;
-    } 
+    }
 
     /**
      * Setup authentication
