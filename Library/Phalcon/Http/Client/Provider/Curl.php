@@ -168,20 +168,15 @@ class Curl extends Request
      *
      * @param mixed   $params      Data to send.
      * @param boolean $useEncoding Whether to url-encode params. Defaults to true.
+     *                             Will not use encoding if a value in params
+     *                             is a file.
      *
      * @return void
      */
     protected function initPostFields($params, $useEncoding = true)
     {
         if (is_array($params)) {
-            foreach ($params as $param) {
-                if (is_string($param) && strpos($param, '@') === 0) {
-                    $useEncoding = false;
-                    break;
-                }
-            }
-
-            if ($useEncoding) {
+            if ($useEncoding && $this->canUseEncoding($params)) {
                 $params = http_build_query($params);
             }
         }
@@ -189,6 +184,28 @@ class Curl extends Request
         if (!empty($params)) {
             $this->setOption(CURLOPT_POSTFIELDS, $params);
         }
+    }
+
+    /**
+     * Returns if can url-encode params.
+     *
+     * @param array $params
+     *
+     * @return bool
+     */
+    protected function canUseEncoding(array $params)
+    {
+        $classCurlFile = class_exists('\CURLFile')
+            ? '\CURLFile'
+            : null;
+        foreach ($params as $value) {
+            if ((is_string($value) && strpos($value, '@') === 0)
+                || ($classCurlFile && $value instanceof $classCurlFile)
+            ) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
