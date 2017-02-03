@@ -20,7 +20,7 @@
 namespace Phalcon\Test;
 
 use Phalcon\Di\InjectionAwareInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase as TestCase;
 use Phalcon\Config;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Di;
