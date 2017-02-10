@@ -28,7 +28,7 @@
     },
     "require-dev": {
         "phpdocumentor/reflection-docblock": "2.0.4",
-        "phpunit/phpunit": "^5",
+        "phpunit/phpunit": "^4.8",
         "squizlabs/php_codesniffer": "^2.7",
         "codeception/codeception": "^2.2",
         "codeception/mockery-module": "^0.2",
