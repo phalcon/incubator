@@ -122,7 +122,7 @@ class FindOneAndReplace implements Executable
 
         $options['new']=$options['returnDocument']===self::RETURN_DOCUMENT_AFTER;
 
-        unset($options['projection'],$options['returnDocument']);
+        unset($options['projection'], $options['returnDocument']);
 
         $this->findAndModify=new FindAndModify($databaseName, $collectionName, ['query' =>$filter,
                                                                               'update'=>$replacement

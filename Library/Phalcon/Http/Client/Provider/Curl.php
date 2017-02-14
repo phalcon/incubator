@@ -86,14 +86,54 @@ class Curl extends Request
         ]);
     }
 
+    /**
+     * Sets an option.
+     *
+     * @param string|int $option
+     * @param mixed      $value
+     *
+     * @return bool
+     */
     public function setOption($option, $value)
     {
+        if ($this->isCurlOptString($option)) {
+            $option = constant(strtoupper($option));
+        }
         return curl_setopt($this->handle, $option, $value);
     }
 
+    /**
+     * Sets multiple options at once.
+     *
+     * @param array $options
+     *
+     * @return bool
+     */
     public function setOptions($options)
     {
+        foreach ($options as $option => $value) {
+            if ($this->isCurlOptString($option)) {
+                $options[constant(strtoupper($option))] = $value;
+                unset($options[$option]);
+            }
+        }
         return curl_setopt_array($this->handle, $options);
+    }
+
+    /**
+     * Returns if the given string is an alias for a CURLOPT_XXX option.
+     *
+     * Example: "curlopt_header" === CURLOPT_HEADER
+     *
+     * @param mixed $option
+     *
+     * @return bool
+     */
+    protected function isCurlOptString($option)
+    {
+        return (is_string($option)
+            && strpos(strtoupper($option), 'CURLOPT_') === 0
+            && defined(strtoupper($option)));
     }
 
     public function setTimeout($timeout)
