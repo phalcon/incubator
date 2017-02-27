@@ -73,7 +73,8 @@ class Slug
         $clean = trim($clean, $delimiter);
 
         // Revert back to the old locale
-        setlocale(LC_ALL, $oldLocale);
+        parse_str(str_replace(';', '&', $oldLocale), $loc);
+        setlocale(LC_ALL, $loc);
 
         return $clean;
     }
