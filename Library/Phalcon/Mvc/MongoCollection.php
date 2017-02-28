@@ -209,14 +209,13 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
          */
         if (isset($params['class'])) {
             $classname = $params['class'];
-
             $base = new $classname();
-
+            
             if (!$base instanceof CollectionInterface || $base instanceof Document) {
                 throw new Exception(
                     sprintf(
                         'Object of class "%s" must be an implementation of %s or an instance of %s',
-                        get_class($classname),
+                        get_class($base),
                         CollectionInterface::class,
                         Document::class
                     )
@@ -300,7 +299,8 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
          */
         $cursor = $mongoCollection->find($conditions, $options);
 
-        $cursor->setTypeMap(['root'=>get_called_class(),'document'=>'object']);
+        
+        $cursor->setTypeMap(['root' => get_class($base), 'document' => 'array']);
 
         if (true === $unique) {
             /**
@@ -313,8 +313,6 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
          * Requesting a complete resultset
          */
         $collections = [];
-
-
         foreach ($cursor as $document) {
             /**
              * Assign the values to the base object
