@@ -47,7 +47,7 @@ env:
     - ZEND_DONT_UNLOAD_MODULES=1
     - CC="ccache gcc"
     - PATH="$PATH:~/bin"
-    - PHALCON_VERSION="v3.0.3"
+    - PHALCON_VERSION="v3.0.4"
 
 before_install:
   - phpenv config-rm xdebug.ini || true
@@ -68,7 +68,7 @@ install:
   - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b ${PHALCON_VERSION} >/dev/null 2>&1
   - ln -s ${TRAVIS_BUILD_DIR}/.temp ${TRAVIS_BUILD_DIR}/cphalcon/.temp
   - ( cd cphalcon; zephir fullclean && zephir generate $ZEND_BACKEND )
-  - ( cd cphalcon/ext; export CFLAGS="-g3 -O1 -std=gnu90 -Wall -DZEPHIR_RELEASE=1"; /usr/bin/phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j2 &> /dev/null && make --silent install )
+  - ( cd cphalcon/ext; export CFLAGS="-g3 -O1 -std=gnu90 -Wall -DZEPHIR_RELEASE=1"; /usr/bin/phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j"$(getconf _NPROCESSORS_ONLN)" &> /dev/null && make --silent install )
   - phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/redis.ini
   - phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.ini
   # Debug
