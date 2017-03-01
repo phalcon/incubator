@@ -27,7 +27,6 @@ use Phalcon\Queue\Beanstalk\Extended;
 class ExtendedTest extends Test
 {
     const TUBE_NAME = 'test-tube';
-    const JOB_CLASS = Job::class;
 
     /**
      * UnitTester Object
@@ -66,13 +65,6 @@ class ExtendedTest extends Test
         $this->shmKey = round(microtime(true) * 1000);
     }
 
-    /**
-     * executed after each test
-     */
-    protected function _after()
-    {
-    }
-
     public function testShouldPutAndReserve()
     {
         $jobId = $this->client->putInTube(self::TUBE_NAME, 'testPutInTube');
@@ -82,7 +74,7 @@ class ExtendedTest extends Test
         $job = $this->client->reserveFromTube(self::TUBE_NAME);
 
         $this->assertNotEmpty($job);
-        $this->assertInstanceOf(self::JOB_CLASS, $job);
+        $this->assertInstanceOf(Job::class, $job);
         $this->assertEquals($jobId, $job->getId());
         $this->assertTrue($job->delete());
     }
@@ -148,9 +140,11 @@ class ExtendedTest extends Test
             $fork = new \duncan3dc\Forker\Fork;
         }
 
-        $fork->call(function () use ($expected) {
+        $that = $this;
+
+        $fork->call(function () use ($expected, $that) {
             foreach ($expected as $tube => $value) {
-                $this->client->addWorker($tube, function (Job $job) {
+                $that->client->addWorker($tube, function (Job $job) {
                     // Store string "test-tube-%JOB_BODY%" in a shared memory
                     $memory  = shmop_open($this->shmKey, 'c', 0644, $this->shmLimit);
                     $output  = trim(shmop_read($memory, 0, $this->shmLimit));
@@ -162,10 +156,10 @@ class ExtendedTest extends Test
                     throw new \RuntimeException('Forced exception to stop worker');
                 });
 
-                $this->assertNotEquals(false, $this->client->putInTube($tube, $value));
+                $that->assertNotEquals(false, $that->client->putInTube($tube, $value));
             }
 
-            $this->client->doWork();
+            $that->client->doWork();
 
             exit(0);
         });
