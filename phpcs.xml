@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="Phalcon Incubator">
+
+<ruleset name="Phalcon_Incubator">
 
     <!--
         The name attribute of the ruleset tag is displayed
@@ -8,7 +9,6 @@
         except in this file, so it can contain information for
         developers who may change this file in the future.
     -->
-
     <description>Phalcon Incubator Coding Standards</description>
 
     <!-- Show colors in console -->
