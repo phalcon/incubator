@@ -74,6 +74,7 @@ install:
   # Debug
   - php -m
   - pecl list
+  - ipcs -m
 
 before_script:
   - stty cols 160
@@ -89,6 +90,9 @@ script:
   - vendor/bin/phpcs
   - vendor/bin/codecept build
   - vendor/bin/codecept run
+
+after_failure:
+  - ipcs -m
 
 notifications:
   email:
