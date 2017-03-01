@@ -89,7 +89,7 @@ before_script:
 script:
   - vendor/bin/phpcs
   - vendor/bin/codecept build
-  - vendor/bin/codecept run -vvv
+  - vendor/bin/codecept run -v
 
 after_failure:
   - ipcs -m
