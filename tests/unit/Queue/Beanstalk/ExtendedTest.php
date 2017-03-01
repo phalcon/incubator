@@ -1,17 +1,18 @@
 <?php
+
 namespace Phalcon\Tests\Queue\Beanstalk;
 
-use Codeception\TestCase\Test;
-use Phalcon\Queue\Beanstalk\Extended;
-use Phalcon\Queue\Beanstalk\Job;
 use UnitTester;
+use Codeception\TestCase\Test;
+use Phalcon\Queue\Beanstalk\Job;
+use Phalcon\Queue\Beanstalk\Extended;
 
 /**
  * \Phalcon\Tests\Queue\Beanstalk\ExtendedTest
  * Tests for Phalcon\Queue\Beanstalk\Extended component
  *
- * @copyright (c) 2011-2016 Phalcon Team
- * @link      http://www.phalconphp.com
+ * @copyright (c) 2011-2017 Phalcon Team
+ * @link      https://phalconphp.com
  * @author    Nikita Vershinin <endeveit@gmail.com>
  * @package   Phalcon\Tests\Queue\Beanstalk
  * @group     Beanstalk
@@ -26,7 +27,7 @@ use UnitTester;
 class ExtendedTest extends Test
 {
     const TUBE_NAME = 'test-tube';
-    const JOB_CLASS = 'Phalcon\Queue\Beanstalk\Job';
+    const JOB_CLASS = Job::class;
 
     /**
      * UnitTester Object
@@ -35,7 +36,7 @@ class ExtendedTest extends Test
     protected $tester;
 
     /**
-     * @var \Phalcon\Queue\Beanstalk\Extended
+     * @var Extended
      */
     protected $client = null;
 
@@ -188,8 +189,15 @@ class ExtendedTest extends Test
 
         $actual = explode("\n", trim($output));
 
-        // Compare number of items in expected list with lines in shared memory
-        $this->assertEquals(count($expected), count($actual));
+        $this->assertEquals(
+            count($expected),
+            count($actual),
+            sprintf(
+                "Compare number of items in expected list with lines in shared memory failed.\nExpected: %s\nActual: %s\n",
+                json_encode($expected, JSON_PRETTY_PRINT),
+                json_encode($actual, JSON_PRETTY_PRINT)
+            )
+        );
 
         foreach ($actual as $value) {
             $this->assertArrayHasKey($value, $expected);
