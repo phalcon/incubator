@@ -94,6 +94,9 @@ script:
 after_failure:
   - ipcs -m
 
+after_failure:
+  - ipcs -m
+
 notifications:
   email:
     recipients:
