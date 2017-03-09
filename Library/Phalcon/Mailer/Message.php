@@ -772,7 +772,7 @@ class Message
      */
     protected function normalizeEmail($email)
     {
-        if (is_array($email)) {
+        if (is_array($email) || is_object($email)) {
             $emails = [];
 
             foreach ($email as $k => $v) {
