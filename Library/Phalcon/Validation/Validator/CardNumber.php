@@ -22,7 +22,7 @@ namespace Phalcon\Validation\Validator;
 use Phalcon\Validation;
 use Phalcon\Validation\Message;
 use Phalcon\Validation\Validator;
-use Phalcon\Validation\Exception;
+use Phalcon\Validation\Exception as ValidationException;
 
 /**
  * Phalcon\Mvc\Model\Validator\CardNumber
@@ -75,7 +75,7 @@ class CardNumber extends Validator
                     $result = ($issuer == 4);
                     break;
                 default:
-                    throw new Exception('Incorrect type specifier');
+                    throw new ValidationException('Incorrect type specifier');
             }
 
             if (false === $result) {
