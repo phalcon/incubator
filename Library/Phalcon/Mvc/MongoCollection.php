@@ -136,6 +136,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
 
             if (false === $exists) {
                 $this->_id = $status->getInsertedId();
+                $this->_dirtyState = self::DIRTY_STATE_PERSISTENT;
             }
         }
 
@@ -223,6 +224,10 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
             }
         } else {
             $base = $collection;
+        }
+
+        if ($base instanceof PhalconCollection) {
+            $base->setDirtyState(PhalconCollection::DIRTY_STATE_PERSISTENT);
         }
 
         $source = $collection->getSource();
@@ -388,6 +393,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
             $success = true;
 
             $this->fireEvent("afterDelete");
+            $this->_dirtyState = self::DIRTY_STATE_DETACHED;
         }
 
         return $success;
@@ -407,6 +413,10 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
             return false;
         }
 
+        if (!$this->_dirtyState) {
+            return true;
+        }
+
         if (is_object($id)) {
             $mongoId = $id;
         } else {
@@ -423,7 +433,15 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         /**
          * Perform the count using the function provided by the driver
          */
-        return $collection->count(["_id"=>$mongoId])>0;
+        $exists = $collection->count(["_id" => $mongoId]) > 0;
+
+        if ($exists) {
+            $this->_dirtyState = self::DIRTY_STATE_PERSISTENT;
+        } else {
+            $this->_dirtyState = self::DIRTY_STATE_TRANSIENT;
+        }
+
+        return $exists;
     }
 
     /**
@@ -505,6 +523,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         $result = $collection->insert($data, ['writeConcern' => new WriteConcern(1)]);
         if ($result instanceof InsertOneResult && $result->getInsertedId()) {
             $success = true;
+            $this->_dirtyState = self::DIRTY_STATE_PERSISTENT;
             $this->_id = $result->getInsertedId();
         }
 

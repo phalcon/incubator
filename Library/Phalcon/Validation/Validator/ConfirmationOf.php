@@ -21,7 +21,7 @@ namespace Phalcon\Validation\Validator;
 
 use Phalcon\Validation;
 use Phalcon\Validation\Validator;
-use Phalcon\Validation\Exception;
+use Phalcon\Validation\Exception as ValidationException;
 
 /**
  * Validates confirmation of other field value
@@ -50,7 +50,7 @@ class ConfirmationOf extends Validator
     public function validate(Validation $validation, $attribute)
     {
         if (!$this->hasOption('origField')) {
-            throw new Exception('Original field must be set');
+            throw new ValidationException('Original field must be set');
         }
 
         $allowEmpty = $this->getOption('allowEmpty');

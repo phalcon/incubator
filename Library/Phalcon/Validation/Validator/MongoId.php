@@ -23,7 +23,7 @@ use MongoId as Id;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator;
 use Phalcon\Validation\Message;
-use Phalcon\Validation\Exception;
+use Phalcon\Validation\Exception as ValidationException;
 
 /**
  * MongoId validator
@@ -41,7 +41,7 @@ class MongoId extends Validator
     public function validate(Validation $validation, $attribute)
     {
         if (!extension_loaded('mongo')) {
-            throw new Exception('Mongo extension is not available');
+            throw new ValidationException('Mongo extension is not available');
         }
 
         $value = $validation->getValue($attribute);
