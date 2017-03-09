@@ -773,7 +773,7 @@ class Message
      */
     protected function normalizeEmail($email)
     {
-        if (is_array($email)) {
+        if (is_array($email) || $email instanceof \Traversable) {
             $emails = [];
 
             foreach ($email as $k => $v) {
