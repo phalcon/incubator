@@ -51,7 +51,7 @@ class ExtendedTest extends Test
         $this->client = new Extended([
             'host'   => env('TEST_BT_HOST', 6379),
             'port'   => env('TEST_BT_PORT', 11300),
-            'prefix' => 'PHPUnit_',
+            'prefix' => 'PHPUnit\\',
         ]);
 
         if (!$this->client->connect()) {
