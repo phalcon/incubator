@@ -18,6 +18,7 @@
 */
 
 namespace Phalcon\Test\Traits;
+
 use Phalcon\Mvc\Model\Resultset;
 
 /**
