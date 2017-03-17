@@ -19,7 +19,7 @@
 
 namespace Phalcon\Test\Traits;
 
-use Phalcon\Mvc\Model\Resultset;
+use Phalcon\Mvc\Model\Resultset as phResultset;
 
 /**
  * Trait ResultSet. Adds Ability To Mock DB ResultSet (Without Actual Connection To DB)
@@ -36,7 +36,7 @@ trait ResultSet
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|\Phalcon\Mvc\Model\Resultset|\Phalcon\Mvc\Model\ResultsetInterface
      */
-    public function mockResultSet(array $dataSet, $className = Resultset::class)
+    public function mockResultSet(array $dataSet, $className = phResultset::class)
     {
         /** @var \PHPUnit_Framework_TestCase $this */
         /** @var \PHPUnit_Framework_MockObject_MockObject $mockResultSet */
