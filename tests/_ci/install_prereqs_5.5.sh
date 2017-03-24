@@ -14,16 +14,13 @@
 CURRENT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 TRAVIS_BUILD_DIR="${TRAVIS_BUILD_DIR:-$(dirname $(dirname $CURRENT_DIR))}"
 
-pecl channel-update pecl.php.net
+source ${TRAVIS_BUILD_DIR}/tests/_ci/install_common.sh
+
+install_extension imagick
+install_extension yaml
+enable_extension memcached
+enable_extension mongo
+enable_extension mongodb
 
 printf "\n" | pecl install apcu-4.0.11 &> /dev/null
-
 echo "apc.enable_cli=On" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-
-printf "\n" | pecl install yaml > /dev/null 2>&1
-
-phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.ini
-phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/redis.ini
-phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/mongo.ini
-phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/mongodb.ini
-phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/memcached.ini

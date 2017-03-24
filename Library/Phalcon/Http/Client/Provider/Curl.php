@@ -86,14 +86,54 @@ class Curl extends Request
         ]);
     }
 
+    /**
+     * Sets an option.
+     *
+     * @param string|int $option
+     * @param mixed      $value
+     *
+     * @return bool
+     */
     public function setOption($option, $value)
     {
+        if ($this->isCurlOptString($option)) {
+            $option = constant(strtoupper($option));
+        }
         return curl_setopt($this->handle, $option, $value);
     }
 
+    /**
+     * Sets multiple options at once.
+     *
+     * @param array $options
+     *
+     * @return bool
+     */
     public function setOptions($options)
     {
+        foreach ($options as $option => $value) {
+            if ($this->isCurlOptString($option)) {
+                $options[constant(strtoupper($option))] = $value;
+                unset($options[$option]);
+            }
+        }
         return curl_setopt_array($this->handle, $options);
+    }
+
+    /**
+     * Returns if the given string is an alias for a CURLOPT_XXX option.
+     *
+     * Example: "curlopt_header" === CURLOPT_HEADER
+     *
+     * @param mixed $option
+     *
+     * @return bool
+     */
+    protected function isCurlOptString($option)
+    {
+        return (is_string($option)
+            && strpos(strtoupper($option), 'CURLOPT_') === 0
+            && defined(strtoupper($option)));
     }
 
     public function setTimeout($timeout)
@@ -149,8 +189,6 @@ class Curl extends Request
 
         $content = curl_exec($this->handle);
 
-        $this->setOption(CURLOPT_HEADERFUNCTION, null);
-
         if ($errno = curl_errno($this->handle)) {
             throw new HttpException(curl_error($this->handle), $errno);
         }
@@ -160,6 +198,8 @@ class Curl extends Request
 
         $response->body = $content;
 
+        $this->setOption(CURLOPT_HEADERFUNCTION, null);
+
         return $response;
     }
 
@@ -168,20 +208,15 @@ class Curl extends Request
      *
      * @param mixed   $params      Data to send.
      * @param boolean $useEncoding Whether to url-encode params. Defaults to true.
+     *                             Will not use encoding if a value in params
+     *                             is a file.
      *
      * @return void
      */
     protected function initPostFields($params, $useEncoding = true)
     {
         if (is_array($params)) {
-            foreach ($params as $param) {
-                if (is_string($param) && strpos($param, '@') === 0) {
-                    $useEncoding = false;
-                    break;
-                }
-            }
-
-            if ($useEncoding) {
+            if ($useEncoding && $this->canUseEncoding($params)) {
                 $params = http_build_query($params);
             }
         }
@@ -189,6 +224,28 @@ class Curl extends Request
         if (!empty($params)) {
             $this->setOption(CURLOPT_POSTFIELDS, $params);
         }
+    }
+
+    /**
+     * Returns if can url-encode params.
+     *
+     * @param array $params
+     *
+     * @return bool
+     */
+    protected function canUseEncoding(array $params)
+    {
+        $classCurlFile = class_exists('\CURLFile')
+            ? '\CURLFile'
+            : null;
+        foreach ($params as $value) {
+            if ((is_string($value) && strpos($value, '@') === 0)
+                || ($classCurlFile && $value instanceof $classCurlFile)
+            ) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

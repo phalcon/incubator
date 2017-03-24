@@ -14,41 +14,14 @@
 CURRENT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 TRAVIS_BUILD_DIR="${TRAVIS_BUILD_DIR:-$(dirname $(dirname $CURRENT_DIR))}"
 
-CFLAGS="-O2 -g3 -fno-strict-aliasing -std=gnu90";
-
-pecl channel-update pecl.php.net
-
-install_apcu() {
-	# See https://github.com/krakjoe/apcu/issues/203
-	git clone -q https://github.com/krakjoe/apcu -b v5.1.7 /tmp/apcu
-	cd /tmp/apcu
-
-	phpize &> /dev/null
-	./configure &> /dev/null
-
-	make --silent -j4 &> /dev/null
-	make --silent install
-}
-
-install_apcu_bc() {
-	git clone -q https://github.com/krakjoe/apcu-bc /tmp/apcu-bc
-	cd /tmp/apcu-bc
-
-	phpize &> /dev/null
-	./configure &> /dev/null
-
-	make --silent -j4 &> /dev/null
-	make --silent install
-}
+source ${TRAVIS_BUILD_DIR}/tests/_ci/install_common.sh
 
 install_apcu
 install_apcu_bc
 
-phpenv config-add "${TRAVIS_BUILD_DIR}/tests/_ci/apc_bc.ini"
+enable_extension apc_bc
+enable_extension mongodb
+enable_extension memcached
+install_extension imagick
 
 printf "\n" | pecl install yaml-2.0.0 >/dev/null 2>&1
-
-phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.ini
-phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/redis.ini
-phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/mongodb.ini
-phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/memcached.ini
