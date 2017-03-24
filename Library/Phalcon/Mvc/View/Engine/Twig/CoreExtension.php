@@ -50,10 +50,16 @@ class CoreExtension extends \Twig_Extension
         ];
 
         return [
-            'assetsOutputCss' => new \Twig_SimpleFunction('assetsOutputCss', [$this, 'functionAssetsOutputCss'], 
-                $options),
-            'assetsOutputJs' => new \Twig_SimpleFunction('assetsOutputJs', [$this, 'functionAssetsOutputJs'],
-                $options)
+            'assetsOutputCss' => new \Twig_SimpleFunction(
+                'assetsOutputCss',
+                [$this, 'functionAssetsOutputCss'],
+                $options
+            ),
+            'assetsOutputJs' => new \Twig_SimpleFunction(
+                'assetsOutputJs',
+                [$this, 'functionAssetsOutputJs'],
+                $options
+            )
         ];
     }
 
