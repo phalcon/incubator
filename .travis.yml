@@ -47,7 +47,7 @@ env:
     - ZEND_DONT_UNLOAD_MODULES=1
     - CC="ccache gcc"
     - PATH="$PATH:~/bin"
-    - PHALCON_VERSION="3.1.x"
+    - PHALCON_VERSION="v3.1.1"
 
 before_install:
   - phpenv config-rm xdebug.ini || true
@@ -91,8 +91,6 @@ script:
   - vendor/bin/codecept build
   - vendor/bin/codecept run -v
 
-after_failure:
-  - ipcs -m
 
 after_failure:
   - ipcs -m
