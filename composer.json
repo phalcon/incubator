@@ -3,13 +3,13 @@
     "type": "library",
     "description": "Adapters, prototypes or functionality that can be potentially incorporated to the C-framework.",
     "keywords": ["framework", "phalcon", "incubator"],
-    "homepage": "http://phalconphp.com",
+    "homepage": "https://phalconphp.com",
     "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Phalcon Team",
             "email": "team@phalconphp.com",
-            "homepage": "http://phalconphp.com/en/team"
+            "homepage": "https://phalconphp.com/en/team"
         },
         {
             "name": "Contributors",
@@ -29,7 +29,7 @@
     "require-dev": {
         "phpdocumentor/reflection-docblock": "2.0.4",
         "phpunit/phpunit": "^4.8",
-        "squizlabs/php_codesniffer": "^2.7",
+        "squizlabs/php_codesniffer": "^2.8",
         "codeception/codeception": "^2.2",
         "codeception/mockery-module": "^0.2",
         "codeception/aerospike-module": "^1.0",
