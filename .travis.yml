@@ -47,9 +47,7 @@ before_install:
   - sudo ln -s /home/travis/.phpenv/versions/$(phpenv version-name)/bin/php-config /usr/bin/
   - export PHP_MAJOR="$(echo $TRAVIS_PHP_VERSION | cut -d '.' -f 1,2)"
   - if [[ ! -z "${GH_TOKEN}" ]]; then composer config github-oauth.github.com ${GH_TOKEN}; echo "Configured Github token"; fi;
-  # Install dev-dependencies
   - travis_retry composer install --prefer-dist --no-interaction --ignore-platform-reqs
-  - travis_retry composer require duncan3dc/fork-helper:$(if [[ "${PHP_MAJOR:0:1}" = "7" ]]; then echo "^2.0"; else echo "^1.0"; fi) --ignore-platform-reqs
 
 install:
   - ( bash tests/_ci/install_prereqs_$PHP_MAJOR.sh )
