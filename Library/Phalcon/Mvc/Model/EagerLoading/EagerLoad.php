@@ -163,6 +163,7 @@ final class EagerLoad
                     if (static::$isPhalcon2) {
                         $record->{$alias} = null;
                         $record->{$alias} = $referencedModels;
+                        $record->_related[$alias] = $referenceModels;
                     }
                 } else {
                     $record->{$alias} = null;
