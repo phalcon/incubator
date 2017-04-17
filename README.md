@@ -141,6 +141,7 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 * [Phalcon\Mvc\View\Engine\Mustache](Library/Phalcon/Mvc/View/Engine) - Adapter for Mustache (@phalcon)
 * [Phalcon\Mvc\View\Engine\Twig](Library/Phalcon/Mvc/View/Engine) - Adapter for Twig (@phalcon)
 * [Phalcon\Mvc\View\Engine\Smarty](Library/Phalcon/Mvc/View/Engine) - Adapter for Smarty (@phalcon)
+* [Phalcon\Mvc\View\Engine\VoltMinifier](Library/Phalcon/Mvc/View/Engine) - Adapter for volt templates, with built in html minification (@thomas-brx)
 
 ### ORM Validators
 * [Phalcon\Mvc\Model\Validator\ConfirmationOf](Library/Phalcon/Mvc/Model/Validator) - Allows to validate if a field has a confirmation field with the same value (@suxxes)
