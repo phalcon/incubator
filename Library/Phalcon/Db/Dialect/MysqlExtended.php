@@ -99,6 +99,6 @@ class MysqlExtended extends Mysql
             }
         }
 
-        return parent::getSqlExpression($expression, $escapeChar);
+        return parent::getSqlExpression($expression, $escapeChar, $bindCounts);
     }
 }
