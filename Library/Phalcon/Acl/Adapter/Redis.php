@@ -114,6 +114,10 @@ class Redis extends Adapter
                 sprintf("Role '%s' does not exist in the role list", $roleName)
             );
         }
+        
+        if ($roleToInherit instanceof Role) {
+            $roleToInherit = $roleToInherit->getName();
+        }
 
         if ($roleToInherit instanceof Role) {
             $roleToInherit = $roleToInherit->getName();
