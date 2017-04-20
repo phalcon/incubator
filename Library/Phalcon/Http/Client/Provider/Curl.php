@@ -334,6 +334,7 @@ class Curl extends Request
             CURLOPT_URL           => $uri->build(),
             CURLOPT_HTTPGET       => true,
             CURLOPT_CUSTOMREQUEST => Method::HEAD,
+            CURLOPT_NOBODY        => true,
         ]);
 
         return $this->send($customHeader, $fullResponse);
