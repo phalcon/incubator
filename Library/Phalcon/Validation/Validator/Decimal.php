@@ -5,7 +5,7 @@ namespace Phalcon\Validation\Validator;
 use Phalcon\Validation;
 use Phalcon\Validation\Message;
 use Phalcon\Validation\Validator;
-use Phalcon\Validation\Exception;
+use Phalcon\Validation\Exception as ValidationException;
 
 /**
  * Phalcon\Validation\Validator\Decimal
@@ -47,7 +47,7 @@ class Decimal extends Validator
         }
 
         if (false === $this->hasOption('places')) {
-            throw new Exception('A number of decimal places must be set');
+            throw new ValidationException('A number of decimal places must be set');
         }
 
         if ($this->hasOption('digits')) {
