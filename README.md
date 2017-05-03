@@ -184,12 +184,17 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 * [Phalcon\Avatar\Gravatar](Library/Phalcon/Avatar) - Provides an easy way to retrieve a user's profile image from Gravatar site based on a given email address (@sergeyklay)
 
 ### Validators
+* [Phalcon\Validation\Validator\AlphaCompleteValidator](Library/Phalcon/Validation/AlphaCompleteValidator) - Validates a string containing alphanumeric, underscore, white spaces, slashes, apostrophes, brackets and punctuation characters. Optionally other characters can be allowed (@micheleangioni)
+* [Phalcon\Validation\Validator\AlphaNamesValidator](Library/Phalcon/Validation/AlphaNamesValidator) - Validates a string containing alphanumeric, menus, apostrophe, underscore and white space characters. Optionally other numbers too can be allowed (@micheleangioni)
+* [Phalcon\Validation\Validator\AlphaNumericValidator](Library/Phalcon/Validation/AlphaNumericValidator) - Validates a string containing alphanumeric characters. Optionally white spaces and underscores can be allowed (@micheleangioni)
 * [Phalcon\Validation\Validator\CardNumber](Library/Phalcon/Validation/Validator) - Allows to validate credit card number using Luhn algorithm (@parshikov)
-* [Phalcon\Validation\Validator\ReCaptcha](Library/Phalcon/Validation/Validator) - The reCAPTCHA Validator (@pflorek)
 * [Phalcon\Validation\Validator\ConfirmationOf](Library/Phalcon/Validation/Validator) - Validates confirmation of other field value (@davihu)
 * [Phalcon\Validation\Validator\Decimal](Library/Phalcon/Validation/Validator) - Allows to validate if a field has a valid number in proper decimal format (negative and decimal numbers allowed) (@sergeyklay)
+* [Phalcon\Validation\Validator\IpValidator](Library/Phalcon/Validation/IpValidator) - Validates an ip address (@micheleangioni)
 * [Phalcon\Validation\Validator\MongoId](Library/Phalcon/Validation/Validator) - Validate MongoId value (@Kachit)
+* [Phalcon\Validation\Validator\NumericValidator](Library/Phalcon/Validation/NumericValidator) - Validates a numeric string. Optionally can contain and sign (+/-) and allow floats (@micheleangioni)
 * [Phalcon\Validation\Validator\PasswordStrength](Library/Phalcon/Validation/Validator) - Validates password strength (@davihu)
+* [Phalcon\Validation\Validator\ReCaptcha](Library/Phalcon/Validation/Validator) - The reCAPTCHA Validator (@pflorek)
 
 ### Traits
 
