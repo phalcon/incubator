@@ -22,9 +22,10 @@ class IpValidator extends Validator implements ValidatorInterface
         $value = $validator->getValue($attribute);
 
         if (!filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6)) {
-
-            $message = $this->getOption('message',
-                'The IP is not valid');
+            $message = $this->getOption(
+                'message',
+                'The IP is not valid'
+            );
 
             $validator->appendMessage(new Message($message, $attribute, 'Ip'));
 
