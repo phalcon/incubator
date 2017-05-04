@@ -33,17 +33,19 @@ class NumericValidator extends Validator implements ValidatorInterface
 
         if ($allowFloat) {
             if (!preg_match('/^(^' . $allowSign . '[0-9]*\.?[0-9]+)+$/u', (string)$value)) {
-
-                $message = $this->getOption('message',
-                    'The value must be a valid ' . $allowSignMessage . ' floating number');
+                $message = $this->getOption(
+                    'message',
+                    'The value must be a valid ' . $allowSignMessage . ' floating number'
+                );
 
                 $validator->appendMessage(new Message($message, $attribute, 'Numeric'));
             }
         } else {
             if (!preg_match('/^(' . $allowSign . '[0-9])+$/u', $value)) {
-
-                $message = $this->getOption('message',
-                    'The value must be a valid ' . $allowSignMessage . ' integer number');
+                $message = $this->getOption(
+                    'message',
+                    'The value must be a valid ' . $allowSignMessage . ' integer number'
+                );
 
                 $validator->appendMessage(new Message($message, $attribute, 'Numeric'));
             }
@@ -51,8 +53,10 @@ class NumericValidator extends Validator implements ValidatorInterface
 
         if ($min = (int)$this->getOption('min')) {
             if ($value < $min) {
-                $messageMin = $this->getOption('messageMinimum',
-                    'The value must be at least ' . $min);
+                $messageMin = $this->getOption(
+                    'messageMinimum',
+                    'The value must be at least ' . $min
+                );
 
                 $validator->appendMessage(new Message($messageMin, $attribute, 'Numeric'));
             }
@@ -60,8 +64,10 @@ class NumericValidator extends Validator implements ValidatorInterface
 
         if ($max = (int)$this->getOption('max')) {
             if ($value > $max) {
-                $messageMax = $this->getOption('messageMaximum',
-                    'The value must be lower than ' . $max);
+                $messageMax = $this->getOption(
+                    'messageMaximum',
+                    'The value must be lower than ' . $max
+                );
 
                 $validator->appendMessage(new Message($messageMax, $attribute, 'Numeric'));
             }

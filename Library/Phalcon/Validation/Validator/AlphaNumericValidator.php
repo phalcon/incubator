@@ -32,7 +32,6 @@ class AlphaNumericValidator extends Validator implements ValidatorInterface
         $underscore = $underscore ? '_' : '';
 
         if (!preg_match('/^([\p{L}0-9' . $whiteSpace . $underscore . '])+$/u', $value)) {
-
             $message = $this->getOption('message');
 
             if (!$message) {
@@ -52,8 +51,10 @@ class AlphaNumericValidator extends Validator implements ValidatorInterface
 
         if ($min = (int)$this->getOption('min')) {
             if (strlen($value) < $min) {
-                $messageMin = $this->getOption('messageMinimum',
-                    'The value must contain at least ' . $min . ' characters.');
+                $messageMin = $this->getOption(
+                    'messageMinimum',
+                    'The value must contain at least ' . $min . ' characters.'
+                );
 
                 $validator->appendMessage(new Message($messageMin, $attribute, 'AlphaNumeric'));
             }
@@ -61,8 +62,10 @@ class AlphaNumericValidator extends Validator implements ValidatorInterface
 
         if ($max = (int)$this->getOption('max')) {
             if (strlen($value) > $max) {
-                $messageMax = $this->getOption('messageMaximum',
-                    'The value can contain maximum ' . $max . ' characters.');
+                $messageMax = $this->getOption(
+                    'messageMaximum',
+                    'The value can contain maximum ' . $max . ' characters.'
+                );
 
                 $validator->appendMessage(new Message($messageMax, $attribute, 'AlphaNumeric'));
             }
