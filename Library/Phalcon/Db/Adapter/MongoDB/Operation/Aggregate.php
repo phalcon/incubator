@@ -40,6 +40,7 @@ class Aggregate implements Executable
     private static $wireVersionForCursor=2;
     private static $wireVersionForDocumentLevelValidation=4;
     private static $wireVersionForReadConcern=4;
+    private static $wireVersionForCollation=5;
 
     private $databaseName;
     private $collectionName;
@@ -266,6 +267,10 @@ class Aggregate implements Executable
 
         if ($this->options['useCursor']) {
             $cmd['cursor']=isset($this->options["batchSize"])?['batchSize'=>$this->options["batchSize"]]:new stdClass;
+        }
+
+		if (isset($this->options['collation']) && Functions::serverSupportsFeature($server, self::$wireVersionForCollation)) {
+            $cmd['collation']=$this->options['collation'];
         }
 
         return new Command($cmd);
