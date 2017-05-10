@@ -20,3 +20,5 @@ printf "\n" | pecl install --force yaml-2.0.0 &> /dev/null
 sed -i '1s/^/extension="apcu.so"\n/' "$(phpenv root)/versions/$(phpenv version-name)/etc/php.ini"
 echo 'extension="memcached.so"' >> "$(phpenv root)/versions/$(phpenv version-name)/etc/php.ini"
 echo 'extension="mongodb.so"' >> "$(phpenv root)/versions/$(phpenv version-name)/etc/php.ini"
+
+cat "$(phpenv root)/versions/$(phpenv version-name)/etc/php.ini" | grep apc
