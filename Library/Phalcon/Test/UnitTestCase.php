@@ -85,9 +85,7 @@ abstract class UnitTestCase extends TestCase implements InjectionAwareInterface
 
     protected function tearDown()
     {
-        $di = $this->getDI();
-        $di::reset();
-
+        Di::reset();
         parent::tearDown();
     }
 
