@@ -243,34 +243,32 @@ class Aggregate implements Executable
             return new Command($cmd);
         }
 
-        $cmd['allowDiskUse']=$this->options['allowDiskUse'];
+        $cmd['allowDiskUse'] = $this->options['allowDiskUse'];
 
-        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature(
+        if (isset($this->options['bypassDocumentValidation']) && Functions::serverSupportsFeature(
             $server,
             self::$wireVersionForDocumentLevelValidation
         )
         ) {
-            $cmd['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
+            $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 
         if (isset($this->options['maxTimeMS'])) {
-            $cmd['maxTimeMS']=$this->options['maxTimeMS'];
+            $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
         }
 
-        if (isset($this->options['readConcern'])&&Functions::serverSupportsFeature(
-            $server,
-            self::$wireVersionForReadConcern
-        )
-        ) {
-            $cmd['readConcern']=Functions::readConcernAsDocument($this->options['readConcern']);
+        if (isset($this->options['readConcern']) &&
+	    Functions::serverSupportsFeature($server, self::$wireVersionForReadConcern)
+	) {
+            $cmd['readConcern'] = Functions::readConcernAsDocument($this->options['readConcern']);
         }
 
         if ($this->options['useCursor']) {
-            $cmd['cursor']=isset($this->options["batchSize"])?['batchSize'=>$this->options["batchSize"]]:new stdClass;
+            $cmd['cursor'] = isset($this->options["batchSize"]) ? ['batchSize'=>$this->options["batchSize"]] : new stdClass();
         }
 
-		if (isset($this->options['collation']) && Functions::serverSupportsFeature($server, self::$wireVersionForCollation)) {
-            $cmd['collation']=$this->options['collation'];
+        if (isset($this->options['collation']) && Functions::serverSupportsFeature($server, self::$wireVersionForCollation)) {
+            $cmd['collation'] = $this->options['collation'];
         }
 
         return new Command($cmd);
