@@ -245,10 +245,11 @@ class Aggregate implements Executable
 
         $cmd['allowDiskUse'] = $this->options['allowDiskUse'];
 
-        if (isset($this->options['bypassDocumentValidation']) && Functions::serverSupportsFeature(
-            $server,
-            self::$wireVersionForDocumentLevelValidation
-        )
+        if (isset($this->options['bypassDocumentValidation']) &&
+            Functions::serverSupportsFeature(
+                $server,
+                self::$wireVersionForDocumentLevelValidation
+            )
         ) {
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
@@ -258,16 +259,22 @@ class Aggregate implements Executable
         }
 
         if (isset($this->options['readConcern']) &&
-	    Functions::serverSupportsFeature($server, self::$wireVersionForReadConcern)
-	) {
+            Functions::serverSupportsFeature($server, self::$wireVersionForReadConcern)
+        ) {
             $cmd['readConcern'] = Functions::readConcernAsDocument($this->options['readConcern']);
         }
 
         if ($this->options['useCursor']) {
-            $cmd['cursor'] = isset($this->options["batchSize"]) ? ['batchSize'=>$this->options["batchSize"]] : new stdClass();
+            if (isset($this->options["batchSize"])) {
+            $cmd['cursor'] = ['batchSize' => $this->options["batchSize"]];
+        } else {
+            $cmd['cursor'] = new stdClass();
+          }
         }
 
-        if (isset($this->options['collation']) && Functions::serverSupportsFeature($server, self::$wireVersionForCollation)) {
+        if (isset($this->options['collation']) &&
+            Functions::serverSupportsFeature($server, self::$wireVersionForCollation)
+        ) {
             $cmd['collation'] = $this->options['collation'];
         }
 
