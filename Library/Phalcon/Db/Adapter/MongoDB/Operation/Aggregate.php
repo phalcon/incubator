@@ -266,10 +266,10 @@ class Aggregate implements Executable
 
         if ($this->options['useCursor']) {
             if (isset($this->options["batchSize"])) {
-            $cmd['cursor'] = ['batchSize' => $this->options["batchSize"]];
-        } else {
-            $cmd['cursor'] = new stdClass();
-          }
+                $cmd['cursor'] = ['batchSize' => $this->options["batchSize"]];
+            } else {
+                $cmd['cursor'] = new stdClass();
+            }
         }
 
         if (isset($this->options['collation']) &&
