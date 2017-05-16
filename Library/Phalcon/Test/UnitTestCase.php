@@ -19,15 +19,14 @@
 
 namespace Phalcon\Test;
 
-use Phalcon\Di\InjectionAwareInterface;
-use PHPUnit\Framework\TestCase as TestCase;
-use Phalcon\Test\Traits\ResultSet;
-use Phalcon\Config;
-use Phalcon\Di\FactoryDefault;
 use Phalcon\Di;
+use Phalcon\Di\FactoryDefault;
+use Phalcon\Di\InjectionAwareInterface;
 use Phalcon\DiInterface;
-use Phalcon\Mvc\Url;
 use Phalcon\Escaper;
+use Phalcon\Mvc\Url;
+use Phalcon\Test\Traits\ResultSet;
+use PHPUnit\Framework\TestCase as TestCase;
 
 /**
  * Class UnitTestCase
@@ -88,9 +87,7 @@ abstract class UnitTestCase extends TestCase implements InjectionAwareInterface
 
     protected function tearDown()
     {
-        $di = $this->getDI();
-        $di::reset();
-
+        Di::reset();
         parent::tearDown();
     }
 
