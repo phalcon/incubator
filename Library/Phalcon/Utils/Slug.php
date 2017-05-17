@@ -80,11 +80,11 @@ class Slug
             parse_str(str_replace(';', '&', $oldLocale), $loc);
             $oldLocale = array_values($loc);
         }
-        
+
         setlocale(LC_ALL, $oldLocale);
     }
-    
-    protected static cleanString($string, $delimiter)
+
+    protected static function cleanString($string, $delimiter)
     {
         // replace non letter or non digits by -
         $string = preg_replace('#[^\pL\d]+#u', '-', $string);
@@ -96,7 +96,7 @@ class Slug
         $clean = strtolower($clean);
         $clean = preg_replace('#[\/_|+ -]+#', $delimiter, $clean);
         $clean = trim($clean, $delimiter);
-        
+
         return $clean;
     }
 }
