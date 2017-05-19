@@ -51,6 +51,4 @@ $robots = Robot::with(
 
 ```
 
-PHP versions under 5.4 do not support traits, use instead `Phalcon\Mvc\Model\EagerLoading\Loader` methods
-
 Distributed as single package at https://github.com/stibiumz/phalcon.eager-loading
