@@ -82,7 +82,8 @@ before_script:
 script:
   - vendor/bin/phpcs
   - vendor/bin/codecept build
-  - vendor/bin/codecept run -v
+  - vendor/bin/codecept run -v tests/unit
+  - '[[ "$PHP_MAJOR" == "7" ]] || vendor/bin/codecept run -v tests/aerospike'
 
 notifications:
   email:

@@ -8,7 +8,6 @@ modules:
     enabled:
         - Helper\Unit
         - Filesystem
-        - Aerospike
         - Asserts
         - Mockery
         - Apc
@@ -21,8 +20,3 @@ modules:
             dump: tests/_data/dump.sql
             populate: false
             cleanup: false
-        Aerospike:
-            addr: "%TEST_AS_HOST%"
-            port: "%TEST_AS_PORT%"
-            set: "%TEST_AS_SET%"
-            namespace: "%TEST_AS_NS%"
