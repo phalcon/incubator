@@ -1,0 +1,18 @@
+# Codeception Test Suite Configuration
+#
+# Suite for unit5x (internal) tests.
+
+class_name: AerospikeTester
+modules:
+    # enabled modules and helpers
+    enabled:
+        - Helper\AerospikeHelper
+        - Aerospike
+        - Asserts
+        - Mockery
+    config:
+        Aerospike:
+            addr: "%TEST_AS_HOST%"
+            port: "%TEST_AS_PORT%"
+            set: "%TEST_AS_SET%"
+            namespace: "%TEST_AS_NS%"

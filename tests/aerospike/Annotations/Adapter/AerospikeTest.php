@@ -1,6 +1,6 @@
 <?php
 
-namespace Phalcon\Test\Annotations\Adapter;
+namespace Phalcon\Test\Aerospike\Annotations\Adapter;
 
 use UnitTester;
 use ReflectionMethod;

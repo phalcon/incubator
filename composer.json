@@ -51,6 +51,7 @@
     "autoload-dev": {
         "psr-4": {
             "Phalcon\\Test\\": "tests/unit/",
+            "Phalcon\\Test\\Aerospike\\": "tests/aerospike/",
             "Phalcon\\Test\\Collections\\": "tests/_data/collections"
         },
         "files": [
