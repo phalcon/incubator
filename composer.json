@@ -52,6 +52,7 @@
         "psr-4": {
             "Phalcon\\Test\\": "tests/unit/",
             "Phalcon\\Test\\Aerospike\\": "tests/aerospike/",
+            "Phalcon\\Test\\Unit5x\\": "tests/unit5x/",
             "Phalcon\\Test\\Collections\\": "tests/_data/collections"
         },
         "files": [
