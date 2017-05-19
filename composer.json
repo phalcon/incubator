@@ -51,9 +51,10 @@
     "autoload-dev": {
         "psr-4": {
             "Phalcon\\Test\\": "tests/unit/",
-            "Phalcon\\Test\\Collections\\": "tests/_data/collections",
             "Phalcon\\Test\\Models\\": "tests/_data/models",
             "Phalcon\\Test\\Behavior\\Blameable\\": "tests/_data/behavior/blameable"
+            "Phalcon\\Test\\Aerospike\\": "tests/aerospike/",
+            "Phalcon\\Test\\Collections\\": "tests/_data/collections"
         },
         "files": [
             "tests/_support/functions.php"
