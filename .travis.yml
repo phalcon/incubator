@@ -84,6 +84,7 @@ script:
   - vendor/bin/codecept build
   - vendor/bin/codecept run -v tests/unit
   - '[[ "$PHP_MAJOR" == "7" ]] || vendor/bin/codecept run -v tests/aerospike'
+  - '[[ "$PHP_MAJOR" == "7" ]] || vendor/bin/codecept run -v tests/unit5x'
 
 notifications:
   email:
