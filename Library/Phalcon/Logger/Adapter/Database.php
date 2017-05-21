@@ -103,7 +103,7 @@ class Database extends LoggerAdapter implements AdapterInterface
     public function getFormatter()
     {
         if (!is_object($this->_formatter)) {
-            $this->_formatter = new LineFormatter();
+            $this->_formatter = new LineFormatter('%message%');
         }
 
         return $this->_formatter;
@@ -122,7 +122,7 @@ class Database extends LoggerAdapter implements AdapterInterface
     {
         return $this->db->execute(
             'INSERT INTO ' . $this->options['table'] . ' VALUES (null, ?, ?, ?, ?)',
-            [$this->name, $type, $message, $time],
+            [$this->name, $type, $this->getFormatter()->format($message, $type, $time, $context), $time],
             [Column::BIND_PARAM_STR, Column::BIND_PARAM_INT, Column::BIND_PARAM_STR, Column::BIND_PARAM_INT]
         );
     }
