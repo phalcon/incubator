@@ -1,6 +1,6 @@
 <?php
 
-namespace Phalcon\Test\Unit5x\Mvc;
+namespace Phalcon\Test\Mvc;
 
 use Phalcon\Di;
 use MongoDB\BSON\ObjectID;
