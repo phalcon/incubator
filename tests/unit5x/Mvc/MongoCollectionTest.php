@@ -315,6 +315,24 @@ class CollectionsTest extends Test
         $this->assertSame('Phalcon contributor', $hero->name);
     }
 
+    public function testUpdateOnFound()
+    {
+        $this->loadData();
+        $car = Cars::findFirst();
+        $car->model = 'New Model';
+        $this->assertTrue($car->update());
+        $this->clearData();
+    }
+
+    public function testSaveOnFound()
+    {
+        $this->loadData();
+        $car = Cars::findFirst();
+        $car->model = 'Other Model';
+        $this->assertTrue($car->save());
+        $this->clearData();
+    }
+
     protected function loadData()
     {
         $car = new Cars();
