@@ -36,7 +36,7 @@
         "codeception/specify": "^0.4",
         "codeception/verify": "^0.3",
         "vlucas/phpdotenv": "^2.4",
-        "phalcongelist/dd": "^1.0"
+        "phalcon/dd": "^1.1"
     },
     "suggest": {
         "ext-aerospike": "*",
@@ -51,7 +51,9 @@
     "autoload-dev": {
         "psr-4": {
             "Phalcon\\Test\\": "tests/unit/",
-            "Phalcon\\Test\\Collections\\": "tests/_data/collections"
+            "Phalcon\\Test\\Collections\\": "tests/_data/collections",
+            "Phalcon\\Test\\Models\\": "tests/_data/models",
+            "Phalcon\\Test\\Behavior\\Blameable\\": "tests/_data/behavior/blameable"
         },
         "files": [
             "tests/_support/functions.php"

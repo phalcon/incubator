@@ -18,6 +18,7 @@ php:
   - 5.5
   - 5.6
   - 7.0
+  - 7.1
 
 services:
   - memcached
@@ -35,31 +36,38 @@ cache:
   directories:
     - vendor
     - $HOME/.composer/cache
+    - $HOME/pear
+    - $HOME/cphalcon
+    - $HOME/ext
 
 env:
   global:
+    - ZEND_DONT_UNLOAD_MODULES=1
+    - CC="ccache gcc"
     - PATH="$PATH:~/bin"
-    - PHALCON_VERSION="v3.1.1"
+    - PHALCON_VERSION="v3.1.2"
 
 before_install:
+  - export PHP_MAJOR="$(echo $TRAVIS_PHP_VERSION | cut -d '.' -f 1)"
+  - export PHP_EXTENSION_DIR=$(php-config --extension-dir)
   - phpenv config-rm xdebug.ini || true
-  - sudo ln -s /home/travis/.phpenv/versions/$(phpenv version-name)/bin/phpize /usr/bin/
-  - sudo ln -s /home/travis/.phpenv/versions/$(phpenv version-name)/bin/php-config /usr/bin/
-  - export PHP_MAJOR="$(echo $TRAVIS_PHP_VERSION | cut -d '.' -f 1,2)"
+  - bash tests/_ci/pear_setup.sh
+  - bash tests/_ci/install_prereqs_$PHP_MAJOR.sh
   - if [[ ! -z "${GH_TOKEN}" ]]; then composer config github-oauth.github.com ${GH_TOKEN}; echo "Configured Github token"; fi;
-  - travis_retry composer install --prefer-dist --no-interaction --ignore-platform-reqs
+  - if [ ! -f "$HOME/cphalcon/tests/_ci/phalcon.ini" ]; then git clone -q --depth=1 https://github.com/phalcon/cphalcon.git $HOME/cphalcon >/dev/null 2>&1; fi;
 
 install:
-  - ( bash tests/_ci/install_prereqs_$PHP_MAJOR.sh )
+  - travis_retry composer install --prefer-dist --no-interaction --quiet --no-ansi --no-progress --optimize-autoloader --dev --no-suggest --ignore-platform-reqs
   # See https://github.com/aerospike/aerospike-client-php/issues/127
-  - '[[ "${PHP_MAJOR:0:1}" == "7" ]] || bash ${TRAVIS_BUILD_DIR}/tests/_ci/install_aerospike.sh'
-  - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b ${PHALCON_VERSION} >/dev/null 2>&1
-  - (cd cphalcon/build; bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config))
+  - '[[ "$PHP_MAJOR" == "7" ]] || bash ${TRAVIS_BUILD_DIR}/tests/_ci/install_aerospike.sh'
+  - if [ ! -f $HOME/ext/$PHP_VERSION/phalcon.so ]; then cd $HOME/cphalcon/build && bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) && mkdir -p $HOME/ext/$PHP_VERSION && cp $PHP_EXTENSION_DIR/phalcon.so $HOME/ext/$PHP_VERSION/phalcon.so; fi;
+  - if [ -f $HOME/ext/$PHP_VERSION/phalcon.so ]; then cp $HOME/ext/$PHP_VERSION/phalcon.so $PHP_EXTENSION_DIR/phalcon.so; fi;
+  - phpenv config-add $HOME/cphalcon/tests/_ci/phalcon.ini
   - phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/redis.ini
-  - phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/phalcon.ini
-  # Debug
-  - php -m
+  - cd $TRAVIS_BUILD_DIR
+  - $(phpenv which php) -m
   - pecl list
+  - ipcs -m
 
 before_script:
   - stty cols 160

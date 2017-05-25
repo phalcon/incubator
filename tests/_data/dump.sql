@@ -1252,3 +1252,30 @@ CREATE TABLE `cache_data` (
   `lifetime` INT,
   PRIMARY KEY(`key_name`)
 );
+DROP TABLE IF EXISTS `robots`;
+CREATE TABLE `robots` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(70) COLLATE utf8_unicode_ci NOT NULL,
+  `type` varchar(32) COLLATE utf8_unicode_ci NOT NULL default 'mechanical',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DROP TABLE if EXISTS `audit`;
+CREATE TABLE `audit` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_name` VARCHAR(255) NOT NULL,
+  `model_name` VARCHAR(255) NOT NULL,
+  `ipaddress` CHAR(15) NOT NULL,
+  `type` CHAR(1) NOT NULL, /* C=Create/U=Update */
+  `created_at` DATETIME NOT NULL,
+  `primary_key` TEXT DEFAULT NULL, /* for BC reasons */
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE if EXISTS `audit_detail`;
+CREATE TABLE `audit_detail` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `audit_id` BIGINT NOT NULL,
+  `field_name` VARCHAR(255) NOT NULL,
+  `old_value` TEXT DEFAULT NULL,
+  `new_value` TEXT NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
