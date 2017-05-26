@@ -373,20 +373,53 @@ class Products extends Phalcon\Mvc\Model
 ```sql
 CREATE TABLE `audit` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_name` VARCHAR(32) NOT NULL,
-  `model_name` VARCHAR(32) NOT NULL,
+  `user_name` VARCHAR(255) NOT NULL,
+  `model_name` VARCHAR(255) NOT NULL,
   `ipaddress` CHAR(15) NOT NULL,
   `type` CHAR(1) NOT NULL, /* C=Create/U=Update */
   `created_at` DATETIME NOT NULL,
+  `primary_key` TEXT DEFAULT NULL, /* for BC reasons */
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `audit_detail` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `audit_id` BIGINT NOT NULL,
-  `field_name` VARCHAR(32) NOT NULL,
-  `old_value` VARCHAR(32) DEFAULT NULL,
-  `new_value` VARCHAR(32) NOT NULL,
+  `field_name` VARCHAR(255) NOT NULL,
+  `old_value` TEXT DEFAULT NULL,
+  `new_value` TEXT NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
+This is an example structure, please fit fields to suit your needs. By default incubator provides needed classes for Blameable behavior, however if you would 
+want to use your own classes you can do it by implementing `AuditDetailInterface` and 
+`AuditInterface` and setting them in constructor:
+
+```php
+public function initialize()
+{
+    $this->addBehavior(
+        [
+            'auditClass'       => MyAudit::class,
+            'auditDetailClass' => MyAuditDetail::class
+        ]
+    );
+}
+```
+
+Also by default `Audit` class will look for userName key in session for getting user name.
+You can change this behavior by:
+
+```php
+public function initialize()
+{
+    $this->addBehavior(
+        [
+            'userCallback' => function(Phalcon\DiInterface $di) {
+                // your custom code to return user name
+            }
+        ]
+    );
+}
 ```

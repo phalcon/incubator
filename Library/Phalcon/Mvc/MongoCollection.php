@@ -25,6 +25,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\BSON\Unserializable;
 use Phalcon\Mvc\Collection\Document;
 use Phalcon\Mvc\Collection\Exception;
+use Phalcon\Mvc\Collection\ManagerInterface;
 use Phalcon\Db\Adapter\MongoDB\InsertOneResult;
 use Phalcon\Mvc\Collection as PhalconCollection;
 use Phalcon\Db\Adapter\MongoDB\Collection as AdapterCollection;
@@ -32,7 +33,7 @@ use Phalcon\Db\Adapter\MongoDB\Collection as AdapterCollection;
 /**
  * Class MongoCollection
  *
- * @property  \Phalcon\Mvc\Collection\ManagerInterface _modelsManager
+ * @property ManagerInterface _modelsManager
  * @package Phalcon\Mvc
  */
 abstract class MongoCollection extends PhalconCollection implements Unserializable
@@ -211,7 +212,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         if (isset($params['class'])) {
             $classname = $params['class'];
             $base = new $classname();
-            
+
             if (!$base instanceof CollectionInterface || $base instanceof Document) {
                 throw new Exception(
                     sprintf(
@@ -304,7 +305,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
          */
         $cursor = $mongoCollection->find($conditions, $options);
 
-        
+
         $cursor->setTypeMap(['root' => get_class($base), 'document' => 'array']);
 
         if (true === $unique) {
@@ -460,6 +461,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
                 return false;
             }
         }
+
 
         /**
          * Send a notification to the events manager
