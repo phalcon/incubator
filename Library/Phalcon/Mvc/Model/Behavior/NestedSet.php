@@ -578,7 +578,6 @@ class NestedSet extends Behavior implements BehaviorInterface
                     return false;
                 }
             }
-            $this->ignoreEvent = false;
         }
 
         $key = $owner->{$this->rightAttribute} + 1;
