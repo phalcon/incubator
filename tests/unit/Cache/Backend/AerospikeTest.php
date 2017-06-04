@@ -134,6 +134,22 @@ class AerospikeTest extends Test
 
         $this->tester->dontSeeInAerospike('test-data');
     }
+    
+    public function testShouldFlushAllData()
+    {
+        $cache = $this->getAdapter();
+        $this->keys[] = 'test-data-flush';
+        $this->keys[] = 'test-data-flush2';
+        
+        $data = "sure, nothing interesting";
+        $cache->save('test-data-flush', $data);
+        $cache->save('test-data-flush2', $data);
+        
+        $cache->flush();
+        
+        $this->tester->dontSeeInAerospike('test-data-flush');
+        $this->tester->dontSeeInAerospike('test-data-flush2');
+    }
 
     public function testShouldUseOutputFrontend()
     {
