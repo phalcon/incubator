@@ -419,4 +419,21 @@ class NestedSetTest extends Helper
             }
         );
     }
+
+    /**
+     * Delete node
+     *
+     * @author Serhii Svyrydenko <sergey.v.sviridenko@gmail.com>
+     * @since  2017-06-08
+     * @issue  603
+     */
+    public function testShouldDeleteNode()
+    {
+
+        $this->createTree();
+        $samsung = CategoriesManyRoots::findFirst(2);
+        $actual = $samsung->deleteNode();
+
+        $this->assertTrue($actual);
+    }
 }
