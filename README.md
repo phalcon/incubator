@@ -81,6 +81,54 @@ $loader->registerNamespaces([
 $loader->register();
 ```
 
+## Unit Testing
+### Getting started
+A MySQL database is require. You should create DB and write connection in `tests/.env` file.
+
+The Unit Tests that tests Aerospike are run separately.
+You’ll need to install the [Aerospike Server](https://www.aerospike.com/download/server), [Aerospike Client](https://www.aerospike.com/download/client/php) and create the database.
+
+The main dependency is [Codeception](http://codeception.com/) which can be installed using Composer:
+`composer install --dev --prefer-source`
+
+Services have to be installed:
+- `Memcached`
+- `Redis`
+- `MongoDB`
+- `MySQL`
+
+Also the packages have to be installed:
+- `re2c`
+- `beanstalkd`
+- `python-bcrypt`
+- `build-essential`
+- `autoconf`
+- `libssl-dev`
+- `libyaml-dev`
+- `liblua5.1-dev`
+- `mysql-server-5.6`
+- `mysql-server-core-5.6`
+- `mysql-client-5.6`
+
+### Run tests
+First you need to re-generate base classes for all suites:
+`vendor/bin/codecept build`
+
+You can run common for php7 and php5 tests using:
+`vendor/bin/codecept run -v tests/unit`
+
+php5:
+`vendor/bin/codecept run -v tests/unit5x`
+
+php5 and aerospike:
+`vendor/bin/codecept run -v tests/aerospike`
+
+To run only one test from a suite you can set path to test
+(for example: `vendor/bin/codecept run -v tests/unit/Mvc/Model/Behavior/NestedSetTest.php`)
+
+### Help
+The file .travis.yml contains full instructions to test Phalcon Incubator on Ubuntu 14+ If you cannot run the tests, please check the file .travis.yml for an in depth view on how test Phalcon Incubator. Additional information regarding our testing environment can be found by looking at the tests/_bootstrap.php file.
+
 # Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
