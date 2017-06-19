@@ -53,7 +53,7 @@ before_install:
   - phpenv config-rm xdebug.ini || true
   - bash tests/_ci/pear_setup.sh
   - bash tests/_ci/install_prereqs_$PHP_MAJOR.sh
-  - if [[ ! -z "${GH_TOKEN}" ]]; then composer config github-oauth.github.com ${GH_TOKEN}; echo "Configured Github token"; fi;
+  - if [ ! -z "${GH_TOKEN}" ]; then composer config github-oauth.github.com ${GH_TOKEN}; echo "Configured Github token"; fi;
   - if [ ! -f "$HOME/cphalcon/$PHALCON_VERSION/tests/_ci/phalcon.ini" ]; then mkdir -p $HOME/cphalcon/$PHALCON_VERSION && git clone -q --depth=1 https://github.com/phalcon/cphalcon.git $HOME/cphalcon/$PHALCON_VERSION >/dev/null 2>&1; fi;
 
 install:
@@ -68,7 +68,6 @@ install:
   - $(phpenv which php) --ri phalcon
 
 before_script:
-  - stty cols 160
   # Create database and user
   - echo 'CREATE DATABASE incubator CHARSET=utf8 COLLATE=utf8_unicode_ci' | mysql -u root
   - echo "CREATE USER 'incubator'@'%' IDENTIFIED BY 'secret'" | mysql -u root
