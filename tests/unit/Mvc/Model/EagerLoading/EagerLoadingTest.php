@@ -398,6 +398,17 @@ class EagerLoadingTest extends Test
 
     public function testBelongsTo()
     {
+        if (version_compare(PHP_VERSION, '5.6.0', '<') &&
+            version_compare(Version::get(), '3.2.0', '=')
+        ) {
+            $this->markTestSkipped(
+                'The Phalcon\Mvc\Model\Query\Builder was changed in Phalcon v3.2.0.' . PHP_EOL .
+                'These changes do not allow to correctly run tests in PHP 5.5.' . PHP_EOL .
+                'See https://github.com/phalcon/cphalcon/pull/12905/commits/8052204db745e93aacfc38c1b6651e29b7ba9440' . PHP_EOL .
+                'And https://travis-ci.org/phalcon/incubator/jobs/244703920'
+            );
+        }
+
         $rawly = Bug::findFirstById(1);
         $rawly->robot;
 
