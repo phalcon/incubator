@@ -25,7 +25,7 @@ class MyAdapter
     
     public function __construct(array $options)
     {
-        $this->setConfig($config);
+        $this->setConfig($options);
     }
     
     protected function setHost($host)
