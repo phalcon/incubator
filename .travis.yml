@@ -54,20 +54,18 @@ before_install:
   - bash tests/_ci/pear_setup.sh
   - bash tests/_ci/install_prereqs_$PHP_MAJOR.sh
   - if [[ ! -z "${GH_TOKEN}" ]]; then composer config github-oauth.github.com ${GH_TOKEN}; echo "Configured Github token"; fi;
-  - if [ ! -f "$HOME/cphalcon/tests/_ci/phalcon.ini" ]; then git clone -q --depth=1 https://github.com/phalcon/cphalcon.git $HOME/cphalcon >/dev/null 2>&1; fi;
+  - if [ ! -f "$HOME/cphalcon/$PHALCON_VERSION/tests/_ci/phalcon.ini" ]; then mkdir -p $HOME/cphalcon/$PHALCON_VERSION && git clone -q --depth=1 https://github.com/phalcon/cphalcon.git $HOME/cphalcon/$PHALCON_VERSION >/dev/null 2>&1; fi;
 
 install:
   - travis_retry composer install --prefer-dist --no-interaction --quiet --no-ansi --no-progress --optimize-autoloader --dev --no-suggest --ignore-platform-reqs
   # See https://github.com/aerospike/aerospike-client-php/issues/127
   - '[[ "$PHP_MAJOR" == "7" ]] || bash ${TRAVIS_BUILD_DIR}/tests/_ci/install_aerospike.sh'
-  - if [ ! -f $HOME/ext/$PHP_VERSION/phalcon.so ]; then cd $HOME/cphalcon/build && bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) && mkdir -p $HOME/ext/$PHP_VERSION && cp $PHP_EXTENSION_DIR/phalcon.so $HOME/ext/$PHP_VERSION/phalcon.so; fi;
-  - if [ -f $HOME/ext/$PHP_VERSION/phalcon.so ]; then cp $HOME/ext/$PHP_VERSION/phalcon.so $PHP_EXTENSION_DIR/phalcon.so; fi;
-  - phpenv config-add $HOME/cphalcon/tests/_ci/phalcon.ini
+  - if [ ! -f $HOME/ext/$PHP_VERSION/$PHALCON_VERSION/phalcon.so ]; then cd$HOME/cphalcon/$PHALCON_VERSION/build && bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) && mkdir -p $HOME/ext/$PHP_VERSION/$PHALCON_VERSION && cp $PHP_EXTENSION_DIR/phalcon.so $HOME/ext/$PHP_VERSION/$PHALCON_VERSION/phalcon.so; fi;
+  - if [ -f $HOME/ext/$PHP_VERSION/$PHALCON_VERSION/phalcon.so ]; then cp $HOME/ext/$PHP_VERSION/$PHALCON_VERSION/phalcon.so $PHP_EXTENSION_DIR/phalcon.so; fi;
+  - phpenv config-add $HOME/cphalcon/$PHALCON_VERSION/tests/_ci/phalcon.ini
   - phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/redis.ini
   - cd $TRAVIS_BUILD_DIR
-  - $(phpenv which php) -m
-  - pecl list
-  - ipcs -m
+  - $(phpenv which php) --ri phalcon
 
 before_script:
   - stty cols 160
