@@ -16,12 +16,13 @@ use Phalcon\Mvc\Model\Manager;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Codeception\TestCase\Test;
 use UnitTester;
+use Phalcon\Version;
 
 /**
  * \Phalcon\Test\Mvc\Model\EagerLoading\EagerLoadingTest
  * Tests for Phalcon\Mvc\Model\EagerLoading\Loader component
  *
- * @copyright (c) 2011-2016 Phalcon Team
+ * @copyright (c) 2011-2017 Phalcon Team
  * @link      http://www.phalconphp.com
  * @author    Óscar Enríquez
  * @package   Phalcon\Test\Mvc\Model\EagerLoading
@@ -91,6 +92,17 @@ class EagerLoadingTest extends Test
      */
     public function testShouldLoadChildOfEmptyParentWithoutException()
     {
+        if (version_compare(PHP_VERSION, '5.6.0', '<') &&
+            version_compare(Version::get(), '3.2.0', '=')
+        ) {
+            $this->markTestSkipped(
+                'The Phalcon\Mvc\Model\Query\Builder was changed in Phalcon v3.2.0.' . PHP_EOL .
+                'These changes do not allow to correctly run tests in PHP 5.5.' . PHP_EOL .
+                'See https://github.com/phalcon/cphalcon/pull/12905/commits/8052204db745e93aacfc38c1b6651e29b7ba9440' . PHP_EOL .
+                'And https://travis-ci.org/phalcon/incubator/jobs/244703920'
+            );
+        }
+
         // Has many -> Belongs to
         // Should be the same for Has many -> Has one
         $loader = new Loader(Robot::findFirstById(1), 'Bugs.Robot');
