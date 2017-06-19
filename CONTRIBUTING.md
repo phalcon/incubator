@@ -34,8 +34,8 @@ to [Phalcon Framework][cphalcon].
   before submitting a bug report. Bugs in versions older than the latest released one will not be addressed by the
   core team
 
-- If you have found a bug it is important to add relevant reproducibility information to your issue to allow us 
-  to reproduce the bug and fix it quicker. Add a script, small program or repository providing the necessary code to 
+- If you have found a bug it is important to add relevant reproducibility information to your issue to allow us
+  to reproduce the bug and fix it quicker. Add a script, small program or repository providing the necessary code to
   make everyone reproduce the issue reported easily. If a bug cannot be reproduced by the development it would be
   difficult provide corrections and solutions. [Submit Reproducible Test][srt] for more information.
 
@@ -49,7 +49,7 @@ to [Phalcon Framework][cphalcon].
 - Don't submit your pull requests to the `master` branch. Branch from the required branch and,
   if needed, rebase to the proper branch before submitting your pull request.
   If it doesn't merge cleanly with master you may be asked to rebase your changes
-  
+
 - Don't put submodule updates, composer.lock, etc in your pull request unless they are to landed commits
 
 - Make sure that the code you write fits with the general style and coding standards of the [Accepted PHP Standards][psr]

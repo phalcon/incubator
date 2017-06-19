@@ -6,9 +6,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/phalcon/incubator.svg?style=flat-square)](https://packagist.org/packages/phalcon/incubator)
 [![Daily Downloads](https://img.shields.io/packagist/dd/phalcon/incubator.svg?style=flat-square)](https://packagist.org/packages/phalcon/incubator)
 
-Phalcon is a web framework delivered as a C extension providing high performance and lower resource consumption.
-
-This is a repository to publish/share/experiment with new adapters, prototypes or functionality that can potentially be incorporated into the framework.
+This is a repository to publish/share/experiment with new adapters, prototypes or functionality that can potentially be incorporated into the [Phalcon Framework](https://github.com/phalcon/cphalcon).
 
 We also welcome submissions of snippets from the community, to further extend the framework.
 
@@ -43,7 +41,6 @@ If you are still using Phalcon 2.0.x, create the `composer.json` file as follows
     }
 }
 ```
-
 
 Run the composer installer:
 
@@ -85,7 +82,7 @@ $loader->register();
 
 Tests are located in `tests/` and use Codeception. See [tests/README.md](tests/README.md).
 
-# Contributing
+## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
