@@ -61,7 +61,7 @@
         "psr-4": {
             "Phalcon\\Test\\": "tests/unit/",
             "Phalcon\\Test\\Models\\": "tests/_data/models",
-            "Phalcon\\Test\\Behavior\\Blameable\\": "tests/_data/behavior/blameable"
+            "Phalcon\\Test\\Behavior\\Blameable\\": "tests/_data/behavior/blameable",
             "Phalcon\\Test\\Aerospike\\": "tests/aerospike/",
             "Phalcon\\Test\\Unit5x\\": "tests/unit5x/",
             "Phalcon\\Test\\Collections\\": "tests/_data/collections"
