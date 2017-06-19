@@ -45,7 +45,7 @@ env:
     - ZEND_DONT_UNLOAD_MODULES=1
     - CC="ccache gcc"
     - PATH="$PATH:~/bin"
-    - PHALCON_VERSION="v3.1.2"
+    - PHALCON_VERSION="v3.2.0"
 
 before_install:
   - export PHP_MAJOR="$(echo $TRAVIS_PHP_VERSION | cut -d '.' -f 1)"
