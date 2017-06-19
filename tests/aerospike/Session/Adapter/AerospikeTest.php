@@ -1,6 +1,6 @@
 <?php
 
-namespace Phalcon\Test\Session\Adapter;
+namespace Phalcon\Test\Aerospike\Session\Adapter;
 
 use Phalcon\Session\Adapter\Aerospike as SessionHandler;
 use Codeception\TestCase\Test;
@@ -57,7 +57,9 @@ class AerospikeTest extends Test
      */
     protected function _after()
     {
-        $this->cleanup();
+        if (extension_loaded('aerospike')) {
+            $this->cleanup();
+        }
     }
 
     public function testShouldWriteSession()

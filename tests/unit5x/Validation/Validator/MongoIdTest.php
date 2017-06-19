@@ -1,6 +1,6 @@
 <?php
 
-namespace Phalcon\Test\Validation\Validator;
+namespace Phalcon\Test\Unit5x\Validation\Validator;
 
 use ReflectionExtension;
 use Phalcon\Validation;

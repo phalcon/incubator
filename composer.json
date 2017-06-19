@@ -2,7 +2,11 @@
     "name": "phalcon/incubator",
     "type": "library",
     "description": "Adapters, prototypes or functionality that can be potentially incorporated to the C-framework.",
-    "keywords": ["framework", "phalcon", "incubator"],
+    "keywords": [
+        "framework",
+        "phalcon",
+        "incubator"
+    ],
     "homepage": "https://phalconphp.com",
     "license": "BSD-3-Clause",
     "authors": [
@@ -19,18 +23,22 @@
     "support": {
         "issues": "https://github.com/phalcon/incubator/issues",
         "source": "https://github.com/phalcon/incubator",
-        "forum": "https://forum.phalconphp.com/"
+        "forum": "https://forum.phalconphp.com/",
+        "docs": "https://docs.phalconphp.com/",
+        "irc": "irc://irc.freenode.org/phalconphp",
+        "rss" : "https://blog.phalconphp.com/rss",
+        "email": "support@phalconphp.com"
     },
     "require": {
         "php": ">=5.5",
-        "ext-phalcon": "^3.1",
+        "ext-phalcon": "^3.2",
         "swiftmailer/swiftmailer": "~5.2"
     },
     "require-dev": {
         "phpdocumentor/reflection-docblock": "2.0.4",
         "phpunit/phpunit": "^4.8",
-        "squizlabs/php_codesniffer": "^2.8",
-        "codeception/codeception": "^2.2",
+        "squizlabs/php_codesniffer": "^2.9",
+        "codeception/codeception": "^2.3",
         "codeception/mockery-module": "^0.2",
         "codeception/aerospike-module": "^1.0",
         "codeception/specify": "^0.4",
@@ -40,6 +48,7 @@
     },
     "suggest": {
         "ext-aerospike": "*",
+        "phalcon/ide-stubs": "Phalcon IDE Stubs",
         "sergeyklay/aerospike-php-stubs": "The most complete Aerospike PHP stubs which allows autocomplete in modern IDEs",
         "duncan3dc/fork-helper": "To use extended class to access the beanstalk queue service"
     },
@@ -51,9 +60,11 @@
     "autoload-dev": {
         "psr-4": {
             "Phalcon\\Test\\": "tests/unit/",
-            "Phalcon\\Test\\Collections\\": "tests/_data/collections",
             "Phalcon\\Test\\Models\\": "tests/_data/models",
-            "Phalcon\\Test\\Behavior\\Blameable\\": "tests/_data/behavior/blameable"
+            "Phalcon\\Test\\Behavior\\Blameable\\": "tests/_data/behavior/blameable",
+            "Phalcon\\Test\\Aerospike\\": "tests/aerospike/",
+            "Phalcon\\Test\\Unit5x\\": "tests/unit5x/",
+            "Phalcon\\Test\\Collections\\": "tests/_data/collections"
         },
         "files": [
             "tests/_support/functions.php"

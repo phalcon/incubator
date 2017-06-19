@@ -1,6 +1,6 @@
 # Codeception Test Suite Configuration
 #
-# Suite for unit (internal) tests.
+# Suite for unit5x (internal) tests.
 
 class_name: UnitTester
 modules:

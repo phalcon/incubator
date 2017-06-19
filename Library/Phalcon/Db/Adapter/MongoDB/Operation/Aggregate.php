@@ -40,6 +40,7 @@ class Aggregate implements Executable
     private static $wireVersionForCursor=2;
     private static $wireVersionForDocumentLevelValidation=4;
     private static $wireVersionForReadConcern=4;
+    private static $wireVersionForCollation=5;
 
     private $databaseName;
     private $collectionName;
@@ -242,30 +243,39 @@ class Aggregate implements Executable
             return new Command($cmd);
         }
 
-        $cmd['allowDiskUse']=$this->options['allowDiskUse'];
+        $cmd['allowDiskUse'] = $this->options['allowDiskUse'];
 
-        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature(
-            $server,
-            self::$wireVersionForDocumentLevelValidation
-        )
+        if (isset($this->options['bypassDocumentValidation']) &&
+            Functions::serverSupportsFeature(
+                $server,
+                self::$wireVersionForDocumentLevelValidation
+            )
         ) {
-            $cmd['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
+            $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 
         if (isset($this->options['maxTimeMS'])) {
-            $cmd['maxTimeMS']=$this->options['maxTimeMS'];
+            $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
         }
 
-        if (isset($this->options['readConcern'])&&Functions::serverSupportsFeature(
-            $server,
-            self::$wireVersionForReadConcern
-        )
+        if (isset($this->options['readConcern']) &&
+            Functions::serverSupportsFeature($server, self::$wireVersionForReadConcern)
         ) {
-            $cmd['readConcern']=Functions::readConcernAsDocument($this->options['readConcern']);
+            $cmd['readConcern'] = Functions::readConcernAsDocument($this->options['readConcern']);
         }
 
         if ($this->options['useCursor']) {
-            $cmd['cursor']=isset($this->options["batchSize"])?['batchSize'=>$this->options["batchSize"]]:new stdClass;
+            if (isset($this->options["batchSize"])) {
+                $cmd['cursor'] = ['batchSize' => $this->options["batchSize"]];
+            } else {
+                $cmd['cursor'] = new stdClass();
+            }
+        }
+
+        if (isset($this->options['collation']) &&
+            Functions::serverSupportsFeature($server, self::$wireVersionForCollation)
+        ) {
+            $cmd['collation'] = $this->options['collation'];
         }
 
         return new Command($cmd);

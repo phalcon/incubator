@@ -1,6 +1,6 @@
 <?php
 
-namespace Phalcon\Test\Cache\Backend;
+namespace Phalcon\Test\Aerospike\Cache\Backend;
 
 use Phalcon\Cache\Frontend\Data as CacheData;
 use Phalcon\Cache\Frontend\Output as CacheOutput;
