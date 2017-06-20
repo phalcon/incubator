@@ -123,7 +123,6 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
                 break;
 
             case self::OP_UPDATE:
-                $data = $this->toArray();
                 unset($data['_id']);
                 $status = $collection->updateOne(['_id' => $this->_id], ['$set' => $data]);
                 break;
