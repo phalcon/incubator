@@ -67,13 +67,7 @@ class CollectionsTest extends Test
 
     public function testCollectionsSave()
     {
-        if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
-            throw new \PHPUnit_Framework_SkippedTestError(
-                'Skipped in view of the experimental support for PHP 7.1'
-            );
-        }
-
-        $car = new Cars();
+       $car = new Cars();
         $car->manufacturer = 'Mclaren';
         $car->model = '650S';
         $car->rank = 1;
@@ -269,12 +263,6 @@ class CollectionsTest extends Test
 
     public function testCollectionsAggregate()
     {
-        if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
-            throw new \PHPUnit_Framework_SkippedTestError(
-                'Skipped in view of the experimental support for PHP 7.1'
-            );
-        }
-
         $this->loadData();
 
         /** @var Cursor $data */
@@ -313,6 +301,17 @@ class CollectionsTest extends Test
         $this->assertInstanceOf(MongoCollection::class, $hero);
         $this->assertInstanceOf(ObjectID::class, $hero->getId());
         $this->assertSame('Phalcon contributor', $hero->name);
+    }
+
+    public function testSaveOnFound()
+    {
+        $this->loadData();
+        $car = Cars::findFirst();
+        $car->model = 'Other Model';
+        $this->assertTrue($car->save());
+        $car = Cars::findFirst();
+        $this->assertEquals('Other Model', $car->model);
+        $this->clearData();
     }
 
     protected function loadData()
