@@ -397,13 +397,17 @@ want to use your own classes you can do it by implementing `AuditDetailInterface
 `AuditInterface` and setting them in constructor:
 
 ```php
+use Phalcon\Mvc\Model\Behavior\Blameable;
+
 public function initialize()
 {
     $this->addBehavior(
-        [
-            'auditClass'       => MyAudit::class,
-            'auditDetailClass' => MyAuditDetail::class
-        ]
+        new Blameable(
+            [
+                'auditClass'       => MyAudit::class,
+                'auditDetailClass' => MyAuditDetail::class
+            ]
+        )
     );
 }
 ```
@@ -412,14 +416,37 @@ Also by default `Audit` class will look for userName key in session for getting 
 You can change this behavior by:
 
 ```php
+use Phalcon\Mvc\Model\Behavior\Blameable;
+
 public function initialize()
 {
     $this->addBehavior(
-        [
-            'userCallback' => function(Phalcon\DiInterface $di) {
-                // your custom code to return user name
-            }
-        ]
+        new Blameable(
+            [
+                'userCallback' => function(Phalcon\DiInterface $di) {
+                    // your custom code to return user name
+                }
+            ]
+        )
     );
 }
 ```
+
+If you have snapshot update disabled(`phalcon.orm.update_snapshot_on_save = 0`) then you need
+pass option `snapshotUpdatingDisabled` to `Blameable` constructor:
+
+```php
+use Phalcon\Mvc\Model\Behavior\Blameable;
+
+public function initialize()
+{
+    $this->addBehavior(
+        new Blameable(
+            [
+                'snapshotUpdatingDisabled' => true
+            ]
+        )
+    );
+}
+```
+
