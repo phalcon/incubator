@@ -42,6 +42,11 @@ class Blameable extends Behavior implements BehaviorInterface
     protected $userCallback;
 
     /**
+     * @var boolean
+     */
+    protected $snapshotUpdatingDisabled = false;
+
+    /**
      * Blameable constructor.
      * @param array|null $options
      * @throws Exception
@@ -73,6 +78,10 @@ class Blameable extends Behavior implements BehaviorInterface
             }
             $this->userCallback = $options['userCallback'];
         }
+
+        if (isset($options['snapshotUpdatingDisabled'])) {
+            $this->snapshotUpdatingDisabled = $options['snapshotUpdatingDisabled'];
+        }
     }
 
     /**
@@ -94,7 +103,7 @@ class Blameable extends Behavior implements BehaviorInterface
         }
 
         // Fires 'collectData' if the event is 'beforeUpdate'
-        if ($eventType == 'beforeUpdate') {
+        if ($eventType == 'beforeUpdate' && $this->snapshotUpdatingDisabled) {
             return $this->collectData($model);
         }
     }
@@ -163,7 +172,11 @@ class Blameable extends Behavior implements BehaviorInterface
      */
     public function auditAfterUpdate(ModelInterface $model)
     {
-        $changedFields = $this->changedFields;
+        if ($this->snapshotUpdatingDisabled) {
+            $changedFields = $this->changedFields;
+        } else {
+            $changedFields = $model->getUpdatedFields();
+        }
 
         if (count($changedFields) == 0) {
             return null;
@@ -173,7 +186,11 @@ class Blameable extends Behavior implements BehaviorInterface
         $audit = $this->createAudit('U', $model);
 
         //Date the model had before modifications
-        $originalData = $this->snapshot;
+        if ($this->snapshotUpdatingDisabled) {
+            $originalData = $this->snapshot;
+        } else {
+            $originalData = $model->getOldSnapshotData();
+        }
         $auditDetailClass = $this->auditDetailClass;
 
         $details = [];
