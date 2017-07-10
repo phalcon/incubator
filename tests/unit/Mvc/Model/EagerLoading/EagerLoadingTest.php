@@ -92,17 +92,6 @@ class EagerLoadingTest extends Test
      */
     public function testShouldLoadChildOfEmptyParentWithoutException()
     {
-        if (version_compare(PHP_VERSION, '5.6.0', '<') &&
-            version_compare(Version::get(), '3.2.0', '=')
-        ) {
-            $this->markTestSkipped(
-                'The Phalcon\Mvc\Model\Query\Builder was changed in Phalcon v3.2.0.' . PHP_EOL .
-                'These changes do not allow to correctly run tests in PHP 5.5.' . PHP_EOL .
-                'See https://github.com/phalcon/cphalcon/pull/12905/commits/8052204db745e93aacfc38c1b6651e29b7ba9440' . PHP_EOL .
-                'And https://travis-ci.org/phalcon/incubator/jobs/244703920'
-            );
-        }
-
         // Has many -> Belongs to
         // Should be the same for Has many -> Has one
         $loader = new Loader(Robot::findFirstById(1), 'Bugs.Robot');
@@ -111,17 +100,6 @@ class EagerLoadingTest extends Test
 
     public function testManyEagerLoadsAndConstraints()
     {
-        if (version_compare(PHP_VERSION, '5.6.0', '<') &&
-            version_compare(Version::get(), '3.2.0', '=')
-        ) {
-            $this->markTestSkipped(
-                'The Phalcon\Mvc\Model\Query\Builder was changed in Phalcon v3.2.0.' . PHP_EOL .
-                'These changes do not allow to correctly run tests in PHP 5.5.' . PHP_EOL .
-                'See https://github.com/phalcon/cphalcon/pull/12905/commits/8052204db745e93aacfc38c1b6651e29b7ba9440' . PHP_EOL .
-                'And https://travis-ci.org/phalcon/incubator/jobs/244703920'
-            );
-        }
-
         $manufacturers = Manufacturer::with(
             [
                 'Robots' => function ($builder) {
@@ -219,17 +197,6 @@ class EagerLoadingTest extends Test
      */
     public function testShouldThrowLogicExceptionIfTheEntityWillBeIncomplete($method, $args)
     {
-        if (version_compare(PHP_VERSION, '5.6.0', '<') &&
-            version_compare(Version::get(), '3.2.0', '=')
-        ) {
-            $this->markTestSkipped(
-                'The Phalcon\Mvc\Model\Query\Builder was changed in Phalcon v3.2.0.' . PHP_EOL .
-                'These changes do not allow to correctly run tests in PHP 5.5.' . PHP_EOL .
-                'See https://github.com/phalcon/cphalcon/pull/12905/commits/8052204db745e93aacfc38c1b6651e29b7ba9440' . PHP_EOL .
-                'And https://travis-ci.org/phalcon/incubator/jobs/244703920'
-            );
-        }
-
         call_user_func_array(['Phalcon\Test\Mvc\Model\EagerLoading\Stubs\Robot', $method], $args);
     }
 
@@ -245,17 +212,6 @@ class EagerLoadingTest extends Test
 
     public function testShouldUseEagerLoadingAndGetModelByUsingMethods()
     {
-        if (version_compare(PHP_VERSION, '5.6.0', '<') &&
-            version_compare(Version::get(), '3.2.0', '=')
-        ) {
-            $this->markTestSkipped(
-                'The Phalcon\Mvc\Model\Query\Builder was changed in Phalcon v3.2.0.' . PHP_EOL .
-                'These changes do not allow to correctly run tests in PHP 5.5.' . PHP_EOL .
-                'See https://github.com/phalcon/cphalcon/pull/12905/commits/8052204db745e93aacfc38c1b6651e29b7ba9440' . PHP_EOL .
-                'And https://travis-ci.org/phalcon/incubator/jobs/244703920'
-            );
-        }
-
         $this->assertTrue(is_array(Robot::with('Parts')));
         $this->assertTrue(is_object(Robot::findFirstById(1)->load('Parts')));
         $this->assertTrue(is_object(Robot::findFirstWith('Parts', ['id = 1'])));
@@ -263,16 +219,6 @@ class EagerLoadingTest extends Test
 
     public function testShouldUseEagerLoadingAndDetectHasManyToMany()
     {
-        if (version_compare(PHP_VERSION, '5.6.0', '<') &&
-            version_compare(Version::get(), '3.2.0', '=')
-        ) {
-            $this->markTestSkipped(
-                'The Phalcon\Mvc\Model\Query\Builder was changed in Phalcon v3.2.0.' . PHP_EOL .
-                'These changes do not allow to correctly run tests in PHP 5.5.' . PHP_EOL .
-                'See https://github.com/phalcon/cphalcon/pull/12905/commits/8052204db745e93aacfc38c1b6651e29b7ba9440' . PHP_EOL .
-                'And https://travis-ci.org/phalcon/incubator/jobs/244703920'
-            );
-        }
         $rawly = Robot::findFirstById(1);
         $rawly->parts;
 
@@ -302,17 +248,6 @@ class EagerLoadingTest extends Test
 
     public function testShouldUseEagerLoadingAndDetectHasMany()
     {
-        if (version_compare(PHP_VERSION, '5.6.0', '<') &&
-            version_compare(Version::get(), '3.2.0', '=')
-        ) {
-            $this->markTestSkipped(
-                'The Phalcon\Mvc\Model\Query\Builder was changed in Phalcon v3.2.0.' . PHP_EOL .
-                'These changes do not allow to correctly run tests in PHP 5.5.' . PHP_EOL .
-                'See https://github.com/phalcon/cphalcon/pull/12905/commits/8052204db745e93aacfc38c1b6651e29b7ba9440' . PHP_EOL .
-                'And https://travis-ci.org/phalcon/incubator/jobs/244703920'
-            );
-        }
-
         $rawly = Manufacturer::findFirstById(1);
         $rawly->robots;
 
@@ -342,17 +277,6 @@ class EagerLoadingTest extends Test
 
     public function testShouldUseEagerLoadingAndDetectHasOne()
     {
-        if (version_compare(PHP_VERSION, '5.6.0', '<') &&
-            version_compare(Version::get(), '3.2.0', '=')
-        ) {
-            $this->markTestSkipped(
-                'The Phalcon\Mvc\Model\Query\Builder was changed in Phalcon v3.2.0.' . PHP_EOL .
-                'These changes do not allow to correctly run tests in PHP 5.5.' . PHP_EOL .
-                'See https://github.com/phalcon/cphalcon/pull/12905/commits/8052204db745e93aacfc38c1b6651e29b7ba9440' . PHP_EOL .
-                'And https://travis-ci.org/phalcon/incubator/jobs/244703920'
-            );
-        }
-
         $rawly = Robot::findFirstById(1);
         $rawly->purpose;
 
@@ -365,17 +289,6 @@ class EagerLoadingTest extends Test
 
     public function testShouldUseEagerLoadingAndDetectBelongsToDeep()
     {
-        if (version_compare(PHP_VERSION, '5.6.0', '<') &&
-            version_compare(Version::get(), '3.2.0', '=')
-        ) {
-            $this->markTestSkipped(
-                'The Phalcon\Mvc\Model\Query\Builder was changed in Phalcon v3.2.0.' . PHP_EOL .
-                'These changes do not allow to correctly run tests in PHP 5.5.' . PHP_EOL .
-                'See https://github.com/phalcon/cphalcon/pull/12905/commits/8052204db745e93aacfc38c1b6651e29b7ba9440' . PHP_EOL .
-                'And https://travis-ci.org/phalcon/incubator/jobs/244703920'
-            );
-        }
-
         $rawly = Manufacturer::findFirstById(1);
         $rawly->robots = $this->resultSetToEagerLoadingEquivalent($rawly->robots);
 
@@ -398,17 +311,6 @@ class EagerLoadingTest extends Test
 
     public function testBelongsTo()
     {
-        if (version_compare(PHP_VERSION, '5.6.0', '<') &&
-            version_compare(Version::get(), '3.2.0', '=')
-        ) {
-            $this->markTestSkipped(
-                'The Phalcon\Mvc\Model\Query\Builder was changed in Phalcon v3.2.0.' . PHP_EOL .
-                'These changes do not allow to correctly run tests in PHP 5.5.' . PHP_EOL .
-                'See https://github.com/phalcon/cphalcon/pull/12905/commits/8052204db745e93aacfc38c1b6651e29b7ba9440' . PHP_EOL .
-                'And https://travis-ci.org/phalcon/incubator/jobs/244703920'
-            );
-        }
-
         $rawly = Bug::findFirstById(1);
         $rawly->robot;
 
