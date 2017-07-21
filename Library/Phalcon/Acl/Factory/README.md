@@ -13,7 +13,7 @@ To setup `acl` service in DI `service.php` file using `acl.ini` file:
 use Phalcon\Config\Adapter\Ini as ConfigIni;
 use Phalcon\Acl\Factory\Memory as AclMemory;
 
-$di->setShaerd(
+$di->setShared(
     'acl'
     function () {
         $config  = new ConfigIni(APP_PATH . '/config/acl.ini');
@@ -33,7 +33,7 @@ To setup `acl` service in DI `service.php` file using `acl.php` (array) file:
 use Phalcon\Config;
 use Phalcon\Acl\Factory\Memory as AclMemory;
 
-$di->setShaerd(
+$di->setShared(
     'acl'
     function () {
         $config  = new Config(APP_PATH . '/config/acl.php');
