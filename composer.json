@@ -44,7 +44,8 @@
         "codeception/specify": "^0.4",
         "codeception/verify": "^0.3",
         "vlucas/phpdotenv": "^2.4",
-        "phalcon/dd": "^1.1"
+        "phalcon/dd": "^1.1",
+        "doctrine/instantiator": "1.0.5"
     },
     "suggest": {
         "ext-aerospike": "*",
@@ -64,7 +65,8 @@
             "Phalcon\\Test\\Behavior\\Blameable\\": "tests/_data/behavior/blameable",
             "Phalcon\\Test\\Aerospike\\": "tests/aerospike/",
             "Phalcon\\Test\\Unit5x\\": "tests/unit5x/",
-            "Phalcon\\Test\\Collections\\": "tests/_data/collections"
+            "Phalcon\\Test\\Collections\\": "tests/_data/collections",
+            "Phalcon\\Test\\Module\\": "tests/_support/Module"
         },
         "files": [
             "tests/_support/functions.php"

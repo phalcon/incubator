@@ -26,6 +26,7 @@ use Phalcon\Session\Adapter;
 use Phalcon\Session\AdapterInterface;
 use Phalcon\Session\Exception;
 use Phalcon\Db\AdapterInterface as DbAdapter;
+use Phalcon\Db\Column;
 
 /**
  * Phalcon\Session\Adapter\Database
@@ -121,7 +122,8 @@ class Database extends Adapter implements AdapterInterface
                 $maxLifetime
             ),
             Db::FETCH_NUM,
-            [$sessionId, time()]
+            [$sessionId, time()],
+            [Column::BIND_PARAM_STR, Column::BIND_PARAM_INT]
         );
 
         if (empty($row)) {
@@ -151,7 +153,7 @@ class Database extends Adapter implements AdapterInterface
             [$sessionId]
         );
 
-        if (!empty($row) && intval($row[0]) > 0) {
+        if ($row[0] > 0) {
             return $this->connection->execute(
                 sprintf(
                     'UPDATE %s SET %s = ?, %s = ? WHERE %s = ?',
