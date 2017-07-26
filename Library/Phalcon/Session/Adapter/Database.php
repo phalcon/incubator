@@ -110,27 +110,24 @@ class Database extends Adapter implements AdapterInterface
         $maxLifetime = (int) ini_get('session.gc_maxlifetime');
 
         $options = $this->getOptions();
-        $row = $this->connection->fetchOne(
-            sprintf(
-                'SELECT %s FROM %s WHERE %s = ? AND COALESCE(%s, %s) + %d >= ?',
-                $this->connection->escapeIdentifier($options['column_data']),
-                $this->connection->escapeIdentifier($options['table']),
-                $this->connection->escapeIdentifier($options['column_session_id']),
-                $this->connection->escapeIdentifier($options['column_modified_at']),
-                $this->connection->escapeIdentifier($options['column_created_at']),
-                $maxLifetime
-            ),
-            Db::FETCH_NUM,
-            [$sessionId, time()]
+        $query = sprintf(
+            'SELECT %s FROM %s WHERE %s = ? AND CAST(COALESCE(%s, %s) + %d as int) >= ?', 
+            $this->connection->escapeIdentifier($options['column_data']), 
+            $this->connection->escapeIdentifier($options['table']), 
+            $this->connection->escapeIdentifier($options['column_session_id']), 
+            $this->connection->escapeIdentifier($options['column_modified_at']), 
+            $this->connection->escapeIdentifier($options['column_created_at']), 
+            $maxLifetime
         );
+
+        $row = $this->connection->fetchOne($query, Db::FETCH_NUM, [$sessionId, time()]);
 
         if (empty($row)) {
             return '';
         }
-
         return $row[0];
     }
-
+    
     /**
      * {@inheritdoc}
      *
@@ -143,7 +140,8 @@ class Database extends Adapter implements AdapterInterface
         $options = $this->getOptions();
         $row = $this->connection->fetchOne(
             sprintf(
-                'SELECT COUNT(*) FROM %s WHERE %s = ?',
+                'SELECT COUNT(*), %s FROM %s WHERE %s = ?',
+                $this->connection->escapeIdentifier($options['column_data']),
                 $this->connection->escapeIdentifier($options['table']),
                 $this->connection->escapeIdentifier($options['column_session_id'])
             ),
@@ -152,16 +150,26 @@ class Database extends Adapter implements AdapterInterface
         );
 
         if (!empty($row) && intval($row[0]) > 0) {
-            return $this->connection->execute(
-                sprintf(
-                    'UPDATE %s SET %s = ?, %s = ? WHERE %s = ?',
-                    $this->connection->escapeIdentifier($options['table']),
-                    $this->connection->escapeIdentifier($options['column_data']),
-                    $this->connection->escapeIdentifier($options['column_modified_at']),
-                    $this->connection->escapeIdentifier($options['column_session_id'])
-                ),
-                [$data, time(), $sessionId]
+            
+            $newData = \Wikimedia\PhpSessionSerializer::decode($data);
+            $existingData = \Wikimedia\PhpSessionSerializer::decode($row[1]);
+            $mergedData = array_merge($existingData, $newData);
+            $mergedDataString = \Wikimedia\PhpSessionSerializer::encode($mergedData);
+            
+            $query = sprintf(
+                'UPDATE %s SET %s = ?, %s = ? WHERE %s = ?',
+                $this->connection->escapeIdentifier($options['table']),
+                $this->connection->escapeIdentifier($options['column_data']),
+                $this->connection->escapeIdentifier($options['column_modified_at']),
+                $this->connection->escapeIdentifier($options['column_session_id'])
             );
+            
+            $result = $this->connection->execute(
+                $query,
+                [$mergedDataString, time(), $sessionId]
+            );
+            
+            return $result;
         } else {
             return $this->connection->execute(
                 sprintf(
@@ -175,6 +183,49 @@ class Database extends Adapter implements AdapterInterface
                 [$sessionId, $data, time()]
             );
         }
+    }
+    
+    /**
+     * @todo implement remove for flash messages to be removed correctly.
+     * @param type $index
+     */
+    public function remove($index)
+    {
+        $options = $this->getOptions();
+        $row = $this->connection->fetchOne(
+            sprintf(
+                'SELECT COUNT(*), %s FROM %s WHERE %s = ?',
+                $this->connection->escapeIdentifier($options['column_data']),
+                $this->connection->escapeIdentifier($options['table']),
+                $this->connection->escapeIdentifier($options['column_session_id'])
+            ),
+            Db::FETCH_NUM,
+            [$this->getId()]
+        );
+
+        if (!empty($row) && intval($row[0]) > 0) {
+            
+            $existingData = \Wikimedia\PhpSessionSerializer::decode($row[1]);
+            $prefix = ($this->_uniqueId) ? $this->_uniqueId . '#' : '';
+            unset($existingData[$prefix . $index]);
+            $modifiedDataString = \Wikimedia\PhpSessionSerializer::encode($existingData);
+            
+            $query = sprintf(
+                'UPDATE %s SET %s = ?, %s = ? WHERE %s = ?',
+                $this->connection->escapeIdentifier($options['table']),
+                $this->connection->escapeIdentifier($options['column_data']),
+                $this->connection->escapeIdentifier($options['column_modified_at']),
+                $this->connection->escapeIdentifier($options['column_session_id'])
+            );
+            
+            $result = $this->connection->execute(
+                $query,
+                [$modifiedDataString, time(), $this->getId()]
+            );
+            
+            return $result;
+        }
+        parent::remove($index);
     }
 
     /**
@@ -218,7 +269,7 @@ class Database extends Adapter implements AdapterInterface
 
         return $this->connection->execute(
             sprintf(
-                'DELETE FROM %s WHERE COALESCE(%s, %s) + %d < ?',
+                'DELETE FROM %s WHERE CAST(COALESCE(%s, %s) + %d as int) < ?',
                 $this->connection->escapeIdentifier($options['table']),
                 $this->connection->escapeIdentifier($options['column_modified_at']),
                 $this->connection->escapeIdentifier($options['column_created_at']),
