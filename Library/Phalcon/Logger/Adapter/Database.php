@@ -1,12 +1,13 @@
 <?php
+
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (https://www.phalconphp.com)      |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
-  | with this package in the file docs/LICENSE.txt.                        |
+  | with this package in the file LICENSE.txt.                             |
   |                                                                        |
   | If you did not receive a copy of the license and are unable to         |
   | obtain it through the world-wide-web, please send an email             |
@@ -102,7 +103,7 @@ class Database extends LoggerAdapter implements AdapterInterface
     public function getFormatter()
     {
         if (!is_object($this->_formatter)) {
-            $this->_formatter = new LineFormatter();
+            $this->_formatter = new LineFormatter('%message%');
         }
 
         return $this->_formatter;
@@ -121,7 +122,7 @@ class Database extends LoggerAdapter implements AdapterInterface
     {
         return $this->db->execute(
             'INSERT INTO ' . $this->options['table'] . ' VALUES (null, ?, ?, ?, ?)',
-            [$this->name, $type, $message, $time],
+            [$this->name, $type, $this->getFormatter()->format($message, $type, $time, $context), $time],
             [Column::BIND_PARAM_STR, Column::BIND_PARAM_INT, Column::BIND_PARAM_STR, Column::BIND_PARAM_INT]
         );
     }

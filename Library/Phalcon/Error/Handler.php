@@ -1,12 +1,13 @@
 <?php
+
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (https://www.phalconphp.com)      |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
-  | with this package in the file docs/LICENSE.txt.                        |
+  | with this package in the file LICENSE.txt.                             |
   |                                                                        |
   | If you did not receive a copy of the license and are unable to         |
   | obtain it through the world-wide-web, please send an email             |
@@ -18,9 +19,11 @@
   |          Serghei Iakovlev <serghei@phalconphp.com>                     |
   +------------------------------------------------------------------------+
 */
+
 namespace Phalcon\Error;
 
 use Phalcon\Di;
+use Phalcon\DiInterface;
 use Phalcon\Logger\Formatter;
 use Phalcon\Logger;
 use Phalcon\Logger\AdapterInterface;
@@ -90,21 +93,26 @@ class Handler
     /**
      * Logs the error and dispatches an error controller.
      *
-     * @param  \Phalcon\Error\Error $error
-     * @return mixed
+     * @param Error $error
      */
     public static function handle(Error $error)
     {
         $di = Di::getDefault();
+
+        $type = static::getErrorType($error->type());
+        $message = "$type: {$error->message()} in {$error->file()} on line {$error->line()}";
+
+        if (!$di instanceof DiInterface) {
+            echo $message;
+            return;
+        }
+
         $config = $di->getShared('config')->error->toArray();
 
         $logger = $config['logger'];
         if (!$logger instanceof AdapterInterface) {
             $logger = new FileLogger($logger);
         }
-
-        $type = static::getErrorType($error->type());
-        $message = "$type: {$error->message()} in {$error->file()} on line {$error->line()}";
 
         if (isset($config['formatter'])) {
             $formatter = null;
@@ -170,7 +178,8 @@ class Handler
                     $view->render($config['controller'], $config['action'], $dispatcher->getParams());
                     $view->finish();
 
-                    return $response->setContent($view->getContent())->send();
+                    $response->setContent($view->getContent())->send();
+                    return;
                 } else {
                     echo $message;
                 }

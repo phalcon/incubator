@@ -7,7 +7,7 @@
   | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
-  | with this package in the file docs/LICENSE.txt.                        |
+  | with this package in the file LICENSE.txt.                             |
   |                                                                        |
   | If you did not receive a copy of the license and are unable to         |
   | obtain it through the world-wide-web, please send an email             |
@@ -32,14 +32,14 @@ use Phalcon\Db\Exception;
  *
  * <code>
  * use Phalcon\Db\Adapter\Pdo\Mysql;
- * use Phalcon\Db\Adapter\Pdo\MysqlExtended;
+ * use Phalcon\Db\Dialect\MysqlExtended;
  *
  * $connection = new Mysql([
  *     'host'         => 'localhost',
  *     'username'     => 'root',
  *     'password'     => 'secret',
  *     'dbname'       => 'enigma',
- *     'dialectClass' => MysqlExtended::class
+ *     'dialectClass' => MysqlExtended::class,
  * ]);
  * </code>
  *
@@ -86,7 +86,7 @@ class MysqlExtended extends Mysql
                         case "'YEAR'":
                             return 'INTERVAL ' . $this->getSqlExpression($expression["arguments"][0]) . ' YEAR';
                         default:
-                            throw new \Exception('DATE_INTERVAL unit is not supported');
+                            throw new Exception('DATE_INTERVAL unit is not supported');
                     }
                     break;
 

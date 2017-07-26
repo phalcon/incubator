@@ -1,12 +1,13 @@
 <?php
+
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (https://www.phalconphp.com)      |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
-  | with this package in the file docs/LICENSE.txt.                        |
+  | with this package in the file LICENSE.txt.                             |
   |                                                                        |
   | If you did not receive a copy of the license and are unable to         |
   | obtain it through the world-wide-web, please send an email             |
@@ -21,7 +22,7 @@ namespace Phalcon\Validation\Validator;
 use Phalcon\Validation;
 use Phalcon\Validation\Message;
 use Phalcon\Validation\Validator;
-use Phalcon\Validation\Exception;
+use Phalcon\Validation\Exception as ValidationException;
 
 /**
  * Phalcon\Mvc\Model\Validator\CardNumber
@@ -74,7 +75,7 @@ class CardNumber extends Validator
                     $result = ($issuer == 4);
                     break;
                 default:
-                    throw new Exception('Incorrect type specifier');
+                    throw new ValidationException('Incorrect type specifier');
             }
 
             if (false === $result) {

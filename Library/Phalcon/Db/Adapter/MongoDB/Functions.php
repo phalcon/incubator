@@ -140,8 +140,6 @@ class Functions
     /**
      * Return whether the server supports a particular feature.
      *
-     * @internal
-     *
      * @param Server  $server Server to check
      * @param integer $feature Feature constant (i.e. wire protocol version)
      *

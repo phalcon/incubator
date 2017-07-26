@@ -1,12 +1,13 @@
 <?php
+
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (https://www.phalconphp.com)      |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
-  | with this package in the file docs/LICENSE.txt.                        |
+  | with this package in the file LICENSE.txt.                             |
   |                                                                        |
   | If you did not receive a copy of the license and are unable to         |
   | obtain it through the world-wide-web, please send an email             |
@@ -18,14 +19,14 @@
 
 namespace Phalcon\Test;
 
-use Phalcon\Di\InjectionAwareInterface;
-use PHPUnit_Framework_TestCase as TestCase;
-use Phalcon\Config;
-use Phalcon\Di\FactoryDefault;
 use Phalcon\Di;
+use Phalcon\Di\FactoryDefault;
+use Phalcon\Di\InjectionAwareInterface;
 use Phalcon\DiInterface;
-use Phalcon\Mvc\Url;
 use Phalcon\Escaper;
+use Phalcon\Mvc\Url;
+use Phalcon\Test\Traits\ResultSet;
+use PHPUnit\Framework\TestCase as TestCase;
 
 /**
  * Class UnitTestCase
@@ -34,6 +35,8 @@ use Phalcon\Escaper;
  */
 abstract class UnitTestCase extends TestCase implements InjectionAwareInterface
 {
+    use ResultSet;
+
     /**
      * Holds the configuration variables and other stuff
      * I can use the DI container but for tests like the Translate
@@ -84,9 +87,7 @@ abstract class UnitTestCase extends TestCase implements InjectionAwareInterface
 
     protected function tearDown()
     {
-        $di = $this->getDI();
-        $di::reset();
-
+        Di::reset();
         parent::tearDown();
     }
 
@@ -168,7 +169,7 @@ abstract class UnitTestCase extends TestCase implements InjectionAwareInterface
     public function getConfig()
     {
         if (!$this->config instanceof Config && $this->getDI()->has('config')) {
-            return $this->getDI()->has('config');
+            return $this->getDI()->get('config');
         }
 
         return $this->config;

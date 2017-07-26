@@ -10,7 +10,7 @@ use MongoDB\Driver\Server;
  * This interface is reserved for internal use until PHPC-378 is implemented,
  * since execute() should ultimately be changed to use ServerInterface.
  *
- * @internal
+ * @package Phalcon\Db\Adapter\MongoDB\Operation
  */
 interface Executable
 {

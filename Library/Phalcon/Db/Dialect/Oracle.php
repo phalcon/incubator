@@ -1,22 +1,22 @@
 <?php
 
 /*
- +------------------------------------------------------------------------+
- | Phalcon Framework                                                      |
- +------------------------------------------------------------------------+
- | Copyright (c) 2011-2016 Phalcon Team (https://phalconphp.com)          |
- +------------------------------------------------------------------------+
- | This source file is subject to the New BSD License that is bundled     |
- | with this package in the file docs/LICENSE.txt.                        |
- |                                                                        |
- | If you did not receive a copy of the license and are unable to         |
- | obtain it through the world-wide-web, please send an email             |
- | to license@phalconphp.com so we can send you a copy immediately.       |
- +------------------------------------------------------------------------+
- | Authors: Andres Gutierrez <andres@phalconphp.com>                      |
- |          Eduar Carvajal <eduar@phalconphp.com>                         |
- +------------------------------------------------------------------------+
- */
+  +------------------------------------------------------------------------+
+  | Phalcon Framework                                                      |
+  +------------------------------------------------------------------------+
+  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
+  +------------------------------------------------------------------------+
+  | This source file is subject to the New BSD License that is bundled     |
+  | with this package in the file LICENSE.txt.                             |
+  |                                                                        |
+  | If you did not receive a copy of the license and are unable to         |
+  | obtain it through the world-wide-web, please send an email             |
+  | to license@phalconphp.com so we can send you a copy immediately.       |
+  +------------------------------------------------------------------------+
+  | Authors: Andres Gutierrez <andres@phalconphp.com>                      |
+  |          Eduar Carvajal <eduar@phalconphp.com>                         |
+  +------------------------------------------------------------------------+
+*/
 
 namespace Phalcon\Db\Dialect;
 
@@ -33,12 +33,24 @@ use Phalcon\Db\ReferenceInterface;
  *
  * Generates database specific SQL for the Oracle RDBMS.
  *
+ * <code>
+ * use Phalcon\Db\Adapter\Pdo\Oracle;
+ * use Phalcon\Db\Adapter\Pdo\Oracle as Connection;
+ *
+ * $connection = new Connection([
+ *     'dbname'       => '//localhost/enigma',
+ *     'username'     => 'oracle',
+ *     'password'     => 'secret',
+ *     'dialectClass' => Oracle::class,
+ * ]);
+ * </code>
+ *
  * @package Phalcon\Db\Dialect
  */
 class Oracle extends Dialect
 {
     // @codingStandardsIgnoreStart
-    protected $_escapeChar = "'";
+    protected $_escapeChar = "";
     // @codingStandardsIgnoreEnd
 
     /**
@@ -53,13 +65,10 @@ class Oracle extends Dialect
         $offset = 0;
 
         if (is_array($number)) {
-            if (isset($number[1])) {
-                $offset = intval(trim($number[1], $this->_escapeChar));
-            }
-
-            $limit = intval(trim($number[0], $this->_escapeChar)) + $offset;
+            $offset = $number[1] !=null? $number[1]:0;
+            $limit = $number[0];
         } else {
-            $limit = intval(trim($number, $this->_escapeChar));
+            $limit = $number;
         }
 
         $sqlQuery = sprintf(
@@ -68,16 +77,11 @@ class Oracle extends Dialect
             $sqlQuery
         );
 
-        if (0 != $limit) {
-            $sqlQuery .= sprintf(' WHERE ROWNUM <= %d', $limit);
-        }
+        $sqlQuery .= sprintf(' WHERE ROWNUM <= %s', $limit);
 
         $sqlQuery .= ')';
 
-        if (0 != $offset) {
-            $sqlQuery .= sprintf(' WHERE PHALCON_RN >= %d', $offset);
-        }
-
+        $sqlQuery .= sprintf(' WHERE PHALCON_RN >= %s', $offset);
         return $sqlQuery;
     }
 
@@ -353,6 +357,9 @@ class Oracle extends Dialect
      */
     public function tableExists($tableName, $schemaName = null)
     {
+
+        $oldEscapeChar=$this->_escapeChar;
+        $this->_escapeChar = "'";
         $tableName = $this->escape(Text::upper($tableName));
         $baseQuery = sprintf(
             /** @lang text */
@@ -363,8 +370,9 @@ class Oracle extends Dialect
         if (!empty($schemaName)) {
             $schemaName = $this->escapeSchema($schemaName);
 
-            return sprintf("%s AND OWNER = %s", $baseQuery, Text::upper($schemaName));
+            $baseQuery=sprintf("%s AND OWNER = %s", $baseQuery, Text::upper($schemaName));
         }
+        $this->_escapeChar = $oldEscapeChar;
 
         return $baseQuery;
     }
@@ -415,8 +423,6 @@ class Oracle extends Dialect
                 $sql
             );
         }
-
-        $this->_escapeChar = "'";
 
         return $sql;
     }
@@ -476,6 +482,8 @@ class Oracle extends Dialect
      */
     public function describeColumns($table, $schema = null)
     {
+        $oldEscapeChar= $this->_escapeChar;
+        $this->_escapeChar = "'";
         $table = $this->escape($table);
         $sql = 'SELECT TC.COLUMN_NAME, TC.DATA_TYPE, TC.DATA_LENGTH, TC.DATA_PRECISION, TC.DATA_SCALE, TC.NULLABLE, ' .
                'C.CONSTRAINT_TYPE, TC.DATA_DEFAULT, CC.POSITION FROM ALL_TAB_COLUMNS TC LEFT JOIN ' .
@@ -484,13 +492,16 @@ class Oracle extends Dialect
                'TC.TABLE_NAME = CC.TABLE_NAME AND TC.COLUMN_NAME = CC.COLUMN_NAME WHERE TC.TABLE_NAME = %s %s '.
                'ORDER BY TC.COLUMN_ID';
 
+
         if (!empty($schema)) {
             $schema = $this->escapeSchema($schema);
 
-            return sprintf($sql, Text::upper($table), 'AND TC.OWNER = ' . Text::upper($schema));
+            $queryBase=sprintf($sql, Text::upper($table), 'AND TC.OWNER = ' . Text::upper($schema));
+        } else {
+            $queryBase=sprintf($sql, Text::upper($table), '');
         }
-
-        return sprintf($sql, Text::upper($table), '');
+        $this->_escapeChar = $oldEscapeChar;
+        return $queryBase;
     }
 
     /**

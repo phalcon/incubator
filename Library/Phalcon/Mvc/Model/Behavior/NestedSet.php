@@ -560,7 +560,6 @@ class NestedSet extends Behavior implements BehaviorInterface
 
                 return false;
             }
-            $this->ignoreEvent = false;
         } else {
             $condition = $this->leftAttribute . '>=' . $owner->{$this->leftAttribute} . ' AND ';
             $condition .= $this->rightAttribute . '<=' . $owner->{$this->rightAttribute};
@@ -578,12 +577,12 @@ class NestedSet extends Behavior implements BehaviorInterface
                     return false;
                 }
             }
-            $this->ignoreEvent = false;
         }
 
         $key = $owner->{$this->rightAttribute} + 1;
         $delta = $owner->{$this->leftAttribute} - $owner->{$this->rightAttribute} - 1;
         $this->shiftLeftRight($key, $delta);
+        $this->ignoreEvent = false;
 
         $this->db->commit();
 

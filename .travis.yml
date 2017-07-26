@@ -1,59 +1,109 @@
+#  Phalcon Framework
+#
+#  Copyright (c) 2011-2017 Phalcon Team (https://www.phalconphp.com)
+#
+#  This source file is subject to the New BSD License that is bundled
+#  with this package in the file LICENSE.txt.
+#
+#  If you did not receive a copy of the license and are unable to
+#  obtain it through the world-wide-web, please send an email
+#  to license@phalconphp.com so we can send you a copy immediately.
+
 language: php
+
+dist: trusty
+sudo: required
 
 php:
   - 5.5
   - 5.6
   - 7.0
+  - 7.1
 
-sudo: required
-dist: trusty
+services:
+  - memcached
+  - redis
+  - mongodb
+  - mysql
+
+git:
+  depth: 1
+
+cache:
+  apt: true
+  ccache: true
+  timeout: 691200
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+    - $HOME/pear
+    - $HOME/cphalcon
+    - $HOME/ext
 
 env:
   global:
-    - DOCKER_COMPOSE_VERSION="1.7.0" PHALCON_SRC_PATH="${TRAVIS_BUILD_DIR}/cphalcon"
-  matrix:
-    - PHALCON_VERSION="3.0.x"
-    - PHALCON_VERSION="v3.0.0"
-    - PHALCON_VERSION="v3.0.1"
+    - ZEND_DONT_UNLOAD_MODULES=1
+    - CC="ccache gcc"
+    - PATH="$PATH:~/bin"
+    - PHALCON_VERSION="v3.2.0"
 
 before_install:
-  - sudo service memcached stop
-  - sudo service docker stop
-  # Fix Hash Sum mismatch
-  - sudo apt-get purge -y google-chrome-stable
-  - sudo rm -f /etc/apt/sources.list.d/google*
-  - phpenv config-rm xdebug.ini
+  - export PHP_MAJOR="$(echo $TRAVIS_PHP_VERSION | cut -d '.' -f 1)"
+  - export PHP_EXTENSION_DIR=$(php-config --extension-dir)
+  - phpenv config-rm xdebug.ini || true
+  - bash tests/_ci/pear_setup.sh
+  - bash tests/_ci/install_prereqs_$PHP_MAJOR.sh
+  - if [ ! -z "${GH_TOKEN}" ]; then composer config github-oauth.github.com ${GH_TOKEN}; echo "Configured Github token"; fi;
+  - if [ ! -f "$HOME/cphalcon/$PHALCON_VERSION/tests/_ci/phalcon.ini" ]; then mkdir -p $HOME/cphalcon/$PHALCON_VERSION && git clone -q --depth=1 https://github.com/phalcon/cphalcon.git $HOME/cphalcon/$PHALCON_VERSION >/dev/null 2>&1; fi;
 
 install:
-  - git clone --depth=1 --branch=${PHALCON_VERSION} https://github.com/phalcon/cphalcon.git ${PHALCON_SRC_PATH}
-  # Install Docker
-  - sudo apt-get update -qq
-  - sudo apt-get install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y --force-yes docker-engine
-  - sudo service docker restart
-  # Install Docker Compose
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-  # Install Dependencies
-  - composer self-update
-  - travis_retry composer install --ignore-platform-reqs --prefer-source --no-interaction
-  - travis_retry composer require --ignore-platform-reqs "duncan3dc/fork-helper:*"
-  # Pull images
-  - docker pull phalconphp/php:${TRAVIS_PHP_VERSION}
-  - docker pull phalconphp/zephir:${TRAVIS_PHP_VERSION}
+  - travis_retry composer install --prefer-dist --no-interaction --quiet --no-ansi --no-progress --optimize-autoloader --dev --no-suggest --ignore-platform-reqs
+  # See https://github.com/aerospike/aerospike-client-php/issues/127
+  - '[[ "$PHP_MAJOR" == "7" ]] || bash ${TRAVIS_BUILD_DIR}/tests/_ci/install_aerospike.sh'
+  - if [ ! -f $HOME/ext/$PHP_VERSION/$PHALCON_VERSION/phalcon.so ]; then cd $HOME/cphalcon/$PHALCON_VERSION/build && bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) && mkdir -p $HOME/ext/$PHP_VERSION/$PHALCON_VERSION && cp $PHP_EXTENSION_DIR/phalcon.so $HOME/ext/$PHP_VERSION/$PHALCON_VERSION/phalcon.so; fi;
+  - if [ -f $HOME/ext/$PHP_VERSION/$PHALCON_VERSION/phalcon.so ]; then cp $HOME/ext/$PHP_VERSION/$PHALCON_VERSION/phalcon.so $PHP_EXTENSION_DIR/phalcon.so; fi;
+  - phpenv config-add $HOME/cphalcon/$PHALCON_VERSION/tests/_ci/phalcon.ini
+  - phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/redis.ini
+  - cd $TRAVIS_BUILD_DIR
+  - $(phpenv which php) --ri phalcon
 
 before_script:
-  - stty cols 160
-  - docker-compose -p incubator up -d
-  - sleep 1
+  # Create database and user
+  - echo 'CREATE DATABASE incubator CHARSET=utf8 COLLATE=utf8_unicode_ci' | mysql -u root
+  - echo "CREATE USER 'incubator'@'%' IDENTIFIED BY 'secret'" | mysql -u root
+  - echo "GRANT ALL PRIVILEGES ON incubator.* TO 'incubator'@'%' WITH GRANT OPTION" | mysql -u root
+  - cat ${TRAVIS_BUILD_DIR}/tests/_data/dump.sql | mysql -u root incubator
+  # See https://github.com/aerospike/aerospike-client-php/issues/127
+  - '[[ "${PHP_MAJOR:0:1}" == "7" ]] || bash ${TRAVIS_BUILD_DIR}/tests/_ci/install_aserver.sh'
 
 script:
-  - bash tests/build.sh
+  - vendor/bin/phpcs
+  - vendor/bin/codecept build
+  - vendor/bin/codecept run -v tests/unit
+  - '[[ "$PHP_MAJOR" == "7" ]] || vendor/bin/codecept run -v tests/aerospike'
+  - '[[ "$PHP_MAJOR" == "7" ]] || vendor/bin/codecept run -v tests/unit5x'
 
 notifications:
   email:
     recipients:
-      - serghei@phalconphp.com
+      - build@phalconphp.com
     on_success: change
     on_failure: always
+
+addons:
+  apt:
+    packages:
+      - re2c
+      - beanstalkd
+      - python-bcrypt
+      - build-essential
+      - autoconf
+      - libssl-dev
+      - libyaml-dev
+      - liblua5.1-dev
+      - mysql-server-5.6
+      - mysql-server-core-5.6
+      - mysql-client-5.6
+  hosts:
+    - db
+    - incubator.local

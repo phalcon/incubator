@@ -1,12 +1,13 @@
 <?php
+
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
+  | Copyright (c) 2011-2016 Phalcon Team (https://www.phalconphp.com)      |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
-  | with this package in the file docs/LICENSE.txt.                        |
+  | with this package in the file LICENSE.txt.                             |
   |                                                                        |
   | If you did not receive a copy of the license and are unable to         |
   | obtain it through the world-wide-web, please send an email             |
@@ -92,13 +93,13 @@ abstract class FunctionalTestCase extends ModelTestCase
      * Assert that the last dispatched controller matches the given controller class name
      *
      * @param  string $expected The expected controller name
-     * @throws \PHPUnit_Framework_ExpectationFailedException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
      */
     public function assertController($expected)
     {
         $actual = $this->di->getShared('dispatcher')->getControllerName();
         if ($actual != $expected) {
-            throw new \PHPUnit_Framework_ExpectationFailedException(
+            throw new \PHPUnit\Framework\ExpectationFailedException(
                 sprintf(
                     'Failed asserting Controller name "%s", actual Controller name is "%s"',
                     $expected,
@@ -114,13 +115,13 @@ abstract class FunctionalTestCase extends ModelTestCase
      * Assert that the last dispatched action matches the given action name
      *
      * @param  string $expected The expected action name
-     * @throws \PHPUnit_Framework_ExpectationFailedException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
      */
     public function assertAction($expected)
     {
         $actual = $this->di->getShared('dispatcher')->getActionName();
         if ($actual != $expected) {
-            throw new \PHPUnit_Framework_ExpectationFailedException(
+            throw new \PHPUnit\Framework\ExpectationFailedException(
                 sprintf(
                     'Failed asserting Action name "%s", actual Action name is "%s"',
                     $expected,
@@ -138,14 +139,14 @@ abstract class FunctionalTestCase extends ModelTestCase
      * </code>
      *
      * @param  array $expected The expected headers
-     * @throws \PHPUnit_Framework_ExpectationFailedException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
      */
     public function assertHeader(array $expected)
     {
         foreach ($expected as $expectedField => $expectedValue) {
             $actualValue = $this->di->getShared('response')->getHeaders()->get($expectedField);
             if ($actualValue != $expectedValue) {
-                throw new \PHPUnit_Framework_ExpectationFailedException(
+                throw new \PHPUnit\Framework\ExpectationFailedException(
                     sprintf(
                         'Failed asserting "%s" has a value of "%s", actual "%s" header value is "%s"',
                         $expectedField,
@@ -163,7 +164,7 @@ abstract class FunctionalTestCase extends ModelTestCase
      * Asserts that the response code matches the given one
      *
      * @param  string $expected the expected response code
-     * @throws \PHPUnit_Framework_ExpectationFailedException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
      */
     public function assertResponseCode($expected)
     {
@@ -175,7 +176,7 @@ abstract class FunctionalTestCase extends ModelTestCase
         $actualValue = $this->di->getShared('response')->getHeaders()->get('Status');
 
         if (empty($actualValue) || stristr($actualValue, $expected) === false) {
-            throw new \PHPUnit_Framework_ExpectationFailedException(
+            throw new \PHPUnit\Framework\ExpectationFailedException(
                 sprintf(
                     'Failed asserting response code is "%s", actual response status is "%s"',
                     $expected,
@@ -190,7 +191,7 @@ abstract class FunctionalTestCase extends ModelTestCase
     /**
      * Asserts that the dispatch is forwarded
      *
-     * @throws \PHPUnit_Framework_ExpectationFailedException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
      */
     public function assertDispatchIsForwarded()
     {
@@ -199,7 +200,7 @@ abstract class FunctionalTestCase extends ModelTestCase
         $actual = $dispatcher->wasForwarded();
 
         if (!$actual) {
-            throw new \PHPUnit_Framework_ExpectationFailedException('Failed asserting dispatch was forwarded');
+            throw new \PHPUnit\Framework\ExpectationFailedException('Failed asserting dispatch was forwarded');
         }
 
         $this->assertTrue($actual);
@@ -209,18 +210,18 @@ abstract class FunctionalTestCase extends ModelTestCase
      * Assert location redirect
      *
      * @param  string $location
-     * @throws \PHPUnit_Framework_ExpectationFailedException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
      */
     public function assertRedirectTo($location)
     {
         $actualLocation = $this->di->getShared('response')->getHeaders()->get('Location');
 
         if (!$actualLocation) {
-            throw new \PHPUnit_Framework_ExpectationFailedException('Failed asserting response caused a redirect');
+            throw new \PHPUnit\Framework\ExpectationFailedException('Failed asserting response caused a redirect');
         }
 
         if ($actualLocation !== $location) {
-            throw new \PHPUnit_Framework_ExpectationFailedException(sprintf(
+            throw new \PHPUnit\Framework\ExpectationFailedException(sprintf(
                 'Failed asserting response redirects to "%s". It redirects to "%s".',
                 $location,
                 $actualLocation

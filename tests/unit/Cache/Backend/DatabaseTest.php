@@ -96,12 +96,12 @@ class DatabaseTest extends Test
         $frontend   = new CacheFrontend(['lifetime' => 10]);
         $connection = new DbAdapter(
             [
-                'host'     => TEST_DB_HOST,
-                'username' => TEST_DB_USER,
-                'password' => TEST_DB_PASSWD,
-                'dbname'   => TEST_DB_NAME,
-                'charset'  => TEST_DB_CHARSET,
-                'port'     => TEST_DB_PORT,
+                'host'     => env('TEST_DB_HOST', '127.0.0.1'),
+                'username' => env('TEST_DB_USER', 'incubator'),
+                'password' => env('TEST_DB_PASSWD', 'secret'),
+                'dbname'   => env('TEST_DB_NAME', 'incubator'),
+                'charset'  => env('TEST_DB_CHARSET', 'utf8'),
+                'port'     => env('TEST_DB_PORT', 3306),
             ]
         );
 

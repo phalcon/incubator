@@ -1,21 +1,21 @@
 <?php
 
 /*
- +------------------------------------------------------------------------+
- | Phalcon Framework                                                      |
- +------------------------------------------------------------------------+
- | Copyright (c) 2011-2016 Phalcon Team (http://www.phalconphp.com)       |
- +------------------------------------------------------------------------+
- | This source file is subject to the New BSD License that is bundled     |
- | with this package in the file docs/LICENSE.txt.                        |
- |                                                                        |
- | If you did not receive a copy of the license and are unable to         |
- | obtain it through the world-wide-web, please send an email             |
- | to license@phalconphp.com so we can send you a copy immediately.       |
- +------------------------------------------------------------------------+
- | Authors: Serghei Iakovlev <serghei@phalconphp.com>                     |
- +------------------------------------------------------------------------+
- */
+  +------------------------------------------------------------------------+
+  | Phalcon Framework                                                      |
+  +------------------------------------------------------------------------+
+  | Copyright (c) 2011-2016 Phalcon Team (https://www.phalconphp.com)      |
+  +------------------------------------------------------------------------+
+  | This source file is subject to the New BSD License that is bundled     |
+  | with this package in the file LICENSE.txt.                             |
+  |                                                                        |
+  | If you did not receive a copy of the license and are unable to         |
+  | obtain it through the world-wide-web, please send an email             |
+  | to license@phalconphp.com so we can send you a copy immediately.       |
+  +------------------------------------------------------------------------+
+  | Authors: Serghei Iakovlev <serghei@phalconphp.com>                     |
+  +------------------------------------------------------------------------+
+*/
 
 namespace Phalcon\Cache\Backend;
 
@@ -179,11 +179,7 @@ class Aerospike extends Backend implements BackendInterface
 
         $aKey = $this->buildKey($prefixedKey);
 
-        if (is_numeric($cachedContent)) {
-            $bins = ['value' => $cachedContent];
-        } else {
-            $bins = ['value' => $this->_frontend->beforeStore($cachedContent)];
-        }
+        $bins['value'] = $cachedContent;
 
         $status = $this->db->put(
             $aKey,
@@ -261,11 +257,7 @@ class Aerospike extends Backend implements BackendInterface
 
         $cachedContent = $cache['bins']['value'];
 
-        if (is_numeric($cachedContent)) {
-            return $cachedContent;
-        }
-
-        return $this->_frontend->afterRetrieve($cachedContent);
+        return $cachedContent;
     }
 
     /**
@@ -288,6 +280,26 @@ class Aerospike extends Backend implements BackendInterface
     /**
      * {@inheritdoc}
      *
+     * @return boolean
+     */
+    public function flush()
+    {
+        $keys = $this->queryKeys();
+
+        $success = true;
+
+        foreach ($keys as $aKey) {
+            if (!$this->delete($aKey)) {
+                $success = false;
+            }
+        }
+
+        return $success;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @param string $keyName
      * @param int    $lifetime
      * @return boolean
@@ -305,9 +317,8 @@ class Aerospike extends Backend implements BackendInterface
         }
 
         $aKey = $this->buildKey($prefixedKey);
-        $status = $this->db->get($aKey, $cache);
 
-        return $status == \Aerospike::OK;
+        return $this->db->exists($aKey, $cache) == \Aerospike::OK;
     }
 
     /**
