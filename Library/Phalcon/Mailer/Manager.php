@@ -338,7 +338,15 @@ class Manager extends Component
             $view = $this->getDI()->get('\Phalcon\Mvc\View\Simple');
             $view->setViewsDir($viewsDir);
 
-            if ($engines = $viewApp->getRegisteredEngines()) {
+            if ($registeredEngines = $viewApp->getRegisteredEngines()) {
+                $engines = [];
+                foreach ($registeredEngines as $key => $engine) {
+                    if (is_object($engine)) {
+                        $engines[$key] = get_class($engine);
+                    } else {
+                        $engines[$key] = $engine;
+                    }
+                }
                 $view->registerEngines($engines);
             }
 
