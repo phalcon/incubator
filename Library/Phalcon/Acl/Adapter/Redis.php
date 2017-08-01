@@ -119,6 +119,26 @@ class Redis extends Adapter
             $roleToInherit = $roleToInherit->getName();
         }
 
+        /**
+         * Deep inherits Explicit tests array, Implicit recurs through inheritance chain
+         */
+        if( is_array( $roleToInherit ) ) {
+
+            foreach ($roleToInherit as $roleToInherit) {
+                $this->redis->sAdd("rolesInherits:$roleName", $roleToInherit);
+            }
+            return true;
+        }
+
+        if($this->redis->exists("rolesInherits:$roleToInherit")) {
+
+            $deeperInherits = $this->redis->sGetMembers("rolesInherits:$roleToInherit");
+
+            foreach($deeperInherits as $deeperInherit) {
+                $this->addInherit($roleName,$deeperInherit);
+            }
+        }
+
         $this->redis->sAdd("rolesInherits:$roleName", $roleToInherit);
     }
 
