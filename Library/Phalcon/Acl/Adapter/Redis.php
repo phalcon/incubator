@@ -119,6 +119,16 @@ class Redis extends Adapter
             $roleToInherit = $roleToInherit->getName();
         }
 
+        /**
+         * Deep inherits
+         */
+        if( is_array( $roleToInherit ) ) {
+            foreach ($roleToInherit as $roleToInherit) {
+                $this->redis->sAdd("rolesInherits:$roleName", $roleToInherit);
+            }
+            return true;
+        }
+
         $this->redis->sAdd("rolesInherits:$roleName", $roleToInherit);
     }
 
