@@ -101,6 +101,12 @@ class Redis extends Adapter
     /**
      * {@inheritdoc}
      *
+     * Example:
+     * //Administrator implicitly inherits all descendants of 'consultor' unless explicity set in an Array
+     * <code>$acl->addInherit('administrator', new Phalcon\Acl\Role('consultor'));</code>
+     * <code>$acl->addInherit('administrator', 'consultor');</code>
+     * <code>$acl->addInherit('administrator', ['consultor', 'poweruser']);</code>
+     *
      * @param  string $roleName
      * @param  \Phalcon\Acl\Role|string $roleToInherit
      * @throws \Phalcon\Acl\Exception
