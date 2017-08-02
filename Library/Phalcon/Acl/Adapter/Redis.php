@@ -101,6 +101,12 @@ class Redis extends Adapter
     /**
      * {@inheritdoc}
      *
+     * Example:
+     * //Administrator implicitly inherits all descendants of 'consultor' unless explicity set in an Array
+     * <code>$acl->addInherit('administrator', new Phalcon\Acl\Role('consultor'));</code>
+     * <code>$acl->addInherit('administrator', 'consultor');</code>
+     * <code>$acl->addInherit('administrator', ['consultor', 'poweruser']);</code>
+     *
      * @param  string $roleName
      * @param  \Phalcon\Acl\Role|string $roleToInherit
      * @throws \Phalcon\Acl\Exception
@@ -117,6 +123,24 @@ class Redis extends Adapter
 
         if ($roleToInherit instanceof Role) {
             $roleToInherit = $roleToInherit->getName();
+        }
+
+        /**
+         * Deep inherits Explicit tests array, Implicit recurs through inheritance chain
+         */
+        if (is_array($roleToInherit)) {
+            foreach ($roleToInherit as $roleToInherit) {
+                $this->redis->sAdd("rolesInherits:$roleName", $roleToInherit);
+            }
+            return true;
+        }
+
+        if ($this->redis->exists("rolesInherits:$roleToInherit")) {
+            $deeperInherits = $this->redis->sGetMembers("rolesInherits:$roleToInherit");
+
+            foreach ($deeperInherits as $deeperInherit) {
+                $this->addInherit($roleName, $deeperInherit);
+            }
         }
 
         $this->redis->sAdd("rolesInherits:$roleName", $roleToInherit);
