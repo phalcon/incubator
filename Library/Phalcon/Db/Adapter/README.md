@@ -88,7 +88,7 @@ $di->setShared('mongo', function () {
         $dsn = 'mongodb://' . $config->database->mongo->host;
     } else {
         $dsn = sprintf(
-            'mongodb://%s:%s@%s'
+            'mongodb://%s:%s@%s',
             $config->database->mongo->username,
             $config->database->mongo->password,
             $config->database->mongo->host
