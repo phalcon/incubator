@@ -21,18 +21,14 @@ mkdir -p /tmp/aerospike-ext
 sudo mkdir -p /usr/local/aerospike/{lua,usr-lua}
 sudo chmod -R ugoa+rwx /usr/local/aerospike
 
+git clone --depth=1 -q https://github.com/aerospike/aerospike-client-php /tmp/aerospike-ext
+cd /tmp/aerospike-ext/src/
+
 sudo ln -sf /usr/lib/x86_64-linux-gnu/libcrypto.so /usr/local/lib/libcrypto.so
 sudo ln -sf /usr/lib/x86_64-linux-gnu/libcrypto.a /usr/local/lib/libcrypto.a
 
-cd /tmp/aerospike-ext
-wget -O aerospike.zip https://github.com/aerospike/aerospike-client-php/archive/master.zip
-unzip aerospike.zip -x "aerospike-client-php-master/doc/*" -x "aerospike-client-php-master/examples/*" -x "aerospike-client-php-master/src/aerospike/tests/*"
-
-mkdir -p aerospike-client-php-master/src/aerospike/tests/
-cd aerospike-client-php-master/src/aerospike
-
-./build.sh --loglevel OFF > /dev/null 2>&1
-make --silent install
+bash ./build.sh
+make install
 
 find . -type f -name aerospike.so | xargs sudo cp -t $(php-config --extension-dir)
 phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/aerospike.ini
