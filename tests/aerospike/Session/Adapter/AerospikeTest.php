@@ -48,7 +48,7 @@ class AerospikeTest extends Test
         $this->getModule('Aerospike')->_reconfigure([
             'set'  => $this->set,
             'addr' => env('TEST_AS_HOST', '127.0.0.1'),
-            'port' => env('TEST_AS_PORT', 3000)
+            'port' => (int)env('TEST_AS_PORT', 3000)
         ]);
     }
 
@@ -115,7 +115,7 @@ class AerospikeTest extends Test
         $aerospike = new Aerospike(
             [
                 'hosts' => [
-                    ['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]
+                    ['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => (int)env('TEST_AS_PORT', 3000)]
                 ]
             ],
             false
@@ -140,7 +140,7 @@ class AerospikeTest extends Test
     {
         return [
             'hosts' => [
-                ['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]
+                ['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => (int)env('TEST_AS_PORT', 3000)]
             ],
             'persistent' => false,
             'namespace'  => $this->ns,
