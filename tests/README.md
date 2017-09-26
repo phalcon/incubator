@@ -12,7 +12,7 @@ The testing suites can be run on your own machine. The main dependency is [Codec
 
 ```bash
 # run this command from project root
-composer install --dev --prefer-source
+composer install --prefer-source
 ```
 
 You can read more about installing and configuring Codeception from the following resources:

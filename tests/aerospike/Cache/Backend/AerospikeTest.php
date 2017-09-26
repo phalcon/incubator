@@ -183,7 +183,7 @@ class AerospikeTest extends Test
     {
         return [
             'hosts' => [
-                ['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]
+                ['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => (int)env('TEST_AS_PORT', 3000)]
             ],
             'persistent' => false, // important
             'namespace'  => 'test',

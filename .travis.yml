@@ -59,7 +59,7 @@ before_install:
 install:
   - travis_retry composer install --prefer-dist --no-interaction --quiet --no-ansi --no-progress --optimize-autoloader --dev --no-suggest --ignore-platform-reqs
   # See https://github.com/aerospike/aerospike-client-php/issues/127
-  - '[[ "$PHP_MAJOR" == "7" ]] || bash ${TRAVIS_BUILD_DIR}/tests/_ci/install_aerospike.sh'
+  - '[[ "$PHP_MAJOR" == "5" ]] || bash ${TRAVIS_BUILD_DIR}/tests/_ci/install_aerospike.sh'
   - if [ ! -f $HOME/ext/$PHP_VERSION/$PHALCON_VERSION/phalcon.so ]; then cd $HOME/cphalcon/$PHALCON_VERSION/build && bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) && mkdir -p $HOME/ext/$PHP_VERSION/$PHALCON_VERSION && cp $PHP_EXTENSION_DIR/phalcon.so $HOME/ext/$PHP_VERSION/$PHALCON_VERSION/phalcon.so; fi;
   - if [ -f $HOME/ext/$PHP_VERSION/$PHALCON_VERSION/phalcon.so ]; then cp $HOME/ext/$PHP_VERSION/$PHALCON_VERSION/phalcon.so $PHP_EXTENSION_DIR/phalcon.so; fi;
   - phpenv config-add $HOME/cphalcon/$PHALCON_VERSION/tests/_ci/phalcon.ini
@@ -74,13 +74,13 @@ before_script:
   - echo "GRANT ALL PRIVILEGES ON incubator.* TO 'incubator'@'%' WITH GRANT OPTION" | mysql -u root
   - cat ${TRAVIS_BUILD_DIR}/tests/_data/dump.sql | mysql -u root incubator
   # See https://github.com/aerospike/aerospike-client-php/issues/127
-  - '[[ "${PHP_MAJOR:0:1}" == "7" ]] || bash ${TRAVIS_BUILD_DIR}/tests/_ci/install_aserver.sh'
+  - '[[ "${PHP_MAJOR:0:1}" == "5" ]] || bash ${TRAVIS_BUILD_DIR}/tests/_ci/install_aserver.sh'
 
 script:
   - vendor/bin/phpcs
   - vendor/bin/codecept build
   - vendor/bin/codecept run -v tests/unit
-  - '[[ "$PHP_MAJOR" == "7" ]] || vendor/bin/codecept run -v tests/aerospike'
+  - '[[ "$PHP_MAJOR" == "5" ]] || vendor/bin/codecept run -v tests/aerospike'
   - '[[ "$PHP_MAJOR" == "7" ]] || vendor/bin/codecept run -v tests/unit5x'
 
 notifications:

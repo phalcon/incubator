@@ -67,7 +67,7 @@ class AerospikeTest extends Test
      */
     public function testShouldReadAndWriteToAerospikeWithoutPrefix($key, $data)
     {
-        $object = new Aerospike(['hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]]]);
+        $object = new Aerospike(['hosts' => $this->getHostConfig()]);
         $object->write($key, $data);
 
         $this->assertEquals($data, $object->read($key));
@@ -80,7 +80,7 @@ class AerospikeTest extends Test
      */
     public function testShouldReadAndWriteToAerospikeWithPrefix($key, $data)
     {
-        $object = new Aerospike(['hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]], 'prefix' => 'test_']);
+        $object = new Aerospike(['hosts' => $this->getHostConfig(), 'prefix' => 'test_']);
         $object->write($key, $data);
 
         $this->assertEquals($data, $object->read($key));
@@ -88,7 +88,7 @@ class AerospikeTest extends Test
 
     public function testShouldGetCacheBackendThroughGetter()
     {
-        $object = new Aerospike(['hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]]]);
+        $object = new Aerospike(['hosts' => $this->getHostConfig()]);
 
         $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
         $reflectedMethod->setAccessible(true);
@@ -97,7 +97,7 @@ class AerospikeTest extends Test
 
     public function testShouldGetCacheBackendThroughReflectionSetter()
     {
-        $object = new Aerospike(['hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]]]);
+        $object = new Aerospike(['hosts' => $this->getHostConfig()]);
         $mock = $this->getMock(CacheBackend::class, [], [], '', false);
 
         $reflectedProperty = new ReflectionProperty(get_class($object), 'aerospike');
@@ -115,7 +115,7 @@ class AerospikeTest extends Test
      */
     public function testShouldPrepareKey($key)
     {
-        $object = new Aerospike(['hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]]]);
+        $object = new Aerospike(['hosts' => $this->getHostConfig()]);
         $reflectedMethod = new ReflectionMethod(get_class($object), 'prepareKey');
         $reflectedMethod->setAccessible(true);
 
@@ -192,14 +192,14 @@ class AerospikeTest extends Test
 
     public function providerConstructor()
     {
-        return [
+        return [ //$this->getConfig()
             [
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                     'lifetime' => 23
                 ],
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                     'lifetime' => 23,
                     'prefix' => '',
                     'persistent' => false,
@@ -208,7 +208,7 @@ class AerospikeTest extends Test
             ],
             [
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                     'lifetime' => 23,
                     'options' => [
                         1 => 1250,
@@ -216,7 +216,7 @@ class AerospikeTest extends Test
                     ]
                 ],
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                     'lifetime' => 23,
                     'prefix' => '',
                     'persistent' => false,
@@ -228,12 +228,12 @@ class AerospikeTest extends Test
             ],
             [
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                     'lifetime' => 23,
                     'persistent' => true
                 ],
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                     'lifetime' => 23,
                     'prefix' => '',
                     'persistent' => true,
@@ -242,11 +242,11 @@ class AerospikeTest extends Test
             ],
             [
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                     'prefix' => 'test_'
                 ],
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                     'lifetime' => 8600,
                     'prefix' => 'test_',
                     'persistent' => false,
@@ -255,11 +255,11 @@ class AerospikeTest extends Test
             ],
             [
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                     'randomValue' => 'test_'
                 ],
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                     'randomValue' => 'test_',
                     'lifetime' => 8600,
                     'prefix' => '',
@@ -269,11 +269,11 @@ class AerospikeTest extends Test
             ],
             [
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                     123 => 'test_'
                 ],
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                     123 => 'test_',
                     'lifetime' => 8600,
                     'prefix' => '',
@@ -283,12 +283,12 @@ class AerospikeTest extends Test
             ],
             [
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                     'lifetime' => 24,
                     'prefix' => 'test_',
                 ],
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                     'lifetime' => 24,
                     'prefix' => 'test_',
                     'persistent' => false,
@@ -297,10 +297,10 @@ class AerospikeTest extends Test
             ],
             [
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                 ],
                 [
-                    'hosts' => [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => env('TEST_AS_PORT', 3000)]],
+                    'hosts' => $this->getHostConfig(),
                     'lifetime' => 8600,
                     'prefix' => '',
                     'persistent' => false,
@@ -309,5 +309,10 @@ class AerospikeTest extends Test
             ],
 
         ];
+    }
+
+    private function getHostConfig()
+    {
+        return [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => (int)env('TEST_AS_PORT', 3000)]];
     }
 }
