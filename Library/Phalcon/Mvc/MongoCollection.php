@@ -313,7 +313,10 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
             /**
              * Looking for only the first result.
              */
-            return current($cursor->toArray());
+            $document = current($cursor->toArray());
+            $document = $document->toArray();
+
+            return static::cloneResult($base, $document);
         }
 
         /**
@@ -324,7 +327,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
             /**
              * Assign the values to the base object
              */
-            $collections[] = $document;
+            $collections[] = static::cloneResult($base, $document);
         }
 
         return $collections;
