@@ -327,7 +327,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
             /**
              * Assign the values to the base object
              */
-            $collections[] = static::cloneResult($base, $document);
+            $collections[] = static::cloneResult($base, $document->toArray());
         }
 
         return $collections;
