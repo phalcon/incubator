@@ -9,9 +9,21 @@ use Phalcon\Mvc\Model\Exception;
 use Phalcon\Db\AdapterInterface;
 use Phalcon\Mvc\Model\BehaviorInterface;
 use Phalcon\Mvc\Model\ResultsetInterface;
+use Phalcon\Traits\EventManagerAwareTrait;
 
 class NestedSet extends Behavior implements BehaviorInterface
 {
+    use EventManagerAwareTrait;
+
+    const EVT_TYPE_QUERY = 'nestedset';
+
+    const EVT_DESCENDANTS = 'Descendants';
+    const EVT_ANCESTORS = 'Ancestors';
+    const EVT_PARENT = 'Parent';
+    const EVT_PREV = 'Prev';
+    const EVT_NEXT = 'Next';
+    const EVT_ROOTS = 'Roots';
+
     /**
      * @var AdapterInterface|null
      */
@@ -216,6 +228,16 @@ class NestedSet extends Behavior implements BehaviorInterface
             $query = $query->andWhere($this->rootAttribute . '=' . $owner->{$this->rootAttribute});
         }
 
+        $this->fire(
+            self::EVT_TYPE_QUERY . ':before' . self::EVT_DESCENDANTS,
+            $query,
+            [
+                'owner' => $owner,
+                'depth' => $depth,
+                'addSelf' => $addSelf
+            ]
+        );
+
         return $query->execute();
     }
 
@@ -252,6 +274,15 @@ class NestedSet extends Behavior implements BehaviorInterface
             $query = $query->andWhere($this->rootAttribute . '=' . $owner->{$this->rootAttribute});
         }
 
+        $this->fire(
+            self::EVT_TYPE_QUERY . ':before' . self::EVT_ANCESTORS,
+            $query,
+            [
+                'owner' => $owner,
+                'depth' => $depth
+            ]
+        );
+
         return $query->execute();
     }
 
@@ -264,7 +295,19 @@ class NestedSet extends Behavior implements BehaviorInterface
     {
         $owner = $this->getOwner();
 
-        return $owner::find($this->leftAttribute . ' = 1');
+        $query = $owner::query()
+            ->andWhere($this->leftAttribute . ' = 1')
+        ;
+
+        $this->fire(
+            self::EVT_TYPE_QUERY . ':before' . self::EVT_ROOTS,
+            $query,
+            [
+                'owner' => $owner
+            ]
+        );
+
+        return $owner::find($query->getParams());
     }
 
     /**
@@ -286,6 +329,14 @@ class NestedSet extends Behavior implements BehaviorInterface
             $query = $query->andWhere($this->rootAttribute . '=' . $owner->{$this->rootAttribute});
         }
 
+        $this->fire(
+            self::EVT_TYPE_QUERY . ':before' . self::EVT_PARENT,
+            $query,
+            [
+                'owner' => $owner
+            ]
+        );
+
         return $query->execute()->getFirst();
     }
 
@@ -304,6 +355,14 @@ class NestedSet extends Behavior implements BehaviorInterface
             $query = $query->andWhere($this->rootAttribute . '=' . $owner->{$this->rootAttribute});
         }
 
+        $this->fire(
+            self::EVT_TYPE_QUERY . ':before' . self::EVT_PREV,
+            $query,
+            [
+                'owner' => $owner
+            ]
+        );
+
         return $query->execute()->getFirst();
     }
 
@@ -321,6 +380,14 @@ class NestedSet extends Behavior implements BehaviorInterface
         if ($this->hasManyRoots) {
             $query = $query->andWhere($this->rootAttribute . '=' . $owner->{$this->rootAttribute});
         }
+
+        $this->fire(
+            self::EVT_TYPE_QUERY . ':before' . self::EVT_NEXT,
+            $query,
+            [
+                'owner' => $owner
+            ]
+        );
 
         return $query->execute()->getFirst();
     }
