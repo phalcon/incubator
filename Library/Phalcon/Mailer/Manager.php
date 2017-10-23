@@ -26,6 +26,15 @@ use Phalcon\Mvc\View;
 /**
  * Class Manager
  *
+ *  *<code>
+ * $mailer = \Phalcon\Mailer\Manager($config);
+ *
+ * if need to set view engines
+ * $mailer->setViewEngines([
+ *      '.phtml' => 'Phalcon\Mvc\View\Engine\Php'
+ * ]);
+ *</code>
+ *
  * @package Phalcon\Manager
  */
 class Manager extends Component
@@ -49,6 +58,11 @@ class Manager extends Component
      * @var \Phalcon\Mvc\View\Simple
      */
     protected $view;
+
+    /**
+     * @var array
+     */
+    protected $viewEngines = null;
 
     /**
      * Create a new MailerManager component using $config for configuring
@@ -143,6 +157,16 @@ class Manager extends Component
         } else {
             return $email;
         }
+    }
+
+    /**
+     * set value of $viewEngines
+     *
+     * @param array $engines
+     */
+    public function setViewEngines(array $engines)
+    {
+        $this->viewEngines = $engines;
     }
 
     /**
@@ -338,16 +362,8 @@ class Manager extends Component
             $view = $this->getDI()->get('\Phalcon\Mvc\View\Simple');
             $view->setViewsDir($viewsDir);
 
-            if ($registeredEngines = $viewApp->getRegisteredEngines()) {
-                $engines = [];
-                foreach ($registeredEngines as $key => $engine) {
-                    if (is_object($engine)) {
-                        $engines[$key] = get_class($engine);
-                    } else {
-                        $engines[$key] = $engine;
-                    }
-                }
-                $view->registerEngines($engines);
+            if ($this->viewEngines) {
+                $view->registerEngines($this->viewEngines);
             }
 
             $this->view = $view;
