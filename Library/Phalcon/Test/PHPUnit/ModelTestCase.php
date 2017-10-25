@@ -17,16 +17,11 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Phalcon\Test;
+namespace Phalcon\Test\PHPUnit;
 
-use Phalcon\Test\PHPUnit\UnitTestCase as UnitTest;
+use Phalcon\Test\Traits\ModelTestCase as ModelTestCaseTrait;
 
-/**
- * Class serves as a placeholder for backwards compatibility
- *
- * @package Phalcon\Test
- */
-abstract class UnitTestCase extends UnitTest
+abstract class ModelTestCase extends UnitTestCase
 {
-
+    use ModelTestCaseTrait;
 }

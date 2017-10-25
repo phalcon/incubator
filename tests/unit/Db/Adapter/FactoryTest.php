@@ -3,8 +3,7 @@
 namespace Phalcon\Test\Db\Adapter;
 
 use Phalcon\Db\Adapter\Factory as AdaptersFactory;
-use Codeception\TestCase\Test;
-use UnitTester;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 
 /**
  * \Phalcon\Test\Db\Adapter\FactoryTest
@@ -25,12 +24,6 @@ use UnitTester;
  */
 class FactoryTest extends Test
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
     /**
      * @var array
      */

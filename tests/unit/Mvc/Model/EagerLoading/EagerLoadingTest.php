@@ -14,8 +14,7 @@ use Phalcon\DiInterface;
 use Phalcon\Mvc\Model\Metadata;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Db\Adapter\Pdo\Mysql;
-use Codeception\TestCase\Test;
-use UnitTester;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Version;
 
 /**
@@ -37,12 +36,6 @@ use Phalcon\Version;
  */
 class EagerLoadingTest extends Test
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
     /**
      * @var DiInterface
      */

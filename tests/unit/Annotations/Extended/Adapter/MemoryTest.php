@@ -2,21 +2,14 @@
 
 namespace Phalcon\Test\Annotations\Extended\Adapter;
 
-use UnitTester;
 use ReflectionMethod;
 use ReflectionProperty;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Annotations\Reflection;
 use Phalcon\Annotations\Extended\Adapter\Memory;
 
 class MemoryTest extends Test
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
     /** @test */
     public function shouldReadFromMemoryWithoutAnyAdditionalParameter()
     {

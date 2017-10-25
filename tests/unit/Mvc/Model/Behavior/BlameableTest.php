@@ -2,7 +2,7 @@
 
 namespace Phalcon\Test\Mvc\Model\Behavior;
 
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Di;
 use Phalcon\Di\FactoryDefault;

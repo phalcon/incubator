@@ -3,9 +3,8 @@
 namespace Phalcon\Test\Annotations\Adapter;
 
 use stdClass;
-use UnitTester;
 use ReflectionMethod;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Cache\Backend\Libmemcached;
 use Phalcon\Annotations\Adapter\Memcached;
 
@@ -28,12 +27,6 @@ use Phalcon\Annotations\Adapter\Memcached;
  */
 class MemcachedTest extends Test
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
     /**
      * executed before each test
      */

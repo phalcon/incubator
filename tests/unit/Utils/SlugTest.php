@@ -3,7 +3,7 @@
 namespace Phalcon\Test\Utils;
 
 use Phalcon\Utils\Slug;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use UnitTester;
 
 /**
@@ -26,12 +26,6 @@ use UnitTester;
 class SlugTest extends Test
 {
     /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
-    /**
      * executed before each test
      */
     protected function _before()
@@ -41,13 +35,6 @@ class SlugTest extends Test
                 'The intl module is not available.'
             );
         }
-    }
-
-    /**
-     * executed after each test
-     */
-    protected function _after()
-    {
     }
 
     /**
