@@ -232,7 +232,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
             $base->setDirtyState(PhalconCollection::DIRTY_STATE_PERSISTENT);
         }
 
-        if($params['source']){
+        if(isset($params['source'])){
             $source = $params['source'];
         }else{
             $source = $collection->getSource();
