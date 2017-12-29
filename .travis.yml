@@ -57,7 +57,6 @@ before_install:
   - if [ ! -f "$HOME/cphalcon/$PHALCON_VERSION/tests/_ci/phalcon.ini" ]; then mkdir -p $HOME/cphalcon/$PHALCON_VERSION && git clone -q --depth=1 https://github.com/phalcon/cphalcon.git $HOME/cphalcon/$PHALCON_VERSION >/dev/null 2>&1; fi;
 
 install:
-  - travis_retry composer install --prefer-dist --no-interaction --quiet --no-ansi --no-progress --optimize-autoloader --dev --no-suggest --ignore-platform-reqs
   # See https://github.com/aerospike/aerospike-client-php/issues/127
   - '[[ "$PHP_MAJOR" == "5" ]] || bash ${TRAVIS_BUILD_DIR}/tests/_ci/install_aerospike.sh'
   - if [ ! -f $HOME/ext/$PHP_VERSION/$PHALCON_VERSION/phalcon.so ]; then cd $HOME/cphalcon/$PHALCON_VERSION/build && bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) && mkdir -p $HOME/ext/$PHP_VERSION/$PHALCON_VERSION && cp $PHP_EXTENSION_DIR/phalcon.so $HOME/ext/$PHP_VERSION/$PHALCON_VERSION/phalcon.so; fi;
@@ -66,6 +65,7 @@ install:
   - phpenv config-add ${TRAVIS_BUILD_DIR}/tests/_ci/redis.ini
   - cd $TRAVIS_BUILD_DIR
   - $(phpenv which php) --ri phalcon
+  - travis_retry composer install --prefer-dist --no-interaction --no-ansi --no-progress --optimize-autoloader --dev --no-suggest
 
 before_script:
   # Create database and user
