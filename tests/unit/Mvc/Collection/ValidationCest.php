@@ -1,5 +1,22 @@
 <?php
 
+/*
+  +------------------------------------------------------------------------+
+  | Phalcon Framework                                                      |
+  +------------------------------------------------------------------------+
+  | Copyright (c) 2011-present Phalcon Team (https://www.phalconphp.com)   |
+  +------------------------------------------------------------------------+
+  | This source file is subject to the New BSD License that is bundled     |
+  | with this package in the file LICENSE.txt.                             |
+  |                                                                        |
+  | If you did not receive a copy of the license and are unable to         |
+  | obtain it through the world-wide-web, please send an email             |
+  | to license@phalconphp.com so we can send you a copy immediately.       |
+  +------------------------------------------------------------------------+
+  | Authors: Wojciech Ślawski <jurigag@gmail.com>                          |
+  +------------------------------------------------------------------------+
+*/
+
 namespace Phalcon\Test\Mvc\Collection;
 
 use DateTime;
@@ -13,7 +30,7 @@ use UnitTester;
  * \Phalcon\Test\Mvc\Collection\ValidationCest
  * Tests for Phalcon\Mvc\MongoCollection component
  *
- * @copyright (c) 2011-2017 Phalcon Team
+ * @copyright (c) 2011-present Phalcon Team
  * @link      https://www.phalconphp.com
  * @author    Wojciech Ślawski <jurigag@gmail.com>
  * @package   Phalcon\Test\Mvc\Collection
