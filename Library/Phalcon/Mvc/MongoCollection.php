@@ -307,7 +307,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         $cursor = $mongoCollection->find($conditions, $options);
 
 
-        $cursor->setTypeMap(['root' => get_class($base), 'document' => 'array']);
+        $cursor->setTypeMap(['root' => get_class($base), 'document' => 'array', "root" => "array", "array" => "array"]);
 
         if (true === $unique) {
             /**
