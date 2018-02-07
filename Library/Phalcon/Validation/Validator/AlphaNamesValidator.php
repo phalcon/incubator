@@ -62,10 +62,12 @@ class AlphaNamesValidator extends Validator implements ValidatorInterface
                 );
 
                 $validator->appendMessage(new Message($messageMax, $attribute, 'AlphaNames'));
+                return false;
             }
         }
 
-        if (count($validator)) {
+
+        if (count($validator->getMessages())) {
             return false;
         }
 
