@@ -1,12 +1,9 @@
-.DS_Store
-.idea/*
-*.sublime-project
-*.sublime-workspace
+# Please do not use this ignore file to define platform specific files.
+#
+# For these purposes create a global .gitignore file, which is a list of rules
+# for ignoring files in every Git repository on your computer.
+#
+# https://help.github.com/articles/ignoring-files/#create-a-global-gitignore
+
 composer.lock
-composer.phar
-/nbproject/
 /vendor/
-.vagrant
-Vagrantfile
-/build
-/tests/_support/_generated/*.php
