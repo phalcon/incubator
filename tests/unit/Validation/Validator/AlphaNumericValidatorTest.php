@@ -2,10 +2,8 @@
 
 namespace Phalcon\Test\Validation\Validator;
 
-use UnitTester;
 use Phalcon\Validation;
-use Codeception\TestCase\Test;
-use Phalcon\Validation\Validator\CardNumber;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 
 /**
  * \Phalcon\Test\Validation\Validator\AlphaNumericValidatorTest
@@ -26,12 +24,6 @@ use Phalcon\Validation\Validator\CardNumber;
  */
 class AlphaNumericValidatorTest extends Test
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
     public function testAlphaNumericValidatorOk()
     {
         $data['text'] = '0123456789 abcdefghijklmnopqrstuvz ñ _';

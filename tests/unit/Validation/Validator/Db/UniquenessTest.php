@@ -6,8 +6,7 @@ use Phalcon\Di;
 use Phalcon\Validation;
 use Codeception\Util\Stub;
 use Phalcon\Validation\Validator\Db\Uniqueness;
-use Codeception\TestCase\Test;
-use UnitTester;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 
 /**
  * \Phalcon\Test\Validation\Validator\Db\UniquenessTest
@@ -29,12 +28,6 @@ use UnitTester;
 class UniquenessTest extends Test
 {
     /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
-    /**
      * @var Validation
      */
     protected $validation;
@@ -45,13 +38,6 @@ class UniquenessTest extends Test
     protected function _before()
     {
         $this->validation = new Validation();
-    }
-
-    /**
-     * executed after each test
-     */
-    protected function _after()
-    {
     }
 
     private function getDbStub()
@@ -106,8 +92,7 @@ class UniquenessTest extends Test
 
     public function testAvailableUniquenessWithDefaultDI()
     {
-        $di = new Di();
-        $di->set('db', $this->getDbStub());
+        $this->di->set('db', $this->getDbStub());
 
         $uniquenessOptions = [
             'table' => 'users',

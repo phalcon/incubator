@@ -5,7 +5,7 @@ namespace Phalcon\Test\Unit5x\Validation\Validator;
 use ReflectionExtension;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\MongoId;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use UnitTester;
 
 /**

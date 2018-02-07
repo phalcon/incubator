@@ -2,10 +2,9 @@
 
 namespace Phalcon\Test\Mvc\Model\Validator;
 
-use UnitTester;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Decimal;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 
 /**
  * \Phalcon\Test\Validation\Validator\DecimalTest
@@ -26,12 +25,6 @@ use Codeception\TestCase\Test;
  */
 class DecimalTest extends Test
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
     /**
      * @expectedException        \Phalcon\Validation\Exception
      * @expectedExceptionMessage A number of decimal places must be set

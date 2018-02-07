@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -13,20 +12,15 @@
   | obtain it through the world-wide-web, please send an email             |
   | to license@phalconphp.com so we can send you a copy immediately.       |
   +------------------------------------------------------------------------+
-  | Authors: Stephen Hoogendijk <stephen@tca0.nl>                          |
+  | Authors: Phoenix Osiris <phoenix@twistersfury.com>                     |
   +------------------------------------------------------------------------+
 */
 
-namespace Phalcon\Test;
+namespace Phalcon\Test\Codeception;
 
-use Phalcon\Test\PHPUnit\UnitTestCase as UnitTest;
+use Phalcon\Test\Traits\FunctionalTestCase as FunctionalTestCaseTrait;
 
-/**
- * Class serves as a placeholder for backwards compatibility
- *
- * @package Phalcon\Test
- */
-abstract class UnitTestCase extends UnitTest
+class FunctionalTestCase extends ModelTestCase
 {
-
+    use FunctionalTestCaseTrait;
 }

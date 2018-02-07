@@ -2,8 +2,7 @@
 
 namespace Phalcon\Tests\Queue\Beanstalk;
 
-use UnitTester;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Queue\Beanstalk\Job;
 use Phalcon\Queue\Beanstalk\Extended;
 
@@ -27,12 +26,6 @@ use Phalcon\Queue\Beanstalk\Extended;
 class ExtendedTest extends Test
 {
     const TUBE_NAME = 'test-tube';
-
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
 
     /**
      * @var Extended

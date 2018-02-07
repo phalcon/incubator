@@ -20,7 +20,7 @@
 namespace Phalcon\Test\Validation\Validator;
 
 use Phalcon\Validation;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Validation\Validator\PasswordStrength;
 
 class PasswordStrengthTest extends Test

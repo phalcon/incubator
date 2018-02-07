@@ -5,7 +5,7 @@ namespace Phalcon\Test\Aerospike\Annotations\Adapter;
 use UnitTester;
 use ReflectionMethod;
 use ReflectionProperty;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Annotations\Exception;
 use Phalcon\Annotations\Adapter\Aerospike;
 use Phalcon\Cache\Backend\Aerospike as CacheBackend;

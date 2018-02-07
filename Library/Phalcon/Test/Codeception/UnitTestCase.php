@@ -1,5 +1,4 @@
 <?php
-
 /*
   +------------------------------------------------------------------------+
   | Phalcon Framework                                                      |
@@ -13,20 +12,45 @@
   | obtain it through the world-wide-web, please send an email             |
   | to license@phalconphp.com so we can send you a copy immediately.       |
   +------------------------------------------------------------------------+
-  | Authors: Stephen Hoogendijk <stephen@tca0.nl>                          |
+  | Authors: Phoenix Osiris <phoenix@twistersfury.com>                     |
   +------------------------------------------------------------------------+
 */
 
-namespace Phalcon\Test;
+namespace Phalcon\Test\Codeception;
 
-use Phalcon\Test\PHPUnit\UnitTestCase as UnitTest;
+use Codeception\Test\Unit;
 
-/**
- * Class serves as a placeholder for backwards compatibility
- *
- * @package Phalcon\Test
- */
-abstract class UnitTestCase extends UnitTest
+use Phalcon\Test\Traits\UnitTestCase as UnitTestCaseTrait;
+use UnitTester;
+
+class UnitTestCase extends Unit
 {
+    use UnitTestCaseTrait;
 
+
+    /**
+     * UnitTester Object
+     * @var UnitTester
+     */
+    protected $tester;
+
+    /**
+     * Standard Setup Method For PHPUnit. Calling setUpPhalcon Here to Maintain Codeception's _before Without a call
+     * to parent::_before
+     */
+    protected function setUp()
+    {
+        $this->setUpPhalcon();
+        parent::setUp();
+    }
+
+    /**
+     * Standard Tear Down Method For PHPUnit. Calling tearDownPhalcon Here to Maintain Codeception's _after
+     * Without a call to parent::_before
+     */
+    protected function tearDown()
+    {
+        $this->tearDownPhalcon();
+        parent::tearDown();
+    }
 }

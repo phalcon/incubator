@@ -2,8 +2,7 @@
 
 namespace Phalcon\Test\Db\Dialect;
 
-use UnitTester;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Db\Dialect\Oracle;
 
 /**
@@ -25,12 +24,6 @@ use Phalcon\Db\Dialect\Oracle;
  */
 class OracleTest extends Test
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
     public function testDescribeColumnsForSchemaWithDots()
     {
         $dialect = new Oracle();

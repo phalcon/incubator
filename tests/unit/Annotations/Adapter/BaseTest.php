@@ -2,9 +2,8 @@
 
 namespace Phalcon\Test\Annotations\Adapter;
 
-use UnitTester;
 use ReflectionProperty;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Annotations\Adapter\Base;
 use Phalcon\Cache\Backend\Memory as CacheBackend;
 use Phalcon\Cache\Frontend\Data as CacheFrontend;
@@ -28,12 +27,6 @@ use Phalcon\Cache\Frontend\Data as CacheFrontend;
  */
 class BaseTest extends Test
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
     protected function getObject($options)
     {
         return $this->getMockForAbstractClass(

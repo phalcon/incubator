@@ -2,9 +2,8 @@
 
 namespace Phalcon\Test\Validation\Validator;
 
-use UnitTester;
 use Phalcon\Validation;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Validation\Validator\CardNumber;
 
 /**
@@ -26,12 +25,6 @@ use Phalcon\Validation\Validator\CardNumber;
  */
 class CardNumberTest extends Test
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
     /**
      * @dataProvider providerCards
      * @param mixed $type
