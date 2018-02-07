@@ -3,8 +3,8 @@
     "type": "library",
     "description": "Adapters, prototypes or functionality that can be potentially incorporated to the C-framework.",
     "keywords": ["framework", "phalcon"],
-    "homepage": "http://phalconphp.com",
-    "license": "BSD-3",
+    "homepage": "https://phalconphp.com",
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Phalcon Team",
@@ -27,5 +27,4 @@
             "Phalcon": "Library/"
         }
     }
-
 }
