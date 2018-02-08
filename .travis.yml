@@ -11,7 +11,7 @@
 
 language: php
 
-sudo: required # Thanks to Arespike
+sudo: false
 dist: trusty
 
 php:
@@ -47,12 +47,6 @@ addons:
   apt:
     packages:
       - beanstalkd
-      - python-bcrypt
-      - build-essential
-      - autoconf
-      - libssl-dev
-      - libyaml-dev
-      - liblua5.1-dev
   hosts:
     - db
     - incubator.local
@@ -65,8 +59,6 @@ before_install:
   - bash tests/_ci/install_prereqs_$PHP_MAJOR.sh
 
 install:
-  # See https://github.com/aerospike/aerospike-client-php/issues/127
-  - '[[ "$PHP_MAJOR" == "5" ]] || bash ${TRAVIS_BUILD_DIR}/tests/_ci/install_aerospike.sh'
   - bash $TRAVIS_BUILD_DIR/tests/_ci/install_phalcon.sh
   - cd $TRAVIS_BUILD_DIR
   - travis_retry composer install --prefer-dist --no-interaction --no-ansi --no-progress --optimize-autoloader --dev --no-suggest
@@ -81,14 +73,11 @@ before_script:
   - echo "CREATE USER 'incubator'@'%' IDENTIFIED BY 'secret'" | mysql -u root
   - echo "GRANT ALL PRIVILEGES ON incubator.* TO 'incubator'@'%' WITH GRANT OPTION" | mysql -u root
   - cat ${TRAVIS_BUILD_DIR}/tests/_data/dump.sql | mysql -u root incubator
-  # See https://github.com/aerospike/aerospike-client-php/issues/127
-  - '[[ "${PHP_MAJOR:0:1}" == "5" ]] || bash ${TRAVIS_BUILD_DIR}/tests/_ci/install_aserver.sh'
 
 script:
   - vendor/bin/phpcs
   - vendor/bin/codecept build
   - vendor/bin/codecept run -v tests/unit
-  - '[[ "$PHP_MAJOR" == "5" ]] || vendor/bin/codecept run -v tests/aerospike'
   - '[[ "$PHP_MAJOR" == "7" ]] || vendor/bin/codecept run -v tests/unit5x'
 
 after_failure:
