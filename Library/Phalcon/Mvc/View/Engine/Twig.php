@@ -59,7 +59,7 @@ class Twig extends Engine implements EngineInterface
                 return $view->partial($partialPath, $params);
             }, $options),
             new \Twig_SimpleFunction('linkTo', function ($parameters, $text = null, $local = true) {
-                return \Phalcon\Tag::linkTo($parameters, $text,$local);
+                return \Phalcon\Tag::linkTo($parameters, $text, $local);
             }, $options),
             new \Twig_SimpleFunction('textField', function ($parameters) {
                 return \Phalcon\Tag::textField($parameters);
