@@ -55,11 +55,11 @@ class Twig extends Engine implements EngineInterface
             new \Twig_SimpleFunction('content', function () use ($view) {
                 return $view->getContent();
             }, $options),
-            new \Twig_SimpleFunction('partial', function ($partialPath) use ($view) {
-                return $view->partial($partialPath);
+            new \Twig_SimpleFunction('partial', function ($partialPath, $params = null) use ($view) {
+                return $view->partial($partialPath, $params);
             }, $options),
-            new \Twig_SimpleFunction('linkTo', function ($parameters, $text = null) {
-                return \Phalcon\Tag::linkTo($parameters, $text);
+            new \Twig_SimpleFunction('linkTo', function ($parameters, $text = null, $local = true) {
+                return \Phalcon\Tag::linkTo($parameters, $text,$local);
             }, $options),
             new \Twig_SimpleFunction('textField', function ($parameters) {
                 return \Phalcon\Tag::textField($parameters);
@@ -106,11 +106,11 @@ class Twig extends Engine implements EngineInterface
             new \Twig_SimpleFunction('javascriptInclude', function ($parameters = null, $local = true) {
                 return \Phalcon\Tag::javascriptInclude($parameters, $local);
             }, $options),
-            new \Twig_SimpleFunction('image', function ($parameters) {
-                return \Phalcon\Tag::image($parameters);
+            new \Twig_SimpleFunction('image', function ($parameters = null, $local = true) {
+                return \Phalcon\Tag::image($parameters, $local);
             }, $options),
-            new \Twig_SimpleFunction('friendlyTitle', function ($text, $separator = null, $lowercase = true) {
-                return \Phalcon\Tag::friendlyTitle($text, $separator, $lowercase);
+            new \Twig_SimpleFunction('friendlyTitle', function ($text, $separator = "-", $lc = true, $replace = null) {
+                return \Phalcon\Tag::friendlyTitle($text, $separator, $lc, $replace);
             }, $options),
             new \Twig_SimpleFunction('getDocType', function () {
                 return \Phalcon\Tag::getDocType();
