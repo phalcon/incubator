@@ -2,10 +2,8 @@
 
 namespace Phalcon\Test\Validation\Validator;
 
-use UnitTester;
 use Phalcon\Validation;
-use Codeception\TestCase\Test;
-use Phalcon\Validation\Validator\CardNumber;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 
 /**
  * \Phalcon\Test\Validation\Validator\IpValidatorTest
@@ -26,12 +24,6 @@ use Phalcon\Validation\Validator\CardNumber;
  */
 class IpValidatorTest extends Test
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
     public function testIpValidatorOk()
     {
         $data['ip'] = '192.168.0.1';

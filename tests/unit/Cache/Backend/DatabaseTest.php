@@ -5,8 +5,7 @@ namespace Phalcon\Test\Cache\Backend;
 use Phalcon\Cache\Backend\Database as CacheBackend;
 use Phalcon\Cache\Frontend\Data as CacheFrontend;
 use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
-use Codeception\TestCase\Test;
-use UnitTester;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 
 /**
  * \Phalcon\Test\Cache\Backend\DatabaseTest
@@ -27,28 +26,8 @@ use UnitTester;
  */
 class DatabaseTest extends Test
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
     protected $key = 'DB_key';
     protected $data = 'DB_data';
-
-    /**
-     * executed before each test
-     */
-    protected function _before()
-    {
-    }
-
-    /**
-     * executed after each test
-     */
-    protected function _after()
-    {
-    }
 
     /**
      * @dataProvider incorrectDbProvider

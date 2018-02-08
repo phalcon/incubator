@@ -2,9 +2,8 @@
 
 namespace Phalcon\Tests\Http\Client;
 
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Http\Client\Header;
-use UnitTester;
 
 /**
  * \Phalcon\Tests\Http\Client\HeaderTest
@@ -25,26 +24,6 @@ use UnitTester;
  */
 class HeaderTest extends Test
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
-    /**
-     * executed before each test
-     */
-    protected function _before()
-    {
-    }
-
-    /**
-     * executed after each test
-     */
-    protected function _after()
-    {
-    }
-
     public function testHeaderParsedCorrectlyBothWithAndWithoutMessage()
     {
         $stringHeaderWithMessage = "HTTP/1.1 200 OK\r\nDate: Fri, 06 Nov 2015 10:30:15 GMT\r\nServer: Apache\r\nX-Server: http-devel, test.test\r\nCache-Control: max-age=0\r\nExpires: Fri, 06 Nov 2015 10:30:15 GMT\r\nX-Server: nb\r\nContent-Type: application/json;charset=UTF-8\r\nTransfer-Encoding: chunked";

@@ -2,10 +2,9 @@
 
 namespace Phalcon\Test\Annotations\Adapter;
 
-use UnitTester;
 use ReflectionMethod;
 use ReflectionProperty;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Annotations\Adapter\Redis;
 use Phalcon\Cache\Backend\Redis as CacheBackend;
 
@@ -29,12 +28,6 @@ use Phalcon\Cache\Backend\Redis as CacheBackend;
 class RedisTest extends Test
 {
     /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
-    /**
      * executed before each test
      */
     protected function _before()
@@ -42,13 +35,6 @@ class RedisTest extends Test
         if (!extension_loaded('redis')) {
             $this->markTestSkipped('redis extension not loaded');
         }
-    }
-
-    /**
-     * executed after each test
-     */
-    protected function _after()
-    {
     }
 
     public function testHasRedis()

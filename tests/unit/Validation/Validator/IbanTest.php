@@ -19,8 +19,7 @@
 
 namespace Phalcon\Test\Validation\Validator;
 
-use UnitTester;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Validation\Validator\Iban;
 use Phalcon\Validation;
 

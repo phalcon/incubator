@@ -19,8 +19,7 @@
 
 namespace Phalcon\Test\Utils;
 
-use Codeception\TestCase\Test;
-use UnitTester;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Utils\ArrayUtils;
 use ArrayIterator;
 

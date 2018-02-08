@@ -2,10 +2,8 @@
 
 namespace Phalcon\Test\Module;
 
-use UnitTester;
 use Codeception\Specify;
-use Codeception\Test\Unit;
-use PHPUnit_Runner_Version;
+use Phalcon\Test\Codeception\UnitTestCase as Unit;
 
 /**
  * \Phalcon\Test\Module\UnitTest
@@ -27,10 +25,4 @@ use PHPUnit_Runner_Version;
 class UnitTest extends Unit
 {
     use Specify;
-
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
 }

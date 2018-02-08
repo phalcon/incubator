@@ -2,10 +2,9 @@
 
 namespace Phalcon\Test\Validation\Validator;
 
-use UnitTester;
 use Phalcon\Validation;
-use Codeception\TestCase\Test;
-use Phalcon\Validation\Validator\CardNumber;
+use Phalcon\Test\Codeception\UnitTestCase;
+use Phalcon\Validation\Validator\AlphaCompleteValidator;
 
 /**
  * \Phalcon\Test\Validation\Validator\AlphaCompleteValidatorTest
@@ -24,13 +23,8 @@ use Phalcon\Validation\Validator\CardNumber;
  * through the world-wide-web, please send an email to license@phalconphp.com
  * so that we can send you a copy immediately.
  */
-class AlphaCompleteValidatorTest extends Test
+class AlphaCompleteValidatorTest extends UnitTestCase
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
 
     public function testAlphaCompleteValidatorOk()
     {
@@ -40,13 +34,13 @@ class AlphaCompleteValidatorTest extends Test
 
         $validation->add(
             'text',
-            new \Phalcon\Validation\Validator\AlphaCompleteValidator (
+            new AlphaCompleteValidator (
                 [
-                    'min' => 5,                                                                 // Optional
-                    'max' => 100,                                                               // Optional
-                    'message' => 'Validation failed.',                                          // Optional
-                    'messageMinimum' => 'The value must contain at least 5 characters.',        // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'         // Optional
+                    'min' => 5,                                                          // Optional
+                    'max' => 100,                                                        // Optional
+                    'message' => 'Validation failed.',                                   // Optional
+                    'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
                 ]
             )
         );
@@ -63,14 +57,14 @@ class AlphaCompleteValidatorTest extends Test
 
         $validation->add(
             'text',
-            new \Phalcon\Validation\Validator\AlphaCompleteValidator (
+            new AlphaCompleteValidator (
                 [
-                    'allowPipes' => true,                                                       // Optional
-                    'min' => 5,                                                                 // Optional
-                    'max' => 100,                                                               // Optional
-                    'message' => 'Validation failed.',                                          // Optional
-                    'messageMinimum' => 'The value must contain at least 5 characters.',        // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'         // Optional
+                    'allowPipes' => true,                                                // Optional
+                    'min' => 5,                                                          // Optional
+                    'max' => 100,                                                        // Optional
+                    'message' => 'Validation failed.',                                   // Optional
+                    'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
                 ]
             )
         );
@@ -87,14 +81,14 @@ class AlphaCompleteValidatorTest extends Test
 
         $validation->add(
             'text',
-            new \Phalcon\Validation\Validator\AlphaCompleteValidator (
+            new AlphaCompleteValidator (
                 [
-                    'allowBackslashes' => true,                                                       // Optional
-                    'min' => 5,                                                                 // Optional
-                    'max' => 100,                                                               // Optional
-                    'message' => 'Validation failed.',                                          // Optional
-                    'messageMinimum' => 'The value must contain at least 5 characters.',        // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'         // Optional
+                    'allowBackslashes' => true,                                          // Optional
+                    'min' => 5,                                                          // Optional
+                    'max' => 100,                                                        // Optional
+                    'message' => 'Validation failed.',                                   // Optional
+                    'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
                 ]
             )
         );
@@ -111,15 +105,15 @@ class AlphaCompleteValidatorTest extends Test
 
         $validation->add(
             'text',
-            new \Phalcon\Validation\Validator\AlphaCompleteValidator (
+            new AlphaCompleteValidator (
                 [
-                    'allowPipes' => true,                                                       // Optional
-                    'allowUrlChars' => true,                                                       // Optional
-                    'min' => 5,                                                                 // Optional
-                    'max' => 100,                                                               // Optional
-                    'message' => 'Validation failed.',                                          // Optional
-                    'messageMinimum' => 'The value must contain at least 5 characters.',        // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'         // Optional
+                    'allowPipes' => true,                                                // Optional
+                    'allowUrlChars' => true,                                             // Optional
+                    'min' => 5,                                                          // Optional
+                    'max' => 100,                                                        // Optional
+                    'message' => 'Validation failed.',                                   // Optional
+                    'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
                 ]
             )
         );
@@ -136,13 +130,13 @@ class AlphaCompleteValidatorTest extends Test
 
         $validation->add(
             'text',
-            new \Phalcon\Validation\Validator\AlphaCompleteValidator (
+            new AlphaCompleteValidator (
                 [
-                    'min' => 5,                                                                 // Optional
-                    'max' => 100,                                                               // Optional
-                    'message' => 'Validation failed.',                                          // Optional
-                    'messageMinimum' => 'The value must contain at least 5 characters.',        // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'         // Optional
+                    'min' => 5,                                                          // Optional
+                    'max' => 100,                                                        // Optional
+                    'message' => 'Validation failed.',                                   // Optional
+                    'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
                 ]
             )
         );
@@ -159,13 +153,13 @@ class AlphaCompleteValidatorTest extends Test
 
         $validation->add(
             'text',
-            new \Phalcon\Validation\Validator\AlphaCompleteValidator (
+            new AlphaCompleteValidator (
                 [
-                    'min' => 5,                                                                 // Optional
-                    'max' => 100,                                                               // Optional
-                    'message' => 'Validation failed.',                                          // Optional
-                    'messageMinimum' => 'The value must contain at least 5 characters.',        // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'         // Optional
+                    'min' => 5,                                                          // Optional
+                    'max' => 100,                                                        // Optional
+                    'message' => 'Validation failed.',                                   // Optional
+                    'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
                 ]
             )
         );
@@ -182,13 +176,13 @@ class AlphaCompleteValidatorTest extends Test
 
         $validation->add(
             'text',
-            new \Phalcon\Validation\Validator\AlphaCompleteValidator (
+            new AlphaCompleteValidator (
                 [
-                    'min' => 5,                                                                 // Optional
-                    'max' => 100,                                                               // Optional
-                    'message' => 'Validation failed.',                                          // Optional
-                    'messageMinimum' => 'The value must contain at least 5 characters.',        // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'         // Optional
+                    'min' => 5,                                                          // Optional
+                    'max' => 100,                                                        // Optional
+                    'message' => 'Validation failed.',                                   // Optional
+                    'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
                 ]
             )
         );
@@ -205,13 +199,13 @@ class AlphaCompleteValidatorTest extends Test
 
         $validation->add(
             'text',
-            new \Phalcon\Validation\Validator\AlphaCompleteValidator (
+            new AlphaCompleteValidator (
                 [
-                    'min' => 5,                                                                 // Optional
-                    'max' => 100,                                                               // Optional
-                    'message' => 'Validation failed.',                                          // Optional
-                    'messageMinimum' => 'The value must contain at least 5 characters.',        // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'         // Optional
+                    'min' => 5,                                                          // Optional
+                    'max' => 100,                                                        // Optional
+                    'message' => 'Validation failed.',                                   // Optional
+                    'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
                 ]
             )
         );
@@ -228,13 +222,13 @@ class AlphaCompleteValidatorTest extends Test
 
         $validation->add(
             'text',
-            new \Phalcon\Validation\Validator\AlphaCompleteValidator (
+            new AlphaCompleteValidator (
                 [
-                    'min' => 5,                                                                 // Optional
-                    'max' => 10,                                                                // Optional
-                    'message' => 'Validation failed.',                                          // Optional
-                    'messageMinimum' => 'The value must contain at least 5 characters.',        // Optional
-                    'messageMaximum' => 'The value can contain maximum 10 characters.'          // Optional
+                    'min' => 5,                                                          // Optional
+                    'max' => 10,                                                         // Optional
+                    'message' => 'Validation failed.',                                   // Optional
+                    'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
+                    'messageMaximum' => 'The value can contain maximum 10 characters.'   // Optional
                 ]
             )
         );

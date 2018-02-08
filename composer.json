@@ -31,8 +31,9 @@
     },
     "require": {
         "php": ">=5.5",
-        "ext-phalcon": "^3.2",
-        "swiftmailer/swiftmailer": "~5.2"
+        "ext-phalcon": "~3.3",
+        "swiftmailer/swiftmailer": "~5.2",
+        "twig/twig": "~1.35|~2.0"
     },
     "require-dev": {
         "phpdocumentor/reflection-docblock": "2.0.4",

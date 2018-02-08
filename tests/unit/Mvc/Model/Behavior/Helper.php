@@ -10,7 +10,7 @@ use CategoriesManyRoots;
 use Phalcon\DiInterface;
 use Codeception\Specify;
 use Phalcon\Mvc\Model\Manager;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Mvc\Model\Metadata;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Mvc\Model\Behavior\NestedSet as NestedSetBehavior;

@@ -4,7 +4,7 @@ namespace Phalcon\Test\Test\Traits;
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Resultset\Simple;
 use Phalcon\Test\Traits\ResultSet;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 
 /**
  * \Phalcon\Test\Test\Traits\ResultSetTest
