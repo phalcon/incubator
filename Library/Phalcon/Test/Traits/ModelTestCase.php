@@ -58,7 +58,7 @@ trait ModelTestCase
      */
     protected function setDb($dbType = 'mysql')
     {
-        $config = $this->config;
+        $config = $this->config ?: $this->getConfig();
 
         if ($this->di->has('db')) {
             $db = $this->di->get('db');
