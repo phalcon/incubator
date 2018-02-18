@@ -58,21 +58,21 @@ trait ModelTestCase
      */
     protected function setDb($dbType = 'mysql')
     {
-        $config = $this->config ?: $this->getConfig();
-
         if ($this->di->has('db')) {
             $db = $this->di->get('db');
             $class = 'Phalcon\Db\Adapter\Pdo\\' . ucfirst($dbType);
-            if (get_class($db) == $class) {
+            if ($db instanceof $class) {
                 return $db;
             }
         }
+
+        $config = $this->config ?: $this->getConfig();
 
         // Set the connection to whatever we chose
         $this->di->set(
             'db',
             function () use ($dbType, $config) {
-                $params = $config['db'][$dbType];
+                $params = isset($config['db'][$dbType]) ? $config['db'][$dbType] : $config['db'];
                 $class = 'Phalcon\Db\Adapter\Pdo\\' . ucfirst($dbType);
 
                 $conn = new $class($params);
