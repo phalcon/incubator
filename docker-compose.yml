@@ -30,9 +30,8 @@ services:
             - "11211:11211"
 
     mongodb:
-        image: "tutum/mongodb"
+        image: mongo
         environment:
-          MONGODB_DATABASE: incubator
-          AUTH: "no"
+          MONGO_INITDB_DATABASE: incubator
         ports:
             - "27017:27017"
