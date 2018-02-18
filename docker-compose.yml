@@ -1,0 +1,38 @@
+version: "3"
+services:
+    db:
+        image: mysql
+        environment:
+          MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+          MYSQL_DATABASE: "incubator"
+          MYSQL_USER: "incubator"
+          MYSQL_PASSWORD: "secret"
+        ports:
+            - "3306:3306"
+
+    aerospike:
+        image: aerospike
+        ports:
+            - "3000:3000"
+
+    redis:
+        image: redis
+        ports:
+            - "6379:6379"
+
+    beanstalk:
+        image: schickling/beanstalkd
+        ports:
+            - "11300:11300"
+    memcached:
+        image: memcached
+        ports:
+            - "11211:11211"
+
+    mongodb:
+        image: "tutum/mongodb"
+        environment:
+          MONGODB_DATABASE: incubator
+          AUTH: "no"
+        ports:
+            - "27017:27017"
