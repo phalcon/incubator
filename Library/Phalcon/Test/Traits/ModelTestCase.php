@@ -18,6 +18,7 @@
 
 namespace Phalcon\Test\Traits;
 
+use Phalcon\Config;
 use Phalcon\Mvc\Model\Manager as PhModelManager;
 use Phalcon\Mvc\Model\Metadata\Memory as PhMetadataMemory;
 
@@ -73,6 +74,10 @@ trait ModelTestCase
             'db',
             function () use ($dbType, $config) {
                 $params = isset($config['db'][$dbType]) ? $config['db'][$dbType] : $config['db'];
+                if ($params instanceof Config){
+                    $params = $params->toArray();
+                }
+
                 $class = 'Phalcon\Db\Adapter\Pdo\\' . ucfirst($dbType);
 
                 $conn = new $class($params);
