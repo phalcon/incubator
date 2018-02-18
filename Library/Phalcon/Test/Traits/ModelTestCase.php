@@ -74,7 +74,7 @@ trait ModelTestCase
             'db',
             function () use ($dbType, $config) {
                 $params = isset($config['db'][$dbType]) ? $config['db'][$dbType] : $config['db'];
-                if ($params instanceof Config){
+                if ($params instanceof Config) {
                     $params = $params->toArray();
                 }
 
