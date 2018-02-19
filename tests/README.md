@@ -33,6 +33,14 @@ You may need the following services to run other tests:
 * MongoDB
 * Beanstalk
 
+## Docker Compose
+
+As an alternative to installing the above requirements, you may also utilize the included docker-compose.yml. This requires docker-compose and docker to be installed. You will need to update your `tests/.env` file appropriately to point to the resulting docker containers. You may start the containers by running:
+
+```bash
+docker-compose up
+```
+
 ## Run tests
 
 First you need to re-generate base classes for test all suites:
@@ -76,6 +84,28 @@ To run single test:
 ```bash
 vendor/bin/codecept run tests/unit/some/folder/some/test/file.php
 ```
+
+## Advanced Configuration
+The test suites ship with `.dist.yml` configuration files:
+
+ ```
+ codeception.dist.yml
+ tests/aerospike.suite.dist.yml
+ tests/unit.suite.5.dist.yml
+ tests/unit.suite.dist.yml
+ tests/unit5x.suite.dist.yml
+ ```
+
+ You may override the options in each of these files by creating a new configuration file of the same name, without the `.dist`. For example, to auto-populate/reset the database on every unit test, create the file `tests/unit.suite.yml` with:
+
+ ```yaml
+ modules:
+     config:
+         Db:
+             populate: true
+ ```
+
+For additional configuration options, see http://codeception.com.
 
 ## Help
 
