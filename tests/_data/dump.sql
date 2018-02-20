@@ -1283,7 +1283,7 @@ CREATE TABLE `audit_detail` (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE if EXISTS `session`;
+DROP TABLE if EXISTS `sessions`;
 CREATE TABLE `sessions` (
   session_id TEXT NOT NULL,
   data TEXT,

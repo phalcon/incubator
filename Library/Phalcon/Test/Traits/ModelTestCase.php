@@ -18,6 +18,7 @@
 
 namespace Phalcon\Test\Traits;
 
+use Phalcon\Config;
 use Phalcon\Mvc\Model\Manager as PhModelManager;
 use Phalcon\Mvc\Model\Metadata\Memory as PhMetadataMemory;
 
@@ -58,21 +59,25 @@ trait ModelTestCase
      */
     protected function setDb($dbType = 'mysql')
     {
-        $config = $this->config;
-
         if ($this->di->has('db')) {
             $db = $this->di->get('db');
             $class = 'Phalcon\Db\Adapter\Pdo\\' . ucfirst($dbType);
-            if (get_class($db) == $class) {
+            if ($db instanceof $class) {
                 return $db;
             }
         }
+
+        $config = $this->config ?: $this->getConfig();
 
         // Set the connection to whatever we chose
         $this->di->set(
             'db',
             function () use ($dbType, $config) {
-                $params = $config['db'][$dbType];
+                $params = isset($config['db'][$dbType]) ? $config['db'][$dbType] : $config['db'];
+                if ($params instanceof Config) {
+                    $params = $params->toArray();
+                }
+
                 $class = 'Phalcon\Db\Adapter\Pdo\\' . ucfirst($dbType);
 
                 $conn = new $class($params);

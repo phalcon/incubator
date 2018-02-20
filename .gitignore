@@ -7,3 +7,8 @@
 
 composer.lock
 /vendor/
+codeception.yml
+tests/aerospike.suite.yml
+tests/unit.suite.5.yml
+tests/unit.suite.yml
+tests/unit5x.suite.yml
