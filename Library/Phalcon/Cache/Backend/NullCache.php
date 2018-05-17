@@ -3,6 +3,7 @@
 namespace Phalcon\Cache\Backend;
 
 use Phalcon\Cache\BackendInterface;
+use Phalcon\Cache\Frontend\None as NoneFrontend;
 
 /**
  * A cache adapter that does nothing.
@@ -11,6 +12,7 @@ final class NullCache implements BackendInterface
 {
     public function start($keyName, $lifetime = null)
     {
+        return true;
     }
 
     public function stop($stopBuffer = true)
@@ -19,6 +21,7 @@ final class NullCache implements BackendInterface
 
     public function getFrontend()
     {
+        return NoneFrontend;
     }
 
     public function getOptions()
