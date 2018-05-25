@@ -97,9 +97,9 @@ echo $time;
 This adapter uses [windows cache extension](http://pecl.php.net/package/wincache) for PHP
 
 
-## Null
+## NullCache
 
-Null adapter can be useful when you have dependency injection and wants to provider an Adapter that does nothing.  
+NullCache adapter can be useful when you have dependency injection and wants to provider an Adapter that does nothing.  
 
 [1]: http://www.aerospike.com/
 [2]: http://www.aerospike.com/docs/client/php/install/
