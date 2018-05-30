@@ -21,7 +21,7 @@ final class NullCache implements BackendInterface
 
     public function getFrontend()
     {
-        return NoneFrontend();
+        return new NoneFrontend();
     }
 
     public function getOptions()
