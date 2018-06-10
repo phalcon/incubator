@@ -65,7 +65,7 @@ final class EagerLoad
         $relation = $this->relation;
 
         $alias                = $relation->getOptions();
-        $alias                = strtolower($alias['alias']);
+        $alias                = $alias['alias'];
         $relField             = $relation->getFields();
         $relReferencedModel   = $relation->getReferencedModel();
         $relReferencedField   = $relation->getReferencedFields();
