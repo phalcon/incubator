@@ -128,6 +128,22 @@ class MysqlExtended extends Mysql
                     return $this->getSqlExpression($expression['arguments'][0]) .
                     ' REGEXP (' . $this->getSqlExpression($expression['arguments'][1]) . ')';
                     break;
+
+                case 'JSON_EXTRACT':
+                    if (count($expression["arguments"]) < 2) {
+                        throw new Exception('JSON_EXTRACT requires 2 parameters');
+                    }
+
+                    $arguments = [];
+                    $length = count($expression["arguments"]);
+                    for ($i = 0; $i < $length; $i++) {
+                        $arguments[] = $i === 0 ?
+                            $this->getSqlExpression($expression["arguments"][$i]) :
+                            $expression["arguments"][$i]['value'];
+                    }
+
+                    return 'JSON_EXTRACT(' . join(', ', $arguments) . ')';
+                    break;
             }
         }
 
