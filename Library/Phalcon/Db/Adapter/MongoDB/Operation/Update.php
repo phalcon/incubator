@@ -138,7 +138,7 @@ class Update implements Executable
 	    
         if(isset($this->options['arrayFilters'])) {
             $updateOptions['arrayFilters'] = $this->options['arrayFilters'];
-	}
+        }
 
         $bulkOptions=[];
 
