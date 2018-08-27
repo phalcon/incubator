@@ -135,6 +135,9 @@ class Update implements Executable
             'multi' =>$this->options['multi'],
             'upsert'=>$this->options['upsert'],
         ];
+      
+        if(isset($this->options['arrayFilters']))
+		      $updateOptions['arrayFilters'] = $this->options['arrayFilters'];
 
         $bulkOptions=[];
 
