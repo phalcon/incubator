@@ -95,9 +95,9 @@ class Update implements Executable
 
         if (!is_bool($options['multi'])) {
             throw InvalidArgumentException::invalidType(
-            	'"multi" option',
-	            $options['multi'],
-	            'boolean'
+                '"multi" option',
+                $options['multi'],
+                'boolean'
             );
         }
 
@@ -107,9 +107,9 @@ class Update implements Executable
 
         if (!is_bool($options['upsert'])) {
             throw InvalidArgumentException::invalidType(
-            	'"upsert" option',
-	            $options['upsert'],
-	            'boolean'
+                '"upsert" option',
+                $options['upsert'],
+                'boolean'
             );
         }
 
