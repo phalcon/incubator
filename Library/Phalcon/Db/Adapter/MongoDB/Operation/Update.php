@@ -36,7 +36,7 @@ use Phalcon\Db\Adapter\MongoDB\Exception\InvalidArgumentException;
  */
 class Update implements Executable
 {
-    private static $wireVersionForDocumentLevelValidation=4;
+    private static $wireVersionForDocumentLevelValidation = 4;
 
     private $databaseName;
     private $collectionName;
