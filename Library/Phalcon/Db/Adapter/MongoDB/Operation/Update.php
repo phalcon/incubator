@@ -72,11 +72,11 @@ class Update implements Executable
      */
     public function __construct($databaseName, $collectionName, $filter, $update, array $options = [])
     {
-        if (!is_array($filter)&&!is_object($filter)) {
+        if (!is_array($filter) && !is_object($filter)) {
             throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
-        if (!is_array($update)&&!is_object($update)) {
+        if (!is_array($update) && !is_object($update)) {
             throw InvalidArgumentException::invalidType('$update', $filter, 'array or object');
         }
 
@@ -85,7 +85,7 @@ class Update implements Executable
             'upsert'=>false,
         ];
 
-        if (isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])) {
+        if (isset($options['bypassDocumentValidation']) && !is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType(
                 '"bypassDocumentValidation" option',
                 $options['bypassDocumentValidation'],
@@ -94,18 +94,26 @@ class Update implements Executable
         }
 
         if (!is_bool($options['multi'])) {
-            throw InvalidArgumentException::invalidType('"multi" option', $options['multi'], 'boolean');
+            throw InvalidArgumentException::invalidType(
+            	'"multi" option',
+	            $options['multi'],
+	            'boolean'
+            );
         }
 
-        if ($options['multi']&&!Functions::isFirstKeyOperator($update)) {
+        if ($options['multi'] && !Functions::isFirstKeyOperator($update)) {
             throw new InvalidArgumentException('"multi" option cannot be true if $update is a replacement document');
         }
 
         if (!is_bool($options['upsert'])) {
-            throw InvalidArgumentException::invalidType('"upsert" option', $options['upsert'], 'boolean');
+            throw InvalidArgumentException::invalidType(
+            	'"upsert" option',
+	            $options['upsert'],
+	            'boolean'
+            );
         }
 
-        if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
+        if (isset($options['writeConcern']) && !$options['writeConcern'] instanceof WriteConcern) {
             throw InvalidArgumentException::invalidType(
                 '"writeConcern" option',
                 $options['writeConcern'],
@@ -113,11 +121,11 @@ class Update implements Executable
             );
         }
 
-        $this->databaseName  =(string)$databaseName;
-        $this->collectionName=(string)$collectionName;
-        $this->filter        =$filter;
-        $this->update        =$update;
-        $this->options       =$options;
+        $this->databaseName = (string)$databaseName;
+        $this->collectionName = (string)$collectionName;
+        $this->filter = $filter;
+        $this->update = $update;
+        $this->options = $options;
     }
 
     /**
@@ -131,30 +139,34 @@ class Update implements Executable
      */
     public function execute(Server $server)
     {
-        $updateOptions=[
-            'multi' =>$this->options['multi'],
-            'upsert'=>$this->options['upsert'],
+        $updateOptions = [
+            'multi' => $this->options['multi'],
+            'upsert' => $this->options['upsert']
         ];
 
         if (isset($this->options['arrayFilters'])) {
             $updateOptions['arrayFilters'] = $this->options['arrayFilters'];
         }
 
-        $bulkOptions=[];
+        $bulkOptions = [];
 
         if (isset($this->options['bypassDocumentValidation']) && Functions::serverSupportsFeature(
             $server,
             self::$wireVersionForDocumentLevelValidation
         )
         ) {
-            $bulkOptions['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
+            $bulkOptions['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 
-        $bulk=new Bulk($bulkOptions);
+        $bulk = new Bulk($bulkOptions);
         $bulk->update($this->filter, $this->update, $updateOptions);
 
-        $writeConcern=isset($this->options['writeConcern'])?$this->options['writeConcern']:null;
-        $writeResult =$server->executeBulkWrite($this->databaseName.'.'.$this->collectionName, $bulk, $writeConcern);
+        $writeConcern = isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null;
+        $writeResult = $server->executeBulkWrite(
+            $this->databaseName.'.'.$this->collectionName,
+            $bulk,
+            $writeConcern
+        );
 
         return new UpdateResult($writeResult);
     }
