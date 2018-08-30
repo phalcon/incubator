@@ -153,7 +153,7 @@ class Update implements Executable
         if (isset($this->options['bypassDocumentValidation']) && Functions::serverSupportsFeature(
             $server,
             self::$wireVersionForDocumentLevelValidation
-            )
+        )
         ) {
             $bulkOptions['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
