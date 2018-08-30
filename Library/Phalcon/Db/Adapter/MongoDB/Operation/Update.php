@@ -72,11 +72,11 @@ class Update implements Executable
      */
     public function __construct($databaseName, $collectionName, $filter, $update, array $options = [])
     {
-        if ( ! is_array($filter) && ! is_object($filter)) {
+        if (! is_array($filter) && ! is_object($filter)) {
             throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
-        if ( ! is_array($update) && ! is_object($update)) {
+        if (! is_array($update) && ! is_object($update)) {
             throw InvalidArgumentException::invalidType('$update', $filter, 'array or object');
         }
 
@@ -93,7 +93,7 @@ class Update implements Executable
             );
         }
 
-        if ( ! is_bool($options['multi'])) {
+        if (! is_bool($options['multi'])) {
             throw InvalidArgumentException::invalidType(
                 '"multi" option',
                 $options['multi'],
@@ -105,7 +105,7 @@ class Update implements Executable
             throw new InvalidArgumentException('"multi" option cannot be true if $update is a replacement document');
         }
 
-        if ( ! is_bool($options['upsert'])) {
+        if (! is_bool($options['upsert'])) {
             throw InvalidArgumentException::invalidType(
                 '"upsert" option',
                 $options['upsert'],
@@ -151,8 +151,8 @@ class Update implements Executable
         $bulkOptions = [];
 
         if (isset($this->options['bypassDocumentValidation']) && Functions::serverSupportsFeature(
-                $server,
-                self::$wireVersionForDocumentLevelValidation
+            $server,
+            self::$wireVersionForDocumentLevelValidation
             )
         ) {
             $bulkOptions['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
