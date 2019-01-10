@@ -42,7 +42,10 @@ use Phalcon\Validation\Validator;
  *
  * $validator->add('g-recaptcha-response', new Validator([
  *    'message' => 'The captcha is not valid',
- *    'secret'  => 'your_site_key'
+ *    'secret'  => 'your_site_key',
+ *    'score'   => 0.5, //optional score check for ReCaptcha v3
+ *    'ip'      => 'optional client ip address override',
+ *    'action'  => 'optional action name to verify for ReCaptcha v3'
  * ]));
  * </code>
  *
@@ -80,7 +83,11 @@ class ReCaptcha extends Validator
         $secret   = $this->getOption('secret');
         $value    = $validation->getValue($attribute);
         $request  = $validation->getDI()->get('request');
-        $remoteIp = $request->getClientAddress(false);
+        if ($this->hasOption('ip')) {
+            $remoteIp = $this->getOption('ip');
+        } else {
+            $remoteIp = $request->getClientAddress(false);
+        }
 
         if (!empty($value)) {
             $curl = curl_init(self::RECAPTCHA_URL);
@@ -96,7 +103,12 @@ class ReCaptcha extends Validator
             curl_close($curl);
         }
 
-        if (empty($response['success'])) {
+        if (empty($response['success'])
+            || ($this->hasOption('score')
+                && $this->getOption('score') > $response['score'])
+            || ($this->hasOption('action')
+                && $this->getOption('action') !== $response['action'])
+        ) {
             $label = $this->getOption('label');
             if (empty($label)) {
                 $label = $validation->getLabel($attribute);
