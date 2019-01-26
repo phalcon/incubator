@@ -31,7 +31,8 @@ class ArrayInclusionInValidator extends Validator implements ValidatorInterface
 
         foreach ($array as $item) {
             if (!in_array($item, $domain)) {
-                $validation->appendMessage(new Message($this->getOption('message') ?: 'Values provided not exist in domain', $attribute));
+                $message = $this->getOption('message', 'Values provided not exist in domain');
+                $validation->appendMessage(new Message($message, $attribute));
                 return false;
             }
         }
