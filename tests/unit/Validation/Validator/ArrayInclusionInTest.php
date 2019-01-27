@@ -73,7 +73,7 @@ class ArrayInclusionInTest extends UnitTestCase
 
         $validation->add(
             'field',
-            new ArrayInclusionInValidator([
+            new ArrayInclusionIn([
                 'domain' => $this->domain,
                 'allowEmpty' => true
             ])
