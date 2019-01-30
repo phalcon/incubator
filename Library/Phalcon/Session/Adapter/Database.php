@@ -87,7 +87,8 @@ class Database extends Adapter implements AdapterInterface
      */
     public function open()
     {
-        return true;
+        $this->_started = true;
+        return $this->isStarted();
     }
 
     /**
@@ -97,7 +98,8 @@ class Database extends Adapter implements AdapterInterface
      */
     public function close()
     {
-        return false;
+        $this->_started = false;
+        return $this->isStarted();
     }
 
     /**
@@ -109,7 +111,11 @@ class Database extends Adapter implements AdapterInterface
     public function read($sessionId)
     {
         $maxLifetime = (int) ini_get('session.gc_maxlifetime');
-
+        
+        if (!$this->isStarted()) {
+            return false;
+        }
+        
         $options = $this->getOptions();
         $row = $this->connection->fetchOne(
             sprintf(
@@ -152,7 +158,7 @@ class Database extends Adapter implements AdapterInterface
             Db::FETCH_NUM,
             [$sessionId]
         );
-
+        
         if ($row[0] > 0) {
             return $this->connection->execute(
                 sprintf(
@@ -164,19 +170,23 @@ class Database extends Adapter implements AdapterInterface
                 ),
                 [$data, time(), $sessionId]
             );
-        } else {
-            return $this->connection->execute(
-                sprintf(
-                    'INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?, ?, NULL)',
-                    $this->connection->escapeIdentifier($options['table']),
-                    $this->connection->escapeIdentifier($options['column_session_id']),
-                    $this->connection->escapeIdentifier($options['column_data']),
-                    $this->connection->escapeIdentifier($options['column_created_at']),
-                    $this->connection->escapeIdentifier($options['column_modified_at'])
-                ),
-                [$sessionId, $data, time()]
-            );
         }
+        
+        if (!$this->isStarted()) {
+            return false;
+        }
+            
+        return $this->connection->execute(
+            sprintf(
+                'INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?, ?, NULL)',
+                $this->connection->escapeIdentifier($options['table']),
+                $this->connection->escapeIdentifier($options['column_session_id']),
+                $this->connection->escapeIdentifier($options['column_data']),
+                $this->connection->escapeIdentifier($options['column_created_at']),
+                $this->connection->escapeIdentifier($options['column_modified_at'])
+            ),
+            [$sessionId, $data, time()]
+        );
     }
 
     /**
@@ -205,7 +215,7 @@ class Database extends Adapter implements AdapterInterface
             [$session_id]
         );
 
-        return $result && session_destroy();
+        return $result;
     }
 
     /**

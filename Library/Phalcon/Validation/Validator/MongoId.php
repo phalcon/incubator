@@ -36,7 +36,7 @@ class MongoId extends Validator
      * @param Validation $validation
      * @param string $attribute
      * @return bool
-     * @throws Exception
+     * @throws ValidationException
      */
     public function validate(Validation $validation, $attribute)
     {

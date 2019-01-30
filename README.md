@@ -27,7 +27,7 @@ Then create the `composer.json` file as follows:
 ```json
 {
     "require": {
-        "phalcon/incubator": "^3.2"
+        "phalcon/incubator": "^3.4"
     }
 }
 ```
@@ -93,4 +93,4 @@ See [INDEX.md](INDEX.md).
 ## License
 
 Incubator is open-sourced software licensed under the [New BSD License](https://github.com/phalcon/incubator/blob/master/LICENSE.txt).<br>
-© 2011-2016, Phalcon Framework Team
+© 2011-2018, Phalcon Framework Team

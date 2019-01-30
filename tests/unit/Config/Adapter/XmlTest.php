@@ -2,9 +2,8 @@
 
 namespace Phalcon\Test\Config\Adapter;
 
-use UnitTester;
 use Codeception\Specify;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Config\Adapter\Xml;
 
 /**
@@ -29,12 +28,6 @@ class XmlTest extends Test
     use Specify;
 
     /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
-    /**
      * executed before each test
      */
     protected function _before()
@@ -42,13 +35,6 @@ class XmlTest extends Test
         if (!extension_loaded('SimpleXML')) {
             $this->markTestSkipped("SimpleXML extension not loaded");
         }
-    }
-
-    /**
-     * executed after each test
-     */
-    protected function _after()
-    {
     }
 
     /**

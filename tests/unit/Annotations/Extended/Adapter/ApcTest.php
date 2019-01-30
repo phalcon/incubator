@@ -2,20 +2,13 @@
 
 namespace Phalcon\Test\Annotations\Extended\Adapter;
 
-use UnitTester;
 use ReflectionMethod;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Annotations\Reflection;
 use Phalcon\Annotations\Extended\Adapter\Apc;
 
 class ApcTest extends Test
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
     /**
      * executed before each test
      */

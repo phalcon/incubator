@@ -2,10 +2,9 @@
 
 namespace Phalcon\Test\Validation\Validator;
 
-use UnitTester;
 use Phalcon\Validation;
-use Codeception\TestCase\Test;
-use Phalcon\Validation\Validator\CardNumber;
+use Phalcon\Test\Codeception\UnitTestCase;
+use Phalcon\Validation\Validator\NumericValidator;
 
 /**
  * \Phalcon\Test\Validation\Validator\NumericValidatorTest
@@ -24,14 +23,8 @@ use Phalcon\Validation\Validator\CardNumber;
  * through the world-wide-web, please send an email to license@phalconphp.com
  * so that we can send you a copy immediately.
  */
-class NumericValidatorTest extends Test
+class NumericValidatorTest extends UnitTestCase
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
     public function testNumericValidatorOk()
     {
         $data['number'] = 1234567890;
@@ -40,13 +33,13 @@ class NumericValidatorTest extends Test
 
         $validation->add(
             'number',
-            new \Phalcon\Validation\Validator\NumericValidator (
+            new NumericValidator (
                 [
-                    'min' => 1,                                                     // Optional
-                    'max' => 2000000000,                                            // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.',      // Optional
-                    'messageMinimum' => 'The value must be at least 1',             // Optional
-                    'messageMaximum' => 'The value must be lower than 12345678900'  // Optional
+                    'min' => 1,                                                    // Optional
+                    'max' => 2000000000,                                           // Optional
+                    'message' => 'Only numeric (0-9) characters are allowed.',     // Optional
+                    'messageMinimum' => 'The value must be at least 1',            // Optional
+                    'messageMaximum' => 'The value must be lower than 12345678900' // Optional
                 ]
             )
         );
@@ -63,14 +56,14 @@ class NumericValidatorTest extends Test
 
         $validation->add(
             'number',
-            new \Phalcon\Validation\Validator\NumericValidator (
+            new NumericValidator (
                 [
-                    'allowSign' => true,                                            // Optional, default false
-                    'min' => -20,                                                   // Optional
-                    'max' => 2000000000,                                            // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.',      // Optional
-                    'messageMinimum' => 'The value must be at least 1',             // Optional
-                    'messageMaximum' => 'The value must be lower than 12345678900'  // Optional
+                    'allowSign' => true,                                           // Optional, default false
+                    'min' => -20,                                                  // Optional
+                    'max' => 2000000000,                                           // Optional
+                    'message' => 'Only numeric (0-9) characters are allowed.',     // Optional
+                    'messageMinimum' => 'The value must be at least 1',            // Optional
+                    'messageMaximum' => 'The value must be lower than 12345678900' // Optional
                 ]
             )
         );
@@ -87,13 +80,13 @@ class NumericValidatorTest extends Test
 
         $validation->add(
             'number',
-            new \Phalcon\Validation\Validator\NumericValidator (
+            new NumericValidator (
                 [
-                    'min' => 2,                                                     // Optional
-                    'max' => 10         ,                                           // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.',      // Optional
-                    'messageMinimum' => 'The value must be at least 2',             // Optional
-                    'messageMaximum' => 'The value must be lower than 10'           // Optional
+                    'min' => 2,                                                // Optional
+                    'max' => 10         ,                                      // Optional
+                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',        // Optional
+                    'messageMaximum' => 'The value must be lower than 10'      // Optional
                 ]
             )
         );
@@ -110,13 +103,13 @@ class NumericValidatorTest extends Test
 
         $validation->add(
             'number',
-            new \Phalcon\Validation\Validator\NumericValidator (
+            new NumericValidator (
                 [
-                    'min' => 2,                                                     // Optional
-                    'max' => 10         ,                                           // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.',      // Optional
-                    'messageMinimum' => 'The value must be at least 2',             // Optional
-                    'messageMaximum' => 'The value must be lower than 10'           // Optional
+                    'min' => 2,                                                // Optional
+                    'max' => 10         ,                                      // Optional
+                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',        // Optional
+                    'messageMaximum' => 'The value must be lower than 10'      // Optional
                 ]
             )
         );
@@ -133,13 +126,13 @@ class NumericValidatorTest extends Test
 
         $validation->add(
             'number',
-            new \Phalcon\Validation\Validator\NumericValidator (
+            new NumericValidator (
                 [
-                    'min' => 2,                                                     // Optional
-                    'max' => 10         ,                                           // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.',      // Optional
-                    'messageMinimum' => 'The value must be at least 2',             // Optional
-                    'messageMaximum' => 'The value must be lower than 10'           // Optional
+                    'min' => 2,                                                // Optional
+                    'max' => 10         ,                                      // Optional
+                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',        // Optional
+                    'messageMaximum' => 'The value must be lower than 10'      // Optional
                 ]
             )
         );
@@ -156,13 +149,13 @@ class NumericValidatorTest extends Test
 
         $validation->add(
             'number',
-            new \Phalcon\Validation\Validator\NumericValidator (
+            new NumericValidator (
                 [
-                    'min' => 2,                                                     // Optional
-                    'max' => 10         ,                                           // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.',      // Optional
-                    'messageMinimum' => 'The value must be at least 2',             // Optional
-                    'messageMaximum' => 'The value must be lower than 10'           // Optional
+                    'min' => 2,                                                // Optional
+                    'max' => 10         ,                                      // Optional
+                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',        // Optional
+                    'messageMaximum' => 'The value must be lower than 10'      // Optional
                 ]
             )
         );
@@ -179,14 +172,14 @@ class NumericValidatorTest extends Test
 
         $validation->add(
             'number',
-            new \Phalcon\Validation\Validator\NumericValidator (
+            new NumericValidator (
                 [
-                    'allowFloat' => true,                                           // Optional, default: false
-                    'min' => 2,                                                     // Optional
-                    'max' => 10         ,                                           // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.',      // Optional
-                    'messageMinimum' => 'The value must be at least 2',             // Optional
-                    'messageMaximum' => 'The value must be lower than 10'           // Optional
+                    'allowFloat' => true,                                      // Optional, default: false
+                    'min' => 2,                                                // Optional
+                    'max' => 10         ,                                      // Optional
+                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',        // Optional
+                    'messageMaximum' => 'The value must be lower than 10'      // Optional
                 ]
             )
         );
@@ -203,14 +196,14 @@ class NumericValidatorTest extends Test
 
         $validation->add(
             'number',
-            new \Phalcon\Validation\Validator\NumericValidator (
+            new NumericValidator (
                 [
-                    'allowSign' => true,                                           // Optional, default: false
-                    'allowFloat' => true,                                           // Optional, default: false
-                    'max' => 10         ,                                           // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.',      // Optional
-                    'messageMinimum' => 'The value must be at least 2',             // Optional
-                    'messageMaximum' => 'The value must be lower than 10'           // Optional
+                    'allowSign' => true,                                       // Optional, default: false
+                    'allowFloat' => true,                                      // Optional, default: false
+                    'max' => 10         ,                                      // Optional
+                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',        // Optional
+                    'messageMaximum' => 'The value must be lower than 10'      // Optional
                 ]
             )
         );
@@ -227,14 +220,14 @@ class NumericValidatorTest extends Test
 
         $validation->add(
             'number',
-            new \Phalcon\Validation\Validator\NumericValidator (
+            new NumericValidator (
                 [
-                    'allowSign' => true,                                           // Optional, default: false
-                    'allowFloat' => true,                                           // Optional, default: false
-                    'max' => 10         ,                                           // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.',      // Optional
-                    'messageMinimum' => 'The value must be at least 2',             // Optional
-                    'messageMaximum' => 'The value must be lower than 10'           // Optional
+                    'allowSign' => true,                                       // Optional, default: false
+                    'allowFloat' => true,                                      // Optional, default: false
+                    'max' => 10         ,                                      // Optional
+                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',        // Optional
+                    'messageMaximum' => 'The value must be lower than 10'      // Optional
                 ]
             )
         );
@@ -251,14 +244,14 @@ class NumericValidatorTest extends Test
 
         $validation->add(
             'number',
-            new \Phalcon\Validation\Validator\NumericValidator (
+            new NumericValidator (
                 [
-                    'allowFloat' => true,                                           // Optional, default: false
-                    'min' => 2,                                                     // Optional
-                    'max' => 10         ,                                           // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.',      // Optional
-                    'messageMinimum' => 'The value must be at least 2',             // Optional
-                    'messageMaximum' => 'The value must be lower than 10'           // Optional
+                    'allowFloat' => true,                                      // Optional, default: false
+                    'min' => 2,                                                // Optional
+                    'max' => 10         ,                                      // Optional
+                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',        // Optional
+                    'messageMaximum' => 'The value must be lower than 10'      // Optional
                 ]
             )
         );
@@ -275,14 +268,14 @@ class NumericValidatorTest extends Test
 
         $validation->add(
             'number',
-            new \Phalcon\Validation\Validator\NumericValidator (
+            new NumericValidator (
                 [
-                    'allowFloat' => true,                                           // Optional, default: false
-                    'min' => 2,                                                     // Optional
-                    'max' => 10         ,                                           // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.',      // Optional
-                    'messageMinimum' => 'The value must be at least 2',             // Optional
-                    'messageMaximum' => 'The value must be lower than 10'           // Optional
+                    'allowFloat' => true,                                      // Optional, default: false
+                    'min' => 2,                                                // Optional
+                    'max' => 10         ,                                      // Optional
+                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',        // Optional
+                    'messageMaximum' => 'The value must be lower than 10'      // Optional
                 ]
             )
         );

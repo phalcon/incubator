@@ -2,10 +2,9 @@
 
 namespace Phalcon\Test\Validation\Validator;
 
-use UnitTester;
 use Phalcon\Validation;
-use Codeception\TestCase\Test;
-use Phalcon\Validation\Validator\CardNumber;
+use Phalcon\Test\Codeception\UnitTestCase;
+use Phalcon\Validation\Validator\AlphaNumericValidator;
 
 /**
  * \Phalcon\Test\Validation\Validator\AlphaNumericValidatorTest
@@ -24,14 +23,8 @@ use Phalcon\Validation\Validator\CardNumber;
  * through the world-wide-web, please send an email to license@phalconphp.com
  * so that we can send you a copy immediately.
  */
-class AlphaNumericValidatorTest extends Test
+class AlphaNumericValidatorTest extends UnitTestCase
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
     public function testAlphaNumericValidatorOk()
     {
         $data['text'] = '0123456789 abcdefghijklmnopqrstuvz ñ _';
@@ -40,15 +33,15 @@ class AlphaNumericValidatorTest extends Test
 
         $validation->add(
             'text',
-            new \Phalcon\Validation\Validator\AlphaNumericValidator (
+            new AlphaNumericValidator (
                 [
-                    'whiteSpace' => true,                                                       // Optional, default false
-                    'underscore' => true,                                                       // Optional, default false
-                    'min' => 5,                                                                 // Optional
-                    'max' => 100,                                                               // Optional
-                    'message' => 'Validation failed.',                                          // Optional
-                    'messageMinimum' => 'The value must contain at least 5 characters.',        // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'         // Optional
+                    'whiteSpace' => true,                                                // Optional, default false
+                    'underscore' => true,                                                // Optional, default false
+                    'min' => 5,                                                          // Optional
+                    'max' => 100,                                                        // Optional
+                    'message' => 'Validation failed.',                                   // Optional
+                    'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
                 ]
             )
         );
@@ -65,15 +58,15 @@ class AlphaNumericValidatorTest extends Test
 
         $validation->add(
             'text',
-            new \Phalcon\Validation\Validator\AlphaNumericValidator (
+            new AlphaNumericValidator (
                 [
-                    'whiteSpace' => false,                                                      // Optional, default false
-                    'underscore' => true,                                                       // Optional, default false
-                    'min' => 5,                                                                 // Optional
-                    'max' => 100,                                                               // Optional
-                    'message' => 'Validation failed.',                                          // Optional
-                    'messageMinimum' => 'The value must contain at least 5 characters.',        // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'         // Optional
+                    'whiteSpace' => false,                                               // Optional, default false
+                    'underscore' => true,                                                // Optional, default false
+                    'min' => 5,                                                          // Optional
+                    'max' => 100,                                                        // Optional
+                    'message' => 'Validation failed.',                                   // Optional
+                    'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
                 ]
             )
         );
@@ -90,15 +83,15 @@ class AlphaNumericValidatorTest extends Test
 
         $validation->add(
             'text',
-            new \Phalcon\Validation\Validator\AlphaNumericValidator (
+            new AlphaNumericValidator (
                 [
-                    'whiteSpace' => true,                                                       // Optional, default false
-                    'underscore' => false,                                                      // Optional, default false
-                    'min' => 5,                                                                 // Optional
-                    'max' => 100,                                                               // Optional
-                    'message' => 'Validation failed.',                                          // Optional
-                    'messageMinimum' => 'The value must contain at least 5 characters.',        // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'         // Optional
+                    'whiteSpace' => true,                                                // Optional, default false
+                    'underscore' => false,                                               // Optional, default false
+                    'min' => 5,                                                          // Optional
+                    'max' => 100,                                                        // Optional
+                    'message' => 'Validation failed.',                                   // Optional
+                    'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
                 ]
             )
         );
@@ -115,15 +108,15 @@ class AlphaNumericValidatorTest extends Test
 
         $validation->add(
             'text',
-            new \Phalcon\Validation\Validator\AlphaNumericValidator (
+            new AlphaNumericValidator (
                 [
-                    'whiteSpace' => true,                                                       // Optional, default false
-                    'underscore' => false,                                                      // Optional, default false
-                    'min' => 5,                                                                 // Optional
-                    'max' => 10,                                                               // Optional
-                    'message' => 'Validation failed.',                                          // Optional
-                    'messageMinimum' => 'The value must contain at least 5 characters.',        // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'         // Optional
+                    'whiteSpace' => true,                                                // Optional, default false
+                    'underscore' => false,                                               // Optional, default false
+                    'min' => 5,                                                          // Optional
+                    'max' => 10,                                                         // Optional
+                    'message' => 'Validation failed.',                                   // Optional
+                    'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
                 ]
             )
         );

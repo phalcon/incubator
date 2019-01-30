@@ -2,19 +2,12 @@
 
 namespace Phalcon\Test\Annotations\Extended\Adapter;
 
-use UnitTester;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Annotations\Reflection;
 use Phalcon\Annotations\Extended\Adapter\Files;
 
 class FilesTest extends Test
 {
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
     /** @test */
     public function shouldReadFromFileDirectoryWithoutAnyAdditionalParameter()
     {

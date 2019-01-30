@@ -31,8 +31,7 @@
     },
     "require": {
         "php": ">=5.5",
-        "ext-phalcon": "^3.2",
-        "swiftmailer/swiftmailer": "~5.2"
+        "ext-phalcon": "~3.3"
     },
     "require-dev": {
         "phpdocumentor/reflection-docblock": "2.0.4",
@@ -51,7 +50,9 @@
         "ext-aerospike": "*",
         "phalcon/ide-stubs": "Phalcon IDE Stubs",
         "sergeyklay/aerospike-php-stubs": "The most complete Aerospike PHP stubs which allows autocomplete in modern IDEs",
-        "duncan3dc/fork-helper": "To use extended class to access the beanstalk queue service"
+        "duncan3dc/fork-helper": "To use extended class to access the beanstalk queue service",
+        "swiftmailer/swiftmailer": "~5.2",
+        "twig/twig": "~1.35|~2.0"
     },
     "autoload": {
         "psr-4": {

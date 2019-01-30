@@ -2,10 +2,9 @@
 
 namespace Phalcon\Test\Legacy;
 
-use UnitTester;
 use Codeception\Specify;
 use Phalcon\Legacy\Crypt;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 
 /**
  * \Phalcon\Test\Legacy\CryptTest
@@ -27,12 +26,6 @@ use Codeception\TestCase\Test;
 class CryptTest extends Test
 {
     use Specify;
-
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
 
     public function _before()
     {

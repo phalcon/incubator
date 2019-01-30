@@ -5,7 +5,7 @@ namespace Phalcon\Test\Mvc;
 use Phalcon\Di;
 use MongoDB\BSON\ObjectID;
 use MongoDB\Driver\Cursor;
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Phalcon\Mvc\MongoCollection;
 use Phalcon\Test\Collections\Cars;
 use Phalcon\Mvc\Collection\Manager;
@@ -42,27 +42,14 @@ class CollectionsTest extends Test
             $this->markTestSkipped('mongodb extension not loaded');
         }
 
-        Di::reset();
-
-        $di = new Di();
-        $di->set('mongo', function() {
+        $this->di->set('mongo', function() {
             $dsn = 'mongodb://' . env('TEST_MONGODB_HOST', '127.0.0.1') . ':' . env('TEST_MONGODB_PORT', 27017);
             $mongo = new Client($dsn);
 
             return $mongo->selectDatabase(env('TEST_MONGODB_NAME', 'incubator'));
         });
 
-        $di->set('collectionManager', Manager::class);
-    }
-
-    /**
-     * Executed after each test
-     */
-    protected function _after()
-    {
-        parent::_after();
-
-        Di::reset();
+        $this->di->set('collectionManager', Manager::class);
     }
 
     public function testCollectionsSave()

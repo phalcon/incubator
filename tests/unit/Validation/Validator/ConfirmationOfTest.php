@@ -19,21 +19,12 @@
 
 namespace Phalcon\Test\Validation\Validator;
 
-use Codeception\TestCase\Test;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use Codeception\Util\Stub;
 use Phalcon\Validation\Validator\ConfirmationOf;
 
 class ConfirmationOfTest extends Test
 {
-
-    protected function _before()
-    {
-    }
-
-    protected function _after()
-    {
-    }
-
     public function testValidateExceptionWithoutOrigField()
     {
         $validation = Stub::make('Phalcon\Validation');

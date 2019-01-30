@@ -5,8 +5,7 @@ namespace Phalcon\Test\Acl\Adapter;
 use Phalcon\Db\AdapterInterface as DbAdapter;
 use Phalcon\Db\Adapter\Pdo\Sqlite;
 use Phalcon\Acl\Adapter\Database;
-use Codeception\TestCase\Test;
-use UnitTester;
+use Phalcon\Test\Codeception\UnitTestCase as Test;
 use ReflectionProperty;
 
 /**
@@ -29,26 +28,6 @@ use ReflectionProperty;
 class DatabaseTest extends Test
 {
     const ADAPTER_CLASS = 'Phalcon\Acl\Adapter\Database';
-
-    /**
-     * UnitTester Object
-     * @var UnitTester
-     */
-    protected $tester;
-
-    /**
-     * executed before each test
-     */
-    protected function _before()
-    {
-    }
-
-    /**
-     * executed after each test
-     */
-    protected function _after()
-    {
-    }
 
     protected function getConnection()
     {
