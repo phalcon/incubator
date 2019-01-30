@@ -63,18 +63,19 @@ class MysqlExtended extends Mysql
             $expressionName = strtoupper($expression["name"]);
 
             switch ($expressionName) {
-
                 case 'TIMESTAMPDIFF':
                     $timeUnit = substr($expression["arguments"][0]['value'], 1, -1);
                     $allowedTimeUnits = [
                         "MICROSECOND", "SECOND", "MINUTE", "HOUR", "DAY", "WEEK", "MONTH", "QUARTER", "YEAR"
                     ];
 
-                    if (count($expression["arguments"]) != 3)
+                    if (count($expression["arguments"]) != 3) {
                         throw new Exception($expressionName . ' requires 3 parameters');
+                    }
 
-                    if (!in_array($timeUnit, $allowedTimeUnits))
+                    if (!in_array($timeUnit, $allowedTimeUnits)) {
                         throw new Exception($expressionName . ' unit is not supported');
+                    }
 
                     return $expressionName . '(' . $timeUnit . ', ' .
                         $this->getSqlExpression($expression["arguments"][1]) . ', ' .
