@@ -59,7 +59,8 @@ class Oracle extends Dialect
      * @param string $sqlQuery
      * @return string
      */
-    public function sharedLock($sqlQuery) {
+    public function sharedLock($sqlQuery)
+    {
         return $sqlQuery . ' LOCK IN SHARE MODE';
     }
 
