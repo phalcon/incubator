@@ -37,15 +37,14 @@
         "phpdocumentor/reflection-docblock": "2.0.4",
         "phpunit/phpunit": "^4.8",
         "squizlabs/php_codesniffer": "^2.9",
-        "codeception/codeception": "^2.5",
+        "codeception/codeception": "2.3.6",
         "codeception/mockery-module": "0.2.2",
         "codeception/aerospike-module": "^1.0",
         "codeception/specify": "^0.4",
         "codeception/verify": "^0.3",
         "vlucas/phpdotenv": "^2.4",
         "phalcon/dd": "^1.1",
-        "doctrine/instantiator": "1.0.5",
-        "duncan3dc/fork-helper": "^2.3"
+        "doctrine/instantiator": "1.0.5"
     },
     "suggest": {
         "ext-aerospike": "*",
