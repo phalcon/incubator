@@ -1,16 +1,16 @@
 <?php
 
-namespace Lib\Translate\Adapter;
+namespace Phalcon\Translate\Adapter;
 
 use Phalcon\Translate\Exception;
 use Phalcon\Translate\AdapterInterface;
-use Phalcon\Translate\Adapter\Csv as Csv;
+use Phalcon\Translate\Adapter\Csv;
 
 class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess {
   /**
   * @var array
   */
-  private $locales_map = array();
+  private $locales = array();
   
   /**
   * @var string
@@ -35,30 +35,30 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess {
     $fileHandler = fopen($file, "rb");
     
     if(gettype($fileHandler) !== "resource"){
-      throw new Exception("Error opening translation file '" . $file . "'");
+      throw new \Exception("Error opening translation file '" . $file . "'");
     }
     
     $line = 0;
-    $locales_map = array();
+    $locales = array();
     while($data = fgetcsv($fileHandler, $length, $delimiter, $enclosure)) {
       
-      // register the horizontal locales sort order
-      if($line++ == 0) {
-        // the first element is removed
-        foreach(array_slice($data, 1) as $pos => $locale) {
-          $this->locales_map[$pos] = $locale;
+        if($line++ == 0) {
+            // first csv line
+            // register the horizontal locales sort order
+            // the first element (must be empty) is removed
+            foreach(array_slice($data, 1) as $pos => $locale) {
+              $this->locales[$pos] = $locale;
+            }
+        } else {
+            // the first row is the translation index (label)
+            $index = array_shift($data);
+            // store this index internally
+            $this->_indexes[] = $index;
+            // the first element is removed as well, so the pos is according to the first line
+            foreach($data as $pos => $translation) {
+              $this->_translate[$this->locales[$pos]][$index] = $translation;
+            }
         }
-      } else {
-        
-        // the first col is the translation index
-        $index = array_shift($data);
-        $this->_indexes[] = $index;
-        // the first element is removed as well, so the pos is according to the first line
-        foreach($data as $pos => $translation) {
-          $this->_translate[$this->locales_map[$pos]][$index] = $translation;
-        }
-        
-      }
       
     }
     
@@ -68,40 +68,38 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess {
   
   
   /**
-   * Sets locale information
-   *
+   * Sets locale information, according to one from the header row of the source csv
+   * Set it to false for enabling the "no translation mode"
    * <code>
    * // Set locale to Dutch
-   * $gettext->setLocale('nl_NL');
-   *
-   * // Try different possible locale names for german
-   * $gettext->setLocale('de_DE@euro', 'de_DE', 'de', 'ge');
+   * $adapter->setLocale('nl_NL');
    * </code>
    */
   public function setLocale($locale) {
-    
+      
     if($locale !== false && !array_key_exists($locale, $this->_translate)) {
-      throw new \Exception("The locale '{$locale}' is not available in the date source");
+      throw new \Exception("The locale '{$locale}' is not available in the data source.");
       return false;
     } else  {
       return $this->_locale = $locale;
     }
+    
   }
   
   /**
-   * Returns the translation related to the given key
+   * Returns the translation related to the given key and the previsouly set locale
    */
   public function query($index, $placeholders = null) {
-    
-    // no translation mode
-    if($this->_locale === false) {
-      return $index;
+      
+    if(!$this->exists($index)) {
+        throw new \Exception("They key '{$index}' was not found.");
     }
     
-    if($this->exists($index)) {
-      $translation = $this->_translate[$this->_locale][$index];
+    if($this->_locale === false) {
+        // "no translation mode"
+        $translation = $index;
     } else {
-      $translation = $index;
+        $translation = $this->_translate[$this->_locale][$index];
     }
     
     return $this->replacePlaceholders($translation, $placeholders);
@@ -111,15 +109,17 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess {
    * Check whether is defined a translation key in the internal array
    */
   public function exists($index) {
+      
     if(is_null($this->_locale)) {
-      throw new Exception('The locale must have been defined');
+      throw new Exception('The locale must have been defined.');
     }
-    return array_key_exists($index, $this->_translate[$this->_locale]);
+    return in_array($index, $this->getIndexes());
   }
   
+  /**
+   * Returns all the translation keys
+   */
   public function getIndexes() {
     return $this->_indexes;
   }
-    
-    
 }
