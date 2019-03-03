@@ -16,12 +16,12 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
     /**
     * @var string
     */
-    protected $_locale = null;
+    private $locale = null;
     
     /**
     * @var string
     */
-    protected $_indexes = array();
+    private $indexes = array();
     
     /**
     * Load translates from file
@@ -31,7 +31,7 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
     * @param string delimiter
     * @param string enclosure
     */
-    private function _load($file, $length, $delimiter, $enclosure) 
+    private function _load($file, $length, $delimiter, $enclosure)
     {
         
         $fileHandler = fopen($file, "rb");
@@ -47,16 +47,16 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
                 // first csv line
                 // register the horizontal locales sort order
                 // the first element (must be empty) is removed
-                foreach(array_slice($data, 1) as $pos => $locale) {
+                foreach (array_slice($data, 1) as $pos => $locale) {
                     $this->locales[$pos] = $locale;
                 }
             } else {
                 // the first row is the translation index (label)
                 $index = array_shift($data);
                 // store this index internally
-                $this->_indexes[] = $index;
+                $this->indexes[] = $index;
                 // the first element is removed as well, so the pos is according to the first line
-                foreach($data as $pos => $translation) {
+                foreach ($data as $pos => $translation) {
                     $this->_translate[$this->locales[$pos]][$index] = $translation;
                 }
             }
@@ -73,13 +73,13 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
      * $adapter->setLocale('nl_NL');
      * </code>
      */
-    public function setLocale($locale) 
+    public function setLocale($locale)
     {
         if ($locale !== false && !array_key_exists($locale, $this->_translate)) {
             throw new \Exception("The locale '{$locale}' is not available in the data source.");
             return false;
-        } else    {
-            return $this->_locale = $locale;
+        } else {
+            return $this->locale = $locale;
         }
     }
     
@@ -92,11 +92,11 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
             throw new \Exception("They key '{$index}' was not found.");
         }
         
-        if ($this->_locale === false) {
+        if ($this->locale === false) {
             // "no translation mode"
             $translation = $index;
         } else {
-            $translation = $this->_translate[$this->_locale][$index];
+            $translation = $this->_translate[$this->locale][$index];
         }
         
         return $this->replacePlaceholders($translation, $placeholders);
@@ -107,7 +107,7 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
      */
     public function exists($index)
     {
-        if (is_null($this->_locale)) {
+        if (is_null($this->locale)) {
             throw new Exception('The locale must have been defined.');
         }
         return in_array($index, $this->getIndexes());
@@ -118,6 +118,6 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
      */
     public function getIndexes()
     {
-        return $this->_indexes;
+        return $this->indexes;
     }
 }
