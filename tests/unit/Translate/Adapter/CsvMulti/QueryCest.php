@@ -42,7 +42,7 @@ class QueryCest extends Base
     
     public function queryKeyDoesntExist(UnitTester $I)
     {
-        $I->wantToTest('Translate\Adapter\CsvMulti - query raises an exception when the key doesn\'t match and there is no placeholder');
+        $I->wantToTest('Translate\Adapter\CsvMulti - query raises an exception when the key doesn\'t match');
         $I->expectThrowable(
             new \Exception("They key 'label_unexists' was not found."),
             function () {
