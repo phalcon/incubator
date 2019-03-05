@@ -7,6 +7,7 @@ namespace Phalcon\Test\Unit\Translate\Adapter\CsvMulti;
 require_once 'Base.php';
 use Phalcon\Test\Unit\Translate\Adapter\CsvMulti\Base;
 
+use Phalcon\Translate\Exception;
 use UnitTester;
 
 /**
@@ -18,7 +19,7 @@ class ExistsCest extends Base
     {
         $I->wantToTest('Translate\Adapter\CsvMulti - exists cannot work without a locale having been set');
         $I->expectThrowable(
-            new \Exception('The locale must have been defined.'),
+            new Exception('The locale must have been defined.'),
             function () {
                 $this->adapter->exists('label_street');
             }

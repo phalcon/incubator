@@ -7,6 +7,7 @@ namespace Phalcon\Test\Unit\Translate\Adapter\CsvMulti;
 require_once 'Base.php';
 use Phalcon\Test\Unit\Translate\Adapter\CsvMulti\Base;
 
+use Phalcon\Translate\Exception;
 use UnitTester;
 
 /**
@@ -44,7 +45,7 @@ class QueryCest extends Base
     {
         $I->wantToTest('Translate\Adapter\CsvMulti - query raises an exception when the key doesn\'t match');
         $I->expectThrowable(
-            new \Exception("They key 'label_unexists' was not found."),
+            new Exception("They key 'label_unexists' was not found."),
             function () {
                 $this->adapter->setLocale('en_US');
                 $this->adapter->query('label_unexists');

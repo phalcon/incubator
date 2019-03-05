@@ -2,9 +2,9 @@
 
 namespace Phalcon\Translate\Adapter;
 
-use Phalcon\Translate\Exception;
 use Phalcon\Translate\AdapterInterface;
 use Phalcon\Translate\Adapter\Csv;
+use Phalcon\Translate\Exception;
 
 class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
 {
@@ -37,7 +37,7 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
         $fileHandler = fopen($file, "rb");
         
         if (gettype($fileHandler) !== "resource") {
-            throw new \Exception("Error opening translation file '" . $file . "'");
+            throw new Exception("Error opening translation file '" . $file . "'");
         }
         
         $line = 0;
@@ -76,7 +76,7 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
     public function setLocale($locale)
     {
         if ($locale !== false && !array_key_exists($locale, $this->_translate)) {
-            throw new \Exception("The locale '{$locale}' is not available in the data source.");
+            throw new Exception("The locale '{$locale}' is not available in the data source.");
             return false;
         } else {
             return $this->locale = $locale;
@@ -89,7 +89,7 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
     public function query($index, $placeholders = null)
     {
         if (!$this->exists($index)) {
-            throw new \Exception("They key '{$index}' was not found.");
+            throw new Exception("They key '{$index}' was not found.");
         }
         
         if ($this->locale === false) {
