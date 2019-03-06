@@ -88,14 +88,14 @@ class DatabaseTest extends UnitTest
                 ]
             ]
         );
-
+        
+        session_start();
         $this->session->write($sessionID, session_encode());
         $this->tester->seeInDatabase(ModelSession::$table, ['session_id' => $sessionID]);
         $this->tester->seeInDatabase(ModelSession::$table, ['data' => 'customer_id|s:7:"somekey";']);
         $this->session->remove('customer_id');
 
         $sessionData = $this->session->read($sessionID);
-        session_start();
         session_decode($sessionData);
         
         $this->specify(
