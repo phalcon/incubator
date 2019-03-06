@@ -31,9 +31,12 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
     * @param string delimiter
     * @param string enclosure
     */
+    // @codingStandardsIgnoreStart
+    // Method name "_load" should not be prefixed with an underscore to indicate visibility
+    // Still, it needs to extend the parent one
     private function _load($file, $length, $delimiter, $enclosure)
     {
-        
+        // @codingStandardsIgnoreEnd
         $fileHandler = fopen($file, "rb");
         
         if (gettype($fileHandler) !== "resource") {
