@@ -10,7 +10,7 @@ use Phalcon\Translate\Exception;
 use UnitTester;
 
 /**
- * Class QueryCest
+ * Class ExistsCest
  */
 class ExistsCest extends Base
 {
