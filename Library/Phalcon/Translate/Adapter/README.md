@@ -165,3 +165,24 @@ root {
 [1]: http://docs.phalconphp.com/en/latest/api/Phalcon_DI.html
 [2]: http://docs.phalconphp.com/en/latest/reference/volt.html
 [3]: http://php.net/manual/en/book.intl.php
+
+## MultiCsv
+
+This adapter extends *Phalcon\Translate\Adapter\Csv* by allowing one csv file for several languages.
+
+* CSV example (blank spaces added for readability):
+```csv
+#ignored;     en_US;  fr_FR;   es_ES
+label_street; street; rue;     calle
+label_car;    car;    voiture; coche
+label_home;   home;   maison;  casa
+```
+* PHP example : 
+```php
+// the constructor is inherited from Phalcon\Translate\Adapter\Csv
+$titles_translater = new Phalcon\Translate\Adapter\MultiCsv([
+    'content' => "{$config->langDir}/titles.csv"
+]);
+$titles_translater->setLocale('es_ES');
+echo $titles_translater->query('label_home'); // string 'casa'
+```

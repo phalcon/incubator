@@ -84,22 +84,20 @@ class DatabaseTest extends UnitTest
             },
             [
                 'examples' => [
-                    [$_SESSION['customer_id'], 'somekey']
+                    [$this->session->get('customer_id'), 'somekey']
                 ]
             ]
         );
-
-
+        
+        session_start();
         $this->session->write($sessionID, session_encode());
         $this->tester->seeInDatabase(ModelSession::$table, ['session_id' => $sessionID]);
         $this->tester->seeInDatabase(ModelSession::$table, ['data' => 'customer_id|s:7:"somekey";']);
         $this->session->remove('customer_id');
 
-
         $sessionData = $this->session->read($sessionID);
-        session_start();
         session_decode($sessionData);
-
+        
         $this->specify(
             "Method read() hasn't worked",
             function ($data, $expected) {
@@ -107,7 +105,7 @@ class DatabaseTest extends UnitTest
             },
             [
                 'examples' => [
-                    [$_SESSION['customer_id'], 'somekey']
+                    [$this->session->get('customer_id'), 'somekey']
                 ]
             ]
         );
@@ -123,7 +121,20 @@ class DatabaseTest extends UnitTest
         $sessionData = $this->session->read($sessionID);
         session_start();
         session_decode($sessionData);
-
+        
+        $session = $this->session;
+        $this->specify(
+            "Method read() hasn't worked",
+            function ($data, $expected) use ($session) {
+                expect($data)->equals($expected);
+            },
+            [
+                'examples' => [
+                    [$this->session->get('customer_id'), 'somekey']
+                ]
+            ]
+        );
+        
         $this->specify(
             "Method update() hasn't worked",
             function ($data, $expected) {
@@ -131,8 +142,8 @@ class DatabaseTest extends UnitTest
             },
             [
                 'examples' => [
-                    [$_SESSION['customer_id'], 'somekey'],
-                    [$_SESSION['customer_id2'], 'somekey2']
+                    [$this->session->get('customer_id'), 'somekey'],
+                    [$this->session->get('customer_id2'), 'somekey2']
                 ]
             ]
         );
