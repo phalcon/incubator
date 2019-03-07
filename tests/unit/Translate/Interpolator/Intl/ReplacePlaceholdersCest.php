@@ -34,8 +34,17 @@ class ReplacePlaceholdersCest
             'number_apples' => 1,
             'name' => 'Richard'
         ]));
-        $I->assertEquals('I have 5 apples and my name is John.', $interpolator->replacePlaceholders($stringFrom, [
-            'number_apples' => 5,
+        // thousands separator is "," for en_US
+        $I->assertEquals('I have 1,000 apples and my name is John.', $interpolator->replacePlaceholders($stringFrom, [
+            'number_apples' => 1000,
+            'name' => 'John'
+        ]));
+        
+        // thousands separator is " " for fr_FR
+        $interpolator = new Intl('fr_FR');
+        $stringFrom = "{number_apples, plural, =0{Je n'ai aucune pomme} =1{J'ai une pomme} other{J'ai # pommes}} et mon nom est {name}.";
+        $I->assertEquals("J'ai 1 000 pommes et mon nom est John.", $interpolator->replacePlaceholders($stringFrom, [
+            'number_apples' => 1000,
             'name' => 'John'
         ]));
     }
@@ -70,6 +79,5 @@ class ReplacePlaceholdersCest
                 var_dump($interpolator->replacePlaceholders($stringFrom, [[]]));
             }
         );
-        
     }
 }
