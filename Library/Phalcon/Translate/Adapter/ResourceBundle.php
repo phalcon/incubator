@@ -8,7 +8,7 @@ use Phalcon\Translate\Exception;
 /**
  * ResourceBundle adapter
  */
-class ResourceBundle extends Base implements AdapterInterface
+class ResourceBundle extends Adapter implements AdapterInterface
 {
     /**
      * @var \ResourceBundle
@@ -40,10 +40,6 @@ class ResourceBundle extends Base implements AdapterInterface
 
         if (!class_exists('\ResourceBundle')) {
             throw new Exception('"ResourceBundle" class is required');
-        }
-
-        if (!class_exists('\MessageFormatter')) {
-            throw new Exception('"MessageFormatter" class is required');
         }
 
         if (!isset($options['bundle'])) {
@@ -88,13 +84,7 @@ class ResourceBundle extends Base implements AdapterInterface
             return $index;
         }
 
-        $formatter = new \MessageFormatter($this->options['locale'], $this->get($index, $this->bundle));
-
-        if (null !== $formatter) {
-            return $formatter->format((array) $placeholders);
-        } else {
-            return $index;
-        }
+        return $this->replacePlaceholders($this->get($index, $this->bundle), $placeholders);
     }
 
     /**

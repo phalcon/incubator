@@ -1,6 +1,7 @@
 <?php
 namespace Phalcon\Translate\Adapter;
 
+use Phalcon\Translate\Adapter;
 use Phalcon\Translate\AdapterInterface;
 use Phalcon\Translate\Exception;
 
@@ -9,7 +10,7 @@ use Phalcon\Translate\Exception;
  *
  * @package Phalcon\Translate\Adapter
  */
-class Redis extends Base implements AdapterInterface
+class Redis extends Adapter implements AdapterInterface
 {
     /**
      * Redis object.

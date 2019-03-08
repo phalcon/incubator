@@ -25,7 +25,7 @@ use Phalcon\Translate\Adapter;
 use Phalcon\Translate\AdapterInterface;
 use Phalcon\Translate\Exception;
 
-class Database extends Base implements AdapterInterface, \ArrayAccess
+class Database extends Adapter implements AdapterInterface, \ArrayAccess
 {
     /**
      * @var array
@@ -45,13 +45,6 @@ class Database extends Base implements AdapterInterface, \ArrayAccess
     protected $stmtSelect;
 
     /**
-     * Use ICU MessageFormatter to parse message
-     *
-     * @var boolean
-     */
-    protected $useIcuMessageFormatter = false;
-
-    /**
      * Class constructor.
      *
      * @param  array $options
@@ -69,14 +62,6 @@ class Database extends Base implements AdapterInterface, \ArrayAccess
 
         if (!isset($options['language'])) {
             throw new Exception("Parameter 'language' is required");
-        }
-
-        if (isset($options['useIcuMessageFormatter'])) {
-            if (!class_exists('\MessageFormatter')) {
-                throw new Exception('"MessageFormatter" class is required');
-            }
-
-            $this->useIcuMessageFormatter = (boolean) $options['useIcuMessageFormatter'];
         }
 
         $this->stmtSelect = sprintf(
@@ -109,17 +94,7 @@ class Database extends Base implements AdapterInterface, \ArrayAccess
         );
         $value       = empty($translation['value']) ? $translateKey : $translation['value'];
 
-        if (is_array($placeholders) && !empty($placeholders)) {
-            if (true === $this->useIcuMessageFormatter) {
-                $value = \MessageFormatter::formatMessage($options['language'], $value, $placeholders);
-            } else {
-                foreach ($placeholders as $placeHolderKey => $placeHolderValue) {
-                    $value = str_replace('%' . $placeHolderKey . '%', $placeHolderValue, $value);
-                }
-            }
-        }
-
-        return $value;
+        return $this->replacePlaceholders($value, $placeholders);
     }
 
     /**

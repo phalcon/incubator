@@ -23,7 +23,7 @@ class Intl implements InterpolatorInterface
     */
     public function replacePlaceholders($translation, $placeholders = null)
     {   
-        if(is_array($placeholders) && count($placeholders) {
+        if (is_array($placeholders) && count($placeholders)) {
             try {
                 // TODO (?) : keep an internal cache of the message formatter (key = locale.translation)
                 $fmt = new MessageFormatter($this->locale, $translation);
