@@ -28,11 +28,16 @@ class Intl implements InterpolatorInterface
                 // TODO (?) : keep an internal cache of the MessageFormatter objects (key = locale.translation)
                 $fmt = new MessageFormatter($this->locale, $translation);
             } catch (IntlException $e) {
-                // the original exception message is "Constructor failed"
+                $fmt = null;
+            } finally {
+                // for php 7.x the original exception message is "Constructor failed"
+                // for php 5.6 the constructor returns null, see this wont fix bug https://bugs.php.net/bug.php?id=58631
                 // make it a bit more understandable
-                throw new Exception("Unable to instantiate a MessageFormatter. Check locale and string syntax.", 0, $e);
+                if(is_null($fmt)) {
+                    throw new Exception("Unable to instantiate a MessageFormatter. Check locale and string syntax.", 0, isset($e) ? $e : null);
+                }
             }
-        
+            
             $translation = $fmt->format($placeholders);
             if($translation === false) {
                 throw new Exception($fmt->getErrorMessage(), $fmt->getErrorCode());
