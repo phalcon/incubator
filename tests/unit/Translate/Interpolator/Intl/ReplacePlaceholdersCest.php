@@ -1,6 +1,6 @@
 <?php
 
-namespace Phalcon\Test\Unit\Translate\Interpolator\AssociativeArray;
+namespace Phalcon\Test\Unit\Translate\Interpolator\Intl;
 
 use Phalcon\Translate\Interpolator\Intl;
 use Phalcon\Translate\Exception;
@@ -57,10 +57,9 @@ class ReplacePlaceholdersCest
      *
      * @since  2019-03-07
      */
-    public function translateInterpolatorIntlReplacePlaceholdersBadArguments(UnitTester $I)
+    public function translateInterpolatorIntlReplacePlaceholdersBadString(UnitTester $I)
     {
         $I->wantToTest('Translate\Interpolator\Intl - replacePlaceholders() throws an exception when fails to create a MessageFormatter');
-        
         $I->expectThrowable(
             new Exception("Unable to instantiate a MessageFormatter. Check locale and string syntax."),
             function () {
@@ -69,14 +68,26 @@ class ReplacePlaceholdersCest
                 $interpolator->replacePlaceholders($stringFrom, ['whatever']);
             }
         );
-        
+    }
+    
+    /**
+     * Tests Phalcon\Translate\Interpolator\Intl ::
+     * replacePlaceholders()
+     *
+     * @param UnitTester $I
+     *
+     * @since  2019-03-07
+     */
+    public function translateInterpolatorIntlReplacePlaceholdersBadPlaceholders(UnitTester $I)
+    {
+        $I->wantToTest('Translate\Interpolator\Intl - replacePlaceholders() throws an exception when placeholders data is illegal');
         $I->expectThrowable(
             new Exception("No strategy to convert the value given for the argument with key '0' is available: U_ILLEGAL_ARGUMENT_ERROR", 1),
             function () {
-                $interpolator = new Intl('xx_XX');
+                $interpolator = new Intl('en_US');
                 $stringFrom = 'My name is {name}.';
                 // [[]] is an illegal argument
-                var_dump($interpolator->replacePlaceholders($stringFrom, [[]]));
+                $interpolator->replacePlaceholders($stringFrom, [[]]);
             }
         );
     }
