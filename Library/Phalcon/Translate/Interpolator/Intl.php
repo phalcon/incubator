@@ -22,7 +22,7 @@ class Intl implements InterpolatorInterface
      * See http://php.net/manual/en/class.messageformatter.php
     */
     public function replacePlaceholders($translation, $placeholders = null)
-    {   
+    {
         if (is_array($placeholders) && count($placeholders)) {
             try {
                 // TODO (?) : keep an internal cache of the MessageFormatter objects (key = locale.translation)
@@ -33,13 +33,17 @@ class Intl implements InterpolatorInterface
                 // for php 7.x the original exception message is "Constructor failed"
                 // for php 5.6 the constructor returns null, see this wont fix bug https://bugs.php.net/bug.php?id=58631
                 // make it a bit more understandable
-                if(is_null($fmt)) {
-                    throw new Exception("Unable to instantiate a MessageFormatter. Check locale and string syntax.", 0, isset($e) ? $e : null);
+                if (is_null($fmt)) {
+                    throw new Exception(
+                        "Unable to instantiate a MessageFormatter. Check locale and string syntax.", 
+                        0, 
+                        isset($e) ? $e : null
+                    );
                 }
             }
             
             $translation = $fmt->format($placeholders);
-            if($translation === false) {
+            if ($translation === false) {
                 throw new Exception($fmt->getErrorMessage(), $fmt->getErrorCode());
             }
         }
