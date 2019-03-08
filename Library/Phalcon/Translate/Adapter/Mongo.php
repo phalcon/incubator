@@ -38,7 +38,6 @@ class Mongo extends Adapter implements AdapterInterface, \ArrayAccess
 {
     protected $language;
     protected $collection;
-    protected $formatter;
 
     /**
      * Mongo constructor.
@@ -60,10 +59,6 @@ class Mongo extends Adapter implements AdapterInterface, \ArrayAccess
         }
 
         $this->setLanguage($options['language']);
-
-        if (isset($options['formatter'])) {
-            $this->setFormatter($options['formatter']);
-        }
     }
 
     /**
@@ -123,11 +118,7 @@ class Mongo extends Adapter implements AdapterInterface, \ArrayAccess
             $translation = $translations->{$this->language};
         }
 
-        if (!empty($placeholders)) {
-            return $this->format($translation, $placeholders);
-        }
-
-        return $translation;
+        return $this->replacePlaceholders($value, $placeholders);
     }
 
     /**

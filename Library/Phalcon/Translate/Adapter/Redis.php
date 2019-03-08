@@ -94,9 +94,11 @@ class Redis extends Adapter implements AdapterInterface
 
         $this->loadValueByKey($key);
 
-        return isset($this->cache[$key]) && isset($this->cache[$key][$index])
+        $value = isset($this->cache[$key]) && isset($this->cache[$key][$index])
             ? $this->cache[$key][$index]
             : $translateKey;
+        
+        return $this->replacePlaceholders($value, $placeholders);
     }
 
     /**

@@ -25,7 +25,7 @@ class Intl implements InterpolatorInterface
     {   
         if (is_array($placeholders) && count($placeholders)) {
             try {
-                // TODO (?) : keep an internal cache of the message formatter (key = locale.translation)
+                // TODO (?) : keep an internal cache of the MessageFormatter objects (key = locale.translation)
                 $fmt = new MessageFormatter($this->locale, $translation);
             } catch (IntlException $e) {
                 // the original exception message is "Constructor failed"
