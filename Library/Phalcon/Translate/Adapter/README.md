@@ -34,7 +34,6 @@ class IndexController extends \Phalcon\Mvc\Controller
 		    'db'                     => $this->di->get('db'), // Here we're getting the database from DI
 		    'table'                  => 'translations', // The table that is storing the translations
 		    'language'               => $this->request->getBestLanguage(), // Now we're getting the best language for the user
-		    'useIcuMessageFormatter' => true, // Optional, if need formatting message using ICU MessageFormatter
 		]);
 	}
 	
@@ -98,14 +97,6 @@ Or, if you wish you can use [Volt][2]:
 <h1>{{ expression._("IndexPage_Hello_World") }}</h1>
 ```
 
-ICU MessageFormatter Example
-```php
-// Example plural message with key 'cats'
-// Peter has {nbCats, plural, =0{no cat} =1{a cat} other{# cats}}
-
-$this->_getTranslation()->_('cats', ['nbCats' => rand(0, 10)]);
-```
-
 ## Mongo
 
 Implements a Mongo adapter for translations.
@@ -117,15 +108,9 @@ use MessageFormatter;
 use Phalcon\Translate\Adapter\Mongo;
 use My\Application\Collections\Translate;
 
-$fmt = new MessageFormatter(
-    "en_US",
-    "{0,number,integer} monkeys on {1,number,integer} trees make {2,number} monkeys per tree"
-);
-
 $translate = new Mongo([
     'collection' => Translate::class,
-    'language'   => 'en',
-    'formatter'  => $fmt,
+    'language'   => 'en'
 ]);
 
 echo $translate->t('application.title');
