@@ -35,8 +35,8 @@ class Intl implements InterpolatorInterface
                 // make it a bit more understandable
                 if (is_null($fmt)) {
                     throw new Exception(
-                        "Unable to instantiate a MessageFormatter. Check locale and string syntax.", 
-                        0, 
+                        "Unable to instantiate a MessageFormatter. Check locale and string syntax.",
+                        0,
                         isset($e) ? $e : null
                     );
                 }
