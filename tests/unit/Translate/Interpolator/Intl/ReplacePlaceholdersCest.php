@@ -5,7 +5,7 @@ namespace Phalcon\Test\Unit\Translate\Interpolator\Intl;
 use Phalcon\Translate\Interpolator\Intl;
 use Phalcon\Translate\Exception;
 use UnitTester;
-use DateTimeImmutable;
+use NumberFormatter;
 
 /**
  * Class ReplacePlaceholdersCest
@@ -40,10 +40,16 @@ class ReplacePlaceholdersCest
             'name' => 'John'
         ]));
         
-        // thousands separator is " " for fr_FR
+        // thousands separator is usually " " (blank space) for fr_FR
+        // depending on system settings it can also be an unbreakable-space
+        // retrieve it through NumberFormatter API
+        $numberformatter = new NumberFormatter('fr_FR', NumberFormatter::PATTERN_DECIMAL);
+        $thousand_separator = $numberformatter->getSymbol(NumberFormatter::GROUPING_SEPARATOR_SYMBOL);
+        unset($numberformatter);
+        
         $interpolator = new Intl('fr_FR');
         $stringFrom = "{number_apples, plural, =0{Je n'ai aucune pomme} =1{J'ai une pomme} other{J'ai # pommes}} et mon nom est {name}.";
-        $I->assertEquals("J'ai 1 000 pommes et mon nom est John.", $interpolator->replacePlaceholders($stringFrom, [
+        $I->assertEquals("J'ai 1{$thousand_separator}000 pommes et mon nom est John.", $interpolator->replacePlaceholders($stringFrom, [
             'number_apples' => 1000,
             'name' => 'John'
         ]));
