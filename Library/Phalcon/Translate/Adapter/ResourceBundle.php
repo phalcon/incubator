@@ -56,6 +56,8 @@ class ResourceBundle extends Adapter implements AdapterInterface
 
         $this->options = $options;
         $this->bundle  = new \ResourceBundle($this->options['locale'], $this->options['bundle'], $this->fallback);
+        
+        parent::__construct($options);
     }
 
     /**

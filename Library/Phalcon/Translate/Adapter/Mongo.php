@@ -59,6 +59,8 @@ class Mongo extends Adapter implements AdapterInterface, \ArrayAccess
         }
 
         $this->setLanguage($options['language']);
+        
+        parent::__construct($options);
     }
 
     /**

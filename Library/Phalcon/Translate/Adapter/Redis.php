@@ -62,6 +62,8 @@ class Redis extends Adapter implements AdapterInterface
         if (isset($options['levels'])) {
             $this->levels = $options['levels'];
         }
+        
+        parent::__construct($options);
     }
 
     /**

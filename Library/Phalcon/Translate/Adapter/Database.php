@@ -75,6 +75,8 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
         );
 
         $this->options = $options;
+        
+        parent::__construct($options);
     }
 
     /**
