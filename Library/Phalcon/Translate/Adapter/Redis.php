@@ -1,6 +1,7 @@
 <?php
 namespace Phalcon\Translate\Adapter;
 
+use Phalcon\Translate\Adapter;
 use Phalcon\Translate\AdapterInterface;
 use Phalcon\Translate\Exception;
 
@@ -9,7 +10,7 @@ use Phalcon\Translate\Exception;
  *
  * @package Phalcon\Translate\Adapter
  */
-class Redis extends Base implements AdapterInterface
+class Redis extends Adapter implements AdapterInterface
 {
     /**
      * Redis object.
@@ -61,6 +62,8 @@ class Redis extends Base implements AdapterInterface
         if (isset($options['levels'])) {
             $this->levels = $options['levels'];
         }
+        
+        parent::__construct($options);
     }
 
     /**
@@ -93,9 +96,11 @@ class Redis extends Base implements AdapterInterface
 
         $this->loadValueByKey($key);
 
-        return isset($this->cache[$key]) && isset($this->cache[$key][$index])
+        $value = isset($this->cache[$key]) && isset($this->cache[$key][$index])
             ? $this->cache[$key][$index]
             : $translateKey;
+        
+        return $this->replacePlaceholders($value, $placeholders);
     }
 
     /**

@@ -21,6 +21,7 @@ namespace Phalcon\Translate\Adapter;
 
 use Phalcon\Translate\Exception;
 use Phalcon\Mvc\CollectionInterface;
+use Phalcon\Translate\Adapter;
 use Phalcon\Translate\AdapterInterface;
 
 /**
@@ -33,11 +34,10 @@ use Phalcon\Translate\AdapterInterface;
  *
  * @package Phalcon\Translate\Adapter
  */
-class Mongo extends Base implements AdapterInterface, \ArrayAccess
+class Mongo extends Adapter implements AdapterInterface, \ArrayAccess
 {
     protected $language;
     protected $collection;
-    protected $formatter;
 
     /**
      * Mongo constructor.
@@ -59,10 +59,8 @@ class Mongo extends Base implements AdapterInterface, \ArrayAccess
         }
 
         $this->setLanguage($options['language']);
-
-        if (isset($options['formatter'])) {
-            $this->setFormatter($options['formatter']);
-        }
+        
+        parent::__construct($options);
     }
 
     /**
@@ -84,16 +82,6 @@ class Mongo extends Base implements AdapterInterface, \ArrayAccess
     protected function setLanguage($language)
     {
         $this->language = $language;
-    }
-
-    /**
-     * Sets the formatter to use if necessary.
-     *
-     * @param \MessageFormatter $formatter Message formatter.
-     */
-    protected function setFormatter(\MessageFormatter $formatter)
-    {
-        $this->formatter = $formatter;
     }
 
     /**
@@ -132,34 +120,7 @@ class Mongo extends Base implements AdapterInterface, \ArrayAccess
             $translation = $translations->{$this->language};
         }
 
-        if (!empty($placeholders)) {
-            return $this->format($translation, $placeholders);
-        }
-
-        return $translation;
-    }
-
-    /**
-     * Formats a translation.
-     *
-     * @param string $translation  Translated text.
-     * @param array  $placeholders Placeholders to apply.
-     *
-     * @return string
-     */
-    protected function format($translation, $placeholders = [])
-    {
-        if ($this->formatter) {
-            $formatter = $this->formatter;
-
-            return $formatter::formatMessage($this->language, $translation, $placeholders);
-        }
-
-        foreach ($placeholders as $key => $value) {
-            $translation = str_replace("%$key%", $value, $translation);
-        }
-
-        return $translation;
+        return $this->replacePlaceholders($value, $placeholders);
     }
 
     /**
