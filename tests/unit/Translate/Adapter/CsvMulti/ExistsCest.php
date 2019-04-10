@@ -16,7 +16,10 @@ class ExistsCest extends Base
 {
     public function translateAdapterExistsNoLocaleSet(UnitTester $I)
     {
-        $I->wantToTest('Translate\Adapter\CsvMulti - exists cannot work without a locale having been set');
+        $I->wantToTest(
+            'Translate\Adapter\CsvMulti - exists cannot work without a locale having been set'
+        );
+
         $I->expectThrowable(
             new Exception('The locale must have been defined.'),
             function () {
@@ -28,16 +31,30 @@ class ExistsCest extends Base
     public function translateAdapterExistsItDoesnt(UnitTester $I)
     {
         $I->wantToTest('Translate\Adapter\CsvMulti - exists returns false');
+
         $this->adapter->setLocale('en_US');
-        $I->assertFalse($this->adapter->exists('label_cat'));
+
+        $I->assertFalse(
+            $this->adapter->exists('label_cat')
+        );
     }
     
     public function translateAdapterExistsItDoes(UnitTester $I)
     {
         $I->wantToTest('Translate\Adapter\CsvMulti - exists returns true');
+
         $this->adapter->setLocale('en_US');
-        $I->assertTrue($this->adapter->exists('label_street'));
-        $I->assertTrue($this->adapter->exists('label_car'));
-        $I->assertTrue($this->adapter->exists('label_home'));
+
+        $I->assertTrue(
+            $this->adapter->exists('label_street')
+        );
+
+        $I->assertTrue(
+            $this->adapter->exists('label_car')
+        );
+
+        $I->assertTrue(
+            $this->adapter->exists('label_home')
+        );
     }
 }

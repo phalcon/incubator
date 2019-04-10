@@ -37,7 +37,10 @@ class DatabaseTest extends Test
      */
     public function testShouldThrowExceptionIfDbIsMissingOrInvalid($options)
     {
-        new CacheBackend(new CacheFrontend, $options);
+        new CacheBackend(
+            new CacheFrontend,
+            $options
+        );
     }
 
     public function incorrectDbProvider()
@@ -72,7 +75,12 @@ class DatabaseTest extends Test
 
     protected function getBackend($prefix = '')
     {
-        $frontend   = new CacheFrontend(['lifetime' => 10]);
+        $frontend   = new CacheFrontend(
+            [
+                'lifetime' => 10,
+            ]
+        );
+
         $connection = new DbAdapter(
             [
                 'host'     => env('TEST_DB_HOST', '127.0.0.1'),
@@ -84,32 +92,61 @@ class DatabaseTest extends Test
             ]
         );
 
-        return new CacheBackend($frontend, [
-            'db'     => $connection,
-            'table'  => 'cache_data',
-            'prefix' => $prefix,
-        ]);
+        return new CacheBackend(
+            $frontend,
+            [
+                'db'     => $connection,
+                'table'  => 'cache_data',
+                'prefix' => $prefix,
+            ]
+        );
     }
 
     protected function runTests(CacheBackend $backend, $lifetime = null)
     {
         $backend->save($this->key, $this->data, $lifetime);
 
-        $this->assertTrue($backend->exists($this->key));
-        $this->assertEquals($this->data, $backend->get($this->key));
+        $this->assertTrue(
+            $backend->exists($this->key)
+        );
+
+        $this->assertEquals(
+            $this->data,
+            $backend->get($this->key)
+        );
+
         $this->assertNotEmpty($backend->queryKeys());
         $this->assertNotEmpty($backend->queryKeys('DB_'));
-        $this->assertTrue($backend->delete($this->key));
-        $this->assertFalse($backend->delete($this->key));
+
+
+
+        $this->assertTrue(
+            $backend->delete($this->key)
+        );
+
+        $this->assertFalse(
+            $backend->delete($this->key)
+        );
+
+
 
         if (null !== $lifetime) {
             $backend->save($this->key, $this->data, $lifetime);
 
-            $this->assertTrue($backend->exists($this->key, $lifetime));
-            $this->assertEquals($this->data, $backend->get($this->key, $lifetime));
+            $this->assertTrue(
+                $backend->exists($this->key, $lifetime)
+            );
+
+            $this->assertEquals(
+                $this->data,
+                $backend->get($this->key, $lifetime)
+            );
 
             $backend->save($this->key, $this->data, -$lifetime);
-            $this->assertFalse($backend->exists($this->key, -$lifetime));
+
+            $this->assertFalse(
+                $backend->exists($this->key, -$lifetime)
+            );
         }
     }
 }

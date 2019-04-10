@@ -41,16 +41,22 @@ class DatabaseCest
 
         $di->setShared('modelsMetadata', new Memory());
         $di->setShared('modelsManager', new Manager());
-        $di->setShared('db', function () {
-            return new Mysql([
-                'host'     => env('TEST_DB_HOST', '127.0.0.1'),
-                'username' => env('TEST_DB_USER', 'incubator'),
-                'password' => env('TEST_DB_PASSWD', 'secret'),
-                'dbname'   => env('TEST_DB_NAME', 'incubator'),
-                'charset'  => env('TEST_DB_CHARSET', 'utf8'),
-                'port'     => env('TEST_DB_PORT', 3306),
-            ]);
-        });
+
+        $di->setShared(
+            'db',
+            function () {
+                return new Mysql(
+                    [
+                        'host'     => env('TEST_DB_HOST', '127.0.0.1'),
+                        'username' => env('TEST_DB_USER', 'incubator'),
+                        'password' => env('TEST_DB_PASSWD', 'secret'),
+                        'dbname'   => env('TEST_DB_NAME', 'incubator'),
+                        'charset'  => env('TEST_DB_CHARSET', 'utf8'),
+                        'port'     => env('TEST_DB_PORT', 3306),
+                    ]
+                );
+            }
+        );
         
         if ($this->previousDependencyInjector instanceof DiInterface) {
             Di::setDefault($di);
@@ -58,20 +64,20 @@ class DatabaseCest
         
         $this->config = [
             'en' => [
-                'db'                     => $di->get('db'), // Here we're getting the database from DI
-                'table'                  => 'translations', // The table that is storing the translations
-                'language'               =>  'en_US' // Now we're getting the best language for the user];
+                'db'       => $di->get('db'), // Here we're getting the database from DI
+                'table'    => 'translations', // The table that is storing the translations
+                'language' =>  'en_US',       // Now we're getting the best language for the user];
             ],
             'fr' => [
-                'db'                     => $di->get('db'), // Here we're getting the database from DI
-                'table'                  => 'translations', // The table that is storing the translations
-                'language'               =>  'fr_FR' // Now we're getting the best language for the user];
+                'db'       => $di->get('db'), // Here we're getting the database from DI
+                'table'    => 'translations', // The table that is storing the translations
+                'language' =>  'fr_FR',       // Now we're getting the best language for the user];
             ],
             'es' => [
-                'db'                     => $di->get('db'), // Here we're getting the database from DI
-                'table'                  => 'translations', // The table that is storing the translations
-                'language'               =>  'es_ES' // Now we're getting the best language for the user];
-            ]
+                'db'       => $di->get('db'), // Here we're getting the database from DI
+                'table'    => 'translations', // The table that is storing the translations
+                'language' =>  'es_ES',       // Now we're getting the best language for the user];
+            ],
         ];
     }
     
@@ -81,7 +87,9 @@ class DatabaseCest
     protected function _after()
     {
         if ($this->previousDependencyInjector instanceof DiInterface) {
-            Di::setDefault($this->previousDependencyInjector);
+            Di::setDefault(
+                $this->previousDependencyInjector
+            );
         } else {
             Di::reset();
         }

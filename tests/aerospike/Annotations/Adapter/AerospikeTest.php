@@ -47,17 +47,26 @@ class AerospikeTest extends Test
 
     public function testHasAerospikeProperty()
     {
-        $this->assertClassHasAttribute('aerospike', Aerospike::class);
+        $this->assertClassHasAttribute(
+            'aerospike',
+            Aerospike::class
+        );
     }
 
     public function testHasNamespaceProperty()
     {
-        $this->assertClassHasAttribute('namespace', Aerospike::class);
+        $this->assertClassHasAttribute(
+            'namespace',
+            Aerospike::class
+        );
     }
 
     public function testHasSetProperty()
     {
-        $this->assertClassHasAttribute('set', Aerospike::class);
+        $this->assertClassHasAttribute(
+            'set',
+            Aerospike::class
+        );
     }
 
     /**
@@ -67,10 +76,18 @@ class AerospikeTest extends Test
      */
     public function testShouldReadAndWriteToAerospikeWithoutPrefix($key, $data)
     {
-        $object = new Aerospike(['hosts' => $this->getHostConfig()]);
+        $object = new Aerospike(
+            [
+                'hosts' => $this->getHostConfig(),
+            ]
+        );
+
         $object->write($key, $data);
 
-        $this->assertEquals($data, $object->read($key));
+        $this->assertEquals(
+            $data,
+            $object->read($key)
+        );
     }
 
     /**
@@ -80,33 +97,78 @@ class AerospikeTest extends Test
      */
     public function testShouldReadAndWriteToAerospikeWithPrefix($key, $data)
     {
-        $object = new Aerospike(['hosts' => $this->getHostConfig(), 'prefix' => 'test_']);
+        $object = new Aerospike(
+            [
+                'hosts'  => $this->getHostConfig(),
+                'prefix' => 'test_',
+            ]
+        );
+
         $object->write($key, $data);
 
-        $this->assertEquals($data, $object->read($key));
+        $this->assertEquals(
+            $data,
+            $object->read($key)
+        );
     }
 
     public function testShouldGetCacheBackendThroughGetter()
     {
-        $object = new Aerospike(['hosts' => $this->getHostConfig()]);
+        $object = new Aerospike(
+            [
+                'hosts' => $this->getHostConfig(),
+            ]
+        );
 
-        $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
+        $reflectedMethod = new ReflectionMethod(
+            get_class($object),
+            'getCacheBackend'
+        );
+
         $reflectedMethod->setAccessible(true);
-        $this->assertInstanceOf(CacheBackend::class, $reflectedMethod->invoke($object));
+
+        $this->assertInstanceOf(
+            CacheBackend::class,
+            $reflectedMethod->invoke($object)
+        );
     }
 
     public function testShouldGetCacheBackendThroughReflectionSetter()
     {
-        $object = new Aerospike(['hosts' => $this->getHostConfig()]);
-        $mock = $this->getMock(CacheBackend::class, [], [], '', false);
+        $object = new Aerospike(
+            [
+                'hosts' => $this->getHostConfig(),
+            ]
+        );
 
-        $reflectedProperty = new ReflectionProperty(get_class($object), 'aerospike');
+        $mock = $this->getMock(
+            CacheBackend::class,
+            [],
+            [],
+            '',
+            false
+        );
+
+        $reflectedProperty = new ReflectionProperty(
+            get_class($object),
+            'aerospike'
+        );
+
         $reflectedProperty->setAccessible(true);
+
         $reflectedProperty->setValue($object, $mock);
 
-        $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
+        $reflectedMethod = new ReflectionMethod(
+            get_class($object),
+            'getCacheBackend'
+        );
+
         $reflectedMethod->setAccessible(true);
-        $this->assertInstanceOf(CacheBackend::class, $reflectedMethod->invoke($object));
+
+        $this->assertInstanceOf(
+            CacheBackend::class,
+            $reflectedMethod->invoke($object)
+        );
     }
 
     /**
@@ -115,11 +177,23 @@ class AerospikeTest extends Test
      */
     public function testShouldPrepareKey($key)
     {
-        $object = new Aerospike(['hosts' => $this->getHostConfig()]);
-        $reflectedMethod = new ReflectionMethod(get_class($object), 'prepareKey');
+        $object = new Aerospike(
+            [
+                'hosts' => $this->getHostConfig(),
+            ]
+        );
+
+        $reflectedMethod = new ReflectionMethod(
+            get_class($object),
+            'prepareKey'
+        );
+
         $reflectedMethod->setAccessible(true);
 
-        $this->assertEquals($key, $reflectedMethod->invoke($object, $key));
+        $this->assertEquals(
+            $key,
+            $reflectedMethod->invoke($object, $key)
+        );
     }
 
     /**
@@ -130,10 +204,18 @@ class AerospikeTest extends Test
     public function testShouldCreateAerospikeAdapterInstanceAndSetOptions($options, $expected)
     {
         $object = new Aerospike($options);
-        $reflectedProperty = new ReflectionProperty(get_class($object), 'options');
+
+        $reflectedProperty = new ReflectionProperty(
+            get_class($object),
+            'options'
+        );
+
         $reflectedProperty->setAccessible(true);
 
-        $this->assertEquals($expected, $reflectedProperty->getValue($object));
+        $this->assertEquals(
+            $expected,
+            $reflectedProperty->getValue($object)
+        );
     }
 
     /**
@@ -142,7 +224,10 @@ class AerospikeTest extends Test
      */
     public function testShouldCatchExceptionWhenInvalidParamsPassed($options)
     {
-        $this->setExpectedException(Exception::class, 'No hosts given in options');
+        $this->setExpectedException(
+            Exception::class,
+            'No hosts given in options'
+        );
 
         new Aerospike($options);
     }
@@ -150,7 +235,17 @@ class AerospikeTest extends Test
     public function providerReadWrite()
     {
         // This key is needed in order not to break your real data
-        $key = hash('sha256', json_encode([__CLASS__, __METHOD__, __FILE__, __LINE__]));
+        $key = hash(
+            'sha256',
+            json_encode(
+                [
+                    __CLASS__,
+                    __METHOD__,
+                    __FILE__,
+                    __LINE__,
+                ]
+            )
+        );
 
         return [
             'string' => [$key . '_test1', 'data1'],
@@ -168,7 +263,7 @@ class AerospikeTest extends Test
         return [
             ['key1'],
             [1],
-            ['_key1']
+            ['_key1'],
         ];
     }
 
@@ -195,124 +290,135 @@ class AerospikeTest extends Test
         return [ //$this->getConfig()
             [
                 [
-                    'hosts' => $this->getHostConfig(),
-                    'lifetime' => 23
+                    'hosts'    => $this->getHostConfig(),
+                    'lifetime' => 23,
                 ],
                 [
-                    'hosts' => $this->getHostConfig(),
-                    'lifetime' => 23,
-                    'prefix' => '',
+                    'hosts'      => $this->getHostConfig(),
+                    'lifetime'   => 23,
+                    'prefix'     => '',
                     'persistent' => false,
-                    'options' => []
-                ]
+                    'options'    => [],
+                ],
             ],
+
             [
                 [
-                    'hosts' => $this->getHostConfig(),
+                    'hosts'    => $this->getHostConfig(),
                     'lifetime' => 23,
-                    'options' => [
+                    'options'  => [
                         1 => 1250,
                         3  => 1500
                     ]
                 ],
                 [
-                    'hosts' => $this->getHostConfig(),
-                    'lifetime' => 23,
-                    'prefix' => '',
+                    'hosts'      => $this->getHostConfig(),
+                    'lifetime'   => 23,
+                    'prefix'     => '',
                     'persistent' => false,
-                    'options' => [
+                    'options'    => [
                         1 => 1250,
-                        3 => 1500
-                    ]
-                ]
-            ],
-            [
-                [
-                    'hosts' => $this->getHostConfig(),
-                    'lifetime' => 23,
-                    'persistent' => true
+                        3 => 1500,
+                    ],
                 ],
-                [
-                    'hosts' => $this->getHostConfig(),
-                    'lifetime' => 23,
-                    'prefix' => '',
-                    'persistent' => true,
-                    'options' => [],
-                ]
-            ],
-            [
-                [
-                    'hosts' => $this->getHostConfig(),
-                    'prefix' => 'test_'
-                ],
-                [
-                    'hosts' => $this->getHostConfig(),
-                    'lifetime' => 8600,
-                    'prefix' => 'test_',
-                    'persistent' => false,
-                    'options' => [],
-                ]
-            ],
-            [
-                [
-                    'hosts' => $this->getHostConfig(),
-                    'randomValue' => 'test_'
-                ],
-                [
-                    'hosts' => $this->getHostConfig(),
-                    'randomValue' => 'test_',
-                    'lifetime' => 8600,
-                    'prefix' => '',
-                    'persistent' => false,
-                    'options' => [],
-                ]
-            ],
-            [
-                [
-                    'hosts' => $this->getHostConfig(),
-                    123 => 'test_'
-                ],
-                [
-                    'hosts' => $this->getHostConfig(),
-                    123 => 'test_',
-                    'lifetime' => 8600,
-                    'prefix' => '',
-                    'persistent' => false,
-                    'options' => [],
-                ]
-            ],
-            [
-                [
-                    'hosts' => $this->getHostConfig(),
-                    'lifetime' => 24,
-                    'prefix' => 'test_',
-                ],
-                [
-                    'hosts' => $this->getHostConfig(),
-                    'lifetime' => 24,
-                    'prefix' => 'test_',
-                    'persistent' => false,
-                    'options' => [],
-                ]
-            ],
-            [
-                [
-                    'hosts' => $this->getHostConfig(),
-                ],
-                [
-                    'hosts' => $this->getHostConfig(),
-                    'lifetime' => 8600,
-                    'prefix' => '',
-                    'persistent' => false,
-                    'options' => [],
-                ]
             ],
 
+            [
+                [
+                    'hosts'      => $this->getHostConfig(),
+                    'lifetime'   => 23,
+                    'persistent' => true,
+                ],
+                [
+                    'hosts'      => $this->getHostConfig(),
+                    'lifetime'   => 23,
+                    'prefix'     => '',
+                    'persistent' => true,
+                    'options'    => [],
+                ],
+            ],
+
+            [
+                [
+                    'hosts'  => $this->getHostConfig(),
+                    'prefix' => 'test_',
+                ],
+                [
+                    'hosts'      => $this->getHostConfig(),
+                    'lifetime'   => 8600,
+                    'prefix'     => 'test_',
+                    'persistent' => false,
+                    'options'    => [],
+                ],
+            ],
+
+            [
+                [
+                    'hosts'       => $this->getHostConfig(),
+                    'randomValue' => 'test_',
+                ],
+                [
+                    'hosts'       => $this->getHostConfig(),
+                    'randomValue' => 'test_',
+                    'lifetime'    => 8600,
+                    'prefix'      => '',
+                    'persistent'  => false,
+                    'options'     => [],
+                ],
+            ],
+
+            [
+                [
+                    'hosts' => $this->getHostConfig(),
+                    123     => 'test_'
+                ],
+                [
+                    'hosts'      => $this->getHostConfig(),
+                    123          => 'test_',
+                    'lifetime'   => 8600,
+                    'prefix'     => '',
+                    'persistent' => false,
+                    'options'    => [],
+                ],
+            ],
+
+            [
+                [
+                    'hosts'    => $this->getHostConfig(),
+                    'lifetime' => 24,
+                    'prefix'   => 'test_',
+                ],
+                [
+                    'hosts'      => $this->getHostConfig(),
+                    'lifetime'   => 24,
+                    'prefix'     => 'test_',
+                    'persistent' => false,
+                    'options'    => [],
+                ],
+            ],
+
+            [
+                [
+                    'hosts' => $this->getHostConfig(),
+                ],
+                [
+                    'hosts'      => $this->getHostConfig(),
+                    'lifetime'   => 8600,
+                    'prefix'     => '',
+                    'persistent' => false,
+                    'options'    => [],
+                ],
+            ],
         ];
     }
 
     private function getHostConfig()
     {
-        return [['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => (int)env('TEST_AS_PORT', 3000)]];
+        return [
+            [
+                'addr' => env('TEST_AS_HOST', '127.0.0.1'),
+                'port' => (int) env('TEST_AS_PORT', 3000),
+            ]
+        ];
     }
 }

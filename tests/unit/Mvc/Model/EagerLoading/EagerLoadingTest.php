@@ -114,15 +114,20 @@ class EagerLoadingTest extends Test
         );
 
         $this->assertEquals(
-            array_sum(array_map(function ($o) {
-                $c = 0;
+            array_sum(
+                array_map(
+                    function ($o) {
+                        $c = 0;
 
-                foreach ($o->robots as $r) {
-                    $c += count($r->bugs);
-                }
+                        foreach ($o->robots as $r) {
+                            $c += count($r->bugs);
+                        }
 
-                return $c;
-            }, $manufacturers)),
+                        return $c;
+                    },
+                    $manufacturers
+                )
+            ),
             2
         );
 
@@ -134,15 +139,24 @@ class EagerLoadingTest extends Test
             ],
             [
                 'limit' => 5,
-                'order' => 'id ASC'
+                'order' => 'id ASC',
             ]
         );
 
         $this->assertEquals(
-            array_sum(array_map(function ($o) {
-                return count($o->robots);
-            }, $manufacturers)),
-            Robot::count(['manufacturer_id < 6'])
+            array_sum(
+                array_map(
+                    function ($o) {
+                        return count($o->robots);
+                    },
+                    $manufacturers
+                )
+            ),
+            Robot::count(
+                [
+                    'manufacturer_id < 6',
+                ]
+            )
         );
 
         $robots = [];
@@ -152,9 +166,14 @@ class EagerLoadingTest extends Test
         }
 
         $this->assertEquals(
-            array_sum(array_map(function ($o) {
-                return count($o->bugs);
-            }, $robots)),
+            array_sum(
+                array_map(
+                    function ($o) {
+                        return count($o->bugs);
+                    },
+                    $robots
+                )
+            ),
             0
         );
     }
@@ -166,7 +185,10 @@ class EagerLoadingTest extends Test
      */
     public function testShouldThrowRuntimeExceptionIfTheRelationIsNotDefinedOrSupported($args)
     {
-        $reflection = new ReflectionClass('Phalcon\Mvc\Model\EagerLoading\Loader');
+        $reflection = new ReflectionClass(
+            'Phalcon\Mvc\Model\EagerLoading\Loader'
+        );
+
         $reflection->newInstanceArgs([Robot::findFirst(), $args])->execute();
     }
 
@@ -178,7 +200,10 @@ class EagerLoadingTest extends Test
      */
     public function testShouldThrowInvalidArgumentExceptionIfLoaderSubjectIsNotValid($args)
     {
-        $reflection = new ReflectionClass('Phalcon\Mvc\Model\EagerLoading\Loader');
+        $reflection = new ReflectionClass(
+            'Phalcon\Mvc\Model\EagerLoading\Loader'
+        );
+
         $reflection->newInstance($args);
     }
 
@@ -190,7 +215,13 @@ class EagerLoadingTest extends Test
      */
     public function testShouldThrowLogicExceptionIfTheEntityWillBeIncomplete($method, $args)
     {
-        call_user_func_array(['Phalcon\Test\Mvc\Model\EagerLoading\Stubs\Robot', $method], $args);
+        call_user_func_array(
+            [
+                'Phalcon\Test\Mvc\Model\EagerLoading\Stubs\Robot',
+                $method
+            ],
+            $args
+        );
     }
 
     /**
@@ -200,14 +231,38 @@ class EagerLoadingTest extends Test
      */
     public function testShouldThrowBadMethodCallExceptionIfArgumentsWereNotProvided($method)
     {
-        call_user_func(['Phalcon\Test\Mvc\Model\EagerLoading\Stubs\Robot', $method]);
+        call_user_func(
+            [
+                'Phalcon\Test\Mvc\Model\EagerLoading\Stubs\Robot',
+                $method
+            ]
+        );
     }
 
     public function testShouldUseEagerLoadingAndGetModelByUsingMethods()
     {
-        $this->assertTrue(is_array(Robot::with('Parts')));
-        $this->assertTrue(is_object(Robot::findFirstById(1)->load('Parts')));
-        $this->assertTrue(is_object(Robot::findFirstWith('Parts', ['id = 1'])));
+        $this->assertTrue(
+            is_array(
+                Robot::with('Parts')
+            )
+        );
+
+        $this->assertTrue(
+            is_object(
+                Robot::findFirstById(1)->load('Parts')
+            )
+        );
+
+        $this->assertTrue(
+            is_object(
+                Robot::findFirstWith(
+                    'Parts',
+                    [
+                        'id = 1',
+                    ]
+                )
+            )
+        );
     }
 
     public function testShouldUseEagerLoadingAndDetectHasManyToMany()
@@ -244,7 +299,10 @@ class EagerLoadingTest extends Test
         $rawly = Manufacturer::findFirstById(1);
         $rawly->robots;
 
-        $eagerly = Loader::fromModel(Manufacturer::findFirstById(1), 'Robots');
+        $eagerly = Loader::fromModel(
+            Manufacturer::findFirstById(1),
+            'Robots'
+        );
 
         $this->assertTrue(property_exists($eagerly, 'robots'));
         $this->assertTrue(is_array($eagerly->robots));
@@ -275,31 +333,54 @@ class EagerLoadingTest extends Test
 
         $eagerly = Loader::fromModel(Robot::findFirstById(1), 'Purpose');
 
-        $this->assertTrue(property_exists($eagerly, 'purpose'));
-        $this->assertInstanceOf('Phalcon\Test\Mvc\Model\EagerLoading\Stubs\Purpose', $eagerly->purpose);
-        $this->assertEquals($rawly->purpose->readAttribute('id'), $eagerly->purpose->readAttribute('id'));
+        $this->assertTrue(
+            property_exists($eagerly, 'purpose')
+        );
+
+        $this->assertInstanceOf(
+            'Phalcon\Test\Mvc\Model\EagerLoading\Stubs\Purpose',
+            $eagerly->purpose
+        );
+
+        $this->assertEquals(
+            $rawly->purpose->readAttribute('id'),
+            $eagerly->purpose->readAttribute('id')
+        );
     }
 
     public function testShouldUseEagerLoadingAndDetectBelongsToDeep()
     {
         $rawly = Manufacturer::findFirstById(1);
-        $rawly->robots = $this->resultSetToEagerLoadingEquivalent($rawly->robots);
+
+        $rawly->robots = $this->resultSetToEagerLoadingEquivalent(
+            $rawly->robots
+        );
 
         foreach ($rawly->robots as $robot) {
             $robot->parent;
         }
 
-        $eagerly = Loader::fromModel(Manufacturer::findFirstById(1), 'Robots.Parent');
+        $eagerly = Loader::fromModel(
+            Manufacturer::findFirstById(1),
+            'Robots.Parent'
+        );
 
         $this->assertTrue(property_exists($eagerly->robots[0], 'parent'));
         $this->assertNull($eagerly->robots[0]->parent);
-        $this->assertInstanceOf('Phalcon\Test\Mvc\Model\EagerLoading\Stubs\Robot', $eagerly->robots[2]->parent);
+
+        $this->assertInstanceOf(
+            'Phalcon\Test\Mvc\Model\EagerLoading\Stubs\Robot',
+            $eagerly->robots[2]->parent
+        );
 
         $getIds = function ($obj) {
             return property_exists($obj, 'parent') && isset($obj->parent) ? $obj->parent->readAttribute('id') : null;
         };
 
-        $this->assertEquals(array_map($getIds, $eagerly->robots), array_map($getIds, $rawly->robots));
+        $this->assertEquals(
+            array_map($getIds, $eagerly->robots),
+            array_map($getIds, $rawly->robots)
+        );
     }
 
     public function testBelongsTo()
@@ -310,8 +391,16 @@ class EagerLoadingTest extends Test
         $eagerly = Loader::fromModel(Bug::findFirstById(1), 'Robot');
 
         $this->assertTrue(property_exists($eagerly, 'robot'));
-        $this->assertInstanceOf('Phalcon\Test\Mvc\Model\EagerLoading\Stubs\Robot', $eagerly->robot);
-        $this->assertEquals($rawly->robot->readAttribute('id'), $eagerly->robot->readAttribute('id'));
+
+        $this->assertInstanceOf(
+            'Phalcon\Test\Mvc\Model\EagerLoading\Stubs\Robot',
+            $eagerly->robot
+        );
+
+        $this->assertEquals(
+            $rawly->robot->readAttribute('id'),
+            $eagerly->robot->readAttribute('id')
+        );
 
         // Reverse
         $rawly = Robot::findFirstById(2);
@@ -320,33 +409,67 @@ class EagerLoadingTest extends Test
         $eagerly = Loader::fromModel(Robot::findFirstById(2), 'Bugs');
 
         $this->assertTrue(property_exists($eagerly, 'bugs'));
-        $this->assertContainsOnlyInstancesOf('Phalcon\Test\Mvc\Model\EagerLoading\Stubs\Bug', $eagerly->bugs);
+
+        $this->assertContainsOnlyInstancesOf(
+            'Phalcon\Test\Mvc\Model\EagerLoading\Stubs\Bug',
+            $eagerly->bugs
+        );
 
         $getIds = function ($obj) {
             return $obj->readAttribute('id');
         };
 
-        $this->assertEquals(array_map($getIds, $rawly->bugs), array_map($getIds, $eagerly->bugs));
-        $this->assertEmpty(Loader::fromModel(Robot::findFirstById(1), 'Bugs')->bugs);
+        $this->assertEquals(
+            array_map($getIds, $rawly->bugs),
+            array_map($getIds, $eagerly->bugs)
+        );
+
+        $this->assertEmpty(
+            Loader::fromModel(Robot::findFirstById(1), 'Bugs')->bugs
+        );
 
         // Test from multiple
-        $rawly = $this->resultSetToEagerLoadingEquivalent(Bug::find(['limit' => 10]));
+        $rawly = $this->resultSetToEagerLoadingEquivalent(
+            Bug::find(
+                [
+                    'limit' => 10,
+                ]
+            )
+        );
+
         foreach ($rawly as $bug) {
             $bug->robot;
         }
 
-        $eagerly = Loader::fromResultset(Bug::find(array ('limit' => 10)), 'Robot');
+        $eagerly = Loader::fromResultset(
+            Bug::find(
+                [
+                    'limit' => 10,
+                ]
+            ),
+            'Robot'
+        );
 
         $this->assertTrue(is_array($eagerly));
-        $this->assertTrue(array_reduce($eagerly, function ($res, $bug) {
-            return $res && property_exists($bug, 'robot');
-        }, true));
+
+        $this->assertTrue(
+            array_reduce(
+                $eagerly,
+                function ($res, $bug) {
+                    return $res && property_exists($bug, 'robot');
+                },
+                true
+            )
+        );
 
         $getIds = function ($obj) {
             return property_exists($obj, 'robot') && isset($obj->robot) ? $obj->robot->readAttribute('id') : null;
         };
 
-        $this->assertEquals(array_map($getIds, $rawly), array_map($getIds, $eagerly));
+        $this->assertEquals(
+            array_map($getIds, $rawly),
+            array_map($getIds, $eagerly)
+        );
     }
 
     public function providerWithoutArguments()

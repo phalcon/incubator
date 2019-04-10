@@ -40,18 +40,24 @@ class IbanTest extends Test
     public function shouldValidateIbanCodeWithSetCountryCode($countryCode, $code)
     {
         $validation = new Validation();
+
         $validation->add(
             'test',
             new Iban()
         );
 
         $validators = $validation->getValidators();
+
         $validator = $validators[0];
         $validator = $validator[1];
 
         $validator->setCountryCode($countryCode);
 
-        $messages = $validation->validate(['test' => $code]);
+        $messages = $validation->validate(
+            [
+                'test' => $code,
+            ]
+        );
 
         $this->assertCount(
             0,
@@ -82,7 +88,11 @@ class IbanTest extends Test
             $iban
         );
 
-        $messages = $validation->validate(['test' => $code]);
+        $messages = $validation->validate(
+            [
+                'test' => $code,
+            ]
+        );
 
         $this->assertCount(
             0,
@@ -106,14 +116,21 @@ class IbanTest extends Test
     public function shouldValidateIbanCodeWithCountryCode($countryCode, $code)
     {
         $validation = new Validation();
+
         $validation->add(
             'test',
-            new Iban([
-                'country_code' => $countryCode,
-            ])
+            new Iban(
+                [
+                    'country_code' => $countryCode,
+                ]
+            )
         );
 
-        $messages = $validation->validate(['test' => $code]);
+        $messages = $validation->validate(
+            [
+                'test' => $code,
+            ]
+        );
 
         $this->assertCount(
             0,
@@ -139,18 +156,25 @@ class IbanTest extends Test
     public function shouldCatchErrorMessage($countryCode, $code, $message, $messageType)
     {
         $validation = new Validation();
-        $iban = new Iban([
-            'country_code'        => $countryCode,
-            $messageType          => $message,
-            'allow_non_sepa'      => false,
-        ]);
+
+        $iban = new Iban(
+            [
+                'country_code'   => $countryCode,
+                $messageType     => $message,
+                'allow_non_sepa' => false,
+            ]
+        );
 
         $validation->add(
             'test',
             $iban
         );
 
-        $messages = $validation->validate(['test' => $code]);
+        $messages = $validation->validate(
+            [
+                'test' => $code,
+            ]
+        );
 
         foreach ($messages as $messageReturn) {
             $this->assertEquals(
