@@ -14,23 +14,41 @@ use Phalcon\Cache\Backend\File;
 use Phalcon\Cache\Frontend\Data;
 use Phalcon\Db\Adapter\Cacheable\Mysql;
 
-$di->set('db', function() {
-    /** @var \Phalcon\DiInterface $this */
-    $connection = new Mysql([
-        'host'     => $this->getShared('config')->database->host,
-        'username' => $this->getShared('config')->database->username,
-        'password' => $this->getShared('config')->database->password,
-        'dbname'   => $this->getShared('config')->database->name,
-        'options'  => [Pdo::ATTR_EMULATE_PREPARES => false]
-    ]);
+$di->set(
+    'db',
+    function () {
+        /** @var \Phalcon\DiInterface $this */
+        $connection = new Mysql(
+            [
+                'host'     => $this->getShared('config')->database->host,
+                'username' => $this->getShared('config')->database->username,
+                'password' => $this->getShared('config')->database->password,
+                'dbname'   => $this->getShared('config')->database->name,
+                'options'  => [
+                    Pdo::ATTR_EMULATE_PREPARES => false,
+                ],
+            ]
+        );
 
-    $frontCache = new Data(['lifetime' => 2592000]);
+        $frontCache = new Data(
+            [
+                'lifetime' => 2592000,
+            ]
+        );
 
-    // File backend settings
-    $connection->setCache(new File($frontCache, ['cacheDir' => __DIR__ . '/../../var/db/']));
+        // File backend settings
+        $connection->setCache(
+            new File(
+                $frontCache,
+                [
+                    'cacheDir' => __DIR__ . '/../../var/db/',
+                ]
+            )
+        );
 
-    return $connection;
-});
+        return $connection;
+    }
+);
 ```
 
 ## Pdo\Oracle
@@ -40,16 +58,24 @@ Specific functions for the Oracle RDBMS.
 ```php
 use Phalcon\Db\Adapter\Pdo\Oracle;
 
-$di->set('db', function() {
-    /** @var \Phalcon\DiInterface $this */
-    $connection = new Oracle([
-        'dbname'   => $this->getShared('config')->database->dbname,
-        'username' => $this->getShared('config')->database->username,
-        'password' => $this->getShared('config')->database->password,
-    ]);
-    
-    return $connection;
-});
+$di->set(
+    'db',
+    function () {
+        /** @var \Phalcon\DiInterface $this */
+
+        $config = $this->getShared('config');
+
+        $connection = new Oracle(
+            [
+                'dbname'   => $config->database->dbname,
+                'username' => $config->database->username,
+                'password' => $config->database->password,
+            ]
+        );
+
+        return $connection;
+    }
+);
 ```
 
 ## Mongo\Client
@@ -61,12 +87,17 @@ This will solve cursor and related records problems on the ODM.
 ```php
 use Phalcon\Db\Adapter\Mongo\Client;
 
-$di->setShared('mongo', function() {
-    /** @var \Phalcon\DiInterface $this */
-    $mongo = new Client();
+$di->setShared(
+    'mongo',
+    function () {
+        /** @var \Phalcon\DiInterface $this */
+        $mongo = new Client();
 
-    return $mongo->selectDB($this->getShared('config')->database->dbname);
-});
+        return $mongo->selectDB(
+            $this->getShared('config')->database->dbname
+        );
+    }
+);
 ```
 
 ## MongoDB\Client
@@ -80,30 +111,39 @@ use Phalcon\Mvc\Collection\Manager;
 use Phalcon\Db\Adapter\MongoDB\Client;
 
 // Initialise the mongo DB connection.
-$di->setShared('mongo', function () {
-    /** @var \Phalcon\DiInterface $this */
-    $config = $this->getShared('config');
-    
-    if (!$config->database->mongo->username || !$config->database->mongo->password) {
-        $dsn = 'mongodb://' . $config->database->mongo->host;
-    } else {
-        $dsn = sprintf(
-            'mongodb://%s:%s@%s',
-            $config->database->mongo->username,
-            $config->database->mongo->password,
-            $config->database->mongo->host
+$di->setShared(
+    'mongo',
+    function () {
+        /** @var \Phalcon\DiInterface $this */
+
+        $config = $this->getShared('config');
+
+        if (!$config->database->mongo->username || !$config->database->mongo->password) {
+            $dsn = 'mongodb://' . $config->database->mongo->host;
+        } else {
+            $dsn = sprintf(
+                'mongodb://%s:%s@%s',
+                $config->database->mongo->username,
+                $config->database->mongo->password,
+                $config->database->mongo->host
+            );
+        }
+
+        $mongo = new Client($dsn);
+
+        return $mongo->selectDatabase(
+            $config->database->mongo->dbname
         );
     }
-    
-    $mongo = new Client($dsn);
-
-    return $mongo->selectDatabase($config->database->mongo->dbname);
-});
+);
 
 // Collection Manager is required for MongoDB
-$di->setShared('collectionManager', function () {
-    return new Manager();
-});
+$di->setShared(
+    'collectionManager',
+    function () {
+        return new Manager();
+    }
+);
 ```
 
 Collection example:
@@ -116,7 +156,7 @@ class UserCollection extends MongoCollection
     public $name;
     public $email;
     public $password;
-    
+
     public function getSource()
     {
         return 'users';

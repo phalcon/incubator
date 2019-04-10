@@ -12,15 +12,20 @@ these syntax you can use these functions:
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Db\Dialect\MysqlExtended;
 
-$di->set('db', function() {
-    return new Mysql([
-        'host'         => 'localhost',
-        'username'     => 'root',
-        'password'     => 'secret',
-        'dbname'       => 'enigma',
-        'dialectClass' => MysqlExtended::class,
-    ]);
-});
+$di->set(
+    'db',
+    function () {
+        return new Mysql(
+            [
+                'host'         => 'localhost',
+                'username'     => 'root',
+                'password'     => 'secret',
+                'dbname'       => 'enigma',
+                'dialectClass' => MysqlExtended::class,
+            ]
+        );
+    }
+);
 ```
 
 Usage:
@@ -57,12 +62,17 @@ Generates database specific SQL for the Oracle RDBMS.
 use Phalcon\Db\Adapter\Pdo\Oracle;
 use Phalcon\Db\Adapter\Pdo\Oracle as Connection;
 
-$di->set('db', function() {
-    return new Connection([
-        'dbname'       => '//localhost/enigma',
-        'username'     => 'oracle',
-        'password'     => 'secret',
-        'dialectClass' => Oracle::class,
-    ]);
-});
+$di->set(
+    'db',
+    function () {
+        return new Connection(
+            [
+                'dbname'       => '//localhost/enigma',
+                'username'     => 'oracle',
+                'password'     => 'secret',
+                'dialectClass' => Oracle::class,
+            ]
+        );
+    }
+);
 ```

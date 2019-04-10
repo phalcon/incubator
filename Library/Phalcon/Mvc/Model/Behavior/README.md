@@ -12,12 +12,16 @@ class Categories extends \Phalcon\Mvc\Model
 {
     public function initialize()
     {
-        $this->addBehavior(new NestedSetBehavior([
-            'rootAttribute'  => 'root',
-            'leftAttribute'  => 'lft',
-            'rightAttribute' => 'rgt',
-            'levelAttribute' => 'level'
-        ]));
+        $this->addBehavior(
+            new NestedSetBehavior(
+                [
+                    'rootAttribute'  => 'root',
+                    'leftAttribute'  => 'lft',
+                    'rightAttribute' => 'rgt',
+                    'levelAttribute' => 'level',
+                ]
+            )
+        );
     }
 }
 ```
@@ -128,12 +132,24 @@ Result: Mercedes node and Audi node.
 You can get the whole tree using standard model methods like the following.
 For single tree per table:
 ```php
-Categories::find(['order' => 'lft']);
+Categories::find(
+    [
+        'order' => 'lft',
+    ]
+);
 ```
 
 For multiple trees per table:
 ```php
-Categories::find(['root=:root:', 'order'=>'lft', 'bind' => ['root' => $root_id]]);
+Categories::find(
+    [
+        'root=:root:',
+        'order' => 'lft',
+        'bind'  => [
+            'root' => $root_id,
+        ],
+    ]
+);
 ```
 
 ### Modifying a tree
@@ -278,7 +294,7 @@ $audi = Categories::findFirst(3);
 $ford = Categories::findFirst(4);
 $mercedes = Categories::findFirst(5);
 
-foreach([$audi,$ford,$mercedes] as $category) {
+foreach ([$audi,$ford,$mercedes] as $category) {
     $category->moveAsLast($cars);
 }
 ```
@@ -405,7 +421,7 @@ public function initialize()
         new Blameable(
             [
                 'auditClass'       => MyAudit::class,
-                'auditDetailClass' => MyAuditDetail::class
+                'auditDetailClass' => MyAuditDetail::class,
             ]
         )
     );
@@ -416,6 +432,7 @@ Also by default `Audit` class will look for userName key in session for getting 
 You can change this behavior by:
 
 ```php
+use Phalcon\DiInterface;
 use Phalcon\Mvc\Model\Behavior\Blameable;
 
 public function initialize()
@@ -423,9 +440,9 @@ public function initialize()
     $this->addBehavior(
         new Blameable(
             [
-                'userCallback' => function(Phalcon\DiInterface $di) {
+                'userCallback' => function (DiInterface $di) {
                     // your custom code to return user name
-                }
+                },
             ]
         )
     );
@@ -443,7 +460,7 @@ public function initialize()
     $this->addBehavior(
         new Blameable(
             [
-                'snapshotUpdatingDisabled' => true
+                'snapshotUpdatingDisabled' => true,
             ]
         )
     );

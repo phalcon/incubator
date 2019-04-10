@@ -71,9 +71,11 @@ to load classes from the incubator repository:
 
 $loader = new Phalcon\Loader();
 
-$loader->registerNamespaces([
-    'Phalcon' => '/path/to/incubator/Library/Phalcon/'
-]);
+$loader->registerNamespaces(
+    [
+        'Phalcon' => '/path/to/incubator/Library/Phalcon/',
+    ]
+);
 
 $loader->register();
 ```
