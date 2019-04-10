@@ -39,6 +39,9 @@ class OracleTest extends Test
             "TC.OWNER = 'DATABASE.NAME.WITH.DOTS' ORDER BY TC.COLUMN_ID"
         ];
 
-        $this->assertEquals(join('', $expected), $sql);
+        $this->assertEquals(
+            join('', $expected),
+            $sql
+        );
     }
 }

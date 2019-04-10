@@ -62,7 +62,9 @@ class XmlTest extends Test
                     ],
                 ];
 
-                $config = new Xml(PATH_DATA . 'config/config.xml');
+                $config = new Xml(
+                    PATH_DATA . 'config/config.xml'
+                );
 
                 expect($config->toArray())->equals($expected);
             }

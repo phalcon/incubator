@@ -11,21 +11,30 @@ class ArrayInclusionInTest extends UnitTestCase
 
     public function testArrayInclusionInValidatorOk()
     {
-
         $values = ['A', 'B'];
 
         $validation = new Validation();
 
         $validation->add(
             'field',
-            new ArrayInclusionIn([
-                'domain' => $this->domain,
-                'allowEmpty' => false
-            ])
+            new ArrayInclusionIn(
+                [
+                    'domain'     => $this->domain,
+                    'allowEmpty' => false,
+                ]
+            )
         );
 
-        $messages = $validation->validate(['field' => $values]);
-        $this->assertEquals(0, count($messages));
+        $messages = $validation->validate(
+            [
+                'field' => $values,
+            ]
+        );
+
+        $this->assertCount(
+            0,
+            $messages
+        );
     }
 
     public function testArrayInclusionInWithInvalidInput()
@@ -36,14 +45,24 @@ class ArrayInclusionInTest extends UnitTestCase
 
         $validation->add(
             'field',
-            new ArrayInclusionIn([
-                'domain' => $this->domain,
-                'allowEmpty' => false
-            ])
+            new ArrayInclusionIn(
+                [
+                    'domain'     => $this->domain,
+                    'allowEmpty' => false,
+                ]
+            )
         );
 
-        $messages = $validation->validate(['field' => $values]);
-        $this->assertEquals(1, count($messages));
+        $messages = $validation->validate(
+            [
+                'field' => $values,
+            ]
+        );
+
+        $this->assertCount(
+            1,
+            $messages
+        );
     }
 
     public function testArrayInclusionInWithInvalidArgument()
@@ -54,15 +73,24 @@ class ArrayInclusionInTest extends UnitTestCase
 
         $validation->add(
             'field',
-            new ArrayInclusionIn([
-                'domain' => $this->domain,
-                'allowEmpty' => false
-            ])
+            new ArrayInclusionIn(
+                [
+                    'domain'     => $this->domain,
+                    'allowEmpty' => false,
+                ]
+            )
         );
 
-        $messages = $validation->validate(['field' => $values]);
+        $messages = $validation->validate(
+            [
+                'field' => $values,
+            ]
+        );
 
-        $this->assertEquals(1, count($messages));
+        $this->assertCount(
+            1,
+            $messages
+        );
     }
 
     public function testArrayInclusionInWithAllowEmptyTrue()
@@ -73,14 +101,23 @@ class ArrayInclusionInTest extends UnitTestCase
 
         $validation->add(
             'field',
-            new ArrayInclusionIn([
-                'domain' => $this->domain,
-                'allowEmpty' => true
-            ])
+            new ArrayInclusionIn(
+                [
+                    'domain'     => $this->domain,
+                    'allowEmpty' => true,
+                ]
+            )
         );
 
-        $messages = $validation->validate(['field' => $values]);
+        $messages = $validation->validate(
+            [
+                'field' => $values,
+            ]
+        );
 
-        $this->assertEquals(0, count($messages));
+        $this->assertCount(
+            0,
+            $messages
+        );
     }
 }

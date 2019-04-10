@@ -19,11 +19,15 @@ class ApcTest extends Test
         }
 
         if (!ini_get('apc.enabled') || (PHP_SAPI === 'cli' && !ini_get('apc.enable_cli'))) {
-            $this->markTestSkipped('Warning: apc.enable_cli must be set to "On"');
+            $this->markTestSkipped(
+                'Warning: apc.enable_cli must be set to "On"'
+            );
         }
 
         if (extension_loaded('apcu') && version_compare(phpversion('apcu'), '5.1.6', '=')) {
-            $this->markTestSkipped('Warning: APCu v5.1.6 was broken. See: https://github.com/krakjoe/apcu/issues/203');
+            $this->markTestSkipped(
+                'Warning: APCu v5.1.6 was broken. See: https://github.com/krakjoe/apcu/issues/203'
+            );
         }
     }
 
@@ -31,90 +35,200 @@ class ApcTest extends Test
     public function shouldReadFromApcWithoutAnyAdditionalParameter()
     {
         $reflection = $this->getReflection();
+
         $annotations = new Apc();
 
-        $this->tester->haveInApc('_PHAN' . 'read-1', $reflection);
-        $this->assertEquals($reflection, $annotations->read('read-1'));
+        $this->tester->haveInApc(
+            '_PHAN' . 'read-1',
+            $reflection
+        );
+
+        $this->assertEquals(
+            $reflection,
+            $annotations->read('read-1')
+        );
     }
 
     /** @test */
     public function shouldReadFromApcWithPrefix()
     {
         $reflection = $this->getReflection();
-        $annotations = new Apc(['prefix' => 'prefix-']);
 
-        $this->tester->haveInApc('_PHAN' . 'prefix-read-2', $reflection);
-        $this->assertEquals($reflection, $annotations->read('read-2'));
+        $annotations = new Apc(
+            [
+                'prefix' => 'prefix-',
+            ]
+        );
+
+        $this->tester->haveInApc(
+            '_PHAN' . 'prefix-read-2',
+            $reflection
+        );
+
+        $this->assertEquals(
+            $reflection,
+            $annotations->read('read-2')
+        );
     }
 
     /** @test */
     public function shouldWriteToTheApcWithoutAnyAdditionalParameter()
     {
         $reflection = $this->getReflection();
+
         $annotations = new Apc();
 
-        $this->assertTrue($annotations->write('write-1', $reflection));
-        $this->assertEquals($reflection, $this->tester->grabValueFromApc('_PHAN' . 'write-1'));
+        $this->assertTrue(
+            $annotations->write('write-1', $reflection)
+        );
+
+        $this->assertEquals(
+            $reflection,
+            $this->tester->grabValueFromApc(
+                '_PHAN' . 'write-1'
+            )
+        );
     }
 
     /** @test */
     public function shouldWriteToTheApcWithPrefix()
     {
         $reflection = $this->getReflection();
-        $annotations = new Apc(['prefix' => 'prefix-']);
 
-        $this->assertTrue($annotations->write('write-2', $reflection));
-        $this->assertEquals($reflection, $this->tester->grabValueFromApc('_PHAN' . 'prefix-write-2'));
+        $annotations = new Apc(
+            [
+                'prefix' => 'prefix-',
+            ]
+        );
+
+        $this->assertTrue(
+            $annotations->write('write-2', $reflection)
+        );
+
+        $this->assertEquals(
+            $reflection,
+            $this->tester->grabValueFromApc(
+                '_PHAN' . 'prefix-write-2'
+            )
+        );
     }
 
     /** @test */
     public function shouldFlushTheApcStorageWithoutAnyAdditionalParameter()
     {
         $reflection = $this->getReflection();
+
         $annotations = new Apc();
 
-        $this->tester->haveInApc('_PHAN' . 'flush-1', $reflection);
-        $this->tester->haveInApc('_ANOTHER' . 'flush-1', $reflection);
+        $this->tester->haveInApc(
+            '_PHAN' . 'flush-1',
+            $reflection
+        );
 
-        $this->assertTrue($annotations->flush());
-        $this->tester->dontSeeInApc('_PHAN' . 'flush-1');
-        $this->tester->seeInApc('_ANOTHER' . 'flush-1', $reflection);
+        $this->tester->haveInApc(
+            '_ANOTHER' . 'flush-1',
+            $reflection
+        );
+
+        $this->assertTrue(
+            $annotations->flush()
+        );
+
+        $this->tester->dontSeeInApc(
+            '_PHAN' . 'flush-1'
+        );
+
+        $this->tester->seeInApc(
+            '_ANOTHER' . 'flush-1',
+            $reflection
+        );
     }
 
     /** @test */
     public function shouldFlushTheApcStorageWithPrefix()
     {
         $reflection = $this->getReflection();
-        $annotations = new Apc(['prefix' => 'prefix-']);
 
-        $this->tester->haveInApc('_PHAN' . 'prefix-flush-2', $reflection);
-        $this->tester->haveInApc('_ANOTHER' . 'prefix-flush-2', $reflection);
+        $annotations = new Apc(
+            [
+                'prefix' => 'prefix-',
+            ]
+        );
 
-        $this->assertTrue($annotations->flush());
-        $this->tester->dontSeeInApc('_PHAN' . 'prefix-flush-2');
-        $this->tester->seeInApc('_ANOTHER' . 'prefix-flush-2', $reflection);
+        $this->tester->haveInApc(
+            '_PHAN' . 'prefix-flush-2',
+            $reflection
+        );
+
+        $this->tester->haveInApc(
+            '_ANOTHER' . 'prefix-flush-2',
+            $reflection
+        );
+
+        $this->assertTrue(
+            $annotations->flush()
+        );
+
+        $this->tester->dontSeeInApc(
+            '_PHAN' . 'prefix-flush-2'
+        );
+
+        $this->tester->seeInApc(
+            '_ANOTHER' . 'prefix-flush-2',
+            $reflection
+        );
     }
 
     /** @test */
     public function shouldReadAndWriteFromApcWithoutAnyAdditionalParameter()
     {
         $reflection = $this->getReflection();
+
         $annotations = new Apc();
 
-        $this->assertTrue($annotations->write('read-write-1', $reflection));
-        $this->assertEquals($reflection, $annotations->read('read-write-1'));
-        $this->assertEquals($reflection, $this->tester->grabValueFromApc('_PHAN' . 'read-write-1'));
+        $this->assertTrue(
+            $annotations->write('read-write-1', $reflection)
+        );
+
+        $this->assertEquals(
+            $reflection,
+            $annotations->read('read-write-1')
+        );
+
+        $this->assertEquals(
+            $reflection,
+            $this->tester->grabValueFromApc(
+                '_PHAN' . 'read-write-1'
+            )
+        );
     }
 
     /** @test */
     public function shouldReadAndWriteFromApcWithPrefix()
     {
         $reflection = $this->getReflection();
-        $annotations = new Apc(['prefix' => 'prefix-']);
 
-        $this->assertTrue($annotations->write('read-write-2', $reflection));
-        $this->assertEquals($reflection, $annotations->read('read-write-2'));
-        $this->assertEquals($reflection, $this->tester->grabValueFromApc('_PHAN' . 'prefix-read-write-2'));
+        $annotations = new Apc(
+            [
+                'prefix' => 'prefix-',
+            ]
+        );
+
+        $this->assertTrue(
+            $annotations->write('read-write-2', $reflection)
+        );
+
+        $this->assertEquals(
+            $reflection,
+            $annotations->read('read-write-2')
+        );
+
+        $this->assertEquals(
+            $reflection,
+            $this->tester->grabValueFromApc(
+                '_PHAN' . 'prefix-read-write-2'
+            )
+        );
     }
 
     /**
@@ -128,16 +242,29 @@ class ApcTest extends Test
     public function shouldGetValueFromApcByUsingPrefixedIdentifier($key, $prefix, $statsKey, $expected)
     {
         if ($statsKey === null) {
-            $options = ['prefix' => $prefix];
+            $options = [
+                'prefix' => $prefix,
+            ];
         } else {
-            $options = ['prefix' => $prefix, 'statsKey' => $statsKey];
+            $options = [
+                'prefix'   => $prefix,
+                'statsKey' => $statsKey,
+            ];
         }
 
         $annotations = new Apc($options);
-        $reflectedMethod = new ReflectionMethod(get_class($annotations), 'getPrefixedIdentifier');
+
+        $reflectedMethod = new ReflectionMethod(
+            get_class($annotations),
+            'getPrefixedIdentifier'
+        );
+
         $reflectedMethod->setAccessible(true);
 
-        $this->assertEquals($expected, $reflectedMethod->invoke($annotations, $key));
+        $this->assertEquals(
+            $expected,
+            $reflectedMethod->invoke($annotations, $key)
+        );
     }
 
     public function providerKey()
@@ -158,12 +285,14 @@ class ApcTest extends Test
 
     protected function getReflection()
     {
-        return Reflection::__set_state([
-            '_reflectionData' => [
-                'class'      => [],
-                'methods'    => [],
-                'properties' => [],
+        return Reflection::__set_state(
+            [
+                '_reflectionData' => [
+                    'class'      => [],
+                    'methods'    => [],
+                    'properties' => [],
+                ]
             ]
-        ]);
+        );
     }
 }

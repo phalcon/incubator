@@ -106,17 +106,23 @@ class BlameableTest extends Test
     public function testUpdate()
     {
         $robots = Robots::findFirst();
+
         $robots->type = 'hydraulic';
+
         $this->assertTrue($robots->update());
+
         $audit = Audit::findFirst(2);
+
         $this->assertNotEmpty($audit);
         $this->assertEquals(Robots::class, $audit->model_name);
         $this->assertNotEmpty($audit->primary_key);
         $this->assertEquals($audit->primary_key[0], $robots->id);
         $this->assertEquals('U', $audit->type);
         $this->assertEquals('127.0.0.1', $audit->ipaddress);
+
         /** @var AuditDetail[]|Resultset $details */
         $details = $audit->details->toArray();
+
         $this->assertEquals(
             [
                 [

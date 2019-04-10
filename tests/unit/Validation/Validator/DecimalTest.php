@@ -33,59 +33,121 @@ class DecimalTest extends Test
     {
         $validation = new Validation();
 
-        $validation->add('number', new Decimal([
-            'digit'   => 3,
-            'point'   => ',',
-            'message' => 'Price must contain valid decimal value',
-        ]));
+        $validation->add(
+            'number',
+            new Decimal(
+                [
+                    'digit'   => 3,
+                    'point'   => ',',
+                    'message' => 'Price must contain valid decimal value',
+                ]
+            )
+        );
 
-        $validation->validate(['number' => '1233.22']);
+        $validation->validate(
+            [
+                'number' => '1233.22',
+            ]
+        );
     }
 
     public function testShouldValidateUsingPlacesInDecimalValidation()
     {
         $validation = new Validation();
 
-        $validation->add('number', new Decimal([
-            'places'  => 2,
-            'message' => 'Price must contain valid decimal value',
-        ]));
+        $validation->add(
+            'number',
+            new Decimal(
+                [
+                    'places'  => 2,
+                    'message' => 'Price must contain valid decimal value',
+                ]
+            )
+        );
 
-        $messages = $validation->validate(['number' => '2.1']);
-        $this->assertEquals(1, $messages->count());
-        $this->assertEquals('Price must contain valid decimal value', $messages[0]->getMessage());
-        $this->assertEquals('Decimal', $messages[0]->getType());
+        $messages = $validation->validate(
+            [
+                'number' => '2.1',
+            ]
+        );
 
-        $messages = $validation->validate(['number' => '8.67']);
-        $this->assertEquals(0, $messages->count());
+        $this->assertEquals(
+            1,
+            $messages->count()
+        );
+
+        $this->assertEquals(
+            'Price must contain valid decimal value',
+            $messages[0]->getMessage()
+        );
+
+        $this->assertEquals(
+            'Decimal',
+            $messages[0]->getType()
+        );
+
+        $messages = $validation->validate(
+            [
+                'number' => '8.67',
+            ]
+        );
+
+        $this->assertEquals(
+            0,
+            $messages->count()
+        );
     }
 
     public function testShouldValidateUsingDigitsInDecimalValidation()
     {
         $validation = new Validation();
 
-        $validation->add('number1', new Decimal([
-            'places'  => 2,
-            'digits'  => 2,
-            'label'   => 'Magic number #1',
-            'message' => ':field must contain valid decimal value',
-        ]));
+        $validation->add(
+            'number1',
+            new Decimal(
+                [
+                    'places'  => 2,
+                    'digits'  => 2,
+                    'label'   => 'Magic number #1',
+                    'message' => ':field must contain valid decimal value',
+                ]
+            )
+        );
 
-        $validation->add('number2', new Decimal([
-            'places'  => 2,
-            'digits'  => 1,
-            'label'   => 'Magic number #2',
-            'message' => ':field must contain valid decimal value',
-        ]));
+        $validation->add(
+            'number2',
+            new Decimal(
+                [
+                    'places'  => 2,
+                    'digits'  => 1,
+                    'label'   => 'Magic number #2',
+                    'message' => ':field must contain valid decimal value',
+                ]
+            )
+        );
 
-        $validation->validate([
-            'number1' => '9.99',
-            'number2' => '6.99'
-        ]);
+        $validation->validate(
+            [
+                'number1' => '9.99',
+                'number2' => '6.99',
+            ]
+        );
 
         $messages = $validation->getMessages();
-        $this->assertEquals(1, $messages->count());
-        $this->assertEquals('Magic number #1 must contain valid decimal value', $messages[0]->getMessage());
-        $this->assertEquals('Decimal', $messages[0]->getType());
+
+        $this->assertEquals(
+            1,
+            $messages->count()
+        );
+
+        $this->assertEquals(
+            'Magic number #1 must contain valid decimal value',
+            $messages[0]->getMessage()
+        );
+
+        $this->assertEquals(
+            'Decimal',
+            $messages[0]->getType()
+        );
     }
 }
