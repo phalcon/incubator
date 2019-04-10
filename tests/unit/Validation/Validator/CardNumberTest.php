@@ -36,13 +36,31 @@ class CardNumberTest extends Test
         $validation = new Validation();
 
         if ($type) {
-            $validation->add('creditcard', new CardNumber(['type' => $type]));
+            $validation->add(
+                'creditcard',
+                new CardNumber(
+                    [
+                        'type' => $type,
+                    ]
+                )
+            );
         } else {
-            $validation->add('creditcard', new CardNumber());
+            $validation->add(
+                'creditcard',
+                new CardNumber()
+            );
         }
 
-        $messages = $validation->validate(['creditcard' => $cardnumber]);
-        $this->assertNotEquals($willReturn, $messages->valid());
+        $messages = $validation->validate(
+            [
+                'creditcard' => $cardnumber,
+            ]
+        );
+
+        $this->assertNotEquals(
+            $willReturn,
+            $messages->valid()
+        );
     }
 
     public function providerCards()

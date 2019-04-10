@@ -14,31 +14,55 @@ class MemoryTest extends Test
     public function shouldReadFromMemoryWithoutAnyAdditionalParameter()
     {
         $reflection = $this->getReflection();
+
         $annotations = new Memory();
 
-        $this->haveInMemory($annotations, 'read-1', $reflection);
-        $this->assertEquals($reflection, $annotations->read('read-1'));
+        $this->haveInMemory(
+            $annotations,
+            'read-1',
+            $reflection
+        );
+
+        $this->assertEquals(
+            $reflection,
+            $annotations->read('read-1')
+        );
     }
 
     /** @test */
     public function shouldWriteToTheMemoryWithoutAnyAdditionalParameter()
     {
         $reflection = $this->getReflection();
+
         $annotations = new Memory();
 
-        $this->assertTrue($annotations->write('write-1', $reflection));
-        $this->assertEquals($reflection, $this->grabValueFromMemory($annotations, 'write-1'));
+        $this->assertTrue(
+            $annotations->write('write-1', $reflection)
+        );
+
+        $this->assertEquals(
+            $reflection,
+            $this->grabValueFromMemory($annotations, 'write-1')
+        );
     }
 
     /** @test */
     public function shouldFlushTheMemoryStorageWithoutAnyAdditionalParameter()
     {
         $reflection = $this->getReflection();
+
         $annotations = new Memory();
 
-        $this->haveInMemory($annotations, 'flush-1', $reflection);
+        $this->haveInMemory(
+            $annotations,
+            'flush-1',
+            $reflection
+        );
 
-        $this->assertTrue($annotations->flush());
+        $this->assertTrue(
+            $annotations->flush()
+        );
+
         $this->dontSeeInMemory($annotations, 'flush-1');
     }
 
@@ -46,11 +70,22 @@ class MemoryTest extends Test
     public function shouldReadAndWriteFromMemoryWithoutAnyAdditionalParameter()
     {
         $reflection = $this->getReflection();
+
         $annotations = new Memory();
 
-        $this->assertTrue($annotations->write('read-write-1', $reflection));
-        $this->assertEquals($reflection, $annotations->read('read-write-1'));
-        $this->assertEquals($reflection, $this->grabValueFromMemory($annotations, 'read-write-1'));
+        $this->assertTrue(
+            $annotations->write('read-write-1', $reflection)
+        );
+
+        $this->assertEquals(
+            $reflection,
+            $annotations->read('read-write-1')
+        );
+
+        $this->assertEquals(
+            $reflection,
+            $this->grabValueFromMemory($annotations, 'read-write-1')
+        );
     }
 
     /**
@@ -62,10 +97,18 @@ class MemoryTest extends Test
     public function shouldGetValueFromMemoryByUsingPrefixedIdentifier($key, $expected)
     {
         $annotations = new Memory();
-        $reflectedMethod = new ReflectionMethod(get_class($annotations), 'getPrefixedIdentifier');
+
+        $reflectedMethod = new ReflectionMethod(
+            get_class($annotations),
+            'getPrefixedIdentifier'
+        );
+
         $reflectedMethod->setAccessible(true);
 
-        $this->assertEquals($expected, $reflectedMethod->invoke($annotations, $key));
+        $this->assertEquals(
+            $expected,
+            $reflectedMethod->invoke($annotations, $key)
+        );
     }
 
     public function providerKey()
@@ -80,18 +123,24 @@ class MemoryTest extends Test
 
     protected function getReflection()
     {
-        return Reflection::__set_state([
-            '_reflectionData' => [
-                'class'      => [],
-                'methods'    => [],
-                'properties' => [],
+        return Reflection::__set_state(
+            [
+                '_reflectionData' => [
+                    'class'      => [],
+                    'methods'    => [],
+                    'properties' => [],
+                ],
             ]
-        ]);
+        );
     }
 
     protected function haveInMemory($object, $key, $value)
     {
-        $reflectedProperty = new ReflectionProperty(get_class($object), 'data');
+        $reflectedProperty = new ReflectionProperty(
+            get_class($object),
+            'data'
+        );
+
         $reflectedProperty->setAccessible(true);
 
         $data = $reflectedProperty->getValue($object);
@@ -102,7 +151,11 @@ class MemoryTest extends Test
 
     protected function grabValueFromMemory($object, $key)
     {
-        $reflectedProperty = new ReflectionProperty(get_class($object), 'data');
+        $reflectedProperty = new ReflectionProperty(
+            get_class($object),
+            'data'
+        );
+
         $reflectedProperty->setAccessible(true);
 
         $data = $reflectedProperty->getValue($object);
@@ -112,7 +165,11 @@ class MemoryTest extends Test
 
     protected function dontSeeInMemory($object, $key, $value = false)
     {
-        $reflectedProperty = new ReflectionProperty(get_class($object), 'data');
+        $reflectedProperty = new ReflectionProperty(
+            get_class($object),
+            'data'
+        );
+
         $reflectedProperty->setAccessible(true);
 
         $data = $reflectedProperty->getValue($object);
@@ -120,7 +177,10 @@ class MemoryTest extends Test
         if ($value === false) {
             $this->assertArrayNotHasKey($key, $data);
         } else {
-            $this->assertSame($value, $data[$key]);
+            $this->assertSame(
+                $value,
+                $data[$key]
+            );
         }
     }
 }

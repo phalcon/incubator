@@ -32,15 +32,19 @@ class IpValidatorTest extends Test
 
         $validation->add(
             'ip',
-            new \Phalcon\Validation\Validator\IpValidator (
+            new \Phalcon\Validation\Validator\IpValidator(
                 [
-                    'message' => 'The IP is not valid.'
+                    'message' => 'The IP is not valid.',
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(0, count($messages));
+
+        $this->assertCount(
+            0,
+            $messages
+        );
     }
 
     public function testIpValidatorFailing()
@@ -51,14 +55,18 @@ class IpValidatorTest extends Test
 
         $validation->add(
             'ip',
-            new \Phalcon\Validation\Validator\IpValidator (
+            new \Phalcon\Validation\Validator\IpValidator(
                 [
-                    'message' => 'The IP is not valid.'
+                    'message' => 'The IP is not valid.',
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(1, count($messages));
+
+        $this->assertCount(
+            1,
+            $messages
+        );
     }
 }

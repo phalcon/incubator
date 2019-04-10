@@ -80,43 +80,99 @@ class MongoIdTest extends Test
 
     public function testInvalidMongoIdValue()
     {
+        $array = [
+            'id' => 123,
+        ];
 
-        $array = ['id' => 123];
-        $this->validation->add('id', $this->testable);
+        $this->validation->add(
+            'id',
+            $this->testable
+        );
+
         $messages = $this->validation->validate($array);
 
-        $this->assertEquals(1, count($messages));
-        $this->assertEquals('MongoId is not valid', $messages[0]->getMessage());
-        $this->assertEquals('MongoId', $messages[0]->getType());
+        $this->assertCount(
+            1,
+            $messages
+        );
+
+        $this->assertEquals(
+            'MongoId is not valid',
+            $messages[0]->getMessage()
+        );
+
+        $this->assertEquals(
+            'MongoId',
+            $messages[0]->getType()
+        );
     }
 
     public function testValidMongoIdValue()
     {
-        $array = ['id' => '561824e063e702bc1900002a'];
-        $this->validation->add('id', $this->testable);
+        $array = [
+            'id' => '561824e063e702bc1900002a',
+        ];
+
+        $this->validation->add(
+            'id',
+            $this->testable
+        );
+
         $messages = $this->validation->validate($array);
 
-        $this->assertEquals(0, count($messages));
+        $this->assertCount(
+            0,
+            $messages
+        );
     }
 
     public function testEmptyMongoIdValue()
     {
-        $array = ['id' => ''];
-        $this->validation->add('id', $this->testable);
+        $array = [
+            'id' => '',
+        ];
+
+        $this->validation->add(
+            'id',
+            $this->testable
+        );
+
         $messages = $this->validation->validate($array);
 
-        $this->assertEquals(1, count($messages));
-        $this->assertEquals('MongoId is not valid', $messages[0]->getMessage());
-        $this->assertEquals('MongoId', $messages[0]->getType());
+        $this->assertCount(
+            1,
+            $messages
+        );
+
+        $this->assertEquals(
+            'MongoId is not valid',
+            $messages[0]->getMessage()
+        );
+
+        $this->assertEquals(
+            'MongoId',
+            $messages[0]->getType()
+        );
     }
 
     public function testEmptyMongoIdValueWithAllowEmptyOption()
     {
-        $array = ['id' => ''];
+        $array = [
+            'id' => '',
+        ];
+
         $this->testable->setOption('allowEmpty', true);
-        $this->validation->add('id', $this->testable);
+
+        $this->validation->add(
+            'id',
+            $this->testable
+        );
+
         $messages = $this->validation->validate($array);
 
-        $this->assertEquals(0, count($messages));
+        $this->assertCount(
+            0,
+            $messages
+        );
     }
 }

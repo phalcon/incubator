@@ -15,8 +15,19 @@ class GetIndexesCest extends Base
 {
     public function getIndexes(UnitTester $I)
     {
-        $I->wantToTest('Translate\Adapter\CsvMulti - getIndexes returns the indexes');
+        $I->wantToTest(
+            'Translate\Adapter\CsvMulti - getIndexes returns the indexes'
+        );
+
         $this->adapter->setLocale('en_US');
-        $I->assertEquals(['label_street', 'label_car', 'label_home'], $this->adapter->getIndexes());
+
+        $I->assertEquals(
+            [
+                'label_street',
+                'label_car',
+                'label_home',
+            ],
+            $this->adapter->getIndexes()
+        );
     }
 }

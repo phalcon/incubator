@@ -54,15 +54,17 @@ class DatabaseTest extends UnitTest
                 'password' => env('TEST_DB_PASSWD', 'secret'),
                 'dbname'   => env('TEST_DB_NAME', 'incubator'),
                 'charset'  => env('TEST_DB_CHARSET', 'utf8'),
-                'port'     => env('TEST_DB_PORT', 3306)
+                'port'     => env('TEST_DB_PORT', 3306),
             ]
         );
 
-        $this->session = new Database([
-            'db' => $this->connection,
-            'table' => 'sessions',
-            'lifetime' => 3600
-        ]);
+        $this->session = new Database(
+            [
+                'db'       => $this->connection,
+                'table'    => 'sessions',
+                'lifetime' => 3600,
+            ]
+        );
     }
 
     /**
@@ -75,8 +77,11 @@ class DatabaseTest extends UnitTest
     public function shouldWorkSessionAdapter()
     {
         $this->session->start();
+
         $sessionID = $this->session->getId();
+
         $this->session->set('customer_id', 'somekey');
+
         $this->specify(
             "Method set() hasn't worked",
             function ($data, $expected) {
@@ -84,18 +89,39 @@ class DatabaseTest extends UnitTest
             },
             [
                 'examples' => [
-                    [$this->session->get('customer_id'), 'somekey']
+                    [
+                        $this->session->get('customer_id'),
+                        'somekey',
+                    ],
                 ]
             ]
         );
         
         session_start();
-        $this->session->write($sessionID, session_encode());
-        $this->tester->seeInDatabase(ModelSession::$table, ['session_id' => $sessionID]);
-        $this->tester->seeInDatabase(ModelSession::$table, ['data' => 'customer_id|s:7:"somekey";']);
+
+        $this->session->write(
+            $sessionID,
+            session_encode()
+        );
+
+        $this->tester->seeInDatabase(
+            ModelSession::$table,
+            [
+                'session_id' => $sessionID,
+            ]
+        );
+
+        $this->tester->seeInDatabase(
+            ModelSession::$table,
+            [
+                'data' => 'customer_id|s:7:"somekey";',
+            ]
+        );
+
         $this->session->remove('customer_id');
 
         $sessionData = $this->session->read($sessionID);
+
         session_decode($sessionData);
         
         $this->specify(
@@ -105,21 +131,43 @@ class DatabaseTest extends UnitTest
             },
             [
                 'examples' => [
-                    [$this->session->get('customer_id'), 'somekey']
+                    [
+                        $this->session->get('customer_id'),
+                        'somekey',
+                    ],
                 ]
             ]
         );
 
         $this->session->set('customer_id', 'somekey');
         $this->session->set('customer_id2', 'somekey2');
-        $this->session->write($sessionID, session_encode());
-        $this->tester->seeInDatabase(ModelSession::$table, ['session_id' => $sessionID]);
-        $this->tester->seeInDatabase(ModelSession::$table, ['data' => 'customer_id|s:7:"somekey";customer_id2|s:8:"somekey2";']);
+
+        $this->session->write(
+            $sessionID,
+            session_encode()
+        );
+
+        $this->tester->seeInDatabase(
+            ModelSession::$table,
+            [
+                'session_id' => $sessionID,
+            ]
+        );
+
+        $this->tester->seeInDatabase(
+            ModelSession::$table,
+            [
+                'data' => 'customer_id|s:7:"somekey";customer_id2|s:8:"somekey2";',
+            ]
+        );
+
         $this->session->remove('customer_id');
         $this->session->remove('customer_id2');
 
         $sessionData = $this->session->read($sessionID);
+
         session_start();
+
         session_decode($sessionData);
         
         $session = $this->session;
@@ -130,8 +178,11 @@ class DatabaseTest extends UnitTest
             },
             [
                 'examples' => [
-                    [$this->session->get('customer_id'), 'somekey']
-                ]
+                    [
+                        $this->session->get('customer_id'),
+                        'somekey',
+                    ],
+                ],
             ]
         );
         
@@ -142,13 +193,27 @@ class DatabaseTest extends UnitTest
             },
             [
                 'examples' => [
-                    [$this->session->get('customer_id'), 'somekey'],
-                    [$this->session->get('customer_id2'), 'somekey2']
-                ]
+                    [
+                        $this->session->get('customer_id'),
+                        'somekey',
+                    ],
+                    [
+                        $this->session->get('customer_id2'),
+                        'somekey2',
+                    ],
+                ],
             ]
         );
 
-        $this->connection->execute($this->getWrittenSessionData($sessionID));
-        $this->tester->dontSeeInDatabase(ModelSession::$table, ['session_id' => $sessionID]);
+        $this->connection->execute(
+            $this->getWrittenSessionData($sessionID)
+        );
+
+        $this->tester->dontSeeInDatabase(
+            ModelSession::$table,
+            [
+                'session_id' => $sessionID,
+            ]
+        );
     }
 }
