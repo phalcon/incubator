@@ -8,4 +8,4 @@
 - In `\Phalcon\Mailer\Message`, creation SwiftMailer of instances moved to the DI
 
 ## v1.0.0 (2014-09-14)
-- Release of component :) 
+- Release of component :)

@@ -15,9 +15,9 @@ $config = [
     'username'   => 'example@gmail.com',
     'password'   => 'your_password',
     'from'       => [
-            'email' => 'example@gmail.com',
-            'name'  => 'YOUR FROM NAME'
-        ]
+        'email' => 'example@gmail.com',
+        'name'  => 'YOUR FROM NAME',
+    ],
 ];
 ```
 
@@ -29,8 +29,8 @@ $config = [
     'sendmail'  => '/usr/sbin/sendmail -bs',
     'from'      => [
         'email' => 'example@gmail.com',
-        'name'  => 'YOUR FROM NAME'
-    ]
+        'name'  => 'YOUR FROM NAME',
+    ],
 ];
 ```
 
@@ -41,8 +41,8 @@ $config = [
     'driver'    => 'mail',
     'from'      => [
         'email' => 'example@gmail.com',
-        'name'  => 'YOUR FROM NAME'
-    ]
+        'name'  => 'YOUR FROM NAME',
+    ],
 ];
 ```
 
