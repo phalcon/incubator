@@ -20,7 +20,7 @@ class MyAdapter
     
     protected $configurable = [
         'host',
-        'viewsDir'
+        'viewsDir',
     ];
     
     public function __construct(array $options)

@@ -34,6 +34,9 @@ use Phalcon\DiInterface;
 
 class Console extends PhConsole implements EnvironmentAwareInterface
 {
+    /**
+     * @var EnvironmentInterface|null
+     */
     protected $environment;
 
     public function __construct(DiInterface $di = null)
@@ -65,7 +68,9 @@ use MyAwesomeApplication\Console;
 
 $application = new Console;
 
-$application->setEnvironment(new Environment);
+$application->setEnvironment(
+    new Environment
+);
 ```
 
 ## Implementing your own Environment

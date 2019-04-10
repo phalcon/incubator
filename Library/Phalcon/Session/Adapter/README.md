@@ -16,26 +16,34 @@ Usage:
 ```php
 use Phalcon\Session\Adapter\Aerospike as SessionHandler;
 
-$di->set('session', function () {
-    $session = new SessionHandler([
-        'hosts' => [
-            ['addr' => '127.0.0.1', 'port' => 3000]
-        ],
-        'persistent' => true,
-        'namespace'  => 'test',
-        'prefix'     => 'session_',
-        'lifetime'   => 8600,
-        'uniqueId'   => '3Hf90KdjQ18',
-        'options'    => [
-            \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
-            \Aerospike::OPT_WRITE_TIMEOUT   => 1500
-        ]
-    ]);
+$di->set(
+    'session',
+    function () {
+        $session = new SessionHandler(
+            [
+                'hosts' => [
+                    [
+                        'addr' => '127.0.0.1',
+                        'port' => 3000,
+                    ]
+                ],
+                'persistent' => true,
+                'namespace'  => 'test',
+                'prefix'     => 'session_',
+                'lifetime'   => 8600,
+                'uniqueId'   => '3Hf90KdjQ18',
+                'options'    => [
+                    \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
+                    \Aerospike::OPT_WRITE_TIMEOUT   => 1500,
+                ],
+            ]
+        );
 
-    $session->start();
+        $session->start();
 
-    return $session;
-});
+        return $session;
+    }
+);
 ```
 
 
@@ -47,24 +55,31 @@ This adapter uses a database backend to store session data:
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Session\Adapter\Database;
 
-$di->set('session', function() {
-    // Create a connection
-    $connection = new Mysql([
-        'host'     => 'localhost',
-        'username' => 'root',
-        'password' => 'secret',
-        'dbname'   => 'test'
-    ]);
+$di->set(
+    'session',
+    function () {
+        // Create a connection
+        $connection = new Mysql(
+            [
+                'host'     => 'localhost',
+                'username' => 'root',
+                'password' => 'secret',
+                'dbname'   => 'test',
+            ]
+        );
 
-    $session = new Database([
-        'db'    => $connection,
-        'table' => 'session_data'
-    ]);
+        $session = new Database(
+            [
+                'db'    => $connection,
+                'table' => 'session_data',
+            ]
+        );
 
-    $session->start();
+        $session->start();
 
-    return $session;
-});
+        return $session;
+    }
+);
 
 ```
 
@@ -87,20 +102,24 @@ This adapter uses a Mongo database backend to store session data:
 ```php
 use Phalcon\Session\Adapter\Mongo as MongoSession;
 
-$di->set('session', function() {
-    // Create a connection to mongo
-    $mongo = new \Mongo();
+$di->set(
+    'session',
+    function () {
+        // Create a connection to mongo
+        $mongo = new \Mongo();
 
-    // Passing a collection to the adapter
-    $session = new MongoSession([
-        'collection' => $mongo->test->session_data
-    ]);
+        // Passing a collection to the adapter
+        $session = new MongoSession(
+            [
+                'collection' => $mongo->test->session_data,
+            ]
+        );
 
-    $session->start();
+        $session->start();
 
-    return $session;
-});
-
+        return $session;
+    }
+);
 ```
 
 ## Redis
@@ -111,15 +130,20 @@ You would need a [phpredis][4] extension installed to use it:
 ```php
 use Phalcon\Session\Adapter\Redis;
 
-$di->set('session', function() {
-    $session = new Redis([
-        'path' => 'tcp://127.0.0.1:6379?weight=1'
-    ]);
+$di->set(
+    'session',
+    function () {
+        $session = new Redis(
+            [
+                'path' => 'tcp://127.0.0.1:6379?weight=1',
+            ]
+        );
 
-    $session->start();
+        $session->start();
 
-    return $session;
-});
+        return $session;
+    }
+);
 
 ```
 
@@ -142,24 +166,28 @@ CREATE TABLE `php_session` (
 ```php
 use Phalcon\Session\Adapter\HandlerSocket;
 
-$di->set('session', function() {
-    $session = new HandlerSocket([
-        'cookie_path'   => '/',
-        'cookie_domain' => '',
-        'lifetime'      => 3600,
-        'server' => [
-            'host'    => 'localhost',
-            'port'    => 9999,
-            'dbname'  => 'session',
-            'dbtable' => 'php_session'
-        ]
-    ]);
+$di->set(
+    'session',
+    function () {
+        $session = new HandlerSocket(
+            [
+                'cookie_path'   => '/',
+                'cookie_domain' => '',
+                'lifetime'      => 3600,
+                'server' => [
+                    'host'    => 'localhost',
+                    'port'    => 9999,
+                    'dbname'  => 'session',
+                    'dbtable' => 'php_session',
+                ],
+            ]
+        );
 
-    $session->start();
+        $session->start();
 
-    return $session;
-});
-
+        return $session;
+    }
+);
 ```
 
 The extension [`handlersocket`][5] is required to use this adapter.
