@@ -92,12 +92,24 @@ class Database extends Adapter
 
         $this->connection = $options['db'];
 
-        foreach (['roles', 'resources', 'resourcesAccesses', 'accessList', 'rolesInherits'] as $table) {
+        $tables = [
+            'roles',
+            'resources',
+            'resourcesAccesses',
+            'accessList',
+            'rolesInherits',
+        ];
+
+        foreach ($tables as $table) {
             if (!isset($options[$table]) || empty($options[$table]) || !is_string($options[$table])) {
-                throw new Exception("Parameter '{$table}' is required and it must be a non empty string");
+                throw new Exception(
+                    "Parameter '{$table}' is required and it must be a non empty string"
+                );
             }
 
-            $this->{$table} = $this->connection->escapeIdentifier($options[$table]);
+            $this->{$table} = $this->connection->escapeIdentifier(
+                $options[$table]
+            );
         }
     }
 
@@ -118,33 +130,51 @@ class Database extends Adapter
     public function addRole($role, $accessInherits = null)
     {
         if (is_string($role)) {
-            $role = new Role($role, ucwords($role) . ' Role');
+            $role = new Role(
+                $role,
+                ucwords($role) . ' Role'
+            );
         }
 
         if (!$role instanceof RoleInterface) {
-            throw new Exception('Role must be either an string or implement RoleInterface');
+            throw new Exception(
+                'Role must be either an string or implement RoleInterface'
+            );
         }
 
         $exists = $this->connection->fetchOne(
             "SELECT COUNT(*) FROM {$this->roles} WHERE name = ?",
             null,
-            [$role->getName()]
+            [
+                $role->getName(),
+            ]
         );
 
         if (!$exists[0]) {
             $this->connection->execute(
                 "INSERT INTO {$this->roles} VALUES (?, ?)",
-                [$role->getName(), $role->getDescription()]
+                [
+                    $role->getName(),
+                    $role->getDescription(),
+                ]
             );
 
             $this->connection->execute(
                 "INSERT INTO {$this->accessList} VALUES (?, ?, ?, ?)",
-                [$role->getName(), '*', '*', $this->_defaultAccess]
+                [
+                    $role->getName(),
+                    '*',
+                    '*',
+                    $this->_defaultAccess,
+                ]
             );
         }
 
         if ($accessInherits) {
-            return $this->addInherit($role->getName(), $accessInherits);
+            return $this->addInherit(
+                $role->getName(),
+                $accessInherits
+            );
         }
 
         return true;
@@ -160,21 +190,37 @@ class Database extends Adapter
     public function addInherit($roleName, $roleToInherit)
     {
         $sql = "SELECT COUNT(*) FROM {$this->roles} WHERE name = ?";
-        $exists = $this->connection->fetchOne($sql, null, [$roleName]);
+
+        $exists = $this->connection->fetchOne(
+            $sql,
+            null,
+            [
+                $roleName,
+            ]
+        );
+
         if (!$exists[0]) {
-            throw new Exception("Role '{$roleName}' does not exist in the role list");
+            throw new Exception(
+                "Role '{$roleName}' does not exist in the role list"
+            );
         }
 
         $exists = $this->connection->fetchOne(
             "SELECT COUNT(*) FROM {$this->rolesInherits} WHERE roles_name = ? AND roles_inherit = ?",
             null,
-            [$roleName, $roleToInherit]
+            [
+                $roleName,
+                $roleToInherit,
+            ]
         );
 
         if (!$exists[0]) {
             $this->connection->execute(
                 "INSERT INTO {$this->rolesInherits} VALUES (?, ?)",
-                [$roleName, $roleToInherit]
+                [
+                    $roleName,
+                    $roleToInherit,
+                ]
             );
         }
     }
@@ -190,7 +236,9 @@ class Database extends Adapter
         $exists = $this->connection->fetchOne(
             "SELECT COUNT(*) FROM {$this->roles} WHERE name = ?",
             null,
-            [$roleName]
+            [
+                $roleName,
+            ]
         );
 
         return (bool) $exists[0];
@@ -207,7 +255,9 @@ class Database extends Adapter
         $exists = $this->connection->fetchOne(
             "SELECT COUNT(*) FROM {$this->resources} WHERE name = ?",
             null,
-            [$resourceName]
+            [
+                $resourceName,
+            ]
         );
 
         return (bool) $exists[0];
@@ -238,18 +288,26 @@ class Database extends Adapter
         $exists = $this->connection->fetchOne(
             "SELECT COUNT(*) FROM {$this->resources} WHERE name = ?",
             null,
-            [$resource->getName()]
+            [
+                $resource->getName(),
+            ]
         );
 
         if (!$exists[0]) {
             $this->connection->execute(
                 "INSERT INTO {$this->resources} VALUES (?, ?)",
-                [$resource->getName(), $resource->getDescription()]
+                [
+                    $resource->getName(),
+                    $resource->getDescription(),
+                ]
             );
         }
 
         if ($accessList) {
-            return $this->addResourceAccess($resource->getName(), $accessList);
+            return $this->addResourceAccess(
+                $resource->getName(),
+                $accessList
+            );
         }
 
         return true;
@@ -266,7 +324,9 @@ class Database extends Adapter
     public function addResourceAccess($resourceName, $accessList)
     {
         if (!$this->isResource($resourceName)) {
-            throw new Exception("Resource '{$resourceName}' does not exist in ACL");
+            throw new Exception(
+                "Resource '{$resourceName}' does not exist in ACL"
+            );
         }
 
         $sql = "SELECT COUNT(*) FROM {$this->resourcesAccesses} WHERE resources_name = ? AND access_name = ?";
@@ -276,11 +336,22 @@ class Database extends Adapter
         }
 
         foreach ($accessList as $accessName) {
-            $exists = $this->connection->fetchOne($sql, null, [$resourceName, $accessName]);
+            $exists = $this->connection->fetchOne(
+                $sql,
+                null,
+                [
+                    $resourceName,
+                    $accessName,
+                ]
+            );
+
             if (!$exists[0]) {
                 $this->connection->execute(
                     'INSERT INTO ' . $this->resourcesAccesses . ' VALUES (?, ?)',
-                    [$resourceName, $accessName]
+                    [
+                        $resourceName,
+                        $accessName,
+                    ]
                 );
             }
         }
@@ -296,10 +367,19 @@ class Database extends Adapter
     public function getResources()
     {
         $resources = [];
-        $sql       = "SELECT * FROM {$this->resources}";
 
-        foreach ($this->connection->fetchAll($sql, Db::FETCH_ASSOC) as $row) {
-            $resources[] = new Resource($row['name'], $row['description']);
+        $sql = "SELECT * FROM {$this->resources}";
+
+        $rows = $this->connection->fetchAll(
+            $sql,
+            Db::FETCH_ASSOC
+        );
+
+        foreach ($rows as $row) {
+            $resources[] = new Resource(
+                $row['name'],
+                $row['description']
+            );
         }
 
         return $resources;
@@ -315,8 +395,16 @@ class Database extends Adapter
         $roles = [];
         $sql   = "SELECT * FROM {$this->roles}";
 
-        foreach ($this->connection->fetchAll($sql, Db::FETCH_ASSOC) as $row) {
-            $roles[] = new Role($row['name'], $row['description']);
+        $rows = $this->connection->fetchAll(
+            $sql,
+            Db::FETCH_ASSOC
+        );
+
+        foreach ($rows as $row) {
+            $roles[] = new Role(
+                $row['name'],
+                $row['description']
+            );
         }
 
         return $roles;
@@ -402,29 +490,42 @@ class Database extends Adapter
      */
     public function isAllowed($role, $resource, $access, array $parameters = null)
     {
-        $sql = implode(' ', [
-            "SELECT " . $this->connection->escapeIdentifier('allowed') . " FROM {$this->accessList} AS a",
-            // role_name in:
-            'WHERE roles_name IN (',
-                // given 'role'-parameter
-                'SELECT ? ',
-                // inherited role_names
-                "UNION SELECT roles_inherit FROM {$this->rolesInherits} WHERE roles_name = ?",
-                // or 'any'
-                "UNION SELECT '*'",
-            ')',
-            // resources_name should be given one or 'any'
-            "AND resources_name IN (?, '*')",
-            // access_name should be given one or 'any'
-            "AND access_name IN (?, '*')",
-            // order be the sum of bools for 'literals' before 'any'
-            "ORDER BY ".$this->connection->escapeIdentifier('allowed')." DESC",
-            // get only one...
-            'LIMIT 1'
-        ]);
+        $sql = implode(
+            ' ',
+            [
+                "SELECT " . $this->connection->escapeIdentifier('allowed') . " FROM {$this->accessList} AS a",
+                // role_name in:
+                'WHERE roles_name IN (',
+                    // given 'role'-parameter
+                    'SELECT ? ',
+                    // inherited role_names
+                    "UNION SELECT roles_inherit FROM {$this->rolesInherits} WHERE roles_name = ?",
+                    // or 'any'
+                    "UNION SELECT '*'",
+                ')',
+                // resources_name should be given one or 'any'
+                "AND resources_name IN (?, '*')",
+                // access_name should be given one or 'any'
+                "AND access_name IN (?, '*')",
+                // order be the sum of bools for 'literals' before 'any'
+                "ORDER BY " . $this->connection->escapeIdentifier('allowed') . " DESC",
+                // get only one...
+                'LIMIT 1',
+            ]
+        );
 
         // fetch one entry...
-        $allowed = $this->connection->fetchOne($sql, Db::FETCH_NUM, [$role, $role, $resource, $access]);
+        $allowed = $this->connection->fetchOne(
+            $sql,
+            Db::FETCH_NUM,
+            [
+                $role,
+                $role,
+                $resource,
+                $access,
+            ]
+        );
+
         if (is_array($allowed)) {
             return (bool) $allowed[0];
         }
@@ -432,7 +533,6 @@ class Database extends Adapter
         /**
          * Return the default access action
          */
-
         return $this->_defaultAccess;
     }
 
@@ -475,7 +575,16 @@ class Database extends Adapter
          */
         if ($resourceName !== '*' && $accessName !== '*') {
             $sql = "SELECT COUNT(*) FROM {$this->resourcesAccesses} WHERE resources_name = ? AND access_name = ?";
-            $exists = $this->connection->fetchOne($sql, null, [$resourceName, $accessName]);
+
+            $exists = $this->connection->fetchOne(
+                $sql,
+                null,
+                [
+                    $resourceName,
+                    $accessName,
+                ]
+            );
+
             if (!$exists[0]) {
                 throw new Exception(
                     "Access '{$accessName}' does not exist in resource '{$resourceName}' in ACL"
@@ -488,14 +597,36 @@ class Database extends Adapter
          */
         $sql = "SELECT COUNT(*) FROM {$this->accessList} "
             . " WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
-        $exists = $this->connection->fetchOne($sql, null, [$roleName, $resourceName, $accessName]);
+
+        $exists = $this->connection->fetchOne(
+            $sql,
+            null,
+            [
+                $roleName,
+                $resourceName,
+                $accessName,
+            ]
+        );
+
         if (!$exists[0]) {
             $sql = "INSERT INTO {$this->accessList} VALUES (?, ?, ?, ?)";
-            $params = [$roleName, $resourceName, $accessName, $action];
+
+            $params = [
+                $roleName,
+                $resourceName,
+                $accessName,
+                $action,
+            ];
         } else {
             $sql = "UPDATE {$this->accessList} SET allowed = ? " .
                 "WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
-            $params = [$action, $roleName, $resourceName, $accessName];
+
+            $params = [
+                $action,
+                $roleName,
+                $resourceName,
+                $accessName,
+            ];
         }
 
         $this->connection->execute($sql, $params);
@@ -505,10 +636,29 @@ class Database extends Adapter
          */
         $sql = "SELECT COUNT(*) FROM {$this->accessList} " .
             "WHERE roles_name = ? AND resources_name = ? AND access_name = ?";
-        $exists = $this->connection->fetchOne($sql, null, [$roleName, $resourceName, '*']);
+
+        $exists = $this->connection->fetchOne(
+            $sql,
+            null,
+            [
+                $roleName,
+                $resourceName,
+                '*',
+            ]
+        );
+
         if (!$exists[0]) {
             $sql = "INSERT INTO {$this->accessList} VALUES (?, ?, ?, ?)";
-            $this->connection->execute($sql, [$roleName, $resourceName, '*', $this->_defaultAccess]);
+
+            $this->connection->execute(
+                $sql,
+                [
+                    $roleName,
+                    $resourceName,
+                    '*',
+                    $this->_defaultAccess,
+                ]
+            );
         }
 
         return true;
@@ -526,7 +676,9 @@ class Database extends Adapter
     protected function allowOrDeny($roleName, $resourceName, $access, $action)
     {
         if (!$this->isRole($roleName)) {
-            throw new Exception("Role '{$roleName}' does not exist in the list");
+            throw new Exception(
+                "Role '{$roleName}' does not exist in the list"
+            );
         }
 
         if (!is_array($access)) {
@@ -534,7 +686,12 @@ class Database extends Adapter
         }
 
         foreach ($access as $accessName) {
-            $this->insertOrUpdateAccess($roleName, $resourceName, $accessName, $action);
+            $this->insertOrUpdateAccess(
+                $roleName,
+                $resourceName,
+                $accessName,
+                $action
+            );
         }
     }
 }

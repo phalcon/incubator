@@ -66,10 +66,15 @@ class Memory
         $defaultAction = $this->config->get('defaultAction');
 
         if (!is_int($defaultAction) && !ctype_digit($defaultAction)) {
-            throw new Exception('Key "defaultAction" must exist and must be of numeric value.');
+            throw new Exception(
+                'Key "defaultAction" must exist and must be of numeric value.'
+            );
         }
 
-        $this->acl->setDefaultAction((int) $defaultAction);
+        $this->acl->setDefaultAction(
+            (int) $defaultAction
+        );
+
         $this->addResources();
         $this->addRoles();
 
@@ -85,15 +90,19 @@ class Memory
     protected function addResources()
     {
         if (!(array)$this->config->get('resource')) {
-            throw new Exception('Key "resource" must exist and must be traversable.');
+            throw new Exception(
+                'Key "resource" must exist and must be traversable.'
+            );
         }
 
         // resources
         foreach ($this->config->get('resource') as $name => $resource) {
             $actions = (array) $resource->get('actions');
+
             if (!$actions) {
                 $actions = null;
             }
+
             $this->acl->addResource(
                 $this->makeResource($name, $resource->description),
                 $actions
@@ -111,13 +120,20 @@ class Memory
      */
     protected function addRoles()
     {
-        if (!(array)$this->config->get('role')) {
-            throw new Exception('Key "role" must exist and must be traversable.');
+        if (!(array) $this->config->get('role')) {
+            throw new Exception(
+                'Key "role" must exist and must be traversable.'
+            );
         }
 
         foreach ($this->config->get('role') as $role => $rules) {
-            $this->roles[$role] = $this->makeRole($role, $rules->get('description'));
+            $this->roles[$role] = $this->makeRole(
+                $role,
+                $rules->get('description')
+            );
+
             $this->addRole($role, $rules);
+
             $this->addAccessRulesToRole($role, $rules);
         }
 
@@ -143,13 +159,17 @@ class Memory
             }
 
             foreach ($rules as $controller => $actionRules) {
-                $actions = $this->castAction($actionRules->get('actions'));
+                $actions = $this->castAction(
+                    $actionRules->get('actions')
+                );
 
                 if (!in_array($method, ['allow', 'deny'])) {
-                    throw new Exception(sprintf(
-                        'Wrong access method given. Expected "allow" or "deny" but "%s" was set.',
-                        $method
-                    ));
+                    throw new Exception(
+                        sprintf(
+                            'Wrong access method given. Expected "allow" or "deny" but "%s" was set.',
+                            $method
+                        )
+                    );
                 }
 
                 $this->acl->{$method}($role, $controller, $actions);
@@ -199,16 +219,24 @@ class Memory
         if ($rules->get('inherit')) {
             // role exists?
             if (!array_key_exists($rules->inherit, $this->roles)) {
-                throw new Exception(sprintf(
-                    'Role "%s" cannot inherit non-existent role "%s".
-                     Either such role does not exist or it is set to be inherited before it is actually defined.',
-                    $role,
-                    $rules->inherit
-                ));
+                throw new Exception(
+                    sprintf(
+                        'Role "%s" cannot inherit non-existent role "%s".
+                         Either such role does not exist or it is set to be inherited before it is actually defined.',
+                        $role,
+                        $rules->inherit
+                    )
+                );
             }
-            $this->acl->addRole($this->roles[$role], $this->roles[$rules->inherit]);
+
+            $this->acl->addRole(
+                $this->roles[$role],
+                $this->roles[$rules->inherit]
+            );
         } else {
-            $this->acl->addRole($this->roles[$role]);
+            $this->acl->addRole(
+                $this->roles[$role]
+            );
         }
 
         return $this;
