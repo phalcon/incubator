@@ -104,7 +104,11 @@ class Aerospike extends Base
         parent::__construct($options);
 
         $this->aerospike = new BackendAerospike(
-            new FrontendData(['lifetime' => $this->options['lifetime']]),
+            new FrontendData(
+                [
+                    'lifetime' => $this->options['lifetime'],
+                ]
+            ),
             [
                 'hosts'      => $this->options['hosts'],
                 'namespace'  => $this->namespace,
