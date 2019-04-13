@@ -112,10 +112,18 @@ class Apc extends AbstractAdapter
         $prefixedKey = $this->getPrefixedIdentifier($key);
 
         if (function_exists('apcu_store')) {
-            return apcu_store($prefixedKey, $data, $this->lifetime);
+            return apcu_store(
+                $prefixedKey,
+                $data,
+                $this->lifetime
+            );
         }
 
-        return apc_store($prefixedKey, $data, $this->lifetime);
+        return apc_store(
+            $prefixedKey,
+            $data,
+            $this->lifetime
+        );
     }
 
     /**
@@ -135,15 +143,23 @@ class Apc extends AbstractAdapter
         $prefixPattern = '#^_PHAN' . preg_quote("{$this->prefix}", '#') . '#';
 
         if (class_exists('\APCuIterator')) {
-            foreach (new \APCuIterator($prefixPattern) as $item) {
-                apcu_delete($item['key']);
+            $iterator = new \APCuIterator($prefixPattern);
+
+            foreach ($iterator as $item) {
+                apcu_delete(
+                    $item['key']
+                );
             }
 
             return true;
         }
 
-        foreach (new \APCIterator('user', $prefixPattern) as $item) {
-            apc_delete($item['key']);
+        $iterator = new \APCIterator('user', $prefixPattern);
+
+        foreach ($iterator as $item) {
+            apc_delete(
+                $item['key']
+            );
         }
 
         return true;
