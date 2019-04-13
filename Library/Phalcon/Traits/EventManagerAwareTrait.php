@@ -54,10 +54,12 @@ trait EventManagerAwareTrait
      */
     public function getEventsManager()
     {
+        $di = Di::getDefault();
+
         if (!empty($this->eventsManager)) {
             $manager =  $this->eventsManager;
-        } elseif (Di::getDefault()->has('eventsManager')) {
-            $manager = Di::getDefault()->get('eventsManager');
+        } elseif ($di->has('eventsManager')) {
+            $manager = $di->get('eventsManager');
         }
 
         if (isset($manager) && $manager instanceof EventsManager) {

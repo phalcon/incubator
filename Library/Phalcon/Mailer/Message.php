@@ -82,6 +82,7 @@ class Message
     public function from($email, $name = null)
     {
         $email = $this->normalizeEmail($email);
+
         $this->getMessage()->setFrom($email, $name);
 
         return $this;
@@ -118,6 +119,7 @@ class Message
     public function replyTo($email, $name = null)
     {
         $email = $this->normalizeEmail($email);
+
         $this->getMessage()->setReplyTo($email, $name);
 
         return $this;
@@ -154,6 +156,7 @@ class Message
     public function to($email, $name = null)
     {
         $email = $this->normalizeEmail($email);
+
         $this->getMessage()->setTo($email, $name);
 
         return $this;
@@ -190,6 +193,7 @@ class Message
     public function cc($email, $name = null)
     {
         $email = $this->normalizeEmail($email);
+
         $this->getMessage()->setCc($email, $name);
 
         return $this;
@@ -226,6 +230,7 @@ class Message
     public function bcc($email, $name = null)
     {
         $email = $this->normalizeEmail($email);
+
         $this->getMessage()->setBcc($email, $name);
 
         return $this;
@@ -258,6 +263,7 @@ class Message
     public function sender($email, $name = null)
     {
         $email = $this->normalizeEmail($email);
+
         $this->getMessage()->setSender($email, $name);
 
         return $this;
@@ -435,6 +441,7 @@ class Message
     public function setReadReceiptTo($email)
     {
         $email = $this->normalizeEmail($email);
+
         $this->getMessage()->setReadReceiptTo($email);
 
         return $this;
@@ -536,6 +543,7 @@ class Message
     public function attachment($file, array $options = [])
     {
         $attachment = $this->createAttachmentViaPath($file);
+
         return $this->prepareAttachment($attachment, $options);
     }
 
@@ -554,6 +562,7 @@ class Message
     public function attachmentData($data, $name, array $options = [])
     {
         $attachment = $this->createAttachmentViaData($data, $name);
+
         return $this->prepareAttachment($attachment, $options);
     }
 
@@ -567,6 +576,7 @@ class Message
     public function embed($file)
     {
         $embed = $this->createEmbedViaPath($file);
+
         return $this->getMessage()->embed($embed);
     }
 
@@ -582,6 +592,7 @@ class Message
     public function embedData($data, $name, $contentType = null)
     {
         $embed = $this->createEmbedViaData($data, $name, $contentType);
+
         return $this->getMessage()->embed($embed);
     }
 
@@ -644,10 +655,20 @@ class Message
 
         $this->failedRecipients = [];
 
-        $count = $this->getManager()->getSwift()->send($this->getMessage(), $this->failedRecipients);
+        $count = $this->getManager()->getSwift()->send(
+            $this->getMessage(),
+            $this->failedRecipients
+        );
 
         if ($eventManager) {
-            $eventManager->fire('mailer:afterSend', $this, [$count, $this->failedRecipients]);
+            $eventManager->fire(
+                'mailer:afterSend',
+                $this,
+                [
+                    $count,
+                    $this->failedRecipients,
+                ]
+            );
         }
 
         return $count;
@@ -676,7 +697,13 @@ class Message
         $eventManager = $this->getManager()->getEventsManager();
 
         if ($eventManager) {
-            $result = $eventManager->fire('mailer:beforeAttachFile', $this, [$attachment]);
+            $result = $eventManager->fire(
+                'mailer:beforeAttachFile',
+                $this,
+                [
+                    $attachment,
+                ]
+            );
         } else {
             $result = true;
         }
@@ -685,7 +712,13 @@ class Message
             $this->getMessage()->attach($attachment);
 
             if ($eventManager) {
-                $eventManager->fire('mailer:afterAttachFile', $this, [$attachment]);
+                $eventManager->fire(
+                    'mailer:afterAttachFile',
+                    $this,
+                    [
+                        $attachment,
+                    ]
+                );
             }
         }
 
@@ -704,7 +737,12 @@ class Message
     protected function createAttachmentViaPath($file)
     {
         /** @var $byteStream \Swift_ByteStream_FileByteStream */
-        $byteStream = $this->getManager()->getDI()->get('\Swift_ByteStream_FileByteStream', [$file]);
+        $byteStream = $this->getManager()->getDI()->get(
+            '\Swift_ByteStream_FileByteStream',
+            [
+                $file,
+            ]
+        );
 
         /** @var $image \Swift_Attachment */
         $attachment = $this->getManager()->getDI()->get('\Swift_Attachment')
@@ -725,7 +763,13 @@ class Message
      */
     protected function createAttachmentViaData($data, $name)
     {
-        return $this->getManager()->getDI()->get('\Swift_Attachment', [$data, $name]);
+        return $this->getManager()->getDI()->get(
+            '\Swift_Attachment',
+            [
+                $data,
+                $name,
+            ]
+        );
     }
 
     /**
@@ -740,7 +784,12 @@ class Message
     protected function createEmbedViaPath($file)
     {
         /** @var $byteStream \Swift_ByteStream_FileByteStream */
-        $byteStream = $this->getManager()->getDI()->get('\Swift_ByteStream_FileByteStream', [$file]);
+        $byteStream = $this->getManager()->getDI()->get(
+            '\Swift_ByteStream_FileByteStream',
+            [
+                $file,
+            ]
+        );
 
         /** @var $image \Swift_Image */
         $image = $this->getManager()->getDI()->get('\Swift_Image')
@@ -761,7 +810,13 @@ class Message
      */
     protected function createEmbedViaData($data, $name = null)
     {
-        return $this->getManager()->getDI()->get('\Swift_Image', [$data, $name]);
+        return $this->getManager()->getDI()->get(
+            '\Swift_Image',
+            [
+                $data,
+                $name,
+            ]
+        );
     }
 
     /**
@@ -781,6 +836,7 @@ class Message
                     $emails[$k] = $this->getManager()->normalizeEmail($v);
                 } else {
                     $k = $this->getManager()->normalizeEmail($k);
+
                     $emails[$k] = $v;
                 }
             }

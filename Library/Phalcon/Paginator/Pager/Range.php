@@ -50,7 +50,10 @@ abstract class Range
     public function __construct(Pager $pager, $chunkLength)
     {
         $this->pager = $pager;
-        $this->chunkLength = abs(intval($chunkLength));
+
+        $this->chunkLength = abs(
+            intval($chunkLength)
+        );
 
         if ($this->chunkLength == 0) {
             $this->chunkLength = 1;

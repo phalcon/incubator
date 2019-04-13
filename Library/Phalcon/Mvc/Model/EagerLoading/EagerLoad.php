@@ -131,10 +131,16 @@ final class EagerLoad
 
                 unset($relIrValues, $row);
 
-                $builder->inWhere("[{$relReferencedField}]", array_keys($bindValues));
+                $builder->inWhere(
+                    "[{$relReferencedField}]",
+                    array_keys($bindValues)
+                );
             }
         } else {
-            $builder->inWhere("[{$relReferencedField}]", $bindValues);
+            $builder->inWhere(
+                "[{$relReferencedField}]",
+                $bindValues
+            );
         }
 
         if ($this->constraints) {

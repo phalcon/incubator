@@ -11,18 +11,18 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
     /**
     * @var array
     */
-    private $locales = array();
-    
+    private $locales = [];
+
     /**
     * @var string
     */
     private $locale = null;
-    
+
     /**
     * @var string
     */
-    private $indexes = array();
-    
+    private $indexes = [];
+
     /**
     * Load translates from file
     *
@@ -38,13 +38,16 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
     {
         // @codingStandardsIgnoreEnd
         $fileHandler = fopen($file, "rb");
-        
+
         if (gettype($fileHandler) !== "resource") {
-            throw new Exception("Error opening translation file '" . $file . "'");
+            throw new Exception(
+                "Error opening translation file '" . $file . "'"
+            );
         }
         
         $line = 0;
-        $locales = array();
+        $locales = [];
+
         while ($data = fgetcsv($fileHandler, $length, $delimiter, $enclosure)) {
             if ($line++ == 0) {
                 // first csv line
@@ -56,8 +59,10 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
             } else {
                 // the first row is the translation index (label)
                 $index = array_shift($data);
+
                 // store this index internally
                 $this->indexes[] = $index;
+
                 // the first element is removed as well, so the pos is according to the first line
                 foreach ($data as $pos => $translation) {
                     $this->_translate[$this->locales[$pos]][$index] = $translation;
@@ -71,6 +76,7 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
     /**
      * Sets locale information, according to one from the header row of the source csv
      * Set it to false for enabling the "no translation mode"
+     *
      * <code>
      * // Set locale to Dutch
      * $adapter->setLocale('nl_NL');
@@ -79,11 +85,14 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
     public function setLocale($locale)
     {
         if ($locale !== false && !array_key_exists($locale, $this->_translate)) {
-            throw new Exception("The locale '{$locale}' is not available in the data source.");
+            throw new Exception(
+                "The locale '{$locale}' is not available in the data source."
+            );
+
             return false;
-        } else {
-            return $this->locale = $locale;
         }
+
+        return $this->locale = $locale;
     }
     
     /**
@@ -113,7 +122,11 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
         if (is_null($this->locale)) {
             throw new Exception('The locale must have been defined.');
         }
-        return in_array($index, $this->getIndexes());
+
+        return in_array(
+            $index,
+            $this->getIndexes()
+        );
     }
     
     /**

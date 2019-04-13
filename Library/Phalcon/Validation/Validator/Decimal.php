@@ -42,12 +42,15 @@ class Decimal extends Validator
     {
         $value = $validation->getValue($attribute);
         $field = $this->getOption('label');
+
         if (empty($field)) {
             $validation->getLabel($attribute);
         }
 
         if (false === $this->hasOption('places')) {
-            throw new ValidationException('A number of decimal places must be set');
+            throw new ValidationException(
+                'A number of decimal places must be set'
+            );
         }
 
         if ($this->hasOption('digits')) {
@@ -62,10 +65,12 @@ class Decimal extends Validator
             $decimal = $this->getOption('point');
         } else {
             // Get the decimal point for the current locale
-            list($decimal) = array_values(localeconv());
+            list($decimal) = array_values(
+                localeconv()
+            );
         }
 
-        $result = (boolean) preg_match(
+        $result = (bool) preg_match(
             sprintf(
                 '#^[+-]?[0-9]%s%s[0-9]{%d}$#',
                 $digits,
@@ -77,13 +82,23 @@ class Decimal extends Validator
 
         if (!$result) {
             $message = $this->getOption('message');
-            $replacePairs = [':field' => $field];
+
+            $replacePairs = [
+                ':field' => $field,
+            ];
 
             if (empty($message)) {
                 $message = ':field must contain valid decimal value';
             }
 
-            $validation->appendMessage(new Message(strtr($message, $replacePairs), $attribute, 'Decimal'));
+            $validation->appendMessage(
+                new Message(
+                    strtr($message, $replacePairs),
+                    $attribute,
+                    'Decimal'
+                )
+            );
+
             return false;
         }
 

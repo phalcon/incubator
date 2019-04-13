@@ -46,6 +46,7 @@ class Handler
                 ini_set('display_errors', 0);
                 error_reporting(0);
                 break;
+
             case Application::ENV_TEST:
             case Application::ENV_DEVELOPMENT:
                 ini_set('display_errors', 1);
@@ -53,41 +54,53 @@ class Handler
                 break;
         }
 
-        set_error_handler(function ($errno, $errstr, $errfile, $errline) {
-            if (!($errno & error_reporting())) {
-                return;
+        set_error_handler(
+            function ($errno, $errstr, $errfile, $errline) {
+                if (!($errno & error_reporting())) {
+                    return;
+                }
+
+                $options = [
+                    'type'    => $errno,
+                    'message' => $errstr,
+                    'file'    => $errfile,
+                    'line'    => $errline,
+                    'isError' => true,
+                ];
+
+                static::handle(
+                    new Error($options)
+                );
             }
+        );
 
-            $options = [
-                'type'    => $errno,
-                'message' => $errstr,
-                'file'    => $errfile,
-                'line'    => $errline,
-                'isError' => true,
-            ];
+        set_exception_handler(
+            function ($e) {
+                /** @var \Exception|\Error $e */
+                $options = [
+                    'type'        => $e->getCode(),
+                    'message'     => $e->getMessage(),
+                    'file'        => $e->getFile(),
+                    'line'        => $e->getLine(),
+                    'isException' => true,
+                    'exception'   => $e,
+                ];
 
-            static::handle(new Error($options));
-        });
-
-        set_exception_handler(function ($e) {
-            /** @var \Exception|\Error $e */
-            $options = [
-                'type'        => $e->getCode(),
-                'message'     => $e->getMessage(),
-                'file'        => $e->getFile(),
-                'line'        => $e->getLine(),
-                'isException' => true,
-                'exception'   => $e,
-            ];
-
-            static::handle(new Error($options));
-        });
-
-        register_shutdown_function(function () {
-            if (!is_null($options = error_get_last())) {
-                static::handle(new Error($options));
+                static::handle(
+                    new Error($options)
+                );
             }
-        });
+        );
+
+        register_shutdown_function(
+            function () {
+                if (!is_null($options = error_get_last())) {
+                    static::handle(
+                        new Error($options)
+                    );
+                }
+            }
+        );
     }
 
     /**
@@ -99,11 +112,15 @@ class Handler
     {
         $di = Di::getDefault();
 
-        $type = static::getErrorType($error->type());
+        $type = static::getErrorType(
+            $error->type()
+        );
+
         $message = "$type: {$error->message()} in {$error->file()} on line {$error->line()}";
 
         if (!$di instanceof DiInterface) {
             echo $message;
+
             return;
         }
 
@@ -143,7 +160,12 @@ class Handler
             }
         }
 
-        $logger->log(static::getLogType($error->type()), $message);
+        $logger->log(
+            static::getLogType(
+                $error->type()
+            ),
+            $message
+        );
 
         switch ($error->type()) {
             case E_WARNING:
@@ -157,6 +179,7 @@ class Handler
             case E_USER_DEPRECATED:
             case E_ALL:
                 break;
+
             case 0:
             case E_ERROR:
             case E_PARSE:
@@ -179,6 +202,7 @@ class Handler
                     $view->finish();
 
                     $response->setContent($view->getContent())->send();
+
                     return;
                 } else {
                     echo $message;
@@ -197,34 +221,49 @@ class Handler
         switch ($code) {
             case 0:
                 return 'Uncaught exception';
+
             case E_ERROR:
                 return 'E_ERROR';
+
             case E_WARNING:
                 return 'E_WARNING';
+
             case E_PARSE:
                 return 'E_PARSE';
+
             case E_NOTICE:
                 return 'E_NOTICE';
+
             case E_CORE_ERROR:
                 return 'E_CORE_ERROR';
+
             case E_CORE_WARNING:
                 return 'E_CORE_WARNING';
+
             case E_COMPILE_ERROR:
                 return 'E_COMPILE_ERROR';
+
             case E_COMPILE_WARNING:
                 return 'E_COMPILE_WARNING';
+
             case E_USER_ERROR:
                 return 'E_USER_ERROR';
+
             case E_USER_WARNING:
                 return 'E_USER_WARNING';
+
             case E_USER_NOTICE:
                 return 'E_USER_NOTICE';
+
             case E_STRICT:
                 return 'E_STRICT';
+
             case E_RECOVERABLE_ERROR:
                 return 'E_RECOVERABLE_ERROR';
+
             case E_DEPRECATED:
                 return 'E_DEPRECATED';
+
             case E_USER_DEPRECATED:
                 return 'E_USER_DEPRECATED';
         }
@@ -248,14 +287,17 @@ class Handler
             case E_USER_ERROR:
             case E_PARSE:
                 return Logger::ERROR;
+
             case E_WARNING:
             case E_USER_WARNING:
             case E_CORE_WARNING:
             case E_COMPILE_WARNING:
                 return Logger::WARNING;
+
             case E_NOTICE:
             case E_USER_NOTICE:
                 return Logger::NOTICE;
+
             case E_STRICT:
             case E_DEPRECATED:
             case E_USER_DEPRECATED:

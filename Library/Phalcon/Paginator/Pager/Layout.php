@@ -127,7 +127,7 @@ class Layout
         if (($oldMask = trim($oldMask)) != 'page_number') {
             $this->maskReplacements[$oldMask] = [
                 'newMask' => $newMask,
-                'asValue' => ($asValue === false) ? false : true
+                'asValue' => ($asValue !== false)
             ];
         }
     }
@@ -140,8 +140,9 @@ class Layout
     public function removeMaskReplacement($oldMask)
     {
         if (isset($this->maskReplacements[$oldMask])) {
-            $this->maskReplacements[$oldMask] = null;
-            unset($this->maskReplacements[$oldMask]);
+            unset(
+                $this->maskReplacements[$oldMask]
+            );
         }
     }
 
@@ -216,12 +217,16 @@ class Layout
 
         // If given page is the current active one
         if ($options['page_number'] == $this->pager->getCurrentPage()) {
-            $str = $this->parseMaskReplacements($this->selectedTemplate);
+            $str = $this->parseMaskReplacements(
+                $this->selectedTemplate
+            );
         }
 
         // Possible attempt where Selected == Template
         if ($str == '') {
-            $str = $this->parseMaskReplacements($this->template);
+            $str = $this->parseMaskReplacements(
+                $this->template
+            );
         }
 
         return $str;
