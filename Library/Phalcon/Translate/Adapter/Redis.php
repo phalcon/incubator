@@ -123,7 +123,10 @@ class Redis extends Adapter implements AdapterInterface
 
         $this->cache[$key][$index] = $message;
 
-        return $this->redis->set($key, serialize($this->cache[$key]));
+        return $this->redis->set(
+            $key,
+            serialize($this->cache[$key])
+        );
     }
 
     /**

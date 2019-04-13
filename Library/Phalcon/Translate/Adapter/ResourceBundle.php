@@ -55,7 +55,12 @@ class ResourceBundle extends Adapter implements AdapterInterface
         }
 
         $this->options = $options;
-        $this->bundle  = new \ResourceBundle($this->options['locale'], $this->options['bundle'], $this->fallback);
+
+        $this->bundle = new \ResourceBundle(
+            $this->options['locale'],
+            $this->options['bundle'],
+            $this->fallback
+        );
         
         parent::__construct($options);
     }
@@ -86,7 +91,10 @@ class ResourceBundle extends Adapter implements AdapterInterface
             return $index;
         }
 
-        return $this->replacePlaceholders($this->get($index, $this->bundle), $placeholders);
+        return $this->replacePlaceholders(
+            $this->get($index, $this->bundle),
+            $placeholders
+        );
     }
 
     /**

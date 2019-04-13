@@ -43,13 +43,16 @@ class ArrayUtils
     public function iteratorToArray($iterator, $recursive = true)
     {
         if (!is_array($iterator) && !$iterator instanceof Traversable) {
-            throw new InvalidArgumentException(__METHOD__ . ' must be either an array or Traversable');
+            throw new InvalidArgumentException(
+                __METHOD__ . ' must be either an array or Traversable'
+            );
         }
 
         if (!$recursive) {
             if (is_array($iterator)) {
                 return $iterator;
             }
+
             return iterator_to_array($iterator);
         }
 
@@ -58,21 +61,17 @@ class ArrayUtils
         }
 
         $array = [];
+
         foreach ($iterator as $key => $value) {
             if (is_scalar($value)) {
                 $array[$key] = $value;
-                continue;
-            }
-            if ($value instanceof Traversable) {
+            } elseif ($value instanceof Traversable) {
                 $array[$key] = $this->iteratorToArray($value, $recursive);
-                continue;
-            }
-            if (is_array($value)) {
+            } elseif (is_array($value)) {
                 $array[$key] = $this->iteratorToArray($value, $recursive);
-                continue;
+            } else {
+                $array[$key] = $value;
             }
-
-            $array[$key] = $value;
         }
 
         return $array;

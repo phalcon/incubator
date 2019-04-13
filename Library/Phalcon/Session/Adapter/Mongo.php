@@ -87,13 +87,18 @@ class Mongo extends Adapter implements AdapterInterface
      */
     public function read($sessionId)
     {
-        $sessionData = $this->getCollection()->findOne(['_id' => $sessionId]);
+        $sessionData = $this->getCollection()->findOne(
+            [
+                '_id' => $sessionId,
+            ]
+        );
 
         if (!isset($sessionData['data'])) {
             return '';
         }
 
         $this->data = $sessionData['data'];
+
         return $sessionData['data'];
     }
 
@@ -113,7 +118,7 @@ class Mongo extends Adapter implements AdapterInterface
         $sessionData = [
             '_id'      => $sessionId,
             'modified' => new \MongoDate(),
-            'data'     => $sessionData
+            'data'     => $sessionData,
         ];
 
         $this->getCollection()->save($sessionData);
@@ -132,7 +137,11 @@ class Mongo extends Adapter implements AdapterInterface
 
         $this->data = null;
 
-        $remove = $this->getCollection()->remove(['_id' => $sessionId]);
+        $remove = $this->getCollection()->remove(
+            [
+                '_id' => $sessionId,
+            ]
+        );
 
         return (bool) $remove['ok'];
     }
@@ -144,10 +153,23 @@ class Mongo extends Adapter implements AdapterInterface
     public function gc($maxLifetime)
     {
         $minAge = new \DateTime();
-        $minAge->sub(new \DateInterval('PT' . $maxLifetime . 'S'));
-        $minAgeMongo = new \MongoDate($minAge->getTimestamp());
 
-        $query = ['modified' => ['$lte' => $minAgeMongo]];
+        $minAge->sub(
+            new \DateInterval(
+                'PT' . $maxLifetime . 'S'
+            )
+        );
+
+        $minAgeMongo = new \MongoDate(
+            $minAge->getTimestamp()
+        );
+
+        $query = [
+            'modified' => [
+                '$lte' => $minAgeMongo,
+            ],
+        ];
+
         $remove = $this->getCollection()->remove($query);
 
         return (bool) $remove['ok'];

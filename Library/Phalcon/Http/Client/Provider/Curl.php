@@ -43,7 +43,10 @@ class Curl extends Request
 
         $this->handle = curl_init();
         if (!is_resource($this->handle)) {
-            throw new HttpException(curl_error($this->handle), 'curl');
+            throw new HttpException(
+                curl_error($this->handle),
+                'curl'
+            );
         }
 
         $this->initOptions();
@@ -72,18 +75,20 @@ class Curl extends Request
 
     private function initOptions()
     {
-        $this->setOptions([
-            CURLOPT_RETURNTRANSFER  => true,
-            CURLOPT_AUTOREFERER     => true,
-            CURLOPT_FOLLOWLOCATION  => true,
-            CURLOPT_MAXREDIRS       => 20,
-            CURLOPT_HEADER          => false,
-            CURLOPT_PROTOCOLS       => CURLPROTO_HTTP | CURLPROTO_HTTPS,
-            CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
-            CURLOPT_USERAGENT       => 'Phalcon HTTP/' . self::VERSION . ' (Curl)',
-            CURLOPT_CONNECTTIMEOUT  => 30,
-            CURLOPT_TIMEOUT         => 30,
-        ]);
+        $this->setOptions(
+            [
+                CURLOPT_RETURNTRANSFER  => true,
+                CURLOPT_AUTOREFERER     => true,
+                CURLOPT_FOLLOWLOCATION  => true,
+                CURLOPT_MAXREDIRS       => 20,
+                CURLOPT_HEADER          => false,
+                CURLOPT_PROTOCOLS       => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+                CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+                CURLOPT_USERAGENT       => 'Phalcon HTTP/' . self::VERSION . ' (Curl)',
+                CURLOPT_CONNECTTIMEOUT  => 30,
+                CURLOPT_TIMEOUT         => 30,
+            ]
+        );
     }
 
     /**
@@ -97,8 +102,11 @@ class Curl extends Request
     public function setOption($option, $value)
     {
         if ($this->isCurlOptString($option)) {
-            $option = constant(strtoupper($option));
+            $option = constant(
+                strtoupper($option)
+            );
         }
+
         return curl_setopt($this->handle, $option, $value);
     }
 
@@ -114,6 +122,7 @@ class Curl extends Request
         foreach ($options as $option => $value) {
             if ($this->isCurlOptString($option)) {
                 $options[constant(strtoupper($option))] = $value;
+
                 unset($options[$option]);
             }
         }
@@ -171,11 +180,14 @@ class Curl extends Request
             $header = $customHeader;
         } else {
             $header = [];
+
             if (count($this->header) > 0) {
                 $header = $this->header->build();
             }
         }
+
         $header[] = 'Expect:';
+
         $header = array_unique($header, SORT_STRING);
 
         $this->responseHeader = '';
@@ -190,10 +202,14 @@ class Curl extends Request
         $content = curl_exec($this->handle);
 
         if ($errno = curl_errno($this->handle)) {
-            throw new HttpException(curl_error($this->handle), $errno);
+            throw new HttpException(
+                curl_error($this->handle),
+                $errno
+            );
         }
 
         $response = new Response();
+
         $response->header->parse($this->responseHeader);
 
         $response->body = $content;
@@ -238,6 +254,7 @@ class Curl extends Request
         $classCurlFile = class_exists('\CURLFile')
             ? '\CURLFile'
             : null;
+
         foreach ($params as $value) {
             if ((is_string($value) && strpos($value, '@') === 0)
                 || ($classCurlFile && $value instanceof $classCurlFile)
@@ -245,6 +262,7 @@ class Curl extends Request
                 return false;
             }
         }
+
         return true;
     }
 
@@ -257,8 +275,17 @@ class Curl extends Request
      */
     public function setAuth($user, $pass, $auth = 'basic')
     {
-        $this->setOption(CURLOPT_HTTPAUTH, constant('CURLAUTH_'.strtoupper($auth)));
-        $this->setOption(CURLOPT_USERPWD, $user.":".$pass);
+        $this->setOption(
+            CURLOPT_HTTPAUTH,
+            constant(
+                'CURLAUTH_' . strtoupper($auth)
+            )
+        );
+
+        $this->setOption(
+            CURLOPT_USERPWD,
+            $user . ":" . $pass
+        );
     }
 
     /**
@@ -275,6 +302,7 @@ class Curl extends Request
         }
 
         $cookieList = [];
+
         foreach ($cookies as $cookieName => $cookieValue) {
             $cookie = urlencode($cookieName);
 
@@ -286,21 +314,28 @@ class Curl extends Request
             $cookieList[] = $cookie;
         }
 
-        $this->setOption(CURLOPT_COOKIE, implode(';', $cookieList));
+        $this->setOption(
+            CURLOPT_COOKIE,
+            implode(';', $cookieList)
+        );
     }
 
     public function setProxy($host, $port = 8080, $user = null, $pass = null)
     {
-        $this->setOptions([
-            CURLOPT_PROXY     => $host,
-            CURLOPT_PROXYPORT => $port
-        ]);
+        $this->setOptions(
+            [
+                CURLOPT_PROXY     => $host,
+                CURLOPT_PROXYPORT => $port,
+            ]
+        );
 
         if (!empty($user) && is_string($user)) {
             $pair = $user;
+
             if (!empty($pass) && is_string($pass)) {
                 $pair .= ':' . $pass;
             }
+
             $this->setOption(CURLOPT_PROXYUSERPWD, $pair);
         }
     }
@@ -313,11 +348,13 @@ class Curl extends Request
             $uri->extendQuery($params);
         }
 
-        $this->setOptions([
-            CURLOPT_URL           => $uri->build(),
-            CURLOPT_HTTPGET       => true,
-            CURLOPT_CUSTOMREQUEST => Method::GET,
-        ]);
+        $this->setOptions(
+            [
+                CURLOPT_URL           => $uri->build(),
+                CURLOPT_HTTPGET       => true,
+                CURLOPT_CUSTOMREQUEST => Method::GET,
+            ]
+        );
 
         return $this->send($customHeader, $fullResponse);
     }
@@ -330,12 +367,14 @@ class Curl extends Request
             $uri->extendQuery($params);
         }
 
-        $this->setOptions([
-            CURLOPT_URL           => $uri->build(),
-            CURLOPT_HTTPGET       => true,
-            CURLOPT_CUSTOMREQUEST => Method::HEAD,
-            CURLOPT_NOBODY        => true,
-        ]);
+        $this->setOptions(
+            [
+                CURLOPT_URL           => $uri->build(),
+                CURLOPT_HTTPGET       => true,
+                CURLOPT_CUSTOMREQUEST => Method::HEAD,
+                CURLOPT_NOBODY        => true,
+            ]
+        );
 
         return $this->send($customHeader, $fullResponse);
     }
@@ -348,22 +387,26 @@ class Curl extends Request
             $uri->extendQuery($params);
         }
 
-        $this->setOptions([
-            CURLOPT_URL           => $uri->build(),
-            CURLOPT_HTTPGET       => true,
-            CURLOPT_CUSTOMREQUEST => Method::DELETE,
-        ]);
+        $this->setOptions(
+            [
+                CURLOPT_URL           => $uri->build(),
+                CURLOPT_HTTPGET       => true,
+                CURLOPT_CUSTOMREQUEST => Method::DELETE,
+            ]
+        );
 
         return $this->send($customHeader, $fullResponse);
     }
 
     public function post($uri, $params = [], $useEncoding = true, $customHeader = [], $fullResponse = false)
     {
-        $this->setOptions([
-            CURLOPT_URL           => $this->resolveUri($uri),
-            CURLOPT_POST          => true,
-            CURLOPT_CUSTOMREQUEST => Method::POST,
-        ]);
+        $this->setOptions(
+            [
+                CURLOPT_URL           => $this->resolveUri($uri),
+                CURLOPT_POST          => true,
+                CURLOPT_CUSTOMREQUEST => Method::POST,
+            ]
+        );
 
         $this->initPostFields($params, $useEncoding);
 
@@ -372,11 +415,13 @@ class Curl extends Request
 
     public function put($uri, $params = [], $useEncoding = true, $customHeader = [], $fullResponse = false)
     {
-        $this->setOptions([
-            CURLOPT_URL           => $this->resolveUri($uri),
-            CURLOPT_POST          => true,
-            CURLOPT_CUSTOMREQUEST => Method::PUT,
-        ]);
+        $this->setOptions(
+            [
+                CURLOPT_URL           => $this->resolveUri($uri),
+                CURLOPT_POST          => true,
+                CURLOPT_CUSTOMREQUEST => Method::PUT,
+            ]
+        );
 
         $this->initPostFields($params, $useEncoding);
 
@@ -385,11 +430,13 @@ class Curl extends Request
 
     public function patch($uri, $params = [], $useEncoding = true, $customHeader = [], $fullResponse = false)
     {
-        $this->setOptions([
-            CURLOPT_URL           => $this->resolveUri($uri),
-            CURLOPT_POST          => true,
-            CURLOPT_CUSTOMREQUEST => Method::PATCH,
-        ]);
+        $this->setOptions(
+            [
+                CURLOPT_URL           => $this->resolveUri($uri),
+                CURLOPT_POST          => true,
+                CURLOPT_CUSTOMREQUEST => Method::PATCH,
+            ]
+        );
 
         $this->initPostFields($params, $useEncoding);
 

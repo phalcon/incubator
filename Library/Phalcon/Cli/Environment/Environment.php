@@ -39,7 +39,13 @@ class Environment implements EnvironmentInterface
      */
     public function isWindows()
     {
-        return 'WIN' === strtoupper(substr(PHP_OS, 0, 3));
+        return 'WIN' === strtoupper(
+            substr(
+                PHP_OS,
+                0,
+                3
+            )
+        );
     }
 
     /**
@@ -108,18 +114,31 @@ class Environment implements EnvironmentInterface
             if ($this->isAnsicon() && preg_match('#(?:\d+x\d+)\s+\((\d+)x(\d+)\)#', trim(getenv('ANSICON')), $match)) {
                 // ANSICON maintains an environment variable which holds the current screen size
                 // e.g. ANSICON=200x9999 (200x100)
-                return [(int) $match[1], (int) $match[2]];
+                return [
+                    (int) $match[1],
+                    (int) $match[2],
+                ];
             }
 
             if (1 === preg_match('/^(\d+)x(\d+)$/', $this->getModeCon(), $match)) {
-                return [(int) $match[1], (int) $match[2]];
+                return
+                [
+                    (int) $match[1],
+                    (int) $match[2],
+                ];
             }
         } elseif (1 === preg_match('/^(\d+)x(\d+)$/', $this->getSttySize(), $match)) {
-            return [(int) $match[1], (int) $match[2]];
+            return [
+                (int) $match[1],
+                (int) $match[2],
+            ];
         }
 
         // fallback mode
-        return [EnvironmentInterface::WIDTH, EnvironmentInterface::HEIGHT];
+        return [
+            EnvironmentInterface::WIDTH,
+            EnvironmentInterface::HEIGHT,
+        ];
     }
 
     /**
@@ -132,7 +151,10 @@ class Environment implements EnvironmentInterface
     public function setDimensions($width, $height)
     {
         if ((is_int($width) || ctype_digit($width)) && (is_int($height) || ctype_digit($height))) {
-            $this->dimensions = [$width, $height];
+            $this->dimensions = [
+                $width,
+                $height,
+            ];
         }
 
         return $this;
@@ -153,7 +175,7 @@ class Environment implements EnvironmentInterface
 
         $descriptorspec = [
             1 => ['pipe', 'w'], // stdout
-            2 => ['pipe', 'w']  // stderr
+            2 => ['pipe', 'w'], // stderr
         ];
 
         $process = proc_open(
@@ -162,11 +184,16 @@ class Environment implements EnvironmentInterface
             $pipes,
             null,
             null,
-            ['suppress_errors' => true] // suppressing any error output
+            [
+                // suppressing any error output
+                'suppress_errors' => true,
+            ]
         );
 
         if (is_resource($process)) {
-            $info = stream_get_contents($pipes[1]);
+            $info = stream_get_contents(
+                $pipes[1]
+            );
 
             fclose($pipes[1]);
             fclose($pipes[2]);
@@ -174,7 +201,7 @@ class Environment implements EnvironmentInterface
             proc_close($process);
 
             if (1 === preg_match('/--------+\r?\n.+?(\d+)\r?\n.+?(\d+)\r?\n/', $info, $match)) {
-                return $match[2].'x'.$match[1];
+                return $match[2] . 'x' . $match[1];
             }
         }
 
@@ -194,7 +221,7 @@ class Environment implements EnvironmentInterface
 
         $descriptorspec = [
             1 => ['pipe', 'w'], // stdout
-            2 => ['pipe', 'w']  // stderr
+            2 => ['pipe', 'w'], // stderr
         ];
 
         $process = proc_open(
@@ -203,11 +230,16 @@ class Environment implements EnvironmentInterface
             $pipes,
             null,
             null,
-            ['suppress_errors' => true] // suppressing any error output
+            [
+                // suppressing any error output
+                'suppress_errors' => true,
+            ]
         );
 
         if (is_resource($process)) {
-            $info = stream_get_contents($pipes[1]);
+            $info = stream_get_contents(
+                $pipes[1]
+            );
 
             fclose($pipes[1]);
             fclose($pipes[2]);
@@ -215,7 +247,7 @@ class Environment implements EnvironmentInterface
             proc_close($process);
 
             if (1 === preg_match('#(\d+) (\d+)#', $info, $match)) {
-                return $match[2].'x'.$match[1];
+                return $match[2] . 'x' . $match[1];
             }
         }
 

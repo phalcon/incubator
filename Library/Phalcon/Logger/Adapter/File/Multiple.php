@@ -60,18 +60,22 @@ class Multiple extends FileLogger implements AdapterInterface
     {
         $path = rtrim($path, ' ' . \DIRECTORY_SEPARATOR);
         if (!file_exists($path) || !is_dir($path)) {
-            throw new LoggerException('Directory ' . $path . ' does not exist!');
+            throw new LoggerException(
+                'Directory ' . $path . ' does not exist!'
+            );
         }
 
         if (!is_writable($path)) {
-            throw new LoggerException('Directory ' . $path . ' is not writable!');
+            throw new LoggerException(
+                'Directory ' . $path . ' is not writable!'
+            );
         }
 
         $this->path = $path;
 
         $defaults = [
             'extension' => 'log',
-            'prefix' => ''
+            'prefix'    => '',
         ];
 
         $this->options = array_merge($defaults, $options);
@@ -112,7 +116,9 @@ class Multiple extends FileLogger implements AdapterInterface
      */
     public function begin()
     {
-        throw new LoggerException('Multiple file logger transactions are not implemented yet!');
+        throw new LoggerException(
+            'Multiple file logger transactions are not implemented yet!'
+        );
     }
 
     /**
@@ -122,7 +128,9 @@ class Multiple extends FileLogger implements AdapterInterface
      */
     public function commit()
     {
-        throw new LoggerException('Multiple file logger transactions are not implemented yet!');
+        throw new LoggerException(
+            'Multiple file logger transactions are not implemented yet!'
+        );
     }
 
     /**
@@ -132,7 +140,9 @@ class Multiple extends FileLogger implements AdapterInterface
      */
     public function rollback()
     {
-        throw new LoggerException('Multiple file logger transactions are not implemented yet!');
+        throw new LoggerException(
+            'Multiple file logger transactions are not implemented yet!'
+        );
     }
 
     /**
@@ -153,17 +163,21 @@ class Multiple extends FileLogger implements AdapterInterface
             case Logger::CRITICAL:
                 // emergence, critical
                 return 'critical';
+
             case Logger::ALERT:
             case Logger::ERROR:
                 // error, alert
                 return 'error';
+
             case Logger::WARNING:
                 // warning
                 return 'warning';
+
             case Logger::NOTICE:
             case Logger::INFO:
                 // info, notice
                 return 'info';
+
             case Logger::DEBUG:
             case Logger::CUSTOM:
             case Logger::SPECIAL:

@@ -64,7 +64,14 @@ class Audit extends Model implements AuditInterface
      */
     public function initialize()
     {
-        $this->hasMany('id', AuditDetail::class, 'audit_id', ['alias' => 'details']);
+        $this->hasMany(
+            'id',
+            AuditDetail::class,
+            'audit_id',
+            [
+                'alias' => 'details',
+            ]
+        );
     }
 
     /**
@@ -80,7 +87,10 @@ class Audit extends Model implements AuditInterface
             $this->user_name = $session->get('userName');
         } else {
             $userCallback = $this->userCallback;
-            $this->user_name = $userCallback($this->getDI());
+
+            $this->user_name = $userCallback(
+                $this->getDI()
+            );
         }
 
         //The model who performed the action
@@ -95,14 +105,20 @@ class Audit extends Model implements AuditInterface
         //Current time
         $this->created_at = date('Y-m-d H:i:s');
 
-        $primaryKeys = $this->getModelsMetaData()->getPrimaryKeyAttributes($this->model);
+        $primaryKeys = $this->getModelsMetaData()->getPrimaryKeyAttributes(
+            $this->model
+        );
 
-        $columnMap = $this->getModelsMetaData()->getColumnMap($this->model);
+        $columnMap = $this->getModelsMetaData()->getColumnMap(
+            $this->model
+        );
 
         $primaryValues = [];
         if (!empty($columnMap)) {
             foreach ($primaryKeys as $primaryKey) {
-                $primaryValues[] = $this->model->readAttribute($columnMap[$primaryKey]);
+                $primaryValues[] = $this->model->readAttribute(
+                    $columnMap[$primaryKey]
+                );
             }
         } else {
             foreach ($primaryKeys as $primaryKey) {
@@ -115,12 +131,18 @@ class Audit extends Model implements AuditInterface
 
     public function afterSave()
     {
-        $this->primary_key = json_decode($this->primary_key, true);
+        $this->primary_key = json_decode(
+            $this->primary_key,
+            true
+        );
     }
 
     public function afterFetch()
     {
-        $this->primary_key = json_decode($this->primary_key, true);
+        $this->primary_key = json_decode(
+            $this->primary_key,
+            true
+        );
     }
 
     /**

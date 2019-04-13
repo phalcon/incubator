@@ -25,17 +25,34 @@ class ArrayInclusionIn extends Validator implements ValidatorInterface
         $allowEmpty = $this->getOption('allowEmpty');
 
         if ((empty($array) && !$allowEmpty) || empty($domain) || !is_array($array)) {
-            $validation->appendMessage(new Message('Invalid argument supplied', $attribute));
+            $validation->appendMessage(
+                new Message(
+                    'Invalid argument supplied',
+                    $attribute
+                )
+            );
+
             return false;
         }
 
         foreach ($array as $item) {
             if (!in_array($item, $domain)) {
-                $message = $this->getOption('message', 'Values provided not exist in domain');
-                $validation->appendMessage(new Message($message, $attribute));
+                $message = $this->getOption(
+                    'message',
+                    'Values provided not exist in domain'
+                );
+
+                $validation->appendMessage(
+                    new Message(
+                        $message,
+                        $attribute
+                    )
+                );
+
                 return false;
             }
         }
+
         return true;
     }
 }

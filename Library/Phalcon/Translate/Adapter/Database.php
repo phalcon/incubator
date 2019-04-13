@@ -88,13 +88,16 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      */
     public function query($translateKey, $placeholders = null)
     {
-        $options     = $this->options;
-        $translation = $options['db']->fetchOne(
+        $translation = $this->options['db']->fetchOne(
             $this->stmtSelect,
             Db::FETCH_ASSOC,
-            ['language' => $options['language'], 'key_name' => $translateKey]
+            [
+                'language' => $this->options['language'],
+                'key_name' => $translateKey,
+            ]
         );
-        $value       = empty($translation['value']) ? $translateKey : $translation['value'];
+
+        $value = empty($translation['value']) ? $translateKey : $translation['value'];
 
         return $this->replacePlaceholders($value, $placeholders);
     }
@@ -121,12 +124,13 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      */
     public function exists($translateKey)
     {
-        $options = $this->options;
-
-        $result = $options['db']->fetchOne(
+        $result = $this->options['db']->fetchOne(
             $this->stmtExists,
             Db::FETCH_ASSOC,
-            ['language' => $options['language'], 'key_name' => $translateKey]
+            [
+                'language' => $this->options['language'],
+                'key_name' => $translateKey,
+            ]
         );
 
         return !empty($result['count']);
@@ -141,10 +145,13 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      */
     public function add($translateKey, $message)
     {
-        $options = $this->options;
-        $data = ['language' => $options['language'], 'key_name' => $translateKey, 'value' => $message];
+        $data = [
+            'language' => $this->options['language'],
+            'key_name' => $translateKey,
+            'value'    => $message,
+        ];
 
-        return $options['db']->insert($options['table'], array_values($data), array_keys($data));
+        return $this->options['db']->insert($this->options['table'], array_values($data), array_keys($data));
     }
 
     /**
@@ -158,10 +165,18 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
     {
         $options = $this->options;
 
-        return $options['db']->update($options['table'], ['value'], [$message], [
-            'conditions' => 'key_name = ? AND language = ?',
-            'bind' => ['key' => $translateKey, 'lang' => $options['language']]
-        ]);
+        return $options['db']->update(
+            $options['table'],
+            ['value'],
+            [$message],
+            [
+                'conditions' => 'key_name = ? AND language = ?',
+                'bind' => [
+                    'key'  => $translateKey,
+                    'lang' => $options['language'],
+                ]
+            ]
+        );
     }
 
     /**
@@ -177,7 +192,10 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
         return $options['db']->delete(
             $options['table'],
             'key_name = :key AND language = :lang',
-            ['key' => $translateKey, 'lang' => $options['language']]
+            [
+                'key'  => $translateKey,
+                'lang' => $options['language'],
+            ]
         );
     }
 

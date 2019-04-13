@@ -97,7 +97,13 @@ class Mongo extends Adapter implements AdapterInterface, \ArrayAccess
         /** @var CollectionInterface $collection */
         $collection = $this->collection;
 
-        return $collection::findFirst([['key' => $translateKey]]);
+        return $collection::findFirst(
+            [
+                [
+                    'key' => $translateKey,
+                ],
+            ]
+        );
     }
 
     /**
@@ -147,6 +153,7 @@ class Mongo extends Adapter implements AdapterInterface, \ArrayAccess
     public function offsetSet($translateKey, $message)
     {
         $translations = $this->getTranslations($translateKey);
+
         $translations->{$this->language} = $message;
 
         return $translations->save();
@@ -172,6 +179,7 @@ class Mongo extends Adapter implements AdapterInterface, \ArrayAccess
     public function offsetUnset($translateKey)
     {
         $translations = $this->getTranslations($translateKey);
+
         unset($translations->{$this->language});
 
         return $translations->save();
