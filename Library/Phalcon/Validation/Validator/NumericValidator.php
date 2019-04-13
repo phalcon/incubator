@@ -20,14 +20,14 @@ class NumericValidator extends Validator implements ValidatorInterface
      *
      * @return boolean
      */
-    public function validate(\Phalcon\Validation $validator, $attribute)
+    public function validate(Validation $validator, $attribute)
     {
         $value = $validator->getValue($attribute);
 
-        $allowFloat = (bool)$this->getOption('allowFloat');
+        $allowFloat = (bool) $this->getOption('allowFloat');
         $allowFloat = $allowFloat ? '.,' : '';
 
-        $allowSign = (bool)$this->getOption('allowSign');
+        $allowSign = (bool) $this->getOption('allowSign');
         $allowSign = $allowSign ? '[-+]?' : '';
         $allowSignMessage = $allowSign ? 'signed' : 'unsigned';
 
@@ -38,7 +38,13 @@ class NumericValidator extends Validator implements ValidatorInterface
                     'The value must be a valid ' . $allowSignMessage . ' floating number'
                 );
 
-                $validator->appendMessage(new Message($message, $attribute, 'Numeric'));
+                $validator->appendMessage(
+                    new Message(
+                        $message,
+                        $attribute,
+                        'Numeric'
+                    )
+                );
             }
         } else {
             if (!preg_match('/^(' . $allowSign . '[0-9])+$/u', $value)) {
@@ -47,7 +53,13 @@ class NumericValidator extends Validator implements ValidatorInterface
                     'The value must be a valid ' . $allowSignMessage . ' integer number'
                 );
 
-                $validator->appendMessage(new Message($message, $attribute, 'Numeric'));
+                $validator->appendMessage(
+                    new Message(
+                        $message,
+                        $attribute,
+                        'Numeric'
+                    )
+                );
             }
         }
 
@@ -58,7 +70,13 @@ class NumericValidator extends Validator implements ValidatorInterface
                     'The value must be at least ' . $min
                 );
 
-                $validator->appendMessage(new Message($messageMin, $attribute, 'Numeric'));
+                $validator->appendMessage(
+                    new Message(
+                        $messageMin,
+                        $attribute,
+                        'Numeric'
+                    )
+                );
             }
         }
 
@@ -69,7 +87,13 @@ class NumericValidator extends Validator implements ValidatorInterface
                     'The value must be lower than ' . $max
                 );
 
-                $validator->appendMessage(new Message($messageMax, $attribute, 'Numeric'));
+                $validator->appendMessage(
+                    new Message(
+                        $messageMax,
+                        $attribute,
+                        'Numeric'
+                    )
+                );
             }
         }
 

@@ -33,20 +33,25 @@ use Phalcon\Cache\Backend\Aerospike as AerospikeDb;
  * <code>
  * use Phalcon\Session\Adapter\Aerospike as AerospikeSession;
  *
- * $session = new AerospikeSession([
- *     'hosts' => [
- *         ['addr' => '127.0.0.1', 'port' => 3000]
- *     ],
- *     'persistent' => true,
- *     'namespace'  => 'test',
- *     'prefix'     => 'session_',
- *     'lifetime'   => 8600,
- *     'uniqueId'   => '3Hf90KdjQ18',
- *     'options'    => [
- *         \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
- *         \Aerospike::OPT_WRITE_TIMEOUT   => 1500
+ * $session = new AerospikeSession(
+ *     [
+ *         'hosts' => [
+ *             [
+ *                 'addr' => '127.0.0.1',
+ *                 'port' => 3000,
+ *             ],
+ *         ],
+ *         'persistent' => true,
+ *         'namespace'  => 'test',
+ *         'prefix'     => 'session_',
+ *         'lifetime'   => 8600,
+ *         'uniqueId'   => '3Hf90KdjQ18',
+ *         'options'    => [
+ *             \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
+ *             \Aerospike::OPT_WRITE_TIMEOUT   => 1500,
+ *         ],
  *     ]
- * ]);
+ * );
  *
  * $session->start();
  *
@@ -59,30 +64,35 @@ class Aerospike extends Adapter implements AdapterInterface
 {
     /**
      * The Aerospike DB
+     *
      * @var AerospikeDb
      */
     protected $db;
 
     /**
      * Default Aerospike namespace
+     *
      * @var string
      */
     protected $namespace = 'test';
 
     /**
      * The Aerospike Set for store sessions
+     *
      * @var string
      */
     protected $set = 'session';
 
     /**
      * Key prefix
+     *
      * @var string
      */
     protected $prefix = '';
 
     /**
      * Session lifetime
+     *
      * @var int
      */
     protected $lifetime = 8600;
@@ -103,6 +113,7 @@ class Aerospike extends Adapter implements AdapterInterface
 
         if (isset($options['namespace'])) {
             $this->namespace = $options['namespace'];
+
             unset($options['namespace']);
         }
 
@@ -112,6 +123,7 @@ class Aerospike extends Adapter implements AdapterInterface
 
         if (isset($options['set']) && !empty($options['set'])) {
             $this->set = $options['set'];
+
             unset($options['set']);
         }
 
@@ -130,7 +142,11 @@ class Aerospike extends Adapter implements AdapterInterface
         }
 
         $this->db = new AerospikeDb(
-            new FrontendData(['lifetime' => $this->lifetime]),
+            new FrontendData(
+                [
+                    'lifetime' => $this->lifetime,
+                ]
+            ),
             [
                 'hosts'      => $options['hosts'],
                 'namespace'  => $this->namespace,
@@ -138,7 +154,6 @@ class Aerospike extends Adapter implements AdapterInterface
                 'prefix'     => $this->prefix,
                 'persistent' => $persistent,
                 'options'    => $opts,
-
             ]
         );
 

@@ -86,8 +86,19 @@ class Udplogger extends LoggerAdapter implements AdapterInterface
 
         $this->options = $options;
 
-        register_shutdown_function([$this, 'commit']);
-        register_shutdown_function([$this, 'close']);
+        register_shutdown_function(
+            [
+                $this,
+                'commit',
+            ]
+        );
+
+        register_shutdown_function(
+            [
+                $this,
+                'close',
+            ]
+        );
     }
 
     /**
@@ -141,6 +152,7 @@ class Udplogger extends LoggerAdapter implements AdapterInterface
     public function begin()
     {
         $this->commit();
+
         $this->isTransaction = true;
     }
 
@@ -156,6 +168,7 @@ class Udplogger extends LoggerAdapter implements AdapterInterface
         }
 
         $this->send();
+
         $this->isTransaction = false;
     }
 
@@ -174,7 +187,14 @@ class Udplogger extends LoggerAdapter implements AdapterInterface
             $this->socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
         }
 
-        socket_sendto($this->socket, $message, strlen($message), 0, $this->options['url'], $this->options['port']);
+        socket_sendto(
+            $this->socket,
+            $message,
+            strlen($message),
+            0,
+            $this->options['url'],
+            $this->options['port']
+        );
 
         $this->logs = [];
     }

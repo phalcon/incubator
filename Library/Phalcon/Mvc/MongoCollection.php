@@ -56,6 +56,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
 
         if ($this->_modelsManager->isUsingImplicitObjectIds($this)) {
             $this->_id = new ObjectID($id);
+
             return;
         }
 
@@ -120,15 +121,27 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         switch ($this->_operationMade) {
             case self::OP_CREATE:
                 $status = $collection->insertOne($data);
+
                 break;
 
             case self::OP_UPDATE:
                 unset($data['_id']);
-                $status = $collection->updateOne(['_id' => $this->_id], ['$set' => $data]);
+
+                $status = $collection->updateOne(
+                    [
+                        '_id' => $this->_id,
+                    ],
+                    [
+                        '$set' => $data,
+                    ]
+                );
+
                 break;
 
             default:
-                throw new Exception('Invalid operation requested for ' . __METHOD__);
+                throw new Exception(
+                    'Invalid operation requested for ' . __METHOD__
+                );
         }
 
         $success = false;
@@ -138,6 +151,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
 
             if (false === $exists) {
                 $this->_id = $status->getInsertedId();
+
                 $this->_dirtyState = self::DIRTY_STATE_PERSISTENT;
             }
         }
@@ -159,6 +173,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
     {
         if (!is_object($id)) {
             $classname = get_called_class();
+
             $collection = new $classname();
 
             /** @var MongoCollection $collection */
@@ -171,7 +186,13 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
             $mongoId = $id;
         }
 
-        return static::findFirst([["_id" => $mongoId]]);
+        return static::findFirst(
+            [
+                [
+                    "_id" => $mongoId,
+                ]
+            ]
+        );
     }
 
     /**
@@ -189,7 +210,12 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
 
         $connection = $collection->getConnection();
 
-        return static::_getResultset($parameters, $collection, $connection, true);
+        return static::_getResultset(
+            $parameters,
+            $collection,
+            $connection,
+            true
+        );
     }
 
     /**
@@ -212,6 +238,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
          */
         if (isset($params['class'])) {
             $classname = $params['class'];
+
             $base = new $classname();
 
             if (!$base instanceof CollectionInterface || $base instanceof Document) {
@@ -229,7 +256,9 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         }
 
         if ($base instanceof PhalconCollection) {
-            $base->setDirtyState(PhalconCollection::DIRTY_STATE_PERSISTENT);
+            $base->setDirtyState(
+                PhalconCollection::DIRTY_STATE_PERSISTENT
+            );
         }
 
         $source = $collection->getSource();
@@ -250,7 +279,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         $conditions = [];
 
         if (isset($params[0])||isset($params['conditions'])) {
-            $conditions = (isset($params[0]))?$params[0]:$params['conditions'];
+            $conditions = (isset($params[0])) ? $params[0] : $params['conditions'];
         }
 
         /**
@@ -268,7 +297,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         if (isset($params['limit'])) {
             $limit = $params['limit'];
 
-            $options['limit'] = (int)$limit;
+            $options['limit'] = (int) $limit;
 
             if ($unique) {
                 $options['limit'] = 1;
@@ -307,13 +336,20 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         $cursor = $mongoCollection->find($conditions, $options);
 
 
-        $cursor->setTypeMap(['root' => get_class($base), 'document' => 'array']);
+        $cursor->setTypeMap(
+            [
+                'root'     => get_class($base),
+                'document' => 'array',
+            ]
+        );
 
         if (true === $unique) {
             /**
              * Looking for only the first result.
              */
-            return current($cursor->toArray());
+            return current(
+                $cursor->toArray()
+            );
         }
 
         /**
@@ -345,7 +381,9 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
     public function delete()
     {
         if (!$id = $this->_id) {
-            throw new Exception("The document cannot be deleted because it doesn't exist");
+            throw new Exception(
+                "The document cannot be deleted because it doesn't exist"
+            );
         }
 
         $disableEvents = self::$_disableEvents;
@@ -389,12 +427,20 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         /**
          * Remove the instance
          */
-        $status = $collection->deleteOne(['_id' => $mongoId], ['w' => true]);
+        $status = $collection->deleteOne(
+            [
+                '_id' => $mongoId,
+            ],
+            [
+                'w' => true,
+            ]
+        );
 
         if ($status->isAcknowledged()) {
             $success = true;
 
             $this->fireEvent("afterDelete");
+
             $this->_dirtyState = self::DIRTY_STATE_DETACHED;
         }
 
@@ -486,7 +532,9 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
      */
     public static function summatory($field, $conditions = null, $finalize = null)
     {
-        throw new Exception('The summatory() method is not implemented in the new Mvc MongoCollection');
+        throw new Exception(
+            'The summatory() method is not implemented in the new Mvc MongoCollection'
+        );
     }
 
     /**
@@ -523,9 +571,16 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
          * We always use safe stores to get the success state
          * Save the document
          */
-        $result = $collection->insert($data, ['writeConcern' => new WriteConcern(1)]);
+        $result = $collection->insert(
+            $data,
+            [
+                'writeConcern' => new WriteConcern(1),
+            ]
+        );
+
         if ($result instanceof InsertOneResult && $result->getInsertedId()) {
             $success = true;
+
             $this->_dirtyState = self::DIRTY_STATE_PERSISTENT;
             $this->_id = $result->getInsertedId();
         }
@@ -543,8 +598,11 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
      */
     public function bsonUnserialize(array $data)
     {
-        $this->setDI(Di::getDefault());
-        $this->_modelsManager = Di::getDefault()->getShared('collectionManager');
+        $di = Di::getDefault();
+
+        $this->setDI($di);
+
+        $this->_modelsManager = $di->getShared('collectionManager');
 
         foreach ($data as $key => $val) {
             $this->{$key} = $val;

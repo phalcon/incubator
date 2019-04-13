@@ -31,9 +31,12 @@ class Uri
 
         if (is_string($uri)) {
             $this->parts = parse_url($uri);
+
             if (!empty($this->parts['query'])) {
                 $query = [];
+
                 parse_str($this->parts['query'], $query);
+
                 $this->parts['query'] = $query;
             }
 
@@ -85,8 +88,10 @@ class Uri
 
         if (!empty($parts['scheme'])) {
             $uri .= $parts['scheme'] . ':';
+
             if (!empty($parts['host'])) {
                 $uri .= '//';
+
                 if (!empty($parts['user'])) {
                     $uri .= $parts['user'];
 
@@ -96,6 +101,7 @@ class Uri
 
                     $uri .= '@';
                 }
+
                 $uri .= $parts['host'];
             }
         }
@@ -127,6 +133,7 @@ class Uri
     public function resolve($uri)
     {
         $newUri = new self($this);
+
         $newUri->extend($uri);
 
         return $newUri;
@@ -140,15 +147,27 @@ class Uri
 
         $this->parts = array_merge(
             $this->parts,
-            array_diff_key($uri->parts, array_flip(['query', 'path']))
+            array_diff_key(
+                $uri->parts,
+                array_flip(
+                    [
+                        'query',
+                        'path',
+                    ]
+                )
+            )
         );
 
         if (!empty($uri->parts['query'])) {
-            $this->extendQuery($uri->parts['query']);
+            $this->extendQuery(
+                $uri->parts['query']
+            );
         }
 
         if (!empty($uri->parts['path'])) {
-            $this->extendPath($uri->parts['path']);
+            $this->extendPath(
+                $uri->parts['path']
+            );
         }
 
         return $this;
@@ -158,6 +177,7 @@ class Uri
     {
         $query = empty($this->parts['query']) ? [] : $this->parts['query'];
         $params = empty($params) ? [] : $params;
+
         $this->parts['query'] = array_merge($query, $params);
 
         return $this;

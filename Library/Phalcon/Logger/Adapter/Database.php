@@ -66,7 +66,9 @@ class Database extends LoggerAdapter implements AdapterInterface
         }
 
         if (!$options['db'] instanceof DbAdapterInterface) {
-            throw new Exception("Parameter 'db' must be object and implement AdapterInterface");
+            throw new Exception(
+                "Parameter 'db' must be object and implement AdapterInterface"
+            );
         }
 
         if (!isset($options['table'])) {
@@ -122,8 +124,18 @@ class Database extends LoggerAdapter implements AdapterInterface
     {
         return $this->db->execute(
             'INSERT INTO ' . $this->options['table'] . ' VALUES (null, ?, ?, ?, ?)',
-            [$this->name, $type, $this->getFormatter()->format($message, $type, $time, $context), $time],
-            [Column::BIND_PARAM_STR, Column::BIND_PARAM_INT, Column::BIND_PARAM_STR, Column::BIND_PARAM_INT]
+            [
+                $this->name,
+                $type,
+                $this->getFormatter()->format($message, $type, $time, $context),
+                $time,
+            ],
+            [
+                Column::BIND_PARAM_STR,
+                Column::BIND_PARAM_INT,
+                Column::BIND_PARAM_STR,
+                Column::BIND_PARAM_INT,
+            ]
         );
     }
 

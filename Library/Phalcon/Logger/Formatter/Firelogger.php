@@ -109,17 +109,21 @@ class Firelogger extends Formatter implements FormatterInterface
             case Logger::CRITICAL:
                 // emergence, critical
                 return 'critical';
+
             case Logger::ALERT:
             case Logger::ERROR:
                 // error, alert
                 return 'error';
+
             case Logger::WARNING:
                 // warning
                 return 'warning';
+
             case Logger::NOTICE:
             case Logger::INFO:
                 // info, notice
                 return 'info';
+
             case Logger::DEBUG:
             case Logger::CUSTOM:
             case Logger::SPECIAL:
@@ -160,7 +164,7 @@ class Firelogger extends Formatter implements FormatterInterface
             'order'     => $order, // PHP is really fast, timestamp has insufficient resolution for log records ordering
             'time'      => gmdate('H:i:s', (int) $timestamp) . '.000',
             'template'  => $message,
-            'message'   => $message
+            'message'   => $message,
         ];
 
         if ($this->style) {
@@ -169,12 +173,16 @@ class Firelogger extends Formatter implements FormatterInterface
 
         if (isset($exception)) {
             // exception with backtrace
-            $traceInfo = $this->extractTrace($exception->getTrace());
+            $traceInfo = $this->extractTrace(
+                $exception->getTrace()
+            );
+
             $item['exc_info'] = [
                 $exception->getMessage(),
                 $exception->getFile(),
                 $traceInfo[0]
             ];
+
             $item['exc_frames'] = $traceInfo[1];
             $item['exc_text'] = get_class($exception);
             $item['template'] = $exception->getMessage();
@@ -191,11 +199,13 @@ class Firelogger extends Formatter implements FormatterInterface
 
             if (isset($trace)) {
                 $traceInfo = $this->extractTrace($trace);
+
                 $item['exc_info'] = [
                     '',
                     '',
                     $traceInfo[0]
                 ];
+
                 $item['exc_frames'] = $traceInfo[1];
             }
 
@@ -222,7 +232,11 @@ class Firelogger extends Formatter implements FormatterInterface
 
         if (is_string($var)) {
             // intentionally @
-            return @iconv('UTF-16', 'UTF-8//IGNORE', iconv($this->encoding, 'UTF-16//IGNORE', $var));
+            return @iconv(
+                'UTF-16',
+                'UTF-8//IGNORE',
+                iconv($this->encoding, 'UTF-16//IGNORE', $var)
+            );
         }
 
         if (is_array($var)) {
@@ -268,7 +282,10 @@ class Firelogger extends Formatter implements FormatterInterface
 
                 foreach ($arr as $k => &$v) {
                     if ($k[0] === "\x00") {
-                        $k = substr($k, strrpos($k, "\x00") + 1);
+                        $k = substr(
+                            $k,
+                            strrpos($k, "\x00") + 1
+                        );
                     }
 
                     $res[$this->pickle($k)] = $this->pickle($v, $level + 1);
@@ -299,6 +316,7 @@ class Firelogger extends Formatter implements FormatterInterface
     {
         $t = [];
         $f = [];
+
         foreach ($trace as $frame) {
             // prevent notices about invalid indices, wasn't able to google smart solution, PHP is dumb ass
             $frame += [
@@ -308,14 +326,14 @@ class Firelogger extends Formatter implements FormatterInterface
                 'type'     => null,
                 'function' => null,
                 'object'   => null,
-                'args'     => null
+                'args'     => null,
             ];
 
             $t[] = [
                 $frame['file'],
                 $frame['line'],
                 $frame['class'] . $frame['type'] . $frame['function'],
-                $frame['object']
+                $frame['object'],
             ];
 
             $f[] = $frame['args'];
@@ -352,6 +370,9 @@ class Firelogger extends Formatter implements FormatterInterface
         $file = $trace[0]['file'];
         $line = $trace[0]['line'];
 
-        return [$file, $line];
+        return [
+            $file,
+            $line,
+        ];
     }
 }

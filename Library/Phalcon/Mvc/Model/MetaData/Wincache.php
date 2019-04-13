@@ -37,7 +37,11 @@ class Wincache extends Base
     {
         if (null === $this->wincache) {
             $this->wincache = new CacheBackend(
-                new CacheFrontend(['lifetime' => $this->options['lifetime']]),
+                new CacheFrontend(
+                    [
+                        'lifetime' => $this->options['lifetime'],
+                    ]
+                ),
                 []
             );
         }

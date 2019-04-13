@@ -78,7 +78,7 @@ class Iban extends Validator
     protected $sepaCountries = [
         'AT', 'BE', 'BG', 'CY', 'CZ', 'DK', 'FO', 'GL', 'EE', 'FI', 'FR', 'DE',
         'GI', 'GR', 'HU', 'IS', 'IE', 'IT', 'LV', 'LI', 'LT', 'LU', 'MT', 'MC',
-        'NL', 'NO', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'CH', 'GB'
+        'NL', 'NO', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'CH', 'GB',
     ];
 
     /**
@@ -227,7 +227,12 @@ class Iban extends Validator
             $code = $this->prepareCode($attribute);
             $replacePairs = [":field"=> $label];
 
-            $message = $this->prepareMessage($validation, $attribute, "Iban", $messageCode);
+            $message = $this->prepareMessage(
+                $validation,
+                $attribute,
+                "Iban",
+                $messageCode
+            );
 
             $validation->appendMessage(
                 new Message(
@@ -237,6 +242,7 @@ class Iban extends Validator
                     $code
                 )
             );
+
             return false;
         }
 
@@ -272,11 +278,10 @@ class Iban extends Validator
         }
 
         $format = substr($value, 4) . substr($value, 0, 4);
+
         $format = str_replace(
-            ['A',  'B',  'C',  'D',  'E',  'F',  'G',  'H',  'I',  'J',  'K',  'L',  'M',
-                'N',  'O',  'P',  'Q',  'R',  'S',  'T',  'U',  'V',  'W',  'X',  'Y',  'Z'],
-            ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22',
-                '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35'],
+            range('A', 'Z'),
+            range(10, 35),
             $format
         );
 
