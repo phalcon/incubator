@@ -3,7 +3,7 @@
 namespace Phalcon\Validation\Validator;
 
 use Phalcon\Validation;
-use Phalcon\Validation\Message;
+use Phalcon\Messages\Message;
 use Phalcon\Validation\Validator;
 use Phalcon\Validation\Exception as ValidationException;
 

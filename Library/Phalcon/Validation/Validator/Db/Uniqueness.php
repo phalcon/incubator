@@ -20,7 +20,7 @@
 namespace Phalcon\Validation\Validator\Db;
 
 use Phalcon\Validation\Validator;
-use Phalcon\Validation\Message;
+use Phalcon\Messages\Message;
 use Phalcon\Db\Adapter\Pdo as DbConnection;
 use Phalcon\Validation\Exception as ValidationException;
 use Phalcon\DiInterface;

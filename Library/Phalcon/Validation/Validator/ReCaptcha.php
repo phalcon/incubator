@@ -29,7 +29,7 @@ namespace Phalcon\Validation\Validator;
 
 use Phalcon\Validation;
 use Phalcon\Http\Request;
-use Phalcon\Validation\Message;
+use Phalcon\Messages\Message;
 use Phalcon\Validation\Validator;
 
 /**
