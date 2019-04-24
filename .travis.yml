@@ -15,8 +15,8 @@ sudo: false
 dist: trusty
 
 php:
-  - 7.3
   - 7.2
+  - 7.3
 
 services:
   - redis-server
