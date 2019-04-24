@@ -19,7 +19,7 @@ class AlphaCompleteValidator extends Validator implements ValidatorInterface
      *
      * @return boolean
      */
-    public function validate(\Phalcon\Validation $validator, $attribute)
+    public function validate(\Phalcon\Validation $validator, $attribute): bool
     {
         $value = $validator->getValue($attribute);
 

@@ -53,7 +53,7 @@ class CardNumber extends Validator
      * @return bool
      * @throws Exception
      */
-    public function validate(Validation $validation, $attribute)
+    public function validate(Validation $validation, $attribute): bool
     {
         $value = preg_replace('/[^\d]/', '', $validation->getValue($attribute));
         $message = ($this->hasOption('message')) ? $this->getOption('message') : 'Credit card number is invalid';

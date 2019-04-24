@@ -38,7 +38,7 @@ class Decimal extends Validator
      * @return bool
      * @throws Exception
      */
-    public function validate(Validation $validation, $attribute)
+    public function validate(Validation $validation, $attribute): bool
     {
         $value = $validation->getValue($attribute);
         $field = $this->getOption('label');

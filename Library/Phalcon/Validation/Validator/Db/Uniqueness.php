@@ -116,7 +116,7 @@ class Uniqueness extends Validator
      * @param  string $attribute
      * @return boolean
      */
-    public function validate(Validation $validator, $attribute)
+    public function validate(Validation $validator, $attribute): bool
     {
         $table = $this->db->escapeIdentifier($this->getOption('table'));
         $column = $this->db->escapeIdentifier($this->getOption('column'));

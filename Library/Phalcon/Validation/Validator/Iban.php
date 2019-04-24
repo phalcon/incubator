@@ -219,7 +219,7 @@ class Iban extends Validator
      *
      * @return bool
      */
-    public function validate(Validation $validation, $attribute)
+    public function validate(Validation $validation, $attribute): bool
     {
         $messageCode = $this->getErrorMessageCode($validation, $attribute);
         if (!empty($messageCode)) {

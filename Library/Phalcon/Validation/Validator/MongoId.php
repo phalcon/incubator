@@ -38,7 +38,7 @@ class MongoId extends Validator
      * @return bool
      * @throws ValidationException
      */
-    public function validate(Validation $validation, $attribute)
+    public function validate(Validation $validation, $attribute): bool
     {
         if (!extension_loaded('mongo')) {
             throw new ValidationException('Mongo extension is not available');

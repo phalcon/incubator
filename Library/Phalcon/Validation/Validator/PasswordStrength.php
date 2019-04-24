@@ -46,7 +46,7 @@ class PasswordStrength extends Validation\Validator
      * @param   string $attribute - validated attribute
      * @return  bool
      */
-    public function validate(Validation $validation, $attribute)
+    public function validate(Validation $validation, $attribute): bool
     {
         $allowEmpty = $this->getOption('allowEmpty');
         $value = $validation->getValue($attribute);

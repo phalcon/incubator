@@ -47,7 +47,7 @@ class ConfirmationOf extends Validator
      * @return  bool
      * @throws  \Phalcon\Validation\Exception
      */
-    public function validate(Validation $validation, $attribute)
+    public function validate(Validation $validation, $attribute): bool
     {
         if (!$this->hasOption('origField')) {
             throw new ValidationException('Original field must be set');
