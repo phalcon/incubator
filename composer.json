@@ -34,6 +34,12 @@
         "ext-phalcon": "~4.0"
     },
     "require-dev": {
+        "ext-dom": "*",
+        "ext-json": "*",
+        "ext-libxml": "*",
+        "ext-mbstring": "*",
+        "ext-psr": "*",
+        "ext-xml": "*",
         "phpdocumentor/reflection-docblock": "2.0.4",
         "phpunit/phpunit": "^4.8",
         "squizlabs/php_codesniffer": "^2.9",
