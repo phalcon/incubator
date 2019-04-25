@@ -22,7 +22,7 @@ namespace Phalcon\Acl\Factory;
 use Phalcon\Config;
 use Phalcon\Acl\Adapter\Memory as MemoryAdapter;
 use Phalcon\Acl\Exception;
-use Phalcon\Acl\Resource;
+use Phalcon\Acl\Component;
 use Phalcon\Acl\Role;
 
 /**
@@ -70,7 +70,7 @@ class Memory
         }
 
         $this->acl->setDefaultAction((int) $defaultAction);
-        $this->addResources();
+        $this->addComponents();
         $this->addRoles();
 
         return $this->acl;
@@ -82,7 +82,7 @@ class Memory
      * @return $this
      * @throws Exception
      */
-    protected function addResources()
+    protected function addComponents()
     {
         if (!(array)$this->config->get('resource')) {
             throw new Exception('Key "resource" must exist and must be traversable.');
@@ -94,8 +94,8 @@ class Memory
             if (!$actions) {
                 $actions = null;
             }
-            $this->acl->addResource(
-                $this->makeResource($name, $resource->description),
+            $this->acl->addComponent(
+                $this->makeComponent($name, $resource->description),
                 $actions
             );
         }
@@ -217,14 +217,14 @@ class Memory
     /**
      * Creates acl resource.
      *
-     * @param string      $name        Resource name
-     * @param string|null $description Resource description [Optional]
+     * @param string      $name        Component name
+     * @param string|null $description Component description [Optional]
      *
-     * @return Resource
+     * @return Component
      */
-    protected function makeResource($name, $description = null)
+    protected function makeComponent($name, $description = null)
     {
-        return new Resource($name, $description);
+        return new Component($name, $description);
     }
 
     /**

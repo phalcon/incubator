@@ -24,7 +24,7 @@ use Phalcon\Db;
 use Phalcon\Db\AdapterInterface as DbAdapter;
 use Phalcon\Acl\Adapter;
 use Phalcon\Acl\Exception;
-use Phalcon\Acl\Resource;
+use Phalcon\Acl\Component;
 use Phalcon\Acl;
 use Phalcon\Acl\Role;
 use Phalcon\Acl\RoleInterface;
@@ -47,13 +47,13 @@ class Database extends Adapter
     protected $roles;
 
     /**
-     * Resources table
+     * Components table
      * @var string
      */
     protected $resources;
 
     /**
-     * Resources Accesses table
+     * Components Accesses table
      * @var string
      */
     protected $resourcesAccesses;
@@ -157,7 +157,7 @@ class Database extends Adapter
      * @param  string $roleToInherit
      * @throws \Phalcon\Acl\Exception
      */
-    public function addInherit($roleName, $roleToInherit)
+    public function addInherit($roleName, $roleToInherit): bool
     {
         $sql = "SELECT COUNT(*) FROM {$this->roles} WHERE name = ?";
         $exists = $this->connection->fetchOne($sql, null, [$roleName]);
@@ -202,7 +202,7 @@ class Database extends Adapter
      * @param  string  $resourceName
      * @return boolean
      */
-    public function isResource($resourceName)
+    public function isComponent($resourceName)
     {
         $exists = $this->connection->fetchOne(
             "SELECT COUNT(*) FROM {$this->resources} WHERE name = ?",
@@ -218,21 +218,21 @@ class Database extends Adapter
      * Example:
      * <code>
      * //Add a resource to the the list allowing access to an action
-     * $acl->addResource(new Phalcon\Acl\Resource('customers'), 'search');
-     * $acl->addResource('customers', 'search');
+     * $acl->addComponent(new Phalcon\Acl\Component('customers'), 'search');
+     * $acl->addComponent('customers', 'search');
      * //Add a resource  with an access list
-     * $acl->addResource(new Phalcon\Acl\Resource('customers'), ['create', 'search']);
-     * $acl->addResource('customers', ['create', 'search']);
+     * $acl->addComponent(new Phalcon\Acl\Component('customers'), ['create', 'search']);
+     * $acl->addComponent('customers', ['create', 'search']);
      * </code>
      *
-     * @param  \Phalcon\Acl\Resource|string $resource
+     * @param  \Phalcon\Acl\Component|string $resource
      * @param  array|string                 $accessList
      * @return boolean
      */
-    public function addResource($resource, $accessList = null)
+    public function addComponent($resource, $accessList = null)
     {
         if (!is_object($resource)) {
-            $resource = new Resource($resource);
+            $resource = new Component($resource);
         }
 
         $exists = $this->connection->fetchOne(
@@ -249,7 +249,7 @@ class Database extends Adapter
         }
 
         if ($accessList) {
-            return $this->addResourceAccess($resource->getName(), $accessList);
+            return $this->addComponentAccess($resource->getName(), $accessList);
         }
 
         return true;
@@ -263,10 +263,10 @@ class Database extends Adapter
      * @return boolean
      * @throws \Phalcon\Acl\Exception
      */
-    public function addResourceAccess($resourceName, $accessList)
+    public function addComponentAccess($resourceName, $accessList)
     {
-        if (!$this->isResource($resourceName)) {
-            throw new Exception("Resource '{$resourceName}' does not exist in ACL");
+        if (!$this->isComponent($resourceName)) {
+            throw new Exception("Component '{$resourceName}' does not exist in ACL");
         }
 
         $sql = "SELECT COUNT(*) FROM {$this->resourcesAccesses} WHERE resources_name = ? AND access_name = ?";
@@ -291,15 +291,15 @@ class Database extends Adapter
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Acl\Resource[]
+     * @return \Phalcon\Acl\Component[]
      */
-    public function getResources()
+    public function getComponents()
     {
         $resources = [];
         $sql       = "SELECT * FROM {$this->resources}";
 
         foreach ($this->connection->fetchAll($sql, Db::FETCH_ASSOC) as $row) {
-            $resources[] = new Resource($row['name'], $row['description']);
+            $resources[] = new Component($row['name'], $row['description']);
         }
 
         return $resources;
@@ -328,7 +328,7 @@ class Database extends Adapter
      * @param string       $resourceName
      * @param array|string $accessList
      */
-    public function dropResourceAccess($resourceName, $accessList)
+    public function dropComponentAccess($resourceName, $accessList)
     {
         throw new \BadMethodCallException('Not implemented yet.');
     }
@@ -400,7 +400,7 @@ class Database extends Adapter
      * @param array  $parameters
      * @return bool
      */
-    public function isAllowed($role, $resource, $access, array $parameters = null)
+    public function isAllowed($role, $resource, $access, array $parameters = null): bool
     {
         $sql = implode(' ', [
             "SELECT " . $this->connection->escapeIdentifier('allowed') . " FROM {$this->accessList} AS a",
@@ -442,7 +442,7 @@ class Database extends Adapter
      *
      * @return int
      */
-    public function getNoArgumentsDefaultAction()
+    public function getNoArgumentsDefaultAction(): int
     {
         return $this->noArgumentsDefaultAction;
     }

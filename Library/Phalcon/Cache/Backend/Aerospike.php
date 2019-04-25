@@ -151,7 +151,7 @@ class Aerospike extends Backend implements BackendInterface
      *
      * @throws Exception
      */
-    public function save($keyName = null, $content = null, $lifetime = null, $stopBuffer = true)
+    public function save($keyName = null, $content = null, $lifetime = null, $stopBuffer = true): bool
     {
         if ($keyName === null) {
             $prefixedKey = $this->_lastKey;

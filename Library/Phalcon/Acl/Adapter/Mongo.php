@@ -22,7 +22,7 @@ namespace Phalcon\Acl\Adapter;
 
 use Phalcon\Acl\Adapter;
 use Phalcon\Acl\Exception;
-use Phalcon\Acl\Resource;
+use Phalcon\Acl\Component;
 use Phalcon\Acl;
 use Phalcon\Acl\Role;
 use Phalcon\Acl\RoleInterface;
@@ -154,7 +154,7 @@ class Mongo extends Adapter
      * @param  string  $resourceName
      * @return boolean
      */
-    public function isResource($resourceName)
+    public function isComponent($resourceName)
     {
         return $this->getCollection('resources')->count(['name' => $resourceName]) > 0;
     }
@@ -165,21 +165,21 @@ class Mongo extends Adapter
      * Example:
      * <code>
      * //Add a resource to the the list allowing access to an action
-     * $acl->addResource(new Phalcon\Acl\Resource('customers'), 'search');
-     * $acl->addResource('customers', 'search');
+     * $acl->addComponent(new Phalcon\Acl\Component('customers'), 'search');
+     * $acl->addComponent('customers', 'search');
      * //Add a resource  with an access list
-     * $acl->addResource(new Phalcon\Acl\Resource('customers'), ['create', 'search']);
-     * $acl->addResource('customers', ['create', 'search']);
+     * $acl->addComponent(new Phalcon\Acl\Component('customers'), ['create', 'search']);
+     * $acl->addComponent('customers', ['create', 'search']);
      * </code>
      *
-     * @param  \Phalcon\Acl\Resource $resource
+     * @param  \Phalcon\Acl\Component $resource
      * @param  array|string          $accessList
      * @return boolean
      */
-    public function addResource($resource, $accessList = null)
+    public function addComponent($resource, $accessList = null)
     {
         if (!is_object($resource)) {
-            $resource = new Resource($resource);
+            $resource = new Component($resource);
         }
 
         $resources = $this->getCollection('resources');
@@ -193,7 +193,7 @@ class Mongo extends Adapter
         }
 
         if ($accessList) {
-            return $this->addResourceAccess($resource->getName(), $accessList);
+            return $this->addComponentAccess($resource->getName(), $accessList);
         }
 
         return true;
@@ -207,10 +207,10 @@ class Mongo extends Adapter
      * @return boolean
      * @throws \Phalcon\Acl\Exception
      */
-    public function addResourceAccess($resourceName, $accessList)
+    public function addComponentAccess($resourceName, $accessList)
     {
-        if (!$this->isResource($resourceName)) {
-            throw new Exception("Resource '" . $resourceName . "' does not exist in ACL");
+        if (!$this->isComponent($resourceName)) {
+            throw new Exception("Component '" . $resourceName . "' does not exist in ACL");
         }
 
         $resourcesAccesses = $this->getCollection('resourcesAccesses');
@@ -238,14 +238,14 @@ class Mongo extends Adapter
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Acl\Resource[]
+     * @return \Phalcon\Acl\Component[]
      */
-    public function getResources()
+    public function getComponents()
     {
         $resources = [];
 
         foreach ($this->getCollection('resources')->find() as $row) {
-            $resources[] = new Resource($row['name'], $row['description']);
+            $resources[] = new Component($row['name'], $row['description']);
         }
 
         return $resources;
@@ -273,7 +273,7 @@ class Mongo extends Adapter
      * @param string       $resourceName
      * @param array|string $accessList
      */
-    public function dropResourceAccess($resourceName, $accessList)
+    public function dropComponentAccess($resourceName, $accessList)
     {
         throw new \BadMethodCallException('Not implemented yet.');
     }

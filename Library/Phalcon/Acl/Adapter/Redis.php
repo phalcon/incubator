@@ -24,7 +24,7 @@ use Phalcon\Acl;
 use Phalcon\Acl\Role;
 use Phalcon\Acl\Adapter;
 use Phalcon\Acl\Exception;
-use Phalcon\Acl\Resource;
+use Phalcon\Acl\Component;
 use Phalcon\Acl\RoleInterface;
 
 /**
@@ -151,26 +151,26 @@ class Redis extends Adapter
      * Example:
      * <code>
      * //Add a resource to the the list allowing access to an action
-     * $acl->addResource(new Phalcon\Acl\Resource('customers'), 'search');
-     * $acl->addResource('customers', 'search');
+     * $acl->addComponent(new Phalcon\Acl\Component('customers'), 'search');
+     * $acl->addComponent('customers', 'search');
      * //Add a resource  with an access list
-     * $acl->addResource(new Phalcon\Acl\Resource('customers'), ['create', 'search']);
-     * $acl->addResource('customers', ['create', 'search']);
+     * $acl->addComponent(new Phalcon\Acl\Component('customers'), ['create', 'search']);
+     * $acl->addComponent('customers', ['create', 'search']);
      * </code>
      *
-     * @param  \Phalcon\Acl\Resource|string $resource
+     * @param  \Phalcon\Acl\Component|string $resource
      * @param  array|string $accessList
      * @return boolean
      */
-    public function addResource($resource, $accessList = null)
+    public function addComponent($resource, $accessList = null)
     {
         if (!is_object($resource)) {
-            $resource = new Resource($resource, ucwords($resource) . " Resource");
+            $resource = new Component($resource, ucwords($resource) . " Component");
         }
         $this->redis->hMset("resources", [$resource->getName() => $resource->getDescription()]);
 
         if ($accessList) {
-            return $this->addResourceAccess($resource->getName(), $accessList);
+            return $this->addComponentAccess($resource->getName(), $accessList);
         }
 
         return true;
@@ -184,10 +184,10 @@ class Redis extends Adapter
      * @return boolean
      * @throws \Phalcon\Acl\Exception
      */
-    public function addResourceAccess($resourceName, $accessList)
+    public function addComponentAccess($resourceName, $accessList)
     {
-        if (!$this->isResource($resourceName)) {
-            throw new Exception("Resource '" . $resourceName . "' does not exist in ACL");
+        if (!$this->isComponent($resourceName)) {
+            throw new Exception("Component '" . $resourceName . "' does not exist in ACL");
         }
 
         $accessList = (is_string($accessList)) ? explode(' ', $accessList) : $accessList;
@@ -215,12 +215,12 @@ class Redis extends Adapter
      * @param  string $resourceName
      * @return boolean
      */
-    public function isResource($resourceName)
+    public function isComponent($resourceName)
     {
         return $this->redis->hExists("resources", $resourceName);
     }
 
-    public function isResourceAccess($resource, $access)
+    public function isComponentAccess($resource, $access)
     {
         return $this->redis->sIsMember("resourcesAccesses:$resource", $access);
     }
@@ -228,14 +228,14 @@ class Redis extends Adapter
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Acl\Resource[]
+     * @return \Phalcon\Acl\Component[]
      */
-    public function getResources()
+    public function getComponents()
     {
         $resources = [];
 
         foreach ($this->redis->hGetAll("resources") as $name => $desc) {
-            $resources[] = new Resource($name, $desc);
+            $resources[] = new Component($name, $desc);
         }
 
         return $resources;
@@ -266,7 +266,7 @@ class Redis extends Adapter
         return $this->redis->sMembers("rolesInherits:$role");
     }
 
-    public function getResourceAccess($resource)
+    public function getComponentAccess($resource)
     {
         return $this->redis->sMembers("resourcesAccesses:$resource");
     }
@@ -277,7 +277,7 @@ class Redis extends Adapter
      * @param string $resource
      * @param array|string $accessList
      */
-    public function dropResourceAccess($resource, $accessList)
+    public function dropComponentAccess($resource, $accessList)
     {
         if (!is_array($accessList)) {
             $accessList = (array)$accessList;
@@ -327,7 +327,7 @@ class Redis extends Adapter
      */
     protected function resourcePermission($role, $access, $allowOrDeny)
     {
-        foreach ($this->getResources() as $resource) {
+        foreach ($this->getComponents() as $resource) {
             if ($role === '*' || empty($role)) {
                 $this->rolePermission($resource, $access, $allowOrDeny);
             } else {
@@ -457,13 +457,13 @@ class Redis extends Adapter
         /**
          * Check if the access is valid in the resource
          */
-        if ($this->isResourceAccess($resourceName, $accessName)) {
+        if ($this->isComponentAccess($resourceName, $accessName)) {
             if (!$this->setNXAccess) {
                 throw new Exception(
                     "Access '" . $accessName . "' does not exist in resource '" . $resourceName . "' in ACL"
                 );
             }
-            $this->addResourceAccess($resourceName, $accessName);
+            $this->addComponentAccess($resourceName, $accessName);
         }
         $this->redis->sAdd("accessList:$roleName:$resourceName:$action", $accessName);
         $accessList = "accessList:$roleName:$resourceName";
@@ -495,10 +495,10 @@ class Redis extends Adapter
         if (!$this->isRole($roleName)) {
             throw new Exception('Role "' . $roleName . '" does not exist in the list');
         }
-        if (!$this->isResource($resourceName)) {
-            throw new Exception('Resource "' . $resourceName . '" does not exist in the list');
+        if (!$this->isComponent($resourceName)) {
+            throw new Exception('Component "' . $resourceName . '" does not exist in the list');
         }
-        $access = ($access === '*' || empty($access)) ? $this->getResourceAccess($resourceName) : $access;
+        $access = ($access === '*' || empty($access)) ? $this->getComponentAccess($resourceName) : $access;
         if (is_array($access)) {
             foreach ($access as $accessName) {
                 $this->setAccess($roleName, $resourceName, $accessName, $action);

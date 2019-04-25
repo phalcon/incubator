@@ -119,7 +119,7 @@ class Database extends Backend implements BackendInterface
      *
      * @throws Exception
      */
-    public function save($keyName = null, $content = null, $lifetime = null, $stopBuffer = true)
+    public function save($keyName = null, $content = null, $lifetime = null, $stopBuffer = true): bool
     {
         if ($keyName === null) {
             $prefixedKey = $this->_lastKey;
@@ -190,7 +190,7 @@ class Database extends Backend implements BackendInterface
      * @param  string  $keyName
      * @return bool
      */
-    public function delete($keyName)
+    public function delete($keyName): bool
     {
         $prefixedKey = $this->getPrefixedIdentifier($keyName);
         $sql         = "SELECT COUNT(*) AS rowcount FROM {$this->table} WHERE key_name = ?";
@@ -209,7 +209,7 @@ class Database extends Backend implements BackendInterface
      * @param  string $prefix
      * @return array
      */
-    public function queryKeys($prefix = null)
+    public function queryKeys($prefix = null): array
     {
         if (!$prefix) {
             $prefix = $this->_prefix;
@@ -243,7 +243,7 @@ class Database extends Backend implements BackendInterface
      * @param  string  $lifetime
      * @return bool
      */
-    public function exists($keyName = null, $lifetime = null)
+    public function exists($keyName = null, $lifetime = null): bool
     {
         $prefixedKey = $this->getPrefixedIdentifier($keyName);
         $sql         = "SELECT lifetime FROM {$this->table} WHERE key_name = ?";

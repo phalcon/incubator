@@ -75,7 +75,7 @@ abstract class Base extends MetaData implements \Phalcon\Mvc\Model\MetaDataInter
      * @param  string $key
      * @return array
      */
-    public function read($key)
+    public function read($key): ?array
     {
         return $this->getCacheBackend()->get(
             $this->prepareKey($key),

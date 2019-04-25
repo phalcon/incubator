@@ -4,6 +4,7 @@ namespace Phalcon\Cache\Backend;
 
 use Phalcon\Cache\BackendInterface;
 use Phalcon\Cache\Frontend\None as NoneFrontend;
+use Phalcon\Cache\FrontendInterface;
 
 /**
  * A cache adapter that does nothing.
@@ -19,22 +20,22 @@ final class NullCache implements BackendInterface
     {
     }
 
-    public function getFrontend()
+    public function getFrontend(): FrontendInterface
     {
         return new NoneFrontend();
     }
 
-    public function getOptions()
+    public function getOptions(): array
     {
         return [];
     }
 
-    public function isFresh()
+    public function isFresh(): bool
     {
         return true;
     }
 
-    public function isStarted()
+    public function isStarted(): bool
     {
         return true;
     }
@@ -43,7 +44,7 @@ final class NullCache implements BackendInterface
     {
     }
 
-    public function getLastKey()
+    public function getLastKey(): string
     {
         return '';
     }
@@ -53,22 +54,22 @@ final class NullCache implements BackendInterface
         return null;
     }
 
-    public function save($keyName = null, $content = null, $lifetime = null, $stopBuffer = true)
+    public function save($keyName = null, $content = null, $lifetime = null, $stopBuffer = true): bool
     {
         return true;
     }
 
-    public function delete($keyName)
+    public function delete($keyName): bool
     {
         return true;
     }
 
-    public function queryKeys($prefix = null)
+    public function queryKeys($prefix = null): array
     {
         return [];
     }
 
-    public function exists($keyName = null, $lifetime = null)
+    public function exists($keyName = null, $lifetime = null): bool
     {
         return false;
     }
