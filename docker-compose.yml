@@ -35,7 +35,3 @@ services:
           MONGO_INITDB_DATABASE: incubator
         ports:
             - "27017:27017"
-    php:
-        image: ruudboon/phalcon-codeception
-        volumes:
-            - ./:/project
