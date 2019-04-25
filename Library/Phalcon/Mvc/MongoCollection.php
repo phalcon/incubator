@@ -484,7 +484,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
      *
      * @throws Exception
      */
-    public static function summatory($field, $conditions = null, $finalize = null)
+    public static function summatory($field, $conditions = null, $finalize = null): array
     {
         throw new Exception('The summatory() method is not implemented in the new Mvc MongoCollection');
     }
