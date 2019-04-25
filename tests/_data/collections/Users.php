@@ -31,7 +31,7 @@ class Users extends MongoCollection
         return $this->validate($validator);
     }
 
-    public function validationHasFailed()
+    public function validationHasFailed(): bool
     {
         new \Exception("Not implemented");
     }

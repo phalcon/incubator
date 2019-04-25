@@ -1,7 +1,7 @@
 version: "3"
 services:
     db:
-        image: mysql
+        image: mysql:5
         environment:
           MYSQL_RANDOM_ROOT_PASSWORD: "yes"
           MYSQL_DATABASE: "incubator"
@@ -35,3 +35,7 @@ services:
           MONGO_INITDB_DATABASE: incubator
         ports:
             - "27017:27017"
+    php:
+        image: ruudboon/phalcon-codeception
+        volumes:
+            - ./:/project
