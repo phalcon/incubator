@@ -69,7 +69,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
      *
      * @throws Exception
      */
-    public function save()
+    public function save(): bool
     {
         $dependencyInjector = $this->_dependencyInjector;
 
@@ -155,7 +155,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
      *
      * @return array
      */
-    public static function findById($id)
+    public static function findById($id): ?CollectionInterface
     {
         if (!is_object($id)) {
             $classname = get_called_class();
@@ -180,7 +180,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
      * @param  array|null $parameters
      * @return array
      */
-    public static function findFirst(array $parameters = null)
+    public static function findFirst(array $parameters = null): array
     {
         $className = get_called_class();
 
@@ -342,7 +342,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
      *    }
      * </code>
      */
-    public function delete()
+    public function delete(): bool
     {
         if (!$id = $this->_id) {
             throw new Exception("The document cannot be deleted because it doesn't exist");
@@ -452,7 +452,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
      * @param string $eventName
      * @return bool
      */
-    public function fireEventCancel($eventName)
+    public function fireEventCancel($eventName): bool
     {
         /**
          * Check if there is a method with the same name of the event
@@ -494,7 +494,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
      *
      * @return bool
      */
-    public function create()
+    public function create(): bool
     {
         /** @var \Phalcon\Db\Adapter\MongoDB\Collection $collection */
         $collection = $this->prepareCU();
@@ -535,23 +535,23 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
          */
         return $this->_postSave(self::$_disableEvents, $success, false);
     }
-  
+
     /**
      * {@inheritdoc}
      *
      * @param array $data
      */
-    public function createIfNotExist(array $criteria)
+    public function createIfNotExist(array $criteria): bool
     {
         if (empty($criteria)) {
             throw new Exception("Criteria parameter must be array with one or more attributes of the model");
         }
-      
+
         /**
          * Choose a collection according to the collection name
          */
         $collection = $this->prepareCU();
-      
+
         /**
          * Assume non-existence to fire beforeCreate events - no update does occur anyway
          */
