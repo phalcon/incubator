@@ -39,7 +39,7 @@ cache:
 env:
   global:
     - CC="ccache gcc"
-    - PHALCON_VERSION=v4.0.0-alpha.4
+    - PHALCON_VERSION=4.0.0x
 
 addons:
   apt:
@@ -76,7 +76,6 @@ script:
   - vendor/bin/phpcs
   - vendor/bin/codecept build
   - vendor/bin/codecept run -v tests/unit
-  - '[[ "$PHP_MAJOR" == "7" ]] || vendor/bin/codecept run -v tests/unit5x'
 
 after_failure:
     - for file in `ls ./tests/_output`; do [ -f ./tests/_output/$file ] && cat ./tests/_output/$file; done;
