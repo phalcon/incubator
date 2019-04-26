@@ -293,7 +293,7 @@ class Database extends Adapter
      *
      * @return \Phalcon\Acl\Component[]
      */
-    public function getComponents(): Component
+    public function getComponents(): array
     {
         $resources = [];
         $sql       = "SELECT * FROM {$this->resources}";
