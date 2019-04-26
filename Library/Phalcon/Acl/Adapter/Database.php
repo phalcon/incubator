@@ -115,7 +115,7 @@ class Database extends Adapter
      * @return boolean
      * @throws \Phalcon\Acl\Exception
      */
-    public function addRole($role, $accessInherits = null)
+    public function addRole($role, $accessInherits = null): bool
     {
         if (is_string($role)) {
             $role = new Role($role, ucwords($role) . ' Role');
@@ -185,7 +185,7 @@ class Database extends Adapter
      * @param  string  $roleName
      * @return boolean
      */
-    public function isRole($roleName)
+    public function isRole($roleName): bool
     {
         $exists = $this->connection->fetchOne(
             "SELECT COUNT(*) FROM {$this->roles} WHERE name = ?",
@@ -202,7 +202,7 @@ class Database extends Adapter
      * @param  string  $resourceName
      * @return boolean
      */
-    public function isComponent($resourceName)
+    public function isComponent($resourceName): bool
     {
         $exists = $this->connection->fetchOne(
             "SELECT COUNT(*) FROM {$this->resources} WHERE name = ?",
@@ -229,7 +229,7 @@ class Database extends Adapter
      * @param  array|string                 $accessList
      * @return boolean
      */
-    public function addComponent($resource, $accessList = null)
+    public function addComponent($resource, $accessList = null): bool
     {
         if (!is_object($resource)) {
             $resource = new Component($resource);
@@ -293,7 +293,7 @@ class Database extends Adapter
      *
      * @return \Phalcon\Acl\Component[]
      */
-    public function getComponents()
+    public function getComponents(): Component
     {
         $resources = [];
         $sql       = "SELECT * FROM {$this->resources}";
@@ -310,7 +310,7 @@ class Database extends Adapter
      *
      * @return RoleInterface[]
      */
-    public function getRoles()
+    public function getRoles(): RoleInterface
     {
         $roles = [];
         $sql   = "SELECT * FROM {$this->roles}";
@@ -453,7 +453,7 @@ class Database extends Adapter
      *
      * @param int $defaultAccess Phalcon\Acl::ALLOW or Phalcon\Acl::DENY
      */
-    public function setNoArgumentsDefaultAction($defaultAccess)
+    public function setNoArgumentsDefaultAction($defaultAccess): int
     {
         $this->noArgumentsDefaultAction = intval($defaultAccess);
     }
