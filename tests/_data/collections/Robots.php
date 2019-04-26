@@ -22,4 +22,8 @@ use Phalcon\Mvc\MongoCollection;
  */
 class Robots extends MongoCollection
 {
+    public function validationHasFailed(): bool
+    {
+        new \Exception("Not implemented");
+    }
 }

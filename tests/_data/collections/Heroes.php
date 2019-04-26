@@ -19,4 +19,9 @@ class Heroes extends MongoCollection
     {
         return 'heroes';
     }
+
+    public function validationHasFailed(): bool
+    {
+        new \Exception("Not implemented");
+    }
 }

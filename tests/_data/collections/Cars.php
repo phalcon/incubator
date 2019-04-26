@@ -22,4 +22,9 @@ class Cars extends MongoCollection
     {
         return 'cars';
     }
+
+    public function validationHasFailed(): bool
+    {
+        new \Exception("Not implemented");
+    }
 }
