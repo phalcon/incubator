@@ -310,7 +310,7 @@ class Database extends Adapter
      *
      * @return RoleInterface[]
      */
-    public function getRoles(): RoleInterface
+    public function getRoles(): array
     {
         $roles = [];
         $sql   = "SELECT * FROM {$this->roles}";

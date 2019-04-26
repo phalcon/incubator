@@ -24,6 +24,7 @@ services:
         image: schickling/beanstalkd
         ports:
             - "11300:11300"
+
     memcached:
         image: memcached
         ports:
@@ -35,3 +36,7 @@ services:
           MONGO_INITDB_DATABASE: incubator
         ports:
             - "27017:27017"
+    php:
+        image: ruudboon/phalcon-codeception:latest
+        volumes:
+            - ./:/project
