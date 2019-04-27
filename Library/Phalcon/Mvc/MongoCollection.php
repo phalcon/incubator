@@ -71,7 +71,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
      */
     public function save(): bool
     {
-        $dependencyInjector = $this->_dependencyInjector;
+        $dependencyInjector = $this->getDI();
 
         if (!is_object($dependencyInjector)) {
             throw new Exception(
