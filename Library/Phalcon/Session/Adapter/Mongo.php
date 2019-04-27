@@ -20,15 +20,13 @@
 
 namespace Phalcon\Session\Adapter;
 
-use Phalcon\Session\Adapter;
-use Phalcon\Session\AdapterInterface;
 use Phalcon\Session\Exception;
 
 /**
  * Phalcon\Session\Adapter\Mongo
  * Mongo adapter for Phalcon\Session
  */
-class Mongo extends Adapter implements AdapterInterface
+class Mongo extends Noop
 {
     /**
      * Current session data
@@ -66,7 +64,7 @@ class Mongo extends Adapter implements AdapterInterface
      *
      * @return boolean
      */
-    public function open()
+    public function open($savePath, $sessionName): bool
     {
         return true;
     }
@@ -74,7 +72,7 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function close()
+    public function close(): bool
     {
         return true;
     }
@@ -85,7 +83,7 @@ class Mongo extends Adapter implements AdapterInterface
      * @param  string $sessionId
      * @return string
      */
-    public function read($sessionId)
+    public function read($sessionId): string
     {
         $sessionData = $this->getCollection()->findOne(['_id' => $sessionId]);
 
@@ -104,7 +102,7 @@ class Mongo extends Adapter implements AdapterInterface
      * @param  string $sessionData
      * @return bool
      */
-    public function write($sessionId, $sessionData)
+    public function write($sessionId, $sessionData): bool
     {
         if ($this->data === $sessionData) {
             return true;
@@ -124,7 +122,7 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function destroy($sessionId = null)
+    public function destroy($sessionId = null): bool
     {
         if (is_null($sessionId)) {
             $sessionId =$this->getId();
@@ -141,7 +139,7 @@ class Mongo extends Adapter implements AdapterInterface
      * {@inheritdoc}
      * @param string $maxLifetime
      */
-    public function gc($maxLifetime)
+    public function gc($maxLifetime): bool
     {
         $minAge = new \DateTime();
         $minAge->sub(new \DateInterval('PT' . $maxLifetime . 'S'));

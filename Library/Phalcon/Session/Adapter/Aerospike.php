@@ -19,9 +19,7 @@
 
 namespace Phalcon\Session\Adapter;
 
-use Phalcon\Session\Adapter;
 use Phalcon\Session\Exception;
-use Phalcon\Session\AdapterInterface;
 use Phalcon\Cache\Frontend\Data as FrontendData;
 use Phalcon\Cache\Backend\Aerospike as AerospikeDb;
 
@@ -55,7 +53,7 @@ use Phalcon\Cache\Backend\Aerospike as AerospikeDb;
  * echo $session->get('var');
  * </code>
  */
-class Aerospike extends Adapter implements AdapterInterface
+class Aerospike extends Noop
 {
     /**
      * The Aerospike DB
@@ -169,7 +167,7 @@ class Aerospike extends Adapter implements AdapterInterface
      *
      * @return bool
      */
-    public function open()
+    public function open($savePath, $sessionName): bool
     {
         return true;
     }
@@ -179,7 +177,7 @@ class Aerospike extends Adapter implements AdapterInterface
      *
      * @return bool
      */
-    public function close()
+    public function close(): bool
     {
         return true;
     }
@@ -190,7 +188,7 @@ class Aerospike extends Adapter implements AdapterInterface
      * @param string $sessionId Session variable name
      * @return string
      */
-    public function read($sessionId)
+    public function read($sessionId): string
     {
         return $this->db->get($sessionId, $this->lifetime);
     }
@@ -201,7 +199,7 @@ class Aerospike extends Adapter implements AdapterInterface
      * @param string $sessionId Session variable name
      * @param string $data      Session data
      */
-    public function write($sessionId, $data)
+    public function write($sessionId, $data): bool
     {
         return $this->db->save($sessionId, $data, $this->lifetime);
     }
@@ -212,7 +210,7 @@ class Aerospike extends Adapter implements AdapterInterface
      * @param string $sessionId Session variable name [Optional]
      * @return bool
      */
-    public function destroy($sessionId = null)
+    public function destroy($sessionId = null): bool
     {
         if (null === $sessionId) {
             $sessionId = $this->getId();
@@ -234,7 +232,7 @@ class Aerospike extends Adapter implements AdapterInterface
      *
      * @return bool
      */
-    public function gc()
+    public function gc(): bool
     {
         return true;
     }

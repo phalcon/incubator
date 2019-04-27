@@ -28,6 +28,7 @@ use Phalcon\Acl\Component;
 use Phalcon\Acl;
 use Phalcon\Acl\Role;
 use Phalcon\Acl\RoleInterface;
+use Phalcon\Acl\ComponentInterface;
 
 /**
  * Phalcon\Acl\Adapter\Database
@@ -293,7 +294,7 @@ class Database extends Adapter
      *
      * @return \Phalcon\Acl\Component[]
      */
-    public function getComponents(): array
+    public function getComponents(): ComponentInterface
     {
         $resources = [];
         $sql       = "SELECT * FROM {$this->resources}";
@@ -310,7 +311,7 @@ class Database extends Adapter
      *
      * @return RoleInterface[]
      */
-    public function getRoles(): array
+    public function getRoles(): RoleInterface
     {
         $roles = [];
         $sql   = "SELECT * FROM {$this->roles}";

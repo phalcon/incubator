@@ -53,7 +53,7 @@ class Environment extends \Twig_Environment
      *
      * @return \Phalcon\DiInterface
      */
-    public function getDi()
+    public function getDi(): DiInterface
     {
         return $this->di;
     }

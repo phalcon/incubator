@@ -1,3 +1,3 @@
 <?php
 
-Codeception\Specify\Config::setDeepClone(false);
+//Codeception\Specify\Config::setDeepClone(false);

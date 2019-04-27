@@ -22,8 +22,6 @@
 namespace Phalcon\Session\Adapter;
 
 use Phalcon\Db;
-use Phalcon\Session\Adapter;
-use Phalcon\Session\AdapterInterface;
 use Phalcon\Session\Exception;
 use Phalcon\Db\AdapterInterface as DbAdapter;
 use Phalcon\Db\Column;
@@ -32,7 +30,7 @@ use Phalcon\Db\Column;
  * Phalcon\Session\Adapter\Database
  * Database adapter for Phalcon\Session
  */
-class Database extends Adapter implements AdapterInterface
+class Database extends Noop
 {
     /**
      * @var DbAdapter
@@ -85,7 +83,7 @@ class Database extends Adapter implements AdapterInterface
      *
      * @return boolean
      */
-    public function open()
+    public function open($savePath, $sessionName): bool
     {
         $this->_started = true;
         return $this->isStarted();
@@ -96,7 +94,7 @@ class Database extends Adapter implements AdapterInterface
      *
      * @return boolean
      */
-    public function close()
+    public function close(): bool
     {
         $this->_started = false;
         return $this->isStarted();
@@ -108,14 +106,14 @@ class Database extends Adapter implements AdapterInterface
      * @param  string $sessionId
      * @return string
      */
-    public function read($sessionId)
+    public function read($sessionId): string
     {
         $maxLifetime = (int) ini_get('session.gc_maxlifetime');
-        
+
         if (!$this->isStarted()) {
             return false;
         }
-        
+
         $options = $this->getOptions();
         $row = $this->connection->fetchOne(
             sprintf(
@@ -146,7 +144,7 @@ class Database extends Adapter implements AdapterInterface
      * @param  string $data
      * @return boolean
      */
-    public function write($sessionId, $data)
+    public function write($sessionId, $data): bool
     {
         $options = $this->getOptions();
         $row = $this->connection->fetchOne(
@@ -158,7 +156,7 @@ class Database extends Adapter implements AdapterInterface
             Db::FETCH_NUM,
             [$sessionId]
         );
-        
+
         if ($row[0] > 0) {
             return $this->connection->execute(
                 sprintf(
@@ -171,11 +169,11 @@ class Database extends Adapter implements AdapterInterface
                 [$data, time(), $sessionId]
             );
         }
-        
+
         if (!$this->isStarted()) {
             return false;
         }
-            
+
         return $this->connection->execute(
             sprintf(
                 'INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?, ?, NULL)',
@@ -194,7 +192,7 @@ class Database extends Adapter implements AdapterInterface
      *
      * @return boolean
      */
-    public function destroy($session_id = null)
+    public function destroy($session_id = null): bool
     {
         if (!$this->isStarted()) {
             return true;
@@ -224,7 +222,7 @@ class Database extends Adapter implements AdapterInterface
      *
      * @return boolean
      */
-    public function gc($maxlifetime)
+    public function gc($maxlifetime): bool
     {
         $options = $this->getOptions();
 

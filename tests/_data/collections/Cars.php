@@ -18,7 +18,7 @@ use Phalcon\Mvc\MongoCollection;
  */
 class Cars extends MongoCollection
 {
-    public function getSource()
+    public function getSource(): string
     {
         return 'cars';
     }

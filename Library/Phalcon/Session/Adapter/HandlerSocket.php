@@ -12,11 +12,9 @@
  */
 namespace Phalcon\Session\Adapter;
 
-use Phalcon\Session\Adapter;
-use Phalcon\Session\AdapterInterface;
 use Phalcon\Session\Exception;
 
-class HandlerSocket extends Adapter implements AdapterInterface
+class HandlerSocket extends Noop
 {
     /**
      * Default Values
@@ -137,7 +135,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
      * @param  string  $name
      * @return boolean
      */
-    public function open($save_path, $name)
+    public function open($save_path, $name): bool
     {
         return true;
     }
@@ -147,7 +145,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
      *
      * @return boolean
      */
-    public function close()
+    public function close(): bool
     {
         return true;
     }
@@ -158,7 +156,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
      * @param  string $id
      * @return string
      */
-    public function read($id)
+    public function read($id): string
     {
         $retval = $this->hs->executeSingle($this->hsIndex, '=', [$id], 1, 0);
 
@@ -180,7 +178,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
      * @param  string  $data
      * @return boolean
      */
-    public function write($id, $data)
+    public function write($id, $data): bool
     {
         if (isset($this->fields['id']) && $this->fields['id'] != $id) {
             $this->fields = [];
@@ -201,7 +199,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
      * @param  string  $id
      * @return boolean
      */
-    public function destroy($id)
+    public function destroy($id): bool
     {
         $this->hs->executeDelete($this->hsIndex, '=', [$id], 1, 0);
 
@@ -214,7 +212,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
      * @param  integer $maxlifetime
      * @return boolean
      */
-    public function gc($maxlifetime)
+    public function gc($maxlifetime): bool
     {
         $time  = date('Y-m-d H:i:s', strtotime("- $maxlifetime seconds"));
         $index = $this->hsIndex + 1;

@@ -189,7 +189,7 @@ trait UnitTestCase
      * @see    Injectable::getDI
      * @return DiInterface
      */
-    public function getDI(): Phalcon\DiInterface
+    public function getDI(): DiInterface
     {
         if (!$this->di instanceof DiInterface) {
             return Di::getDefault();
