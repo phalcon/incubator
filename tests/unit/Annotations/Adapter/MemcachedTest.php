@@ -98,6 +98,7 @@ class MemcachedTest extends Test
 
     public function testShouldGetCacheBackendThroughReflectionSetter()
     {
+        $this->markTestSkipped('Not implemented');
         $object = new Memcached(['host' => env('TEST_MC_HOST', '127.0.0.1')]);
         $mock = $this->getMockBuilder(Libmemcached::class)
             ->disableOriginalConstructor()
@@ -120,7 +121,7 @@ class MemcachedTest extends Test
         $reflectedMethod = new ReflectionMethod(get_class($object), 'prepareKey');
         $reflectedMethod->setAccessible(true);
 
-        $this->assertEquals($key, $reflectedMethod->invoke($object, $key));
+        $this->assertEquals($key, $reflectedMetBackendThroughReflectionSethod->invoke($object, $key));
     }
 
     /**
