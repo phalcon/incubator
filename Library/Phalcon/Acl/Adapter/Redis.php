@@ -230,7 +230,7 @@ class Redis extends Adapter
      *
      * @return \Phalcon\Acl\Component[]
      */
-    public function getComponents()
+    public function getComponents(): array
     {
         $resources = [];
 
@@ -246,7 +246,7 @@ class Redis extends Adapter
      *
      * @return RoleInterface[]
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         $roles = [];
 
@@ -261,7 +261,7 @@ class Redis extends Adapter
      * @param $role
      * @return array
      */
-    public function getRoleInherits($role)
+    public function getRoleInherits($role): array
     {
         return $this->redis->sMembers("rolesInherits:$role");
     }

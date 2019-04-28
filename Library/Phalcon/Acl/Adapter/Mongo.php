@@ -240,7 +240,7 @@ class Mongo extends Adapter
      *
      * @return \Phalcon\Acl\Component[]
      */
-    public function getComponents()
+    public function getComponents(): array
     {
         $resources = [];
 
@@ -256,7 +256,7 @@ class Mongo extends Adapter
      *
      * @return RoleInterface[]
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         $roles = [];
 
