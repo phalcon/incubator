@@ -12,6 +12,8 @@
 #  to license@phalconphp.com so we can send you a copy immediately.
 
 printf "\n" | pecl install --force apc &> /dev/null
+echo 'extension="apc.so"' >> "$(phpenv root)/versions/$(phpenv version-name)/etc/php.ini"
+
 printf "\n" | pecl install --force apcu_bc &> /dev/null
 printf "\n" | pecl install --force igbinary &> /dev/null
 printf "\n" | pecl install --force imagick &> /dev/null
