@@ -19,6 +19,7 @@ printf "\n" | pecl install --force psr 1> /dev/null
 printf "\n" | pecl install --force yaml 1> /dev/null
 
 # See https://pear.php.net/bugs/bug.php?id=21007
+echo 'extension="apc.so"' >> "$(phpenv root)/versions/$(phpenv version-name)/etc/php.ini"
 sed -i '1s/^/extension="apcu.so"\n/' "$(phpenv root)/versions/$(phpenv version-name)/etc/php.ini"
 echo 'extension="memcached.so"' >> "$(phpenv root)/versions/$(phpenv version-name)/etc/php.ini"
 echo 'extension="mongodb.so"' >> "$(phpenv root)/versions/$(phpenv version-name)/etc/php.ini"
