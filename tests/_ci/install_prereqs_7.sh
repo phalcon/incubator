@@ -11,8 +11,10 @@
 #  obtain it through the world-wide-web, please send an email
 #  to license@phalconphp.com so we can send you a copy immediately.
 
+find "$(phpenv root)/versions/$(phpenv version-name)/etc/php.ini" -name "*apc*"
 printf "\n" | pecl install --force apc &> /dev/null
 echo 'extension="apc.so"' >> "$(phpenv root)/versions/$(phpenv version-name)/etc/php.ini"
+find "$(phpenv root)/versions/$(phpenv version-name)/etc/php.ini" -name "*apc*"
 
 printf "\n" | pecl install --force apcu_bc &> /dev/null
 printf "\n" | pecl install --force igbinary &> /dev/null
