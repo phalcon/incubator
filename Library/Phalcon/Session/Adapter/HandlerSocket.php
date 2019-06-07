@@ -55,7 +55,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
             'host'    => self::DEFAULT_HOST,
             'port'    => self::DEFAULT_PORT,
             'dbname'  => self::DEFAULT_DBNAME,
-            'dbtable' => self::DEFAULT_DBTABLE
+            'dbtable' => self::DEFAULT_DBTABLE,
         ],
     ];
 
@@ -160,7 +160,15 @@ class HandlerSocket extends Adapter implements AdapterInterface
      */
     public function read($id)
     {
-        $retval = $this->hs->executeSingle($this->hsIndex, '=', [$id], 1, 0);
+        $retval = $this->hs->executeSingle(
+            $this->hsIndex,
+            '=',
+            [
+                $id,
+            ],
+            1,
+            0
+        );
 
         if (!isset($retval[0], $retval[0][2])) {
             return '';
@@ -187,9 +195,27 @@ class HandlerSocket extends Adapter implements AdapterInterface
         }
 
         if (empty($this->fields)) {
-            $this->hs->executeInsert($this->hsIndex, [$id, date('Y-m-d H:i:s'), $data]);
+            $this->hs->executeInsert(
+                $this->hsIndex,
+                [
+                    $id,
+                    date('Y-m-d H:i:s'),
+                    $data,
+                ]
+            );
         } else {
-            $this->hs->executeUpdate($this->hsIndex, '=', [$id], [$id, date('Y-m-d H:i:s'), $data], 1, 0);
+            $this->hs->executeUpdate(
+                $this->hsIndex,
+                '=',
+                [$id],
+                [
+                    $id,
+                    date('Y-m-d H:i:s'),
+                    $data,
+                ],
+                1,
+                0
+            );
         }
 
         return true;
@@ -203,7 +229,13 @@ class HandlerSocket extends Adapter implements AdapterInterface
      */
     public function destroy($id)
     {
-        $this->hs->executeDelete($this->hsIndex, '=', [$id], 1, 0);
+        $this->hs->executeDelete(
+            $this->hsIndex,
+            '=',
+            [$id],
+            1,
+            0
+        );
 
         return true;
     }
@@ -216,7 +248,11 @@ class HandlerSocket extends Adapter implements AdapterInterface
      */
     public function gc($maxlifetime)
     {
-        $time  = date('Y-m-d H:i:s', strtotime("- $maxlifetime seconds"));
+        $time = date(
+            'Y-m-d H:i:s',
+            strtotime("- $maxlifetime seconds")
+        );
+
         $index = $this->hsIndex + 1;
 
         $this->hs->openIndex(
@@ -227,7 +263,13 @@ class HandlerSocket extends Adapter implements AdapterInterface
             ''
         );
 
-        $this->hs->executeDelete($index, '<', [$time], 1000, 0);
+        $this->hs->executeDelete(
+            $index,
+            '<',
+            [$time],
+            1000,
+            0
+        );
 
         return true;
     }
@@ -264,11 +306,16 @@ class HandlerSocket extends Adapter implements AdapterInterface
         $this->options = $options;
 
         if (!extension_loaded('handlersocket')) {
-            throw new Exception('The handlersocket extension must be loaded for using session!');
+            throw new Exception(
+                'The handlersocket extension must be loaded for using session!'
+            );
         }
 
         // load handlersocket server
-        $this->hs = new \HandlerSocket($options['server']['host'], $options['server']['port']);
+        $this->hs = new \HandlerSocket(
+            $options['server']['host'],
+            $options['server']['port']
+        );
 
         // open handlersocket index
         $result = $this->hs->openIndex(
@@ -280,7 +327,9 @@ class HandlerSocket extends Adapter implements AdapterInterface
         );
 
         if (!$result) {
-            throw new Exception('The HandlerSocket database specified in the options does not exist.');
+            throw new Exception(
+                'The HandlerSocket database specified in the options does not exist.'
+            );
         }
     }
 }

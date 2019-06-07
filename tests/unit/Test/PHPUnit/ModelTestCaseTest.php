@@ -32,7 +32,13 @@ class ModelTestCaseTest extends Unit
 
         $testSubject->setUp();
 
-        $reflectionProperty = new \ReflectionProperty(ModelTestCase::class, 'di');
+
+
+        $reflectionProperty = new \ReflectionProperty(
+            ModelTestCase::class,
+            'di'
+        );
+
         $reflectionProperty->setAccessible(true);
 
         $this->assertInstanceOf(

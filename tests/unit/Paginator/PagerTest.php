@@ -41,13 +41,18 @@ class PagerTest extends Test
             ->andReturn(null);
 
         $pager = new Pager($mock);
-        $this->assertInstanceOf('Phalcon\Paginator\Pager', $pager);
+
+        $this->assertInstanceOf(
+            Pager::class,
+            $pager
+        );
     }
 
     public function testCallingGetPagesInRangeMethodWithDefaultOptionsShouldReturnExpectedArray()
     {
         // stub paginate
         $paginate = new stdClass();
+
         $paginate->total_pages = 20;
         $paginate->current = 5;
         $paginate->last = 20;
@@ -63,18 +68,23 @@ class PagerTest extends Test
             ->andReturn(null);
 
         $pager = new Pager($mock);
+
         $this->assertEquals(
             [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             $pager->getPagesInRange()
         );
 
-        $this->assertEquals(null, $pager->getLimit());
+        $this->assertEquals(
+            null,
+            $pager->getLimit()
+        );
     }
 
     public function testCallingGetPagesInRangeMethodWithSliderOnEndShouldReturnExpectedArray()
     {
         // stub paginate
         $paginate = new stdClass();
+
         $paginate->total_pages = 20;
         $paginate->current = 20;
         $paginate->last = 20;
@@ -89,7 +99,13 @@ class PagerTest extends Test
             ->once()
             ->andReturn(null);
 
-        $pager = new Pager($mock, ['rangeLength' => 5]);
+        $pager = new Pager(
+            $mock,
+            [
+                'rangeLength' => 5,
+            ]
+        );
+
         $this->assertEquals(
             [16, 17, 18, 19, 20],
             $pager->getPagesInRange()
@@ -100,6 +116,7 @@ class PagerTest extends Test
     {
         // stub paginate
         $paginate = new stdClass();
+
         $paginate->total_pages = 20;
         $paginate->current = 1;
         $paginate->last = 20;
@@ -114,7 +131,13 @@ class PagerTest extends Test
             ->once()
             ->andReturn(null);
 
-        $pager = new Pager($mock, ['rangeLength' => 5]);
+        $pager = new Pager(
+            $mock,
+            [
+                'rangeLength' => 5,
+            ]
+        );
+
         $this->assertEquals(
             [1, 2, 3, 4, 5],
             $pager->getPagesInRange()
@@ -125,6 +148,7 @@ class PagerTest extends Test
     {
         // stub paginate
         $paginate = new stdClass();
+
         $paginate->total_pages = 20;
         $paginate->current = 1;
         $paginate->last = 20;
@@ -139,15 +163,25 @@ class PagerTest extends Test
             ->once()
             ->andReturn(null);
 
-        $pager = new Pager($mock, ['rangeLength' => 5, 'urlMask' => 'xxx']);
+        $pager = new Pager(
+            $mock,
+            [
+                'rangeLength' => 5,
+                'urlMask'     => 'xxx',
+            ]
+        );
 
-        $this->assertInstanceOf('Phalcon\Paginator\Pager\Layout', $pager->getLayout());
+        $this->assertInstanceOf(
+            \Phalcon\Paginator\Pager\Layout::class,
+            $pager->getLayout()
+        );
     }
 
     public function testPagerGetterMethodsShouldReturnExpectedValues()
     {
         // stub paginate
         $paginate = new stdClass();
+
         $paginate->total_pages = 20;
         $paginate->current = 10;
         $paginate->last = 20;
@@ -167,15 +201,47 @@ class PagerTest extends Test
             ->once()
             ->andReturn(null);
 
-        $pager = new Pager($mock, ['rangeLength' => 5, 'urlMask' => 'xxx']);
+        $pager = new Pager(
+            $mock,
+            [
+                'rangeLength' => 5,
+                'urlMask'     => 'xxx',
+            ]
+        );
 
-        $this->assertEquals($paginate->current, $pager->getCurrentPage());
-        $this->assertEquals($paginate->total_items, $pager->count());
-        $this->assertEquals(1, $pager->getFirstPage());
-        $this->assertTrue($pager->haveToPaginate());
-        $this->assertEquals($paginate->before, $pager->getPreviousPage());
-        $this->assertEquals($paginate->next, $pager->getNextPage());
-        $this->assertInstanceOf('Iterator', $pager->getIterator());
+        $this->assertEquals(
+            $paginate->current,
+            $pager->getCurrentPage()
+        );
+
+        $this->assertEquals(
+            $paginate->total_items,
+            $pager->count()
+        );
+
+        $this->assertEquals(
+            1,
+            $pager->getFirstPage()
+        );
+
+        $this->assertTrue(
+            $pager->haveToPaginate()
+        );
+
+        $this->assertEquals(
+            $paginate->before,
+            $pager->getPreviousPage()
+        );
+
+        $this->assertEquals(
+            $paginate->next,
+            $pager->getNextPage()
+        );
+
+        $this->assertInstanceOf(
+            \Iterator::class,
+            $pager->getIterator()
+        );
     }
 
     public function testPagerGetIteratorMethodWillCreateIteratorIfArrayIsPassed()
@@ -196,9 +262,18 @@ class PagerTest extends Test
             ->once()
             ->andReturn(null);
 
-        $pager = new Pager($mock, ['rangeLength' => 5, 'urlMask' => 'xxx']);
+        $pager = new Pager(
+            $mock,
+            [
+                'rangeLength' => 5,
+                'urlMask'     => 'xxx',
+            ]
+        );
 
-        $this->assertInstanceOf('Iterator', $pager->getIterator());
+        $this->assertInstanceOf(
+            'Iterator',
+            $pager->getIterator()
+        );
     }
 
     /**
@@ -234,6 +309,7 @@ class PagerTest extends Test
     {
         // stub paginate
         $paginate = new stdClass();
+
         $paginate->total_pages = 20;
         $paginate->current = 1;
 
@@ -251,8 +327,8 @@ class PagerTest extends Test
             $mock,
             [
                 'rangeLength' => 5,
-                'rangeClass' => 'UnknownRangeClass',
-                'urlMask' => 'xxx',
+                'rangeClass'  => 'UnknownRangeClass',
+                'urlMask'     => 'xxx',
             ]
         );
 
@@ -267,6 +343,7 @@ class PagerTest extends Test
     {
         // stub paginate
         $paginate = new stdClass();
+
         $paginate->total_pages = 20;
         $paginate->current = 1;
 
@@ -285,9 +362,10 @@ class PagerTest extends Test
             [
                 'rangeLength' => 5,
                 'layoutClass' => 'UnknownLayoutClass',
-                'urlMask' => 'xxx',
+                'urlMask'     => 'xxx',
             ]
         );
+
         $pager->getLayout();
     }
 }

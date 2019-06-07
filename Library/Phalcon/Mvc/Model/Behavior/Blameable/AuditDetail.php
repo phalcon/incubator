@@ -35,7 +35,14 @@ class AuditDetail extends Model implements AuditDetailInterface
      */
     public function initialize()
     {
-        $this->belongsTo('audit_id', Audit::class, 'id', ['alias' => 'audit']);
+        $this->belongsTo(
+            'audit_id',
+            Audit::class,
+            'id',
+            [
+                'alias' => 'audit',
+            ]
+        );
     }
 
     /**

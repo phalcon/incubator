@@ -44,20 +44,23 @@ class UniquenessTest extends Test
     {
         codecept_debug('getDbStub');
         return Stub::makeEmpty(
-            'Phalcon\Db\Adapter\Pdo',
+            \Phalcon\Db\Adapter\Pdo::class,
             [
                 'fetchOne' => function ($sql, $fetchMode, $params) {
-                    if (
-                        $sql !== 'SELECT COUNT(*) AS count FROM "users" WHERE "login" = ? AND "id" != ?' &&
+                    if ($sql !== 'SELECT COUNT(*) AS count FROM "users" WHERE "login" = ? AND "id" != ?' &&
                         $sql !== 'SELECT COUNT(*) AS count FROM "users" WHERE "login" = ?'
                     ) {
                         return null;
                     }
 
                     if ($params[0] == 'login_taken') {
-                        return ['count' => 1];
+                        return [
+                            'count' => 1,
+                        ];
                     } else {
-                        return ['count' => 0];
+                        return [
+                            'count' => 0,
+                        ];
                     }
                 },
                 'escapeIdentifier' => function ($identifier) {
@@ -74,7 +77,7 @@ class UniquenessTest extends Test
     public function testShouldCatchExceptionWhenValidateUniquenessWithoutDbAndDefaultDI()
     {
         $uniquenessOptions = [
-            'table' => 'users',
+            'table'  => 'users',
             'column' => 'login',
         ];
 
@@ -87,15 +90,23 @@ class UniquenessTest extends Test
      */
     public function testShouldCatchExceptionWhenValidateUniquenessWithoutColumnOption()
     {
-        new Uniqueness(['table' => 'users'], $this->getDbStub());
+        new Uniqueness(
+            [
+                'table' => 'users',
+            ],
+            $this->getDbStub()
+        );
     }
 
     public function testAvailableUniquenessWithDefaultDI()
     {
-        $this->di->set('db', $this->getDbStub());
+        $this->di->set(
+            'db',
+            $this->getDbStub()
+        );
 
         $uniquenessOptions = [
-            'table' => 'users',
+            'table'  => 'users',
             'column' => 'login',
         ];
 
@@ -103,39 +114,64 @@ class UniquenessTest extends Test
 
         $this->validation->add('login', $uniqueness);
 
-        $messages = $this->validation->validate(['login' => 'login_free']);
+        $messages = $this->validation->validate(
+            [
+                'login' => 'login_free',
+            ]
+        );
+
         $this->assertCount(0, $messages);
     }
 
     public function testShouldValidateAvailableUniqueness()
     {
         $uniquenessOptions = [
-            'table' => 'users',
+            'table'  => 'users',
             'column' => 'login',
         ];
 
-        $uniqueness = new Uniqueness($uniquenessOptions, $this->getDbStub());
+        $uniqueness = new Uniqueness(
+            $uniquenessOptions,
+            $this->getDbStub()
+        );
 
         $this->validation->add('login', $uniqueness);
 
-        $messages = $this->validation->validate(['login' => 'login_free']);
+        $messages = $this->validation->validate(
+            [
+                'login' => 'login_free',
+            ]
+        );
+
         $this->assertCount(0, $messages);
     }
 
     public function testAlreadyTakenUniquenessWithDefaultMessage()
     {
         $uniquenessOptions = [
-            'table' => 'users',
+            'table'  => 'users',
             'column' => 'login',
         ];
 
-        $uniqueness = new Uniqueness($uniquenessOptions, $this->getDbStub());
+        $uniqueness = new Uniqueness(
+            $uniquenessOptions,
+            $this->getDbStub()
+        );
 
         $this->validation->add('login', $uniqueness);
-        $messages = $this->validation->validate(['login' => 'login_taken']);
+
+        $messages = $this->validation->validate(
+            [
+                'login' => 'login_taken',
+            ]
+        );
 
         $this->assertCount(1, $messages);
-        $this->assertEquals('Already taken. Choose another!', $messages[0]);
+
+        $this->assertEquals(
+            'Already taken. Choose another!',
+            $messages[0]
+        );
     }
 
     public function testAlreadyTakenUniquenessWithCustomMessage()
@@ -146,11 +182,24 @@ class UniquenessTest extends Test
             'message' => 'Login already taken.'
         ];
 
-        $uniqueness = new Uniqueness($uniquenessOptions, $this->getDbStub());
+        $uniqueness = new Uniqueness(
+            $uniquenessOptions,
+            $this->getDbStub()
+        );
+
         $this->validation->add('login', $uniqueness);
-        $messages = $this->validation->validate(['login' => 'login_taken']);
+
+        $messages = $this->validation->validate(
+            [
+                'login' => 'login_taken',
+            ]
+        );
 
         $this->assertCount(1, $messages);
-        $this->assertEquals('Login already taken.', $messages[0]);
+
+        $this->assertEquals(
+            'Login already taken.',
+            $messages[0]
+        );
     }
 }

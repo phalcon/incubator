@@ -33,21 +33,25 @@ class AlphaNumericValidatorTest extends UnitTestCase
 
         $validation->add(
             'text',
-            new AlphaNumericValidator (
+            new AlphaNumericValidator(
                 [
-                    'whiteSpace' => true,                                                // Optional, default false
-                    'underscore' => true,                                                // Optional, default false
-                    'min' => 5,                                                          // Optional
-                    'max' => 100,                                                        // Optional
-                    'message' => 'Validation failed.',                                   // Optional
+                    'whiteSpace'     => true,                                            // Optional, default false
+                    'underscore'     => true,                                            // Optional, default false
+                    'min'            => 5,                                               // Optional
+                    'max'            => 100,                                             // Optional
+                    'message'        => 'Validation failed.',                            // Optional
                     'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.', // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(0, count($messages));
+
+        $this->assertCount(
+            0,
+            $messages
+        );
     }
 
     public function testAlphaNumericValidatorFailingWhiteSpace()
@@ -58,21 +62,25 @@ class AlphaNumericValidatorTest extends UnitTestCase
 
         $validation->add(
             'text',
-            new AlphaNumericValidator (
+            new AlphaNumericValidator(
                 [
-                    'whiteSpace' => false,                                               // Optional, default false
-                    'underscore' => true,                                                // Optional, default false
-                    'min' => 5,                                                          // Optional
-                    'max' => 100,                                                        // Optional
-                    'message' => 'Validation failed.',                                   // Optional
+                    'whiteSpace'     => false,                                           // Optional, default false
+                    'underscore'     => true,                                            // Optional, default false
+                    'min'            => 5,                                               // Optional
+                    'max'            => 100,                                             // Optional
+                    'message'        => 'Validation failed.',                            // Optional
                     'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.', // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(1, count($messages));
+
+        $this->assertCount(
+            1,
+            $messages
+        );
     }
 
     public function testAlphaNumericValidatorFailingUnderscope()
@@ -83,21 +91,25 @@ class AlphaNumericValidatorTest extends UnitTestCase
 
         $validation->add(
             'text',
-            new AlphaNumericValidator (
+            new AlphaNumericValidator(
                 [
-                    'whiteSpace' => true,                                                // Optional, default false
-                    'underscore' => false,                                               // Optional, default false
-                    'min' => 5,                                                          // Optional
-                    'max' => 100,                                                        // Optional
-                    'message' => 'Validation failed.',                                   // Optional
+                    'whiteSpace'     => true,                                            // Optional, default false
+                    'underscore'     => false,                                           // Optional, default false
+                    'min'            => 5,                                               // Optional
+                    'max'            => 100,                                             // Optional
+                    'message'        => 'Validation failed.',                            // Optional
                     'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.', // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(1, count($messages));
+
+        $this->assertCount(
+            1,
+            $messages
+        );
     }
 
     public function testAlphaNumericValidatorFailingLengthAndUnderscore()
@@ -108,20 +120,24 @@ class AlphaNumericValidatorTest extends UnitTestCase
 
         $validation->add(
             'text',
-            new AlphaNumericValidator (
+            new AlphaNumericValidator(
                 [
-                    'whiteSpace' => true,                                                // Optional, default false
-                    'underscore' => false,                                               // Optional, default false
-                    'min' => 5,                                                          // Optional
-                    'max' => 10,                                                         // Optional
-                    'message' => 'Validation failed.',                                   // Optional
+                    'whiteSpace'     => true,                                            // Optional, default false
+                    'underscore'     => false,                                           // Optional, default false
+                    'min'            => 5,                                               // Optional
+                    'max'            => 10,                                              // Optional
+                    'message'        => 'Validation failed.',                            // Optional
                     'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.', // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(2, count($messages));
+
+        $this->assertCount(
+            2,
+            $messages
+        );
     }
 }

@@ -52,6 +52,7 @@ MSG;
                                 } else {
                                     if ($className !== get_class($el)) {
                                         $error = true;
+
                                         break;
                                     }
                                 }
@@ -86,7 +87,9 @@ MSG;
         }
 
         if ($error) {
-            throw new \InvalidArgumentException(static::E_INVALID_SUBJECT);
+            throw new \InvalidArgumentException(
+                static::E_INVALID_SUBJECT
+            );
         }
 
         $this->subject = $from;
@@ -105,13 +108,24 @@ MSG;
     public static function from($subject)
     {
         if ($subject instanceof ModelInterface) {
-            $ret = call_user_func_array('static::fromModel', func_get_args());
+            $ret = call_user_func_array(
+                'static::fromModel',
+                func_get_args()
+            );
         } elseif ($subject instanceof Simple) {
-            $ret = call_user_func_array('static::fromResultset', func_get_args());
+            $ret = call_user_func_array(
+                'static::fromResultset',
+                func_get_args()
+            );
         } elseif (is_array($subject)) {
-            $ret = call_user_func_array('static::fromArray', func_get_args());
+            $ret = call_user_func_array(
+                'static::fromArray',
+                func_get_args()
+            );
         } else {
-            throw new \InvalidArgumentException(static::E_INVALID_SUBJECT);
+            throw new \InvalidArgumentException(
+                static::E_INVALID_SUBJECT
+            );
         }
 
         return $ret;
@@ -127,7 +141,10 @@ MSG;
     public static function fromModel(ModelInterface $subject)
     {
         $reflection = new \ReflectionClass(__CLASS__);
-        $instance   = $reflection->newInstanceArgs(func_get_args());
+
+        $instance = $reflection->newInstanceArgs(
+            func_get_args()
+        );
 
         return $instance->execute()->get();
     }
@@ -142,7 +159,10 @@ MSG;
     public static function fromArray(array $subject)
     {
         $reflection = new \ReflectionClass(__CLASS__);
-        $instance   = $reflection->newInstanceArgs(func_get_args());
+
+        $instance = $reflection->newInstanceArgs(
+            func_get_args()
+        );
 
         return $instance->execute()->get();
     }
@@ -157,7 +177,10 @@ MSG;
     public static function fromResultset(Simple $subject)
     {
         $reflection = new \ReflectionClass(__CLASS__);
-        $instance   = $reflection->newInstanceArgs(func_get_args());
+
+        $instance = $reflection->newInstanceArgs(
+            func_get_args()
+        );
 
         return $instance->execute()->get();
     }
@@ -232,17 +255,21 @@ MSG;
     public function addEagerLoad($relationAlias, $constraints = null)
     {
         if (!is_string($relationAlias)) {
-            throw new \InvalidArgumentException(sprintf(
-                '$relationAlias expects to be a string, `%s` given',
-                gettype($relationAlias)
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    '$relationAlias expects to be a string, `%s` given',
+                    gettype($relationAlias)
+                )
+            );
         }
 
         if ($constraints !== null && !is_callable($constraints)) {
-            throw new \InvalidArgumentException(sprintf(
-                '$constraints expects to be a callable, `%s` given',
-                gettype($constraints)
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    '$constraints expects to be a callable, `%s` given',
+                    gettype($constraints)
+                )
+            );
         }
 
         $this->eagerLoads[$relationAlias] = $constraints;
@@ -273,13 +300,21 @@ MSG;
             do {
                 do {
                     $alias = $relationAliases[$nestingLevel];
-                    $name  = join('.', array_slice($relationAliases, 0, $nestingLevel + 1));
+
+                    $name = join(
+                        '.',
+                        array_slice($relationAliases, 0, $nestingLevel + 1)
+                    );
                 } while (isset($eagerLoads[$name]) && ++$nestingLevel);
 
                 if ($nestingLevel === 0) {
                     $parentClassName = $this->subjectClassName;
                 } else {
-                    $parentName = join('.', array_slice($relationAliases, 0, $nestingLevel));
+                    $parentName = join(
+                        '.',
+                        array_slice($relationAliases, 0, $nestingLevel)
+                    );
+
                     $parentClassName = $resolvedRelations[$parentName]->getReferencedModel();
 
                     if ($parentClassName[0] === '\\') {
@@ -289,14 +324,17 @@ MSG;
 
                 if (!isset($resolvedRelations[$name])) {
                     $mM->load($parentClassName);
+
                     $relation = $mM->getRelationByAlias($parentClassName, $alias);
 
                     if (!$relation instanceof Relation) {
-                        throw new \RuntimeException(sprintf(
-                            'There is no defined relation for the model `%s` using alias `%s`',
-                            $parentClassName,
-                            $alias
-                        ));
+                        throw new \RuntimeException(
+                            sprintf(
+                                'There is no defined relation for the model `%s` using alias `%s`',
+                                $parentClassName,
+                                $alias
+                            )
+                        );
                     }
 
                     $resolvedRelations[$name] = $relation;
@@ -310,18 +348,28 @@ MSG;
                     $relType !== Relation::HAS_ONE &&
                     $relType !== Relation::HAS_MANY &&
                     $relType !== Relation::HAS_MANY_THROUGH) {
-                    throw new \RuntimeException(sprintf('Unknown relation type `%s`', $relType));
+                    throw new \RuntimeException(
+                        sprintf(
+                            'Unknown relation type `%s`',
+                            $relType
+                        )
+                    );
                 }
 
-                if (is_array($relation->getFields()) ||
-                    is_array($relation->getReferencedFields())) {
-                    throw new \RuntimeException('Relations with composite keys are not supported');
+                if (is_array($relation->getFields()) || is_array($relation->getReferencedFields())) {
+                    throw new \RuntimeException(
+                        'Relations with composite keys are not supported'
+                    );
                 }
 
                 $parent      = $nestingLevel > 0 ? $eagerLoads[$parentName] : $this;
                 $constraints = $nestingLevel + 1 === $nestingLevels ? $queryConstraints : null;
 
-                $eagerLoads[$name] = new EagerLoad($relation, $constraints, $parent);
+                $eagerLoads[$name] = new EagerLoad(
+                    $relation,
+                    $constraints,
+                    $parent
+                );
             } while (++$nestingLevel < $nestingLevels);
         }
 

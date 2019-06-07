@@ -102,7 +102,7 @@ class Firelogger extends LoggerAdapter implements AdapterInterface
             'password'     => null,
             'checkVersion' => true,
             'traceable'    => false,
-            'triggerError' => true
+            'triggerError' => true,
         ];
 
         if ($name) {
@@ -112,7 +112,12 @@ class Firelogger extends LoggerAdapter implements AdapterInterface
         $this->options = array_merge($defaults, $options);
         $this->enabled = $this->checkPassword() && $this->checkVersion();
 
-        register_shutdown_function([$this, 'commit']);
+        register_shutdown_function(
+            [
+                $this,
+                'commit',
+            ]
+        );
     }
 
     /**
@@ -156,11 +161,22 @@ class Firelogger extends LoggerAdapter implements AdapterInterface
         if (!$this->enabled) {
             return;
         }
+
         $trace = null;
+
         if ($this->options['traceable']) {
             $trace = debug_backtrace();
         }
-        $log = $this->getFormatter()->format($message, $type, $time, $context, $trace, count($this->logs));
+
+        $log = $this->getFormatter()->format(
+            $message,
+            $type,
+            $time,
+            $context,
+            $trace,
+            count($this->logs)
+        );
+
         $this->logs[] = $log;
 
         // flush if this is not transaction
@@ -186,6 +202,7 @@ class Firelogger extends LoggerAdapter implements AdapterInterface
     {
         // flush the previous transaction if there is any
         $this->commit();
+
         // start a new transaction
         $this->isTransaction = true;
     }
@@ -252,7 +269,11 @@ class Firelogger extends LoggerAdapter implements AdapterInterface
 
         if (isset($_SERVER['HTTP_X_FIRELOGGERAUTH'])) {
             $clientHash = $_SERVER['HTTP_X_FIRELOGGERAUTH'];
-            $serverHash = md5("#FireLoggerPassword#" . $this->options['password'] . "#");
+
+            $serverHash = md5(
+                "#FireLoggerPassword#" . $this->options['password'] . "#"
+            );
+
             if ($clientHash !== $serverHash) { // passwords do not match
                 $this->enabled = false;
 
@@ -281,11 +302,13 @@ class Firelogger extends LoggerAdapter implements AdapterInterface
     {
         if (!$this->options['checkVersion']) {
             $this->enabled = true;
+
             return true;
         }
 
         if (!isset($_SERVER['HTTP_X_FIRELOGGER'])) {
             $this->enabled = false;
+
             return false;
         }
 
@@ -300,10 +323,12 @@ class Firelogger extends LoggerAdapter implements AdapterInterface
             );
 
             $this->enabled = false;
+
             return false;
         }
 
         $this->enabled = true;
+
         return true;
     }
 }

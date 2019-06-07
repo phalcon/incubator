@@ -34,6 +34,9 @@ class UnitTestCaseTest extends Unit
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
 
-        $this->assertInstanceOf(PHPUnitTestCase::class, $testSubject);
+        $this->assertInstanceOf(
+            PHPUnitTestCase::class,
+            $testSubject
+        );
     }
 }

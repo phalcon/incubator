@@ -49,9 +49,18 @@ class UnitTestCaseTest extends Unit
 
         $testSubject->setUp();
 
-        $reflectionProperty = new \ReflectionProperty(UnitTestCase::class, 'di');
+
+
+        $reflectionProperty = new \ReflectionProperty(
+            UnitTestCase::class,
+            'di'
+        );
+
         $reflectionProperty->setAccessible(true);
 
-        $this->assertInstanceOf(DiInterface::class, $reflectionProperty->getValue($testSubject));
+        $this->assertInstanceOf(
+            DiInterface::class,
+            $reflectionProperty->getValue($testSubject)
+        );
     }
 }

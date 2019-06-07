@@ -11,20 +11,24 @@ use Phalcon\Paginator\Pager;
 
 class IndexController extends Controller
 {
-
     public function indexAction()
     {
-        $currentPage = abs($this->request->getQuery('page', 'int', 1));
+        $currentPage = abs(
+            $this->request->getQuery('page', 'int', 1)
+        );
+
         if ($currentPage == 0) {
             $currentPage = 1;
         }
 
         $pager = new Pager(
-            new Paginator([
-                'data'  => range(1, 200),
-                'limit' => 10,
-                'page'  => $currentPage,
-            ]),
+            new Paginator(
+                [
+                    'data'  => range(1, 200),
+                    'limit' => 10,
+                    'page'  => $currentPage,
+                ]
+            ),
             [
                 // We will use Bootstrap framework styles
                 'layoutClass' => 'Phalcon\Paginator\Pager\Layout\Bootstrap',
@@ -35,11 +39,13 @@ class IndexController extends Controller
                 // Or something like this
                 // 'urlMask'     => sprintf(
                 //     '%s?page={%%page_number}',
-                //     $this->url->get([
-                //         'for'        => 'index:posts',
-                //         'controller' => 'index',
-                //         'action'     => 'index'
-                //     ])
+                //     $this->url->get(
+                //         [
+                //             'for'        => 'index:posts',
+                //             'controller' => 'index',
+                //             'action'     => 'index',
+                //         ]
+                //     )
                 // ),
             ]
         );

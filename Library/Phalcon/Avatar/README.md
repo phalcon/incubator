@@ -14,17 +14,22 @@ Users must register their email addresses with Gravatar before their avatars wil
 ```php
 use Phalcon\Avatar\Gravatar;
 
-$di->setShared('gravatar', function () {
-    // Get Gravatar instance
-    $gravatar = new Gravatar([]);
-    
-    // Setting default image, maximum size and maximum allowed Gravatar rating
-    $gravatar->setDefaultImage('retro')
-             ->setSize(220)
-             ->setRating(Gravatar::RATING_PG);
+$di->setShared(
+    'gravatar',
+    function () {
+        // Get Gravatar instance
+        $gravatar = new Gravatar(
+            []
+        );
 
-    return $gravatar;
-});
+        // Setting default image, maximum size and maximum allowed Gravatar rating
+        $gravatar->setDefaultImage('retro')
+                 ->setSize(220)
+                 ->setRating(Gravatar::RATING_PG);
+
+        return $gravatar;
+    }
+);
 ```
 
 #### Setup through config
@@ -40,13 +45,15 @@ $config = [
     'use_https'     => true,
 ];
 
+$di->setShared(
+    'gravatar',
+    function () use ($config) {
+        // Get Gravatar instance
+        $gravatar = new Gravatar($config);
 
-$di->setShared('gravatar', function () use ($config) {
-    // Get Gravatar instance
-    $gravatar = new Gravatar($config);
-
-    return $gravatar;
-});
+        return $gravatar;
+    }
+);
 ```
 
 ### Using
@@ -156,7 +163,9 @@ By default, the Gravatar rating is `Gravatar::RATING_G`.
 Example:
 
 ```php
-$gravatar->setRating(Gravatar::RATING_PG);
+$gravatar->setRating(
+    Gravatar::RATING_PG
+);
 ```
 
 If an invalid maximum rating is specified, this method will throw an exception of class `\InvalidArgumentException`.

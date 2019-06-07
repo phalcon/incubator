@@ -11,12 +11,12 @@ use Phalcon\Logger\Adapter\File as FileLogger;
 use Phalcon\Logger\Formatter\Line as LineFormatter;
 
 return [
-	'error' => [
-		'logger'     => new FileLogger(ROOT_PATH . '/log/' . APPLICATION_ENV . '.log'),
-		'formatter'  => new LineFormatter('[%date%][%type%] %message%', 'Y-m-d H:i:s O'),
-		'controller' => 'error',
-		'action'     => 'index',
-	]
+    'error' => [
+        'logger'     => new FileLogger(ROOT_PATH . '/log/' . APPLICATION_ENV . '.log'),
+        'formatter'  => new LineFormatter('[%date%][%type%] %message%', 'Y-m-d H:i:s O'),
+        'controller' => 'error',
+        'action'     => 'index',
+    ],
 ];
 
 ```
@@ -34,18 +34,19 @@ error handler has to be registered. Application must also define constants for a
 ```php
 class Application extends \Phalcon\Mvc\Application
 {
-	const ENV_PRODUCTION = 'production';
-	const ENV_STAGING = 'staging';
-	const ENV_TEST = 'test';
-	const ENV_DEVELOPMENT = 'development';
+    const ENV_PRODUCTION = 'production';
+    const ENV_STAGING = 'staging';
+    const ENV_TEST = 'test';
+    const ENV_DEVELOPMENT = 'development';
 
-	public function __construct(DiInterface $dependencyInjector = null)
-	{
-		$this->_registerAutoloaders();
-		ErrorHandler::register();
-		
-		parent::__construct($dependencyInjector);
-	}
+    public function __construct(DiInterface $dependencyInjector = null)
+    {
+        $this->_registerAutoloaders();
+
+        ErrorHandler::register();
+
+        parent::__construct($dependencyInjector);
+    }
 }
 ```
 
@@ -54,30 +55,32 @@ In the error controller `\Phalcon\Error\Error` can be retrieved through the disp
 ```php
 public function indexAction()
 {
-	/** @var \Phalcon\Error\Error $error */
-	$error = $this->dispatcher->getParam('error');
+    /** @var \Phalcon\Error\Error $error */
+    $error = $this->dispatcher->getParam('error');
 
-	switch ($error->type()) {
-		case 404:
-			$code = 404;
-			break;
-		case 403:
-			$code = 403;
-			break;
-		case 401:
-			$code = 401;
-			break;
-		default:
-			$code = 500;
-	}
+    switch ($error->type()) {
+        case 404:
+            $code = 404;
+            break;
+        case 403:
+            $code = 403;
+            break;
+        case 401:
+            $code = 401;
+            break;
+        default:
+            $code = 500;
+    }
 
-	$this->response->resetHeaders()->setStatusCode($code, null);
+    $this->response->resetHeaders()->setStatusCode($code, null);
 
-	$this->view->setVars([
-		'error' => $error,
-		'code'  => $code,
-		'dev'   => APPLICATION_ENV != \Phalcon\Error\Application::ENV_PRODUCTION
-	]);
+    $this->view->setVars(
+        [
+            'error' => $error,
+            'code'  => $code,
+            'dev'   => (APPLICATION_ENV != \Phalcon\Error\Application::ENV_PRODUCTION),
+        ]
+    );
 }
 ```
 
@@ -89,9 +92,9 @@ Error message could be displayed to the user this way:
 
 <?php echo $error->message(); ?>
 <?php if ($dev): ?>
-	<br>in <?php echo $error->file(); ?> on line <?php echo $error->line(); ?><br>
-	<?php if ($error->isException()) { ?>
-		<pre><?php echo $error->exception()->getTraceAsString(); ?></pre>
-	<?php } ?>
+    <br>in <?php echo $error->file(); ?> on line <?php echo $error->line(); ?><br>
+    <?php if ($error->isException()) { ?>
+        <pre><?php echo $error->exception()->getTraceAsString(); ?></pre>
+    <?php } ?>
 <?php endif; ?>
 ```

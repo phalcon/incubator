@@ -36,7 +36,6 @@ use Phalcon\Validation;
  */
 class PasswordStrength extends Validation\Validator
 {
-
     const MIN_VALID_SCORE = 2;
 
     /**
@@ -64,7 +63,11 @@ class PasswordStrength extends Validation\Validator
         $message = ($this->hasOption('message') ? $this->getOption('message') : 'Password too weak');
 
         $validation->appendMessage(
-            new Validation\Message($message, $attribute, 'PasswordStrengthValidator')
+            new Validation\Message(
+                $message,
+                $attribute,
+                'PasswordStrengthValidator'
+            )
         );
 
         return false;

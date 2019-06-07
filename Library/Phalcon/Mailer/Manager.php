@@ -92,10 +92,18 @@ class Manager extends Component
         }
 
         /** @var $message Message */
-        $message = $this->getDI()->get('\Phalcon\Mailer\Message', [$this]);
+        $message = $this->getDI()->get(
+            '\Phalcon\Mailer\Message',
+            [
+                $this,
+            ]
+        );
 
         if (($from = $this->getConfig('from'))) {
-            $message->from($from['email'], isset($from['name']) ? $from['name'] : null);
+            $message->from(
+                $from['email'],
+                isset($from['name']) ? $from['name'] : null
+            );
         }
 
         if ($eventsManager) {
@@ -124,7 +132,11 @@ class Manager extends Component
     public function createMessageFromView($view, $params = [], $viewsDir = null)
     {
         $message = $this->createMessage();
-        $message->content($this->renderView($view, $params, $viewsDir), $message::CONTENT_TYPE_HTML);
+
+        $message->content(
+            $this->renderView($view, $params, $viewsDir),
+            $message::CONTENT_TYPE_HTML
+        );
 
         return $message;
     }
@@ -210,7 +222,12 @@ class Manager extends Component
                 break;
 
             default:
-                throw new \InvalidArgumentException(sprintf('Driver-mail "%s" is not supported', $driver));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Driver-mail "%s" is not supported',
+                        $driver
+                    )
+                );
         }
     }
 
@@ -231,12 +248,21 @@ class Manager extends Component
             ->setPort($config['port']);
 
         if (isset($config['encryption'])) {
-            $transport->setEncryption($config['encryption']);
+            $transport->setEncryption(
+                $config['encryption']
+            );
         }
 
         if (isset($config['username'])) {
-            $transport->setUsername($this->normalizeEmail($config['username']));
-            $transport->setPassword($config['password']);
+            $transport->setUsername(
+                $this->normalizeEmail(
+                    $config['username']
+                )
+            );
+
+            $transport->setPassword(
+                $config['password']
+            );
         }
 
         return $transport;
@@ -314,7 +340,12 @@ class Manager extends Component
      */
     protected function registerSwiftMailer()
     {
-        $this->mailer = $this->getDI()->get('\Swift_Mailer', [$this->transport]);
+        $this->mailer = $this->getDI()->get(
+            '\Swift_Mailer',
+            [
+                $this->transport,
+            ]
+        );
     }
 
     /**

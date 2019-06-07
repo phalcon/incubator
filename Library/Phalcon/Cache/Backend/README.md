@@ -17,22 +17,35 @@ Usage:
 use Phalcon\Cache\Backend\Aerospike as BackendCache;
 use Phalcon\Cache\Frontend\Data;
 
-$di->set('cache', function () {
-    $cache = new BackendCache(new Data(['lifetime' => 3600]), [
-        'hosts' => [
-            ['addr' => '127.0.0.1', 'port' => 3000]
-        ],
-        'persistent' => true,
-        'namespace'  => 'test',
-        'prefix'     => 'cache_',
-        'options'    => [
-            \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
-            \Aerospike::OPT_WRITE_TIMEOUT   => 1500
-        ]
-    ]);
+$di->set(
+    'cache',
+    function () {
+        $cache = new BackendCache(
+            new Data(
+                [
+                    'lifetime' => 3600,
+                ]
+            ),
+            [
+                'hosts' => [
+                    [
+                        'addr' => '127.0.0.1',
+                        'port' => 3000,
+                    ],
+                ],
+                'persistent' => true,
+                'namespace'  => 'test',
+                'prefix'     => 'cache_',
+                'options'    => [
+                    \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
+                    \Aerospike::OPT_WRITE_TIMEOUT   => 1500,
+                ],
+            ]
+        );
 
-    return $cache;
-});
+        return $cache;
+    }
+);
 ```
 
 ## Database
@@ -44,26 +57,38 @@ use Phalcon\Cache\Backend\Database;
 use Phalcon\Cache\Frontend\Data;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 
-$di->set('cache', function() {
-	// Create a connection
-	$connection = new Mysql([
-	    'host'     => 'localhost',
-	    'username' => 'root',
-	    'password' => 'secret',
-	    'dbname'   => 'cache_db'
-	]);
+$di->set(
+    'cache',
+    function () {
+        // Create a connection
+        $connection = new Mysql(
+            [
+                'host'     => 'localhost',
+                'username' => 'root',
+                'password' => 'secret',
+                'dbname'   => 'cache_db',
+            ]
+        );
 
-	// Create a Data frontend and set a default lifetime to 1 hour
-	$frontend = new Data(['lifetime' => 3600]);
+        // Create a Data frontend and set a default lifetime to 1 hour
+        $frontend = new Data(
+            [
+                'lifetime' => 3600,
+            ]
+        );
 
-	// Create the cache passing the connection
-	$cache = new Database($frontend, [
-	    'db'    => $connection,
-	    'table' => 'cache_data'
-	]);
+        // Create the cache passing the connection
+        $cache = new Database(
+            $frontend,
+            [
+                'db'    => $connection,
+                'table' => 'cache_data',
+            ]
+        );
 
-	return $cache;
-});
+        return $cache;
+    }
+);
 ```
 
 This adapter uses the following table to store the data:
@@ -81,15 +106,15 @@ This adapter uses the following table to store the data:
 Using the cache adapter:
 
 ```php
-
 $time = $this->cache->get('le-time');
+
 if ($time === null) {
     $time = date('r');
+
     $this->cache->save('le-time', $time);
 }
 
 echo $time;
-
 ```
 
 ## Wincache

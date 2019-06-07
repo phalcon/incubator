@@ -66,13 +66,21 @@ class Database extends Backend implements BackendInterface
         }
 
         if (!isset($options['table']) || empty($options['table']) || !is_string($options['table'])) {
-            throw new Exception("Parameter 'table' is required and it must be a non empty string");
+            throw new Exception(
+                "Parameter 'table' is required and it must be a non empty string"
+            );
         }
 
-        $this->db    = $options['db'];
-        $this->table = $this->db->escapeIdentifier($options['table']);
+        $this->db = $options['db'];
 
-        unset($options['db'], $options['table']);
+        $this->table = $this->db->escapeIdentifier(
+            $options['table']
+        );
+
+        unset(
+            $options['db'],
+            $options['table']
+        );
 
         parent::__construct($frontend, $options);
     }
@@ -86,9 +94,17 @@ class Database extends Backend implements BackendInterface
      */
     public function get($keyName, $lifetime = null)
     {
-        $prefixedKey    = $this->getPrefixedIdentifier($keyName);
-        $sql            = "SELECT data, lifetime FROM {$this->table} WHERE key_name = ?";
-        $cache          = $this->db->fetchOne($sql, Db::FETCH_ASSOC, [$prefixedKey]);
+        $prefixedKey = $this->getPrefixedIdentifier($keyName);
+        $sql         = "SELECT data, lifetime FROM {$this->table} WHERE key_name = ?";
+
+        $cache = $this->db->fetchOne(
+            $sql,
+            Db::FETCH_ASSOC,
+            [
+                $prefixedKey,
+            ]
+        );
+
         $this->_lastKey = $prefixedKey;
 
         if (!$cache) {
@@ -100,12 +116,19 @@ class Database extends Backend implements BackendInterface
 
         // Remove the cache if expired
         if ($cache['lifetime'] < time()) {
-            $this->db->execute("DELETE FROM {$this->table} WHERE key_name = ?", [$prefixedKey]);
+            $this->db->execute(
+                "DELETE FROM {$this->table} WHERE key_name = ?",
+                [
+                    $prefixedKey,
+                ]
+            );
 
             return null;
         }
 
-        return $frontend->afterRetrieve($cache['data']);
+        return $frontend->afterRetrieve(
+            $cache['data']
+        );
     }
 
     /**
@@ -147,15 +170,25 @@ class Database extends Backend implements BackendInterface
         $lifetime = time() + $lifetime;
 
         // Check if the cache already exist
-        $sql   = "SELECT data, lifetime FROM {$this->table} WHERE key_name = ?";
-        $cache = $this->db->fetchOne($sql, Db::FETCH_ASSOC, [$prefixedKey]);
+        $sql = "SELECT data, lifetime FROM {$this->table} WHERE key_name = ?";
+
+        $cache = $this->db->fetchOne(
+            $sql,
+            Db::FETCH_ASSOC,
+            [
+                $prefixedKey,
+            ]
+        );
 
         if (!$cache) {
-            $status = $this->db->execute("INSERT INTO {$this->table} VALUES (?, ?, ?)", [
-                $prefixedKey,
-                $frontend->beforeStore($cachedContent),
-                $lifetime
-            ]);
+            $status = $this->db->execute(
+                "INSERT INTO {$this->table} VALUES (?, ?, ?)",
+                [
+                    $prefixedKey,
+                    $frontend->beforeStore($cachedContent),
+                    $lifetime,
+                ]
+            );
         } else {
             $status = $this->db->execute(
                 "UPDATE {$this->table} SET data = ?, lifetime = ? WHERE key_name = ?",
@@ -194,13 +227,25 @@ class Database extends Backend implements BackendInterface
     {
         $prefixedKey = $this->getPrefixedIdentifier($keyName);
         $sql         = "SELECT COUNT(*) AS rowcount FROM {$this->table} WHERE key_name = ?";
-        $row         = $this->db->fetchOne($sql, Db::FETCH_ASSOC, [$prefixedKey]);
+
+        $row = $this->db->fetchOne(
+            $sql,
+            Db::FETCH_ASSOC,
+            [
+                $prefixedKey,
+            ]
+        );
 
         if (!$row['rowcount']) {
             return false;
         }
 
-        return $this->db->execute("DELETE FROM {$this->table} WHERE key_name = ?", [$prefixedKey]);
+        return $this->db->execute(
+            "DELETE FROM {$this->table} WHERE key_name = ?",
+            [
+                $prefixedKey,
+            ]
+        );
     }
 
     /**
@@ -219,9 +264,16 @@ class Database extends Backend implements BackendInterface
 
         if (!empty($prefix)) {
             $sql = "SELECT key_name FROM {$this->table} WHERE key_name LIKE ? ORDER BY lifetime";
-            $rs  = $this->db->query($sql, [$prefix . '%']);
+
+            $rs  = $this->db->query(
+                $sql,
+                [
+                    $prefix . '%',
+                ]
+            );
         } else {
             $sql = "SELECT key_name FROM {$this->table} ORDER BY lifetime";
+
             $rs  = $this->db->query($sql);
         }
 
@@ -247,7 +299,14 @@ class Database extends Backend implements BackendInterface
     {
         $prefixedKey = $this->getPrefixedIdentifier($keyName);
         $sql         = "SELECT lifetime FROM {$this->table} WHERE key_name = ?";
-        $cache       = $this->db->fetchOne($sql, Db::FETCH_ASSOC, [$prefixedKey]);
+
+        $cache = $this->db->fetchOne(
+            $sql,
+            Db::FETCH_ASSOC,
+            [
+                $prefixedKey,
+            ]
+        );
 
         if (!$cache) {
             return false;
@@ -255,7 +314,12 @@ class Database extends Backend implements BackendInterface
 
         // Remove the cache if expired
         if ($cache['lifetime'] < time()) {
-            $this->db->execute("DELETE FROM {$this->table} WHERE key_name = ?", [$prefixedKey]);
+            $this->db->execute(
+                "DELETE FROM {$this->table} WHERE key_name = ?",
+                [
+                    $prefixedKey,
+                ]
+            );
 
             return false;
         }

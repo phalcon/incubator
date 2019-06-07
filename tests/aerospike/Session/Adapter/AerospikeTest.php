@@ -45,11 +45,13 @@ class AerospikeTest extends Test
             $this->markTestSkipped('The Aerospike module is not available.');
         }
 
-        $this->getModule('Aerospike')->_reconfigure([
-            'set'  => $this->set,
-            'addr' => env('TEST_AS_HOST', '127.0.0.1'),
-            'port' => (int)env('TEST_AS_PORT', 3000)
-        ]);
+        $this->getModule('Aerospike')->_reconfigure(
+            [
+                'set'  => $this->set,
+                'addr' => env('TEST_AS_HOST', '127.0.0.1'),
+                'port' => (int) env('TEST_AS_PORT', 3000),
+            ]
+        );
     }
 
     /**
@@ -65,22 +67,31 @@ class AerospikeTest extends Test
     public function testShouldWriteSession()
     {
         $sessionId = 'abcdef123458';
-        $session = new SessionHandler($this->getConfig());
+
+        $session = new SessionHandler(
+            $this->getConfig()
+        );
 
         $data = [
-                321   => microtime(true),
-                'def' => '678',
-                'xyz' => 'zyx'
-            ];
+            321   => microtime(true),
+            'def' => '678',
+            'xyz' => 'zyx',
+        ];
 
-        $this->assertTrue($session->write($sessionId, $data));
+        $this->assertTrue(
+            $session->write($sessionId, $data)
+        );
+
         $this->tester->seeInAerospike($sessionId, $data);
     }
 
     public function testShouldReadSession()
     {
         $sessionId = 'some_session_key';
-        $session = new SessionHandler($this->getConfig());
+
+        $session = new SessionHandler(
+            $this->getConfig()
+        );
 
         $data = [
                 321   => microtime(true),
@@ -89,24 +100,33 @@ class AerospikeTest extends Test
             ];
 
         $this->tester->haveInAerospike($sessionId, $data);
+
         $this->keys[] = $sessionId;
 
-        $this->assertEquals($data, $session->read($sessionId));
+        $this->assertEquals(
+            $data,
+            $session->read($sessionId)
+        );
     }
 
     public function testShouldDestroySession()
     {
         $sessionId = 'abcdef123457';
-        $session = new SessionHandler($this->getConfig());
+
+        $session = new SessionHandler(
+            $this->getConfig()
+        );
 
         $data = [
-                'abc' => 345,
-                'def' => ['foo' => 'bar'],
-                'zyx' => 'xyz'
-            ];
+            'abc' => 345,
+            'def' => ['foo' => 'bar'],
+            'zyx' => 'xyz',
+        ];
 
         $this->tester->haveInAerospike($sessionId, $data);
+
         $session->destroy($sessionId);
+
         $this->tester->dontSeeInAerospike($sessionId);
     }
 
@@ -115,14 +135,20 @@ class AerospikeTest extends Test
         $aerospike = new Aerospike(
             [
                 'hosts' => [
-                    ['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => (int)env('TEST_AS_PORT', 3000)]
-                ]
+                    [
+                        'addr' => env('TEST_AS_HOST', '127.0.0.1'),
+                        'port' => (int) env('TEST_AS_PORT', 3000),
+                    ],
+                ],
             ],
             false
         );
 
         foreach ($this->keys as $i => $key) {
-            $aerospike->remove($this->buildKey($aerospike, $key));
+            $aerospike->remove(
+                $this->buildKey($aerospike, $key)
+            );
+
             unset($this->keys[$i]);
         }
     }
@@ -140,7 +166,10 @@ class AerospikeTest extends Test
     {
         return [
             'hosts' => [
-                ['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => (int)env('TEST_AS_PORT', 3000)]
+                [
+                    'addr' => env('TEST_AS_HOST', '127.0.0.1'),
+                    'port' => (int) env('TEST_AS_PORT', 3000),
+                ],
             ],
             'persistent' => false,
             'namespace'  => $this->ns,
@@ -148,10 +177,10 @@ class AerospikeTest extends Test
             'prefix'     => '',
             'lifetime'   => 10,
             'uniqueId'   => 'some-unique-id',
-            'options' => [
+            'options'    => [
                 \Aerospike::OPT_CONNECT_TIMEOUT => 1250,
-                \Aerospike::OPT_WRITE_TIMEOUT => 1500
-            ]
+                \Aerospike::OPT_WRITE_TIMEOUT   => 1500,
+            ],
         ];
     }
 }

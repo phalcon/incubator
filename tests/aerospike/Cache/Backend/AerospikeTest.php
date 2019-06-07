@@ -48,7 +48,10 @@ class AerospikeTest extends Test
 
     public function testShouldGetAerospikeInstance()
     {
-        $this->assertInstanceOf(\Aerospike::class, $this->getAdapter()->getDb());
+        $this->assertInstanceOf(
+            \Aerospike::class,
+            $this->getAdapter()->getDb()
+        );
     }
 
     /**
@@ -63,27 +66,55 @@ class AerospikeTest extends Test
     public function testShouldIncrementValue()
     {
         $cache = $this->getAdapter();
+
         $this->tester->haveInAerospike('increment', 1);
 
-        $this->assertEquals(2, $cache->increment('increment'));
-        $this->assertEquals(4, $cache->increment('increment', 2));
-        $this->assertEquals(14, $cache->increment('increment', 10));
+        $this->assertEquals(
+            2,
+            $cache->increment('increment')
+        );
+
+        $this->assertEquals(
+            4,
+            $cache->increment('increment', 2)
+        );
+
+        $this->assertEquals(
+            14,
+            $cache->increment('increment', 10)
+        );
     }
 
     public function testShouldDecrementValue()
     {
         $cache = $this->getAdapter();
+
         $this->tester->haveInAerospike('decrement', 100);
 
-        $this->assertEquals(99, $cache->decrement('decrement'));
-        $this->assertEquals(97, $cache->decrement('decrement', 2));
-        $this->assertEquals(87, $cache->decrement('decrement', 10));
+        $this->assertEquals(
+            99,
+            $cache->decrement('decrement')
+        );
+
+        $this->assertEquals(
+            97,
+            $cache->decrement('decrement', 2)
+        );
+
+        $this->assertEquals(
+            87,
+            $cache->decrement('decrement', 10)
+        );
     }
 
     public function testShouldGetKeys()
     {
         $cache = $this->getAdapter(null);
-        $this->assertEquals(0, count($cache->queryKeys()));
+
+        $this->assertCount(
+            0,
+            $cache->queryKeys()
+        );
 
         $cache->save('a', 1, 10);
         $cache->save('long-key', 'long-val', 10);
@@ -92,8 +123,21 @@ class AerospikeTest extends Test
         $keys = $cache->queryKeys();
         sort($keys);
 
-        $this->assertEquals(['a', 'bcd', 'long-key'], $keys);
-        $this->assertEquals(['long-key'], $cache->queryKeys('long'));
+        $this->assertEquals(
+            [
+                'a',
+                'bcd',
+                'long-key',
+            ],
+            $keys
+        );
+
+        $this->assertEquals(
+            [
+                'long-key',
+            ],
+            $cache->queryKeys('long')
+        );
     }
 
     public function testShouldFlushAllData()
@@ -101,6 +145,7 @@ class AerospikeTest extends Test
         $cache = $this->getAdapter();
 
         $data = "sure, nothing interesting";
+
         $cache->save('test-data-flush', $data);
         $cache->save('test-data-flush2', $data);
 
@@ -115,11 +160,15 @@ class AerospikeTest extends Test
         $cache = $this->getAdapter();
 
         $data = [1, 2, 3, 4, 5];
+
         $cache->save('test-data', $data);
+
         $this->tester->seeInAerospike('test-data', $data);
 
         $data = "sure, nothing interesting";
+
         $cache->save('test-data', $data);
+
         $this->tester->seeInAerospike('test-data', $data);
     }
 
@@ -128,9 +177,12 @@ class AerospikeTest extends Test
         $cache = $this->getAdapter(20);
 
         $data = rand(0, 99);
+
         $this->tester->haveInAerospike('test-data', $data);
 
-        $this->assertTrue($cache->delete('test-data'));
+        $this->assertTrue(
+            $cache->delete('test-data')
+        );
 
         $this->tester->dontSeeInAerospike('test-data');
     }
@@ -139,42 +191,73 @@ class AerospikeTest extends Test
     {
         $time = date('H:i:s');
 
-        $frontCache = new CacheOutput(['lifetime' => 10]);
-        $cache = new CacheAerospike($frontCache, $this->getConfig());
+        $frontCache = new CacheOutput(
+            [
+                'lifetime' => 10,
+            ]
+        );
+
+        $cache = new CacheAerospike(
+            $frontCache,
+            $this->getConfig()
+        );
 
         ob_start();
 
         $content = $cache->start('test-output');
+
         $this->assertNull($content);
 
         echo $time;
 
         $obContent = ob_get_contents();
+
         $cache->save(null, null, null, true);
 
         ob_end_clean();
 
         $this->assertEquals($time, $obContent);
-        $this->assertEquals($time, $cache->get('test-output'));
+
+        $this->assertEquals(
+            $time,
+            $cache->get('test-output')
+        );
 
         $content = $cache->start('test-output');
 
         $this->assertEquals($content, $obContent);
-        $this->assertEquals($content, $cache->get('test-output'));
+
+        $this->assertEquals(
+            $content,
+            $cache->get('test-output')
+        );
 
         $keys = $cache->queryKeys();
-        $this->assertEquals([0 => 'test-output'], $keys);
+
+        $this->assertEquals(
+            [
+                0 => 'test-output',
+            ],
+            $keys
+        );
     }
 
     private function getAdapter($lifetime = 20)
     {
         if ($lifetime) {
-            $frontCache = new CacheData(['lifetime' => $lifetime]);
+            $frontCache = new CacheData(
+                [
+                    'lifetime' => $lifetime,
+                ]
+            );
         } else {
             $frontCache = new CacheData();
         }
 
-        $cache = new CacheAerospike($frontCache, $this->getConfig());
+        $cache = new CacheAerospike(
+            $frontCache,
+            $this->getConfig()
+        );
 
         return $cache;
     }
@@ -183,11 +266,14 @@ class AerospikeTest extends Test
     {
         return [
             'hosts' => [
-                ['addr' => env('TEST_AS_HOST', '127.0.0.1'), 'port' => (int)env('TEST_AS_PORT', 3000)]
+                [
+                    'addr' => env('TEST_AS_HOST', '127.0.0.1'),
+                    'port' => (int) env('TEST_AS_PORT', 3000),
+                ],
             ],
             'persistent' => false, // important
             'namespace'  => 'test',
-            'prefix'     => ''
+            'prefix'     => '',
         ];
     }
 }
