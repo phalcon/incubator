@@ -19,6 +19,8 @@
 
 namespace Phalcon\Logger\Adapter\File;
 
+use const DIRECTORY_SEPARATOR;
+use const FILE_APPEND;
 use Phalcon\Logger\Exception as LoggerException;
 use Phalcon\Logger as Logger;
 use Phalcon\Logger\Adapter\File as FileLogger;
@@ -54,11 +56,11 @@ class Multiple extends FileLogger implements AdapterInterface
      * @param  array  $options The following options are available:
      *                         - extension (string) Extension for all log files.
      *                         - prefix    (string) Name prefix for all log files
-     * @throws \Phalcon\Logger\Exception
+     * @throws LoggerException
      */
     public function __construct($path, array $options = [])
     {
-        $path = rtrim($path, ' ' . \DIRECTORY_SEPARATOR);
+        $path = rtrim($path, ' ' . DIRECTORY_SEPARATOR);
         if (!file_exists($path) || !is_dir($path)) {
             throw new LoggerException(
                 'Directory ' . $path . ' does not exist!'
@@ -88,19 +90,19 @@ class Multiple extends FileLogger implements AdapterInterface
      * @param  integer $type
      * @param  integer $time
      * @param  array   $context
-     * @throws \Phalcon\Logger\Exception
+     * @throws LoggerException
      */
     public function logInternal($message, $type, $time, array $context = [])
     {
         $filename = $this->path .
-            \DIRECTORY_SEPARATOR .
+            DIRECTORY_SEPARATOR .
             $this->options['prefix'] .
             $this->getTypeString($type) .
             '.' .
             $this->options['extension'];
 
         $log    = $this->getFormatter()->format($message, $type, $time, $context);
-        $result = file_put_contents($filename, $log, \FILE_APPEND);
+        $result = file_put_contents($filename, $log, FILE_APPEND);
 
         if ($result === false) {
             throw new LoggerException('Failed to write log into ' . $filename);
@@ -112,7 +114,7 @@ class Multiple extends FileLogger implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @throws \Phalcon\Logger\Exception
+     * @throws LoggerException
      */
     public function begin()
     {
@@ -124,7 +126,7 @@ class Multiple extends FileLogger implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @throws \Phalcon\Logger\Exception
+     * @throws LoggerException
      */
     public function commit()
     {
@@ -136,7 +138,7 @@ class Multiple extends FileLogger implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @throws \Phalcon\Logger\Exception
+     * @throws LoggerException
      */
     public function rollback()
     {

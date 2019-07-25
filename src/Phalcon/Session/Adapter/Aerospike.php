@@ -102,7 +102,7 @@ class Aerospike extends Adapter implements AdapterInterface
      *
      * @param array $options Constructor options
      *
-     * @throws \Phalcon\Session\Exception
+     * @throws Exception
      * @throws \Phalcon\Cache\Exception
      */
     public function __construct(array $options)

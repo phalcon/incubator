@@ -3,8 +3,13 @@ namespace Phalcon\Mvc\View\Engine;
 
 use Phalcon\DiInterface;
 use Phalcon\Mvc\View\Engine;
+use Phalcon\Mvc\View\Engine\Twig\Environment;
 use Phalcon\Mvc\View\EngineInterface;
 use Phalcon\Mvc\ViewBaseInterface;
+use Phalcon\Mvc\ViewInterface;
+use Phalcon\Tag;
+use Twig_Loader_Filesystem;
+use Twig_SimpleFunction;
 
 /**
  * Phalcon\Mvc\View\Engine\Twig
@@ -13,7 +18,7 @@ use Phalcon\Mvc\ViewBaseInterface;
 class Twig extends Engine implements EngineInterface
 {
     /**
-     * @var \Phalcon\Mvc\View\Engine\Twig\Environment
+     * @var Environment
      */
     protected $twig;
 
@@ -31,7 +36,7 @@ class Twig extends Engine implements EngineInterface
         $options = [],
         $userFunctions = []
     ) {
-        $loader = new \Twig_Loader_Filesystem(
+        $loader = new Twig_Loader_Filesystem(
             $view->getViewsDir()
         );
 
@@ -49,8 +54,8 @@ class Twig extends Engine implements EngineInterface
     /**
      * Registers common function in Twig
      *
-     * @param \Phalcon\Mvc\ViewInterface $view
-     * @param \Phalcon\DiInterface       $di
+     * @param ViewInterface $view
+     * @param DiInterface $di
      * @param array                      $userFunctions
      */
     protected function registryFunctions($view, DiInterface $di, $userFunctions = [])
@@ -58,168 +63,168 @@ class Twig extends Engine implements EngineInterface
         $options = ['is_safe' => ['html']];
 
         $functions = [
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'content',
                 function () use ($view) {
                     return $view->getContent();
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'partial',
                 function ($partialPath, $params = null) use ($view) {
                     return $view->partial($partialPath, $params);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'linkTo',
                 function ($parameters, $text = null, $local = true) {
-                    return \Phalcon\Tag::linkTo($parameters, $text, $local);
+                    return Tag::linkTo($parameters, $text, $local);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'textField',
                 function ($parameters) {
-                    return \Phalcon\Tag::textField($parameters);
+                    return Tag::textField($parameters);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'passwordField',
                 function ($parameters) {
-                    return \Phalcon\Tag::passwordField($parameters);
+                    return Tag::passwordField($parameters);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'hiddenField',
                 function ($parameters) {
-                    return \Phalcon\Tag::hiddenField($parameters);
+                    return Tag::hiddenField($parameters);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'fileField',
                 function ($parameters) {
-                    return \Phalcon\Tag::fileField($parameters);
+                    return Tag::fileField($parameters);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'checkField',
                 function ($parameters) {
-                    return \Phalcon\Tag::checkField($parameters);
+                    return Tag::checkField($parameters);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'radioField',
                 function ($parameters) {
-                    return \Phalcon\Tag::radioField($parameters);
+                    return Tag::radioField($parameters);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'submitButton',
                 function ($parameters) {
-                    return \Phalcon\Tag::submitButton($parameters);
+                    return Tag::submitButton($parameters);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'selectStatic',
                 function ($parameters, $data = []) {
-                    return \Phalcon\Tag::selectStatic($parameters, $data);
+                    return Tag::selectStatic($parameters, $data);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'select',
                 function ($parameters, $data = []) {
-                    return \Phalcon\Tag::select($parameters, $data);
+                    return Tag::select($parameters, $data);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'textArea',
                 function ($parameters) {
-                    return \Phalcon\Tag::textArea($parameters);
+                    return Tag::textArea($parameters);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'form',
                 function ($parameters = []) {
-                    return \Phalcon\Tag::form($parameters);
+                    return Tag::form($parameters);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'endForm',
                 function () {
-                    return \Phalcon\Tag::endForm();
+                    return Tag::endForm();
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'getTitle',
                 function () {
-                    return \Phalcon\Tag::getTitle();
+                    return Tag::getTitle();
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'stylesheetLink',
                 function ($parameters = null, $local = true) {
-                    return \Phalcon\Tag::stylesheetLink($parameters, $local);
+                    return Tag::stylesheetLink($parameters, $local);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'javascriptInclude',
                 function ($parameters = null, $local = true) {
-                    return \Phalcon\Tag::javascriptInclude($parameters, $local);
+                    return Tag::javascriptInclude($parameters, $local);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'image',
                 function ($parameters = null, $local = true) {
-                    return \Phalcon\Tag::image($parameters, $local);
+                    return Tag::image($parameters, $local);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'friendlyTitle',
                 function ($text, $separator = "-", $lc = true, $replace = null) {
-                    return \Phalcon\Tag::friendlyTitle($text, $separator, $lc, $replace);
+                    return Tag::friendlyTitle($text, $separator, $lc, $replace);
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'getDocType',
                 function () {
-                    return \Phalcon\Tag::getDocType();
+                    return Tag::getDocType();
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'getSecurityToken',
                 function () use ($di) {
                     return $di->get("security")->getToken();
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'getSecurityTokenKey',
                 function () use ($di) {
                     return $di->get("security")->getTokenKey();
                 },
                 $options
             ),
-            new \Twig_SimpleFunction(
+            new Twig_SimpleFunction(
                 'url',
                 function ($route) use ($di) {
                     return $di->get("url")->get($route);
@@ -273,7 +278,7 @@ class Twig extends Engine implements EngineInterface
     /**
      * Returns Twig environment object.
      *
-     * @return \Phalcon\Mvc\View\Engine\Twig\Environment
+     * @return Environment
      */
     public function getTwig()
     {

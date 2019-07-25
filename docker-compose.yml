@@ -1,7 +1,8 @@
 version: "3"
 services:
-    db:
-        image: mysql
+    mysql:
+        hostname: mysql
+        image: mysql:5
         environment:
           MYSQL_RANDOM_ROOT_PASSWORD: "yes"
           MYSQL_DATABASE: "incubator"
@@ -11,25 +12,31 @@ services:
             - "3306:3306"
 
     aerospike:
+        hostname: aerospike
         image: aerospike
         ports:
             - "3000:3000"
 
     redis:
+        hostname: redis
         image: redis
         ports:
             - "6379:6379"
 
     beanstalk:
+        hostname: beanstalk
         image: schickling/beanstalkd
         ports:
             - "11300:11300"
+
     memcached:
+        hostname: memcached
         image: memcached
         ports:
             - "11211:11211"
 
     mongodb:
+        hostname: mongodb
         image: mongo
         environment:
           MONGO_INITDB_DATABASE: incubator

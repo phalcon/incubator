@@ -19,6 +19,7 @@
 namespace Phalcon\Test\Traits;
 
 use Phalcon\Config;
+use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Mvc\Model\Manager as PhModelManager;
 use Phalcon\Mvc\Model\Metadata\Memory as PhMetadataMemory;
 
@@ -110,7 +111,7 @@ trait ModelTestCase
      */
     public function truncateTable($table)
     {
-        /* @var $db \Phalcon\Db\Adapter\Pdo\Mysql */
+        /* @var $db Mysql */
         $db = $this->getDI()->get('db');
 
         $db->execute("SET FOREIGN_KEY_CHECKS = 0");

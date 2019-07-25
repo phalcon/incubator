@@ -23,6 +23,7 @@ use Phalcon\Logger\Exception;
 use Phalcon\Logger\Formatter\Line as LineFormatter;
 use Phalcon\Logger\Adapter as LoggerAdapter;
 use Phalcon\Logger\AdapterInterface;
+use Phalcon\Logger\FormatterInterface;
 
 /**
  * Phalcon\Logger\Adapter\Udplogger
@@ -68,7 +69,7 @@ class Udplogger extends LoggerAdapter implements AdapterInterface
      *
      * @param string $name
      * @param array  $options
-     * @throws \Phalcon\Logger\Exception
+     * @throws Exception
      */
     public function __construct($name = 'phalcon', array $options = [])
     {
@@ -104,7 +105,7 @@ class Udplogger extends LoggerAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Logger\FormatterInterface
+     * @return FormatterInterface
      */
     public function getFormatter()
     {

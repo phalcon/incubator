@@ -30,7 +30,7 @@ abstract class Range
     /**
      * Pager object.
      *
-     * @var \Phalcon\Paginator\Pager
+     * @var Pager
      */
     protected $pager = null;
 
@@ -44,7 +44,7 @@ abstract class Range
     /**
      * Class constructor.
      *
-     * @param \Phalcon\Paginator\Pager $pager
+     * @param Pager $pager
      * @param integer                  $chunkLength
      */
     public function __construct(Pager $pager, $chunkLength)

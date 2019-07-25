@@ -17,7 +17,9 @@
 */
 namespace Phalcon\Db\Adapter\Mongo;
 
-class Db extends \MongoDB
+use MongoDB;
+
+class Db extends MongoDB
 {
     public $conn = null;
     public $name = null;

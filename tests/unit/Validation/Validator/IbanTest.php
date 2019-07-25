@@ -41,15 +41,18 @@ class IbanTest extends Test
     {
         $validation = new Validation();
 
+        $key = 'test';
+
         $validation->add(
-            'test',
+            $key,
             new Iban()
         );
 
         $validators = $validation->getValidators();
 
-        $validator = $validators[0];
-        $validator = $validator[1];
+        $validator = $validators[$key];
+
+        $validator = $validator[0];
 
         $validator->setCountryCode($countryCode);
 

@@ -19,6 +19,7 @@
 
 namespace Phalcon\Config\Adapter;
 
+use LibXMLError;
 use Phalcon\Config;
 use Phalcon\Config\Exception;
 
@@ -80,7 +81,7 @@ class Xml extends Config
         );
 
         foreach (libxml_get_errors() as $error) {
-            /** @var \LibXMLError $error */
+            /** @var LibXMLError $error */
             switch ($error->code) {
                 case LIBXML_ERR_WARNING:
                     trigger_error($error->message, E_USER_WARNING);

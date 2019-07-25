@@ -18,7 +18,11 @@
     <arg value="s"/>
 
     <!-- Use PSR-2 as a base -->
-    <rule ref="PSR2"/>
+    <rule ref="PSR2">
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
+        <exclude name="Generic.Files.LineLength.TooLong"/>
+        <exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>
+    </rule>
 
     <!--
         If no files or directories are specified on the command line

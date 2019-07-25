@@ -17,6 +17,8 @@
 */
 namespace Phalcon\Db\Adapter\Mongo;
 
+use RecursiveArrayIterator;
+
 class Document
 {
     protected $collection;
@@ -24,7 +26,7 @@ class Document
     public function __construct($collection, $doc = [])
     {
         $this->collection = $collection;
-        $this->extract(new \RecursiveArrayIterator($doc));
+        $this->extract(new RecursiveArrayIterator($doc));
     }
 
     private function extract($iterator, $className = null)

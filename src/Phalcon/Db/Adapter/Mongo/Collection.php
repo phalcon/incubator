@@ -17,7 +17,9 @@
 */
 namespace Phalcon\Db\Adapter\Mongo;
 
-class Collection extends \MongoCollection
+use MongoCollection;
+
+class Collection extends MongoCollection
 {
     public $db;
 

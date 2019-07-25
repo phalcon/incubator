@@ -19,7 +19,8 @@
 
 namespace Phalcon\Annotations\Adapter;
 
-use Phalcon\Annotations\Adapter;
+use Phalcon\Cache\BackendInterface;
+use Phalcon\Mvc\Model\Exception;
 
 /**
  * \Phalcon\Annotations\Adapter\Base
@@ -28,7 +29,7 @@ use Phalcon\Annotations\Adapter;
  *
  * @package Phalcon\Annotations\Adapter
  */
-abstract class Base extends Adapter
+abstract class Base extends AbstractAdapter
 {
     /**
      * Default option for cache lifetime.
@@ -56,7 +57,7 @@ abstract class Base extends Adapter
      *
      * @param null|array $options
      *
-     * @throws \Phalcon\Mvc\Model\Exception
+     * @throws Exception
      */
     public function __construct($options = null)
     {
@@ -117,7 +118,7 @@ abstract class Base extends Adapter
     /**
      * Returns cache backend instance.
      *
-     * @return \Phalcon\Cache\BackendInterface
+     * @return BackendInterface
      */
     abstract protected function getCacheBackend();
 }

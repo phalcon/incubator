@@ -17,7 +17,9 @@
 */
 namespace Phalcon\Db\Adapter\Mongo;
 
-class DbRef extends \MongoDBRef
+use MongoDBRef;
+
+class DbRef extends MongoDBRef
 {
     protected $collection;
     protected $ref;

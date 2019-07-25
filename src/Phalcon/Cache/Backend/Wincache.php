@@ -23,6 +23,7 @@ namespace Phalcon\Cache\Backend;
 use Phalcon\Cache\Exception;
 use Phalcon\Cache\Backend;
 use Phalcon\Cache\BackendInterface;
+use Phalcon\Cache\FrontendInterface;
 
 /**
  * Phalcon\Cache\Backend\Wincache
@@ -30,7 +31,7 @@ use Phalcon\Cache\BackendInterface;
  * This backend uses wincache as cache backend
  *
  * @package Phalcon\Cache\Backend
- * @property \Phalcon\Cache\FrontendInterface _frontend
+ * @property FrontendInterface _frontend
  */
 class Wincache extends Backend implements BackendInterface
 {
@@ -80,7 +81,7 @@ class Wincache extends Backend implements BackendInterface
             throw new Exception('The cache must be started first');
         }
 
-        /** @var \Phalcon\Cache\FrontendInterface $frontend */
+        /** @var FrontendInterface $frontend */
         $frontend = $this->getFrontend();
 
         if ($content === null) {

@@ -19,8 +19,8 @@
 
 namespace Phalcon\Validation\Validator\Db;
 
-use Phalcon\Validation\Validator;
-use Phalcon\Validation\Message;
+use Phalcon\Validation\AbstractValidator;
+use Phalcon\Messages\Message;
 use Phalcon\Db\Adapter\Pdo as DbConnection;
 use Phalcon\Validation\Exception as ValidationException;
 use Phalcon\DiInterface;
@@ -55,11 +55,11 @@ use Phalcon\Validation;
  * \Phalcon\Di::getDefault()->get('db');
  */
 
-class Uniqueness extends Validator
+class Uniqueness extends AbstractValidator
 {
     /**
      * Database connection
-     * @var \Phalcon\Db\Adapter\Pdo
+     * @var DbConnection
      */
     private $db;
 
@@ -123,11 +123,11 @@ class Uniqueness extends Validator
     /**
      * Executes the uniqueness validation
      *
-     * @param  \Phalcon\Validation $validator
+     * @param Validation $validator
      * @param  string $attribute
      * @return boolean
      */
-    public function validate(Validation $validator, $attribute)
+    public function validate(Validation $validator, $attribute): bool
     {
         $table = $this->db->escapeIdentifier(
             $this->getOption('table')

@@ -16,7 +16,10 @@
  */
 namespace Phalcon\Mvc\Model\MetaData;
 
+use Phalcon\Cache\BackendInterface;
+use Phalcon\Mvc\Model\Exception;
 use Phalcon\Mvc\Model\MetaData;
+use Phalcon\Mvc\Model\MetaDataInterface;
 
 /**
  * \Phalcon\Mvc\Model\MetaData\Base
@@ -29,7 +32,7 @@ use Phalcon\Mvc\Model\MetaData;
  * @license  New BSD License
  * @link     http://phalconphp.com/
  */
-abstract class Base extends MetaData implements \Phalcon\Mvc\Model\MetaDataInterface
+abstract class Base extends MetaData implements MetaDataInterface
 {
     /**
      * Default options for cache backend.
@@ -53,7 +56,7 @@ abstract class Base extends MetaData implements \Phalcon\Mvc\Model\MetaDataInter
      *
      * @param null|array $options
      *
-     * @throws \Phalcon\Mvc\Model\Exception
+     * @throws Exception
      */
     public function __construct($options = null)
     {
@@ -75,7 +78,7 @@ abstract class Base extends MetaData implements \Phalcon\Mvc\Model\MetaDataInter
      * @param  string $key
      * @return array
      */
-    public function read($key)
+    public function read(string $key): array
     {
         return $this->getCacheBackend()->get(
             $this->prepareKey($key),
@@ -113,7 +116,7 @@ abstract class Base extends MetaData implements \Phalcon\Mvc\Model\MetaDataInter
     /**
      * Returns cache backend instance.
      *
-     * @return \Phalcon\Cache\BackendInterface
+     * @return BackendInterface
      */
     abstract protected function getCacheBackend();
 }

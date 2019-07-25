@@ -2,7 +2,6 @@
 
 namespace Phalcon\Translate\Interpolator;
 
-use Phalcon\Translate\InterpolatorInterface;
 use Phalcon\Translate\Exception;
 use MessageFormatter;
 use IntlException;
@@ -10,18 +9,18 @@ use IntlException;
 class Intl implements InterpolatorInterface
 {
     private $locale;
-    
+
     public function __construct($locale)
     {
         $this->locale = $locale;
     }
-    
+
     /**
      * Replaces placeholders by the values passed
      * Use the MessageFormatter class,
      * See http://php.net/manual/en/class.messageformatter.php
     */
-    public function replacePlaceholders($translation, $placeholders = null)
+    public function replacePlaceholders(string $translation, array $placeholders = null): string
     {
         if (is_array($placeholders) && count($placeholders)) {
             try {
@@ -41,7 +40,7 @@ class Intl implements InterpolatorInterface
                     );
                 }
             }
-            
+
             $translation = $fmt->format($placeholders);
             if ($translation === false) {
                 throw new Exception($fmt->getErrorMessage(), $fmt->getErrorCode());

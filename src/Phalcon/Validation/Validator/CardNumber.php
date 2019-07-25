@@ -20,8 +20,8 @@
 namespace Phalcon\Validation\Validator;
 
 use Phalcon\Validation;
-use Phalcon\Validation\Message;
-use Phalcon\Validation\Validator;
+use Phalcon\Messages\Message;
+use Phalcon\Validation\AbstractValidator;
 use Phalcon\Validation\Exception as ValidationException;
 
 /**
@@ -38,7 +38,7 @@ use Phalcon\Validation\Exception as ValidationException;
  * ]));
  * </code>
  */
-class CardNumber extends Validator
+class CardNumber extends AbstractValidator
 {
     const AMERICAN_EXPRESS  = 0; // 34, 37
     const MASTERCARD        = 1; // 51-55
@@ -53,7 +53,7 @@ class CardNumber extends Validator
      * @return bool
      * @throws Exception
      */
-    public function validate(Validation $validation, $attribute)
+    public function validate(Validation $validation, $attribute): bool
     {
         $value = preg_replace(
             '/[^\d]/',
@@ -71,17 +71,17 @@ class CardNumber extends Validator
                     $issuer = substr($value, 0, 2);
                     $result = (true === in_array($issuer, [34, 37]));
                     break;
- 
+
                 case CardNumber::MASTERCARD:
                     $issuer = substr($value, 0, 2);
                     $result = (true === in_array($issuer, [51, 52, 53, 54, 55]));
                     break;
- 
+
                 case CardNumber::VISA:
                     $issuer = $value[0];
                     $result = ($issuer == 4);
                     break;
- 
+
                 default:
                     throw new ValidationException('Incorrect type specifier');
             }

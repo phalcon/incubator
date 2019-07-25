@@ -2,23 +2,23 @@
 
 namespace Phalcon\Validation\Validator;
 
-use Phalcon\Validation\Message;
-use Phalcon\Validation\Validator;
-use Phalcon\Validation\ValidatorInterface;
+use Phalcon\Validation;
+use Phalcon\Messages\Message;
+use Phalcon\Validation\AbstractValidator;
 
-class ArrayInclusionIn extends Validator implements ValidatorInterface
+class ArrayInclusionIn extends AbstractValidator
 {
 
     /**
      * Executes the validation
      *
-     * @param \Phalcon\Validation $validation
+     * @param Validation $validation
      * @param string $attribute
      * @return bool
      *
      * @throws \Exception
      */
-    public function validate(\Phalcon\Validation $validation, $attribute)
+    public function validate(Validation $validation, $attribute): bool
     {
         $array = $validation->getValue($attribute);
         $domain = $this->getOption('domain');

@@ -19,9 +19,9 @@
 
 namespace Phalcon\Validation\Validator;
 
-use Phalcon\Validation\Validator;
+use Phalcon\Validation\AbstractValidator;
 use Phalcon\Validation;
-use Phalcon\Validation\Message;
+use Phalcon\Messages\Message;
 
 /**
  * Validates IBAN Numbers (International Bank Account Numbers)
@@ -41,7 +41,7 @@ use Phalcon\Validation\Message;
  *
  * @package Phalcon\Validation\Validator
  */
-class Iban extends Validator
+class Iban extends AbstractValidator
 {
     /**
      * Validation failure message template definitions
@@ -219,7 +219,7 @@ class Iban extends Validator
      *
      * @return bool
      */
-    public function validate(Validation $validation, $attribute)
+    public function validate(Validation $validation, $attribute): bool
     {
         $messageCode = $this->getErrorMessageCode($validation, $attribute);
         if (!empty($messageCode)) {

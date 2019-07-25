@@ -24,14 +24,14 @@ class Wincache extends Base
     /**
      * Memcache backend instance.
      *
-     * @var \Phalcon\Cache\Backend\Wincache
+     * @var CacheBackend
      */
     protected $wincache = null;
 
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Cache\Backend\Wincache
+     * @return CacheBackend
      */
     protected function getCacheBackend()
     {

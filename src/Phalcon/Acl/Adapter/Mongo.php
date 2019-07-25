@@ -20,6 +20,8 @@
 
 namespace Phalcon\Acl\Adapter;
 
+use BadMethodCallException;
+use MongoCollection;
 use Phalcon\Acl\Adapter;
 use Phalcon\Acl\Exception;
 use Phalcon\Acl\Resource;
@@ -48,7 +50,7 @@ class Mongo extends Adapter
      * Class constructor.
      *
      * @param  array $options
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
     public function __construct($options)
     {
@@ -89,7 +91,7 @@ class Mongo extends Adapter
      * @param  string  $role
      * @param  array   $accessInherits
      * @return boolean
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
     public function addRole($role, $accessInherits = null)
     {
@@ -147,11 +149,11 @@ class Mongo extends Adapter
      *
      * @param  string $roleName
      * @param  string $roleToInherit
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      */
     public function addInherit($roleName, $roleToInherit)
     {
-        throw new \BadMethodCallException('Not implemented yet.');
+        throw new BadMethodCallException('Not implemented yet.');
     }
 
     /**
@@ -189,7 +191,7 @@ class Mongo extends Adapter
      * $acl->addResource('customers', ['create', 'search']);
      * </code>
      *
-     * @param  \Phalcon\Acl\Resource $resource
+     * @param Resource $resource
      * @param  array|string          $accessList
      * @return boolean
      */
@@ -232,7 +234,7 @@ class Mongo extends Adapter
      * @param  string       $resourceName
      * @param  array|string $accessList
      * @return boolean
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
     public function addResourceAccess($resourceName, $accessList)
     {
@@ -272,7 +274,7 @@ class Mongo extends Adapter
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Acl\Resource[]
+     * @return Resource[]
      */
     public function getResources()
     {
@@ -315,7 +317,7 @@ class Mongo extends Adapter
      */
     public function dropResourceAccess($resourceName, $accessList)
     {
-        throw new \BadMethodCallException('Not implemented yet.');
+        throw new BadMethodCallException('Not implemented yet.');
     }
 
     /**
@@ -448,7 +450,7 @@ class Mongo extends Adapter
      * Returns a mongo collection
      *
      * @param  string           $name
-     * @return \MongoCollection
+     * @return MongoCollection
      */
     protected function getCollection($name)
     {
@@ -463,7 +465,7 @@ class Mongo extends Adapter
      * @param  string  $accessName
      * @param  integer $action
      * @return boolean
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
     protected function insertOrUpdateAccess($roleName, $resourceName, $accessName, $action)
     {
@@ -540,7 +542,7 @@ class Mongo extends Adapter
      * @param  string  $resourceName
      * @param  string  $access
      * @param  integer $action
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
     protected function allowOrDeny($roleName, $resourceName, $access, $action)
     {

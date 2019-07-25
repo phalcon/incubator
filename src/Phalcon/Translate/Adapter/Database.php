@@ -20,12 +20,13 @@
 
 namespace Phalcon\Translate\Adapter;
 
+use ArrayAccess;
 use Phalcon\Db;
 use Phalcon\Translate\Adapter;
 use Phalcon\Translate\AdapterInterface;
 use Phalcon\Translate\Exception;
 
-class Database extends Adapter implements AdapterInterface, \ArrayAccess
+class Database extends Adapter implements AdapterInterface, ArrayAccess
 {
     /**
      * @var array
@@ -48,7 +49,7 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * Class constructor.
      *
      * @param  array $options
-     * @throws \Phalcon\Translate\Exception
+     * @throws Exception
      */
     public function __construct(array $options)
     {
@@ -75,7 +76,7 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
         );
 
         $this->options = $options;
-        
+
         parent::__construct($options);
     }
 

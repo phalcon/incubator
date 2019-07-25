@@ -19,10 +19,14 @@
 
 namespace Phalcon\Queue\Beanstalk;
 
+use ArrayAccess;
 use duncan3dc\Forker\Exception as ForkException;
 use duncan3dc\Forker\Fork;
+use Exception;
+use InvalidArgumentException;
 use Phalcon\Logger\Adapter as LoggerAdapter;
 use Phalcon\Queue\Beanstalk as Base;
+use RuntimeException;
 
 /**
  * \Phalcon\Queue\Beanstalk\Extended
@@ -61,7 +65,7 @@ class Extended extends Base
     /**
      * If provided the errors will be logged here.
      *
-     * @var \Phalcon\Logger\Adapter
+     * @var LoggerAdapter
      */
     protected $logger = null;
 
@@ -91,7 +95,7 @@ class Extended extends Base
         $logger = null;
         $tubePrefix = '';
 
-        if (is_array($options) || ($options instanceof \ArrayAccess)) {
+        if (is_array($options) || ($options instanceof ArrayAccess)) {
             if (isset($options['prefix'])) {
                 $tubePrefix = $options['prefix'];
             }
@@ -110,16 +114,16 @@ class Extended extends Base
      *
      * @param  string                    $tube
      * @param  callable                  $callback
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function addWorker($tube, $callback)
     {
         if (!is_string($tube)) {
-            throw new \InvalidArgumentException('The tube name must be a string.');
+            throw new InvalidArgumentException('The tube name must be a string.');
         }
 
         if (!is_callable($callback)) {
-            throw new \InvalidArgumentException('The callback is invalid.');
+            throw new InvalidArgumentException('The callback is invalid.');
         }
 
         $this->workers[$tube] = $callback;
@@ -163,7 +167,7 @@ class Extended extends Base
 
                             try {
                                 $job->delete();
-                            } catch (\Exception $e) {
+                            } catch (Exception $e) {
                                 if (null !== $this->logger) {
                                     $this->logger->warning(sprintf(
                                         'Exception thrown while deleting the job: %d — %s',
@@ -172,7 +176,7 @@ class Extended extends Base
                                     ));
                                 }
                             }
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             if (null !== $this->logger) {
                                 $this->logger->warning(sprintf(
                                     'Exception thrown while handling job #%s: %d — %s',
@@ -241,7 +245,7 @@ class Extended extends Base
      *
      * @param  string                               $tube
      * @param  integer                              $timeout
-     * @return boolean|\Phalcon\Queue\Beanstalk\Job
+     * @return boolean|Job
      */
     public function reserveFromTube($tube, $timeout = null)
     {
@@ -369,7 +373,7 @@ class Extended extends Base
      *
      * @param  string            $cmd
      * @return array|null
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     protected function getResponseLines($cmd)
     {
@@ -380,7 +384,7 @@ class Extended extends Base
         $matches = [];
 
         if (!preg_match('#^(OK (\d+))#mi', $response, $matches)) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 'Unhandled response: %s',
                 $response
             ));
@@ -402,7 +406,7 @@ class Extended extends Base
      *
      * @param  string            $cmd
      * @return string|null
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     protected function getWatchingResponse($cmd)
     {
@@ -414,7 +418,7 @@ class Extended extends Base
             $matches = [];
 
             if (!preg_match('#^WATCHING (\d+).*?#', $response, $matches)) {
-                throw new \RuntimeException(sprintf(
+                throw new RuntimeException(sprintf(
                     'Unhandled response: %s',
                     $response
                 ));

@@ -2,6 +2,7 @@
 
 use Phalcon\Mvc\Model\Relation;
 use Phalcon\Mvc\Model\Resultset;
+use Phalcon\Mvc\ModelInterface;
 use Phalcon\Version;
 
 /**
@@ -15,7 +16,7 @@ final class EagerLoad
     private $constraints;
     /** @var Loader|EagerLoad */
     private $parent;
-    /** @var null|\Phalcon\Mvc\ModelInterface[] */
+    /** @var null|ModelInterface[] */
     private $subject;
     /** @var boolean */
     private static $isPhalcon2;
@@ -37,7 +38,7 @@ final class EagerLoad
     }
 
     /**
-     * @return null|\Phalcon\Mvc\ModelInterface[]
+     * @return null|ModelInterface[]
      */
     public function getSubject()
     {
@@ -61,7 +62,7 @@ final class EagerLoad
         if (empty($parentSubject)) {
             return $this;
         }
-        
+
         $relation = $this->relation;
 
         $alias                = $relation->getOptions();

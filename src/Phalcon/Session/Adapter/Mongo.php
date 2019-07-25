@@ -20,6 +20,10 @@
 
 namespace Phalcon\Session\Adapter;
 
+use DateInterval;
+use DateTime;
+use MongoCollection;
+use MongoDate;
 use Phalcon\Session\Adapter;
 use Phalcon\Session\AdapterInterface;
 use Phalcon\Session\Exception;
@@ -117,7 +121,7 @@ class Mongo extends Adapter implements AdapterInterface
 
         $sessionData = [
             '_id'      => $sessionId,
-            'modified' => new \MongoDate(),
+            'modified' => new MongoDate(),
             'data'     => $sessionData,
         ];
 
@@ -152,15 +156,15 @@ class Mongo extends Adapter implements AdapterInterface
      */
     public function gc($maxLifetime)
     {
-        $minAge = new \DateTime();
+        $minAge = new DateTime();
 
         $minAge->sub(
-            new \DateInterval(
+            new DateInterval(
                 'PT' . $maxLifetime . 'S'
             )
         );
 
-        $minAgeMongo = new \MongoDate(
+        $minAgeMongo = new MongoDate(
             $minAge->getTimestamp()
         );
 
@@ -176,7 +180,7 @@ class Mongo extends Adapter implements AdapterInterface
     }
 
     /**
-     * @return \MongoCollection
+     * @return MongoCollection
      */
     protected function getCollection()
     {

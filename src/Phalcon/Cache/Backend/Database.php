@@ -34,7 +34,7 @@ use Phalcon\Cache\BackendInterface;
  * This backend uses a database as cache backend
  *
  * @package Phalcon\Cache\Backend
- * @property \Phalcon\Cache\FrontendInterface _frontend
+ * @property FrontendInterface _frontend
  */
 class Database extends Backend implements BackendInterface
 {
@@ -111,7 +111,7 @@ class Database extends Backend implements BackendInterface
             return null;
         }
 
-        /** @var \Phalcon\Cache\FrontendInterface $frontend */
+        /** @var FrontendInterface $frontend */
         $frontend = $this->getFrontend();
 
         // Remove the cache if expired
@@ -154,7 +154,7 @@ class Database extends Backend implements BackendInterface
             throw new Exception('The cache must be started first');
         }
 
-        /** @var \Phalcon\Cache\FrontendInterface $frontend */
+        /** @var FrontendInterface $frontend */
         $frontend = $this->getFrontend();
 
         if ($content === null) {

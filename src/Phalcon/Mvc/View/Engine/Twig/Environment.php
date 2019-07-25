@@ -20,28 +20,30 @@
 namespace Phalcon\Mvc\View\Engine\Twig;
 
 use Phalcon\DiInterface;
+use Twig_Environment;
+use Twig_LoaderInterface;
 
 /**
  * \Phalcon\Mvc\View\Engine\Twig\Environment
  * Twig environment that uses internal dependency injector.
  */
-class Environment extends \Twig_Environment
+class Environment extends Twig_Environment
 {
     /**
      * Internal dependency injector.
      *
-     * @var \Phalcon\DiInterface
+     * @var DiInterface
      */
     protected $di = null;
 
     /**
      * {@inheritdoc}
      *
-     * @param \Phalcon\DiInterface  $di
-     * @param \Twig_LoaderInterface $loader
+     * @param DiInterface $di
+     * @param Twig_LoaderInterface $loader
      * @param array                 $options
      */
-    public function __construct(DiInterface $di, \Twig_LoaderInterface $loader = null, $options = [])
+    public function __construct(DiInterface $di, Twig_LoaderInterface $loader = null, $options = [])
     {
         $this->di = $di;
 
@@ -51,7 +53,7 @@ class Environment extends \Twig_Environment
     /**
      * Returns the internal dependency injector.
      *
-     * @return \Phalcon\DiInterface
+     * @return DiInterface
      */
     public function getDi()
     {

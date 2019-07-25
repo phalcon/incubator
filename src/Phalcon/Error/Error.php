@@ -21,6 +21,8 @@
 
 namespace Phalcon\Error;
 
+use Exception;
+
 /**
  * Class Error
  * @package Phalcon\Error
@@ -29,7 +31,7 @@ namespace Phalcon\Error;
  * @method string message()
  * @method string file()
  * @method string line()
- * @method \Exception exception()
+ * @method Exception exception()
  * @method bool isException()
  * @method bool isError()
  */

@@ -21,8 +21,8 @@ namespace Phalcon\Validation\Validator;
 
 use MongoId as Id;
 use Phalcon\Validation;
-use Phalcon\Validation\Validator;
-use Phalcon\Validation\Message;
+use Phalcon\Validation\AbstractValidator;
+use Phalcon\Messages\Message;
 use Phalcon\Validation\Exception as ValidationException;
 
 /**
@@ -30,7 +30,7 @@ use Phalcon\Validation\Exception as ValidationException;
  *
  * @package Phalcon\Validation\Validator
  */
-class MongoId extends Validator
+class MongoId extends AbstractValidator
 {
     /**
      * @param Validation $validation
@@ -38,7 +38,7 @@ class MongoId extends Validator
      * @return bool
      * @throws ValidationException
      */
-    public function validate(Validation $validation, $attribute)
+    public function validate(Validation $validation, $attribute): bool
     {
         if (!extension_loaded('mongo')) {
             throw new ValidationException('Mongo extension is not available');

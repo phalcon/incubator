@@ -40,7 +40,7 @@ class Extended extends ConsoleApp
      * @param array $arguments Cli arguments
      *
      * @return mixed
-     * @throws \Phalcon\Cli\Console\Exception
+     * @throws Exception
      */
     public function handle(array $arguments = null)
     {
@@ -62,7 +62,7 @@ class Extended extends ConsoleApp
     }
 
     /**
-     * @throws \Phalcon\Cli\Console\Exception
+     * @throws Exception
      */
     private function setTasksDir()
     {
