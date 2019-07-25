@@ -19,9 +19,11 @@
 
 namespace Phalcon\Logger\Adapter;
 
+use const E_USER_WARNING;
 use Phalcon\Logger\Formatter\Firelogger as FireloggerFormatter;
 use Phalcon\Logger\Adapter as LoggerAdapter;
 use Phalcon\Logger\AdapterInterface;
+use Phalcon\Logger\FormatterInterface;
 
 /**
  * Phalcon\Logger\Adapter\Firelogger
@@ -136,7 +138,7 @@ class Firelogger extends LoggerAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Logger\FormatterInterface
+     * @return FormatterInterface
      */
     public function getFormatter()
     {
@@ -233,7 +235,7 @@ class Firelogger extends LoggerAdapter implements AdapterInterface
             trigger_error(
                 "Cannot send FireLogger headers after output has been sent" .
                 ($file ? " (output started at $file:$line)." : "."),
-                \E_USER_WARNING
+                E_USER_WARNING
             );
 
             return;

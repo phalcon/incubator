@@ -3,11 +3,11 @@
 namespace Phalcon\Validation\Validator;
 
 use Phalcon\Validation;
-use Phalcon\Validation\Message;
-use Phalcon\Validation\Validator;
+use Phalcon\Messages\Message;
+use Phalcon\Validation\AbstractValidator;
 use Phalcon\Validation\ValidatorInterface;
 
-class NumericValidator extends Validator implements ValidatorInterface
+class NumericValidator extends AbstractValidator implements ValidatorInterface
 {
     /**
      * Executes the validation. Allowed options:
@@ -20,7 +20,7 @@ class NumericValidator extends Validator implements ValidatorInterface
      *
      * @return boolean
      */
-    public function validate(Validation $validator, $attribute)
+    public function validate(Validation $validator, $attribute): bool
     {
         $value = $validator->getValue($attribute);
 

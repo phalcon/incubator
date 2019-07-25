@@ -196,7 +196,7 @@ class NestedSet extends Behavior implements BehaviorInterface
     /**
      * Determines if node is descendant of subject node.
      *
-     * @param  \Phalcon\Mvc\ModelInterface $subj the subject node.
+     * @param ModelInterface $subj the subject node.
      *
      * @return boolean                     whether the node is descendant of subject node.
      */
@@ -333,7 +333,7 @@ class NestedSet extends Behavior implements BehaviorInterface
     /**
      * Named scope. Gets parent of node.
      *
-     * @return \Phalcon\Mvc\ModelInterface
+     * @return ModelInterface
      */
     public function parent()
     {

@@ -20,6 +20,7 @@
 
 namespace Phalcon\Acl\Adapter;
 
+use BadMethodCallException;
 use Phalcon\Db;
 use Phalcon\Db\AdapterInterface as DbAdapter;
 use Phalcon\Acl\Adapter;
@@ -122,10 +123,10 @@ class Database extends Adapter
      * $acl->addRole('administrator', 'consultor');
      * </code>
      *
-     * @param  \Phalcon\Acl\Role|string $role
+     * @param Role|string $role
      * @param  string                   $accessInherits
      * @return boolean
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
     public function addRole($role, $accessInherits = null)
     {
@@ -185,7 +186,7 @@ class Database extends Adapter
      *
      * @param  string $roleName
      * @param  string $roleToInherit
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
     public function addInherit($roleName, $roleToInherit)
     {
@@ -275,7 +276,7 @@ class Database extends Adapter
      * $acl->addResource('customers', ['create', 'search']);
      * </code>
      *
-     * @param  \Phalcon\Acl\Resource|string $resource
+     * @param Resource|string $resource
      * @param  array|string                 $accessList
      * @return boolean
      */
@@ -319,7 +320,7 @@ class Database extends Adapter
      * @param  string       $resourceName
      * @param  array|string $accessList
      * @return boolean
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
     public function addResourceAccess($resourceName, $accessList)
     {
@@ -362,7 +363,7 @@ class Database extends Adapter
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Acl\Resource[]
+     * @return Resource[]
      */
     public function getResources()
     {
@@ -418,7 +419,7 @@ class Database extends Adapter
      */
     public function dropResourceAccess($resourceName, $accessList)
     {
-        throw new \BadMethodCallException('Not implemented yet.');
+        throw new BadMethodCallException('Not implemented yet.');
     }
 
     /**
@@ -566,7 +567,7 @@ class Database extends Adapter
      * @param  string  $accessName
      * @param  integer $action
      * @return boolean
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
     protected function insertOrUpdateAccess($roleName, $resourceName, $accessName, $action)
     {
@@ -671,7 +672,7 @@ class Database extends Adapter
      * @param  string       $resourceName
      * @param  array|string $access
      * @param  integer      $action
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
     protected function allowOrDeny($roleName, $resourceName, $access, $action)
     {

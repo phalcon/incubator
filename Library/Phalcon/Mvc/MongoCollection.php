@@ -19,6 +19,7 @@
 
 namespace Phalcon\Mvc;
 
+use MongoDb;
 use Phalcon\Di;
 use MongoDB\BSON\ObjectID;
 use MongoDB\Driver\WriteConcern;
@@ -223,7 +224,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
      *
      * @param array               $params
      * @param CollectionInterface $collection
-     * @param \MongoDb            $connection
+     * @param MongoDb            $connection
      * @param bool                $unique
      *
      * @return array
@@ -268,7 +269,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         }
 
         /**
-         * @var \Phalcon\Db\Adapter\MongoDB\Collection $mongoCollection
+         * @var AdapterCollection $mongoCollection
          */
         $mongoCollection = $connection->selectCollection($source);
 
@@ -544,7 +545,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
      */
     public function create()
     {
-        /** @var \Phalcon\Db\Adapter\MongoDB\Collection $collection */
+        /** @var AdapterCollection $collection */
         $collection = $this->prepareCU();
 
         /**
@@ -590,7 +591,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
          */
         return $this->_postSave(self::$_disableEvents, $success, false);
     }
-  
+
     /**
      * {@inheritdoc}
      *
@@ -601,12 +602,12 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         if (empty($criteria)) {
             throw new Exception("Criteria parameter must be array with one or more attributes of the model");
         }
-      
+
         /**
          * Choose a collection according to the collection name
          */
         $collection = $this->prepareCU();
-      
+
         /**
          * Assume non-existence to fire beforeCreate events - no update does occur anyway
          */

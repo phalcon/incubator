@@ -18,7 +18,9 @@
 */
 namespace Phalcon\Db\Adapter\Cacheable;
 
+use Phalcon\Cache\BackendInterface;
 use Phalcon\Db\Result\Serializable;
+use Phalcon\Kernel;
 
 /**
  * Phalcon\Db\Adapter\Cacheable\Mysql
@@ -41,7 +43,7 @@ class Mysql extends \Phalcon\Db\Adapter\Pdo\Mysql
     /**
      * Sets a handler to cache the data
      *
-     * @param \Phalcon\Cache\BackendInterface $cache
+     * @param BackendInterface $cache
      */
     public function setCache($cache)
     {
@@ -54,7 +56,7 @@ class Mysql extends \Phalcon\Db\Adapter\Pdo\Mysql
      * @param  string                          $sqlStatement
      * @param  array                           $bindParams
      * @param  array                           $bindTypes
-     * @return \Phalcon\Db\Result\Serializable
+     * @return Serializable
      */
     public function query($sqlStatement, $bindParams = null, $bindTypes = null)
     {
@@ -62,9 +64,9 @@ class Mysql extends \Phalcon\Db\Adapter\Pdo\Mysql
          * The key is the full sql statement + its parameters
          */
         if (is_array($bindParams)) {
-            $key = \Phalcon\Kernel::preComputeHashKey($sqlStatement . '//' . join('|', $bindParams));
+            $key = Kernel::preComputeHashKey($sqlStatement . '//' . join('|', $bindParams));
         } else {
-            $key = \Phalcon\Kernel::preComputeHashKey($sqlStatement);
+            $key = Kernel::preComputeHashKey($sqlStatement);
         }
 
         /**

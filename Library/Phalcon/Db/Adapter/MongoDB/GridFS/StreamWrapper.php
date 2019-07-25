@@ -2,6 +2,8 @@
 
 namespace Phalcon\Db\Adapter\MongoDB\GridFS;
 
+use const STREAM_IS_URL;
+
 /**
  * Stream wrapper for reading and writing a GridFS file.
  *
@@ -36,7 +38,7 @@ class StreamWrapper
             stream_wrapper_unregister($protocol);
         }
 
-        stream_wrapper_register($protocol, get_called_class(), \STREAM_IS_URL);
+        stream_wrapper_register($protocol, get_called_class(), STREAM_IS_URL);
     }
 
     /**

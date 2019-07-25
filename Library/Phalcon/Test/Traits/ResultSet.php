@@ -20,6 +20,11 @@
 namespace Phalcon\Test\Traits;
 
 use Phalcon\Mvc\Model\Resultset as phResultset;
+use Phalcon\Mvc\Model\ResultsetInterface;
+use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit_Framework_TestCase;
+use ReflectionProperty;
+use stdClass;
 
 /**
  * Trait ResultSet. Adds Ability To Mock DB ResultSet (Without Actual Connection To DB)
@@ -34,12 +39,12 @@ trait ResultSet
      * @param array $dataSet Mock Data Set To Use
      * @param string $className ResultSet Class To Mimic (Defaults To Abstract ResultSet)
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Phalcon\Mvc\Model\Resultset|\Phalcon\Mvc\Model\ResultsetInterface
+     * @return PHPUnit_Framework_MockObject_MockObject|phResultset|ResultsetInterface
      */
     public function mockResultSet(array $dataSet, $className = phResultset::class)
     {
-        /** @var \PHPUnit_Framework_TestCase $this */
-        /** @var \PHPUnit_Framework_MockObject_MockObject $mockResultSet */
+        /** @var PHPUnit_Framework_TestCase $this */
+        /** @var PHPUnit_Framework_MockObject_MockObject $mockResultSet */
 
 
         $mockResultSet = $this->getMockBuilder($className)
@@ -59,16 +64,16 @@ trait ResultSet
             )->getMockForAbstractClass();
 
         //Work Around For Final Count Method
-        $reflectionMethod = new \ReflectionProperty('\Phalcon\Mvc\Model\Resultset', '_count');
+        $reflectionMethod = new ReflectionProperty('\Phalcon\Mvc\Model\Resultset', '_count');
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->setValue($mockResultSet, count($dataSet));
 
         //Work Around For Final Seek
-        $reflectionProperty = new \ReflectionProperty('\Phalcon\Mvc\Model\Resultset', '_rows');
+        $reflectionProperty = new ReflectionProperty('\Phalcon\Mvc\Model\Resultset', '_rows');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($mockResultSet, $dataSet);
 
-        $sharedData = new \stdClass();
+        $sharedData = new stdClass();
         $sharedData->pos = 0;
         $sharedData->data = $dataSet;
 

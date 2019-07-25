@@ -19,18 +19,28 @@
 
 namespace Phalcon\Paginator;
 
+use ArrayIterator;
+use Countable;
+use Iterator;
+use IteratorAggregate;
+use Phalcon\Paginator\Pager\Layout;
+use Phalcon\Paginator\Pager\Range;
+use Phalcon\Paginator\Pager\Range\Sliding;
+use RuntimeException;
+use stdClass;
+
 /**
  * \Phalcon\Paginator\Pager
  * Pager object is a navigation menu renderer based on doctrine1 pager object.
  *
  * @link https://github.com/doctrine/doctrine1/blob/master/lib/Doctrine/Pager.php
  */
-class Pager implements \IteratorAggregate, \Countable
+class Pager implements IteratorAggregate, Countable
 {
     /**
      * Phalcon's paginate result.
      *
-     * @var \stdClass
+     * @var stdClass
      */
     protected $paginateResult = null;
 
@@ -59,7 +69,7 @@ class Pager implements \IteratorAggregate, \Countable
      *     - layoutClass: Used with getLayout() method. Defaults to "Phalcon\Paginator\Pager\Layout".
      *     - urlMask:     Required with getLayout() method.
      *
-     * @param \Phalcon\Paginator\AdapterInterface $adapter Phalcon paginator adapter
+     * @param AdapterInterface $adapter Phalcon paginator adapter
      * @param array                               $options options array
      *
      */
@@ -144,17 +154,17 @@ class Pager implements \IteratorAggregate, \Countable
     /**
      * Returns the layout object.
      *
-     * @return \Phalcon\Paginator\Pager\Layout
-     * @throws \RuntimeException               in case options are not properly set
+     * @return Layout
+     * @throws RuntimeException               in case options are not properly set
      */
     public function getLayout()
     {
         if (!array_key_exists('layoutClass', $this->options)) {
-            $this->options['layoutClass'] = \Phalcon\Paginator\Pager\Layout::class;
+            $this->options['layoutClass'] = Layout::class;
         }
 
         if (!array_key_exists('urlMask', $this->options)) {
-            throw new \RuntimeException('You must provide option "urlMask"');
+            throw new RuntimeException('You must provide option "urlMask"');
         }
 
         $range       = null;
@@ -162,7 +172,7 @@ class Pager implements \IteratorAggregate, \Countable
         $rangeLength = $this->getRangeLength();
 
         if (!class_exists($rangeClass)) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf(
                     'Unable to find range class "%s"',
                     $rangeClass
@@ -171,7 +181,7 @@ class Pager implements \IteratorAggregate, \Countable
         }
 
         if (!class_exists($this->options['layoutClass'])) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf(
                     'Unable to find layout "%s"',
                     $this->options['layoutClass']
@@ -195,7 +205,7 @@ class Pager implements \IteratorAggregate, \Countable
     {
         $rangeClass = $this->getRangeClass();
 
-        /** @var \Phalcon\Paginator\Pager\Range $range */
+        /** @var Range $range */
         $range = new $rangeClass(
             $this,
             $this->getRangeLength()
@@ -207,12 +217,12 @@ class Pager implements \IteratorAggregate, \Countable
     /**
      * {@inheritdoc}
      *
-     * @return \ArrayIterator
+     * @return ArrayIterator
      */
     public function getIterator()
     {
-        if (!$this->paginateResult->items instanceof \Iterator) {
-            return new \ArrayIterator(
+        if (!$this->paginateResult->items instanceof Iterator) {
+            return new ArrayIterator(
                 $this->paginateResult->items
             );
         }
@@ -240,7 +250,7 @@ class Pager implements \IteratorAggregate, \Countable
     protected function getRangeClass()
     {
         if (!array_key_exists('rangeClass', $this->options)) {
-            $this->options['rangeClass'] = \Phalcon\Paginator\Pager\Range\Sliding::class;
+            $this->options['rangeClass'] = Sliding::class;
         }
 
         return $this->options['rangeClass'];

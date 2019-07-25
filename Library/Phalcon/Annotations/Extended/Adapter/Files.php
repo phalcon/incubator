@@ -19,6 +19,7 @@
 
 namespace Phalcon\Annotations\Extended\Adapter;
 
+use DirectoryIterator;
 use Phalcon\Annotations\Exception;
 use Phalcon\Annotations\Reflection;
 use Phalcon\Annotations\Extended\AbstractAdapter;
@@ -141,7 +142,7 @@ class Files extends AbstractAdapter
      */
     public function flush()
     {
-        $iterator = new \DirectoryIterator($this->annotationsDir);
+        $iterator = new DirectoryIterator($this->annotationsDir);
 
         foreach ($iterator as $item) {
             if ($item->isDot() || !$item->isFile() || $item->getExtension() !== 'php') {

@@ -22,6 +22,7 @@ use Phalcon\Escaper as PhEscaper;
 use Phalcon\Mvc\Dispatcher as PhDispatcher;
 use Phalcon\Mvc\Application as PhApplication;
 use Phalcon\DiInterface;
+use PHPUnit\Framework\ExpectationFailedException;
 
 trait FunctionalTestCase
 {
@@ -97,7 +98,7 @@ trait FunctionalTestCase
      * Assert that the last dispatched controller matches the given controller class name
      *
      * @param  string $expected The expected controller name
-     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws ExpectationFailedException
      */
     public function assertController($expected)
     {
@@ -106,7 +107,7 @@ trait FunctionalTestCase
         $actual = $dispatcher->getControllerName();
 
         if ($actual != $expected) {
-            throw new \PHPUnit\Framework\ExpectationFailedException(
+            throw new ExpectationFailedException(
                 sprintf(
                     'Failed asserting Controller name "%s", actual Controller name is "%s"',
                     $expected,
@@ -122,7 +123,7 @@ trait FunctionalTestCase
      * Assert that the last dispatched action matches the given action name
      *
      * @param  string $expected The expected action name
-     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws ExpectationFailedException
      */
     public function assertAction($expected)
     {
@@ -131,7 +132,7 @@ trait FunctionalTestCase
         $actual = $dispatcher->getActionName();
 
         if ($actual != $expected) {
-            throw new \PHPUnit\Framework\ExpectationFailedException(
+            throw new ExpectationFailedException(
                 sprintf(
                     'Failed asserting Action name "%s", actual Action name is "%s"',
                     $expected,
@@ -150,7 +151,7 @@ trait FunctionalTestCase
      * </code>
      *
      * @param  array $expected The expected headers
-     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws ExpectationFailedException
      */
     public function assertHeader(array $expected)
     {
@@ -162,7 +163,7 @@ trait FunctionalTestCase
             $actualValue = $headers->get($expectedField);
 
             if ($actualValue != $expectedValue) {
-                throw new \PHPUnit\Framework\ExpectationFailedException(
+                throw new ExpectationFailedException(
                     sprintf(
                         'Failed asserting "%s" has a value of "%s", actual "%s" header value is "%s"',
                         $expectedField,
@@ -181,7 +182,7 @@ trait FunctionalTestCase
      * Asserts that the response code matches the given one
      *
      * @param  string $expected the expected response code
-     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws ExpectationFailedException
      */
     public function assertResponseCode($expected)
     {
@@ -197,7 +198,7 @@ trait FunctionalTestCase
         $actualValue = $headers->get('Status');
 
         if (empty($actualValue) || stristr($actualValue, $expected) === false) {
-            throw new \PHPUnit\Framework\ExpectationFailedException(
+            throw new ExpectationFailedException(
                 sprintf(
                     'Failed asserting response code is "%s", actual response status is "%s"',
                     $expected,
@@ -212,17 +213,17 @@ trait FunctionalTestCase
     /**
      * Asserts that the dispatch is forwarded
      *
-     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws ExpectationFailedException
      */
     public function assertDispatchIsForwarded()
     {
-        /* @var $dispatcher \Phalcon\Mvc\Dispatcher */
+        /* @var $dispatcher PhDispatcher */
         $dispatcher = $this->di->getShared('dispatcher');
 
         $actual = $dispatcher->wasForwarded();
 
         if (!$actual) {
-            throw new \PHPUnit\Framework\ExpectationFailedException(
+            throw new ExpectationFailedException(
                 'Failed asserting dispatch was forwarded'
             );
         }
@@ -234,7 +235,7 @@ trait FunctionalTestCase
      * Assert location redirect
      *
      * @param  string $location
-     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws ExpectationFailedException
      */
     public function assertRedirectTo($location)
     {
@@ -245,13 +246,13 @@ trait FunctionalTestCase
         $actualLocation = $headers->get('Location');
 
         if (!$actualLocation) {
-            throw new \PHPUnit\Framework\ExpectationFailedException(
+            throw new ExpectationFailedException(
                 'Failed asserting response caused a redirect'
             );
         }
 
         if ($actualLocation !== $location) {
-            throw new \PHPUnit\Framework\ExpectationFailedException(
+            throw new ExpectationFailedException(
                 sprintf(
                     'Failed asserting response redirects to "%s". It redirects to "%s".',
                     $location,

@@ -23,8 +23,9 @@ namespace Phalcon\Error;
 
 use Phalcon\Config;
 use Phalcon\DI\FactoryDefault;
-use Phalcon\DiInterface;
+use Phalcon\Di\DiInterface;
 use Phalcon\Error\Handler as ErrorHandler;
+use Phalcon\Http\Response;
 use Phalcon\Loader;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\View;
@@ -41,7 +42,7 @@ class Application extends \Phalcon\Mvc\Application
      * handler.
      *
      * @param mixed $dependencyInjector
-     * @return \Phalcon\Error\Application
+     * @return Application
      */
     public function __construct(DiInterface $dependencyInjector = null)
     {
@@ -55,7 +56,7 @@ class Application extends \Phalcon\Mvc\Application
     /**
      * Registers the services and dispatches the application.
      *
-     * @return \Phalcon\Http\Response
+     * @return Response
      */
     public function main()
     {

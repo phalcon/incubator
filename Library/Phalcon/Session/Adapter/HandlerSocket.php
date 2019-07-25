@@ -84,7 +84,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
      * Class constructor.
      *
      * @param  array                      $options associative array of options
-     * @throws \Phalcon\Session\Exception
+     * @throws Exception
      */
     public function __construct($options = [])
     {
@@ -278,7 +278,7 @@ class HandlerSocket extends Adapter implements AdapterInterface
      * Initialize HandlerSocket.
      *
      * @param  array                      $options associative array of options
-     * @throws \Phalcon\Session\Exception
+     * @throws Exception
      */
     protected function init($options)
     {

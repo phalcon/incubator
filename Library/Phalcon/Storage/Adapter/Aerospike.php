@@ -17,7 +17,7 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Phalcon\Cache\Backend;
+namespace Phalcon\Cache\Adapter;
 
 use Phalcon\Cache\FrontendInterface;
 use Phalcon\Cache\Exception;
@@ -68,7 +68,7 @@ use Phalcon\Cache\BackendInterface;
  * </code>
  *
  * @package Phalcon\Cache\Backend
- * @property \Phalcon\Cache\FrontendInterface _frontend
+ * @property FrontendInterface _frontend
  */
 class Aerospike extends Backend implements BackendInterface
 {

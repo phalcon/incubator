@@ -17,7 +17,9 @@
 */
 namespace Phalcon\Db\Adapter\Mongo;
 
-class Client extends \MongoClient
+use MongoClient;
+
+class Client extends MongoClient
 {
     public function __get($dbName)
     {

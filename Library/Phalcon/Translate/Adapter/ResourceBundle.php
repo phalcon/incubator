@@ -30,7 +30,7 @@ class ResourceBundle extends Adapter implements AdapterInterface
      *
      * @param  array $options
      *
-     * @throws \Phalcon\Translate\Exception
+     * @throws Exception
      */
     public function __construct($options)
     {
@@ -61,7 +61,7 @@ class ResourceBundle extends Adapter implements AdapterInterface
             $this->options['bundle'],
             $this->fallback
         );
-        
+
         parent::__construct($options);
     }
 

@@ -20,7 +20,7 @@
 namespace Phalcon\Validation\Validator;
 
 use Phalcon\Validation;
-use Phalcon\Validation\Validator;
+use Phalcon\Validation\AbstractValidator;
 use Phalcon\Validation\Exception as ValidationException;
 
 /**
@@ -36,18 +36,18 @@ use Phalcon\Validation\Exception as ValidationException;
  *
  * @package Phalcon\Validation\Validator
  */
-class ConfirmationOf extends Validator
+class ConfirmationOf extends AbstractValidator
 {
 
     /**
      * Value validation
      *
-     * @param   \Phalcon\Validation $validation - validation object
+     * @param Validation $validation - validation object
      * @param   string $attribute - validated attribute
      * @return  bool
-     * @throws  \Phalcon\Validation\Exception
+     * @throws  ValidationException
      */
-    public function validate(Validation $validation, $attribute)
+    public function validate(Validation $validation, $attribute): bool
     {
         if (!$this->hasOption('origField')) {
             throw new ValidationException('Original field must be set');

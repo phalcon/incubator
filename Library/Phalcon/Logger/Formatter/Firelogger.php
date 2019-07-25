@@ -19,6 +19,7 @@
 
 namespace Phalcon\Logger\Formatter;
 
+use Exception;
 use Phalcon\Logger\Formatter;
 use Phalcon\Logger as Logger;
 use Phalcon\Logger\FormatterInterface;
@@ -73,7 +74,7 @@ class Firelogger extends Formatter implements FormatterInterface
      * Setter for _name
      *
      * @param  string                               $name
-     * @return \Phalcon\Logger\Formatter\Firelogger
+     * @return Firelogger
      */
     public function setName($name)
     {
@@ -86,7 +87,7 @@ class Firelogger extends Formatter implements FormatterInterface
      * Setter for style
      *
      * @param  string                               $style
-     * @return \Phalcon\Logger\Formatter\Firelogger
+     * @return Firelogger
      */
     public function setStyle($style)
     {
@@ -136,7 +137,7 @@ class Firelogger extends Formatter implements FormatterInterface
     /**
      * Applies a format to a message before sent it to the internal log
      *
-     * @param  string|integer|float|array|null|\Exception $message
+     * @param  string|integer|float|array|null|Exception $message
      * @param  integer                                    $type
      * @param  integer                                    $timestamp
      * @param  array                                      $context
@@ -148,7 +149,7 @@ class Firelogger extends Formatter implements FormatterInterface
     {
         $level = $this->getTypeString($type);
 
-        if ($message instanceof \Exception) {
+        if ($message instanceof Exception) {
             $exception = $message;
             $message = '';
         } elseif (!is_string($message)) {

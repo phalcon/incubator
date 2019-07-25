@@ -19,6 +19,7 @@
 
 namespace Phalcon\Http\Client;
 
+use Countable;
 use Phalcon\Http\Response\StatusCode;
 
 /**
@@ -26,7 +27,7 @@ use Phalcon\Http\Response\StatusCode;
  *
  * @package Phalcon\Http\Client
  */
-class Header implements \Countable
+class Header implements Countable
 {
     private $fields = [];
     public $version = '1.0.2';

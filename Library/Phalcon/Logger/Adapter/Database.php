@@ -25,6 +25,7 @@ use Phalcon\Logger\Formatter\Line as LineFormatter;
 use Phalcon\Logger\Adapter as LoggerAdapter;
 use Phalcon\Logger\AdapterInterface;
 use Phalcon\Db\AdapterInterface as DbAdapterInterface;
+use Phalcon\Logger\FormatterInterface;
 
 /**
  * Database Logger
@@ -48,7 +49,7 @@ class Database extends LoggerAdapter implements AdapterInterface
     protected $options = [];
 
     /**
-     * @var \Phalcon\Db\AdapterInterface
+     * @var DbAdapterInterface
      */
     protected $db;
 
@@ -57,7 +58,7 @@ class Database extends LoggerAdapter implements AdapterInterface
      *
      * @param  string $name
      * @param  array  $options
-     * @throws \Phalcon\Logger\Exception
+     * @throws Exception
      */
     public function __construct($name = 'phalcon', array $options = [])
     {
@@ -100,7 +101,7 @@ class Database extends LoggerAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Logger\FormatterInterface
+     * @return FormatterInterface
      */
     public function getFormatter()
     {

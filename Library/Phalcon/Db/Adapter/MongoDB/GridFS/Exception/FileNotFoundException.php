@@ -2,6 +2,8 @@
 
 namespace Phalcon\Db\Adapter\MongoDB\GridFS\Exception;
 
+use function MongoDB\BSON\fromPHP;
+use function MongoDB\BSON\toJSON;
 use Phalcon\Db\Adapter\MongoDB\Exception\RuntimeException;
 
 class FileNotFoundException extends RuntimeException
@@ -32,7 +34,7 @@ class FileNotFoundException extends RuntimeException
      */
     public static function byId($id, $namespace)
     {
-        $json=\MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP(['_id'=>$id]));
+        $json= toJSON(fromPHP(['_id'=>$id]));
 
         return new static(sprintf('File "%s" not found in "%s"', $json, $namespace));
     }

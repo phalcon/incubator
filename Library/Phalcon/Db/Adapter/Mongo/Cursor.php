@@ -17,7 +17,9 @@
 */
 namespace Phalcon\Db\Adapter\Mongo;
 
-class Cursor extends \MongoCursor
+use MongoCursor;
+
+class Cursor extends MongoCursor
 {
     protected $className;
     protected $collection;

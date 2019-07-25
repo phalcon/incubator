@@ -19,18 +19,21 @@
 
 namespace Phalcon\Mvc\View\Engine\Twig\Nodes;
 
+use Twig_Compiler;
+use Twig_Node;
+
 /**
  * \Phalcon\Mvc\View\Engine\Twig\Nodes\Assets
  * Twig node object that compiles "assets" tag in template.
  */
-class Assets extends \Twig_Node
+class Assets extends Twig_Node
 {
     /**
      * {@inheritdoc}
      *
-     * @param \Twig_Compiler $compiler
+     * @param Twig_Compiler $compiler
      */
-    public function compile(\Twig_Compiler $compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $compiler->addDebugInfo($this)
             ->write('$this->env->getDI()->get(\'assets\')->')

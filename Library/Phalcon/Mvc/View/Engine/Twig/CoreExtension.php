@@ -19,12 +19,15 @@
 
 namespace Phalcon\Mvc\View\Engine\Twig;
 
+use Twig_Extension;
+use Twig_SimpleFunction;
+
 /**
  * \Phalcon\Mvc\View\Engine\Twig\CoreExtension
  * Core extension for Twig engine.
  * Currently supports only work with \Phalcon\Assets\Manager.
  */
-class CoreExtension extends \Twig_Extension
+class CoreExtension extends Twig_Extension
 {
     /**
      * {@inheritdoc}
@@ -50,12 +53,12 @@ class CoreExtension extends \Twig_Extension
         ];
 
         return [
-            'assetsOutputCss' => new \Twig_SimpleFunction(
+            'assetsOutputCss' => new Twig_SimpleFunction(
                 'assetsOutputCss',
                 [$this, 'functionAssetsOutputCss'],
                 $options
             ),
-            'assetsOutputJs' => new \Twig_SimpleFunction(
+            'assetsOutputJs' => new Twig_SimpleFunction(
                 'assetsOutputJs',
                 [$this, 'functionAssetsOutputJs'],
                 $options
@@ -66,7 +69,7 @@ class CoreExtension extends \Twig_Extension
     /**
      * Returns string with CSS.
      *
-     * @param  \Phalcon\Mvc\View\Engine\Twig\Environment $env
+     * @param Environment $env
      * @param  string|null                               $options Assets CollectionName
      * @return string
      */
@@ -78,7 +81,7 @@ class CoreExtension extends \Twig_Extension
     /**
      * Returns string with JS.
      *
-     * @param  \Phalcon\Mvc\View\Engine\Twig\Environment $env
+     * @param Environment $env
      * @param  string|null                               $options Assets CollectionName
      * @return string
      */
@@ -100,7 +103,7 @@ class CoreExtension extends \Twig_Extension
     /**
      * Proxy method that handles return of assets instead of instant output.
      *
-     * @param  \Phalcon\Mvc\View\Engine\Twig\Environment $env
+     * @param Environment $env
      * @param  string                                    $method
      * @param  string|null                               $options Assets CollectionName
      * @return string

@@ -28,9 +28,8 @@
 namespace Phalcon\Validation\Validator;
 
 use Phalcon\Validation;
-use Phalcon\Http\Request;
-use Phalcon\Validation\Message;
-use Phalcon\Validation\Validator;
+use Phalcon\Messages\Message;
+use Phalcon\Validation\AbstractValidator;
 
 /**
  * Phalcon\Validation\Validator\ReCaptcha
@@ -38,7 +37,7 @@ use Phalcon\Validation\Validator;
  * Verifies a value to a reCAPTCHA challenge
  *
  * <code>
- * use Phalcon\Validation\Validator;
+ * use Phalcon\Validation\AbstractValidator;
  *
  * $validator->add(
  *     'g-recaptcha-response',
@@ -57,7 +56,7 @@ use Phalcon\Validation\Validator;
  * @link https://developers.google.com/recaptcha/intro
  * @package Phalcon\Validation\Validator
  */
-class ReCaptcha extends Validator
+class ReCaptcha extends AbstractValidator
 {
     /**
      * API request URL
@@ -84,7 +83,7 @@ class ReCaptcha extends Validator
      *
      * @return bool
      */
-    public function validate(Validation $validation, $attribute)
+    public function validate(Validation $validation, $attribute): bool
     {
         $secret   = $this->getOption('secret');
         $value    = $validation->getValue($attribute);

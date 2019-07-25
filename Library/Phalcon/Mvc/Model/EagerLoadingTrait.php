@@ -1,6 +1,9 @@
 <?php namespace Phalcon\Mvc\Model;
 
+use BadMethodCallException;
+use LogicException;
 use Phalcon\Mvc\Model\EagerLoading\Loader;
+use Phalcon\Mvc\ModelInterface;
 
 trait EagerLoadingTrait
 {
@@ -24,7 +27,7 @@ trait EagerLoadingTrait
      * </code>
      *
      * @param mixed ...$arguments
-     * @return \Phalcon\Mvc\ModelInterface[]
+     * @return ModelInterface[]
      */
     public static function with()
     {
@@ -41,13 +44,13 @@ trait EagerLoadingTrait
                 unset($arguments[$lastArg]);
 
                 if (isset($parameters['columns'])) {
-                    throw new \LogicException(
+                    throw new LogicException(
                         'Results from database must be full models, do not use `columns` key'
                     );
                 }
             }
         } else {
-            throw new \BadMethodCallException(
+            throw new BadMethodCallException(
                 sprintf('%s requires at least one argument', __METHOD__)
             );
         }
@@ -70,7 +73,7 @@ trait EagerLoadingTrait
      * Same as EagerLoadingTrait::with() for a single record
      *
      * @param mixed ...$arguments
-     * @return false|\Phalcon\Mvc\ModelInterface
+     * @return false|ModelInterface
      */
     public static function findFirstWith()
     {
@@ -87,13 +90,13 @@ trait EagerLoadingTrait
                 unset($arguments[$lastArg]);
 
                 if (isset($parameters['columns'])) {
-                    throw new \LogicException(
+                    throw new LogicException(
                         'Results from database must be full models, do not use `columns` key'
                     );
                 }
             }
         } else {
-            throw new \BadMethodCallException(
+            throw new BadMethodCallException(
                 sprintf(
                     '%s requires at least one argument',
                     __METHOD__

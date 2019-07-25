@@ -2,7 +2,9 @@
 
 namespace Phalcon\Db\Adapter\MongoDB\GridFS;
 
+use function MongoDB\BSON\fromPHP;
 use MongoDB\BSON\ObjectId;
+use function MongoDB\BSON\toJSON;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
@@ -389,7 +391,7 @@ class Bucket
         if (!is_object($file->_id)||method_exists($file->_id, '__toString')) {
             $id=(string)$file->_id;
         } else {
-            $id=\MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP(['_id'=>$file->_id]));
+            $id= toJSON(fromPHP(['_id'=>$file->_id]));
         }
 
         return sprintf(

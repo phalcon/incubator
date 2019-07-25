@@ -73,10 +73,10 @@ class Redis extends Adapter
      * <code>$acl->addRole(new Phalcon\Acl\Role('administrator'), 'consultor');</code>
      * <code>$acl->addRole('administrator', 'consultor');</code>
      *
-     * @param  \Phalcon\Acl\Role|string $role
+     * @param Role|string $role
      * @param  string $accessInherits
      * @return boolean
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
     public function addRole($role, $accessInherits = null)
     {
@@ -125,8 +125,8 @@ class Redis extends Adapter
      * <code>$acl->addInherit('administrator', ['consultor', 'poweruser']);</code>
      *
      * @param  string $roleName
-     * @param  \Phalcon\Acl\Role|string $roleToInherit
-     * @throws \Phalcon\Acl\Exception
+     * @param Role|string $roleToInherit
+     * @throws Exception
      */
     public function addInherit($roleName, $roleToInherit)
     {
@@ -176,7 +176,7 @@ class Redis extends Adapter
      * $acl->addResource('customers', ['create', 'search']);
      * </code>
      *
-     * @param  \Phalcon\Acl\Resource|string $resource
+     * @param Resource|string $resource
      * @param  array|string $accessList
      * @return boolean
      */
@@ -212,7 +212,7 @@ class Redis extends Adapter
      * @param  string $resourceName
      * @param  array|string $accessList
      * @return boolean
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
     public function addResourceAccess($resourceName, $accessList)
     {
@@ -266,7 +266,7 @@ class Redis extends Adapter
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Acl\Resource[]
+     * @return Resource[]
      */
     public function getResources()
     {
@@ -579,7 +579,7 @@ class Redis extends Adapter
      * @param  string $resourceName
      * @param  array|string $access
      * @param  integer $action
-     * @throws \Phalcon\Acl\Exception
+     * @throws Exception
      */
     protected function allowOrDeny($roleName, $resourceName, $access, $action)
     {

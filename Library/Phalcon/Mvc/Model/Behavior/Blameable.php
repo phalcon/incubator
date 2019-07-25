@@ -92,7 +92,7 @@ class Blameable extends Behavior implements BehaviorInterface
      * {@inheritdoc}
      *
      * @param string $eventType
-     * @param \Phalcon\Mvc\ModelInterface $model
+     * @param ModelInterface $model
      */
     public function notify($eventType, ModelInterface $model)
     {
@@ -116,7 +116,7 @@ class Blameable extends Behavior implements BehaviorInterface
      * Creates an Audit isntance based on the current enviroment
      *
      * @param  string $type
-     * @param  \Phalcon\Mvc\ModelInterface $model
+     * @param ModelInterface $model
      * @return AuditInterface
      */
     public function createAudit($type, ModelInterface $model)
@@ -136,7 +136,7 @@ class Blameable extends Behavior implements BehaviorInterface
     /**
      * Audits an DELETE operation
      *
-     * @param  \Phalcon\Mvc\ModelInterface $model
+     * @param ModelInterface $model
      * @return boolean
      */
     public function auditAfterCreate(ModelInterface $model)
@@ -182,7 +182,7 @@ class Blameable extends Behavior implements BehaviorInterface
     /**
      * Audits an UPDATE operation
      *
-     * @param  \Phalcon\Mvc\ModelInterface $model
+     * @param ModelInterface $model
      * @return boolean
      */
     public function auditAfterUpdate(ModelInterface $model)

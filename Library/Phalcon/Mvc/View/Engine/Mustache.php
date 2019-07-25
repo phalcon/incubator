@@ -1,6 +1,7 @@
 <?php
 namespace Phalcon\Mvc\View\Engine;
 
+use Mustache_Engine;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\View\Engine;
 use Phalcon\Mvc\View\EngineInterface;
@@ -13,7 +14,7 @@ use Phalcon\Mvc\ViewBaseInterface;
 class Mustache extends Engine implements EngineInterface
 {
     /**
-     * @var \Mustache_Engine
+     * @var Mustache_Engine
      */
     protected $mustache;
 
@@ -25,7 +26,7 @@ class Mustache extends Engine implements EngineInterface
      */
     public function __construct(ViewBaseInterface $view, DiInterface $di = null)
     {
-        $this->mustache = new \Mustache_Engine();
+        $this->mustache = new Mustache_Engine();
 
         parent::__construct($view, $di);
     }

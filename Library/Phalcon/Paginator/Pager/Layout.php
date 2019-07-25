@@ -30,14 +30,14 @@ class Layout
     /**
      * Pager object.
      *
-     * @var \Phalcon\Paginator\Pager
+     * @var Pager
      */
     protected $pager = null;
 
     /**
      * Ranges generator.
      *
-     * @var \Phalcon\Paginator\Pager\Range
+     * @var Range
      */
     protected $range = null;
 
@@ -74,8 +74,8 @@ class Layout
     /**
      * Class constructor.
      *
-     * @param \Phalcon\Paginator\Pager       $pager
-     * @param \Phalcon\Paginator\Pager\Range $range
+     * @param Pager $pager
+     * @param Range $range
      * @param string                         $urlMask
      */
     public function __construct(Pager $pager, Range $range, $urlMask)

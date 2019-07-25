@@ -2,11 +2,10 @@
 
 namespace Phalcon\Translate\Adapter;
 
-use Phalcon\Translate\AdapterInterface;
-use Phalcon\Translate\Adapter\Csv;
+use ArrayAccess;
 use Phalcon\Translate\Exception;
 
-class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
+class CsvMulti extends Csv implements AdapterInterface, ArrayAccess
 {
     /**
     * @var array
@@ -44,7 +43,7 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
                 "Error opening translation file '" . $file . "'"
             );
         }
-        
+
         $line = 0;
         $locales = [];
 
@@ -69,10 +68,10 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
                 }
             }
         }
-        
+
         fclose($fileHandler);
     }
-    
+
     /**
      * Sets locale information, according to one from the header row of the source csv
      * Set it to false for enabling the "no translation mode"
@@ -94,30 +93,30 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
 
         return $this->locale = $locale;
     }
-    
+
     /**
      * Returns the translation related to the given key and the previsouly set locale
      */
-    public function query($index, $placeholders = null)
+    public function query($index, $placeholders = null): string
     {
         if (!$this->exists($index)) {
             throw new Exception("They key '{$index}' was not found.");
         }
-        
+
         if ($this->locale === false) {
             // "no translation mode"
             $translation = $index;
         } else {
             $translation = $this->_translate[$this->locale][$index];
         }
-        
+
         return $this->replacePlaceholders($translation, $placeholders);
     }
 
     /**
      * Check whether is defined a translation key in the internal array
      */
-    public function exists($index)
+    public function exists($index): bool
     {
         if (is_null($this->locale)) {
             throw new Exception('The locale must have been defined.');
@@ -128,7 +127,7 @@ class CsvMulti extends Csv implements AdapterInterface, \ArrayAccess
             $this->getIndexes()
         );
     }
-    
+
     /**
      * Returns all the translation keys
      */
