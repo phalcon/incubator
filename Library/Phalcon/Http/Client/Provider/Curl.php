@@ -400,9 +400,11 @@ class Curl extends Request
 
     public function post($uri, $params = [], $useEncoding = true, $customHeader = [], $fullResponse = false)
     {
+        $uri = $this->resolveUri($uri);
+
         $this->setOptions(
             [
-                CURLOPT_URL           => $this->resolveUri($uri),
+                CURLOPT_URL           => $uri->build(),
                 CURLOPT_POST          => true,
                 CURLOPT_CUSTOMREQUEST => Method::POST,
             ]
@@ -415,9 +417,11 @@ class Curl extends Request
 
     public function put($uri, $params = [], $useEncoding = true, $customHeader = [], $fullResponse = false)
     {
+        $uri = $this->resolveUri($uri);
+
         $this->setOptions(
             [
-                CURLOPT_URL           => $this->resolveUri($uri),
+                CURLOPT_URL           => $uri->build(),
                 CURLOPT_POST          => true,
                 CURLOPT_CUSTOMREQUEST => Method::PUT,
             ]
@@ -430,9 +434,11 @@ class Curl extends Request
 
     public function patch($uri, $params = [], $useEncoding = true, $customHeader = [], $fullResponse = false)
     {
+        $uri = $this->resolveUri($uri);
+
         $this->setOptions(
             [
-                CURLOPT_URL           => $this->resolveUri($uri),
+                CURLOPT_URL           => $uri->build(),
                 CURLOPT_POST          => true,
                 CURLOPT_CUSTOMREQUEST => Method::PATCH,
             ]
