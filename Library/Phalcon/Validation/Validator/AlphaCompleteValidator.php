@@ -23,13 +23,13 @@ class AlphaCompleteValidator extends Validator implements ValidatorInterface
     {
         $value = $validator->getValue($attribute);
 
-        $allowPipes = (bool)$this->getOption('allowPipes');
+        $allowPipes = (bool) $this->getOption('allowPipes');
         $allowPipes = $allowPipes ? '|' : '';
 
-        $allowBlackSlashes = (bool)$this->getOption('allowBackslashes');
+        $allowBlackSlashes = (bool) $this->getOption('allowBackslashes');
         $allowBlackSlashes = $allowBlackSlashes ? '\\\\' : '';
 
-        $allowUrlChars = (bool)$this->getOption('allowUrlChars');
+        $allowUrlChars = (bool) $this->getOption('allowUrlChars');
         $allowUrlChars = $allowUrlChars ? '=#' : '';
 
         if (!preg_match('/^([-\p{L}*0-9_+!.,:\/;' . $allowPipes . $allowBlackSlashes . $allowUrlChars
@@ -51,28 +51,46 @@ class AlphaCompleteValidator extends Validator implements ValidatorInterface
 
             $message = $this->getOption('message', $message);
 
-            $validator->appendMessage(new Message($message, $attribute, 'AlphaComplete'));
+            $validator->appendMessage(
+                new Message(
+                    $message,
+                    $attribute,
+                    'AlphaComplete'
+                )
+            );
         }
 
-        if ($min = (int)$this->getOption('min')) {
+        if ($min = (int) $this->getOption('min')) {
             if (strlen($value) < $min) {
                 $messageMin = $this->getOption(
                     'messageMinimum',
                     'The value must contain at least ' . $min . ' characters.'
                 );
 
-                $validator->appendMessage(new Message($messageMin, $attribute, 'AlphaComplete'));
+                $validator->appendMessage(
+                    new Message(
+                        $messageMin,
+                        $attribute,
+                        'AlphaComplete'
+                    )
+                );
             }
         }
 
-        if ($max = (int)$this->getOption('max')) {
+        if ($max = (int) $this->getOption('max')) {
             if (strlen($value) > $max) {
                 $messageMax = $this->getOption(
                     'messageMaximum',
                     'The value can contain maximum ' . $max . ' characters.'
                 );
 
-                $validator->appendMessage(new Message($messageMax, $attribute, 'AlphaComplete'));
+                $validator->appendMessage(
+                    new Message(
+                        $messageMax,
+                        $attribute,
+                        'AlphaComplete'
+                    )
+                );
             }
         }
 

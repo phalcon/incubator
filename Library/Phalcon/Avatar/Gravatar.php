@@ -104,7 +104,7 @@ class Gravatar implements Avatarable
         'monsterid' => true,
         'wavatar'   => true,
         'retro'     => true,
-        'blank'     => true
+        'blank'     => true,
     ];
 
     /**
@@ -115,7 +115,7 @@ class Gravatar implements Avatarable
         self::RATING_G  => true,
         self::RATING_PG => true,
         self::RATING_R  => true,
-        self::RATING_X  => true
+        self::RATING_X  => true,
     ];
 
     /**
@@ -149,19 +149,27 @@ class Gravatar implements Avatarable
         }
 
         if (!is_array($config)) {
-            throw new InvalidArgumentException('Config must be either an array or \Phalcon\Config instance');
+            throw new InvalidArgumentException(
+                'Config must be either an array or \Phalcon\Config instance'
+            );
         }
 
         if (isset($config['default_image'])) {
-            $this->setDefaultImage($config['default_image']);
+            $this->setDefaultImage(
+                $config['default_image']
+            );
         }
 
         if (isset($config['rating'])) {
-            $this->setRating($config['rating']);
+            $this->setRating(
+                $config['rating']
+            );
         }
 
         if (isset($config['size'])) {
-            $this->setSize($config['size']);
+            $this->setSize(
+                $config['size']
+            );
         }
 
         if (isset($config['use_https']) && $config['use_https']) {
@@ -232,16 +240,18 @@ class Gravatar implements Avatarable
         $options = [
             'options' => [
                 'min_range' => static::MIN_AVATAR_SIZE,
-                'max_range' => static::MAX_AVATAR_SIZE
+                'max_range' => static::MAX_AVATAR_SIZE,
             ]
         ];
 
         if (false === filter_var($size, FILTER_VALIDATE_INT, $options)) {
-            throw new InvalidArgumentException(sprintf(
-                "Can't set Gravatar size. Size must be an integer within %s and %s pixels",
-                static::MIN_AVATAR_SIZE,
-                static::MAX_AVATAR_SIZE
-            ));
+            throw new InvalidArgumentException(
+                sprintf(
+                    "Can't set Gravatar size. Size must be an integer within %s and %s pixels",
+                    static::MIN_AVATAR_SIZE,
+                    static::MAX_AVATAR_SIZE
+                )
+            );
         }
 
         $this->size = (int) $size;
@@ -271,14 +281,18 @@ class Gravatar implements Avatarable
     {
         $rating = strtolower(trim($rating));
 
-
         if (!isset($this->validRatings[$rating])) {
             $allowed = array_keys($this->validRatings);
             $last    = array_pop($allowed);
             $allowed = join(',', $allowed);
 
             throw new InvalidArgumentException(
-                sprintf("Invalid rating '%s' specified. Available for use only: %s or %s", $rating, $allowed, $last)
+                sprintf(
+                    "Invalid rating '%s' specified. Available for use only: %s or %s",
+                    $rating,
+                    $allowed,
+                    $last
+                )
             );
         }
 
@@ -407,18 +421,28 @@ class Gravatar implements Avatarable
 
         $query = [
             's' => $this->getSize(),
-            'r' => $this->getRating()
+            'r' => $this->getRating(),
         ];
 
         if ($this->defaultImage) {
-            $query = array_merge($query, ['d' => $this->defaultImage]);
+            $query = array_merge(
+                $query,
+                [
+                    'd' => $this->defaultImage,
+                ]
+            );
         }
 
         if ($this->forceDefault) {
-            $query = array_merge($query, ['f' => 'y']);
+            $query = array_merge(
+                $query,
+                [
+                    'f' => 'y',
+                ]
+            );
         }
 
-        $url .= '?'.http_build_query($query, '', '&');
+        $url .= '?' . http_build_query($query, '', '&');
 
         return $url;
     }

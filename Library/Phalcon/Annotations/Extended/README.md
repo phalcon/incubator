@@ -18,13 +18,18 @@ using either _APCu_ or _APC_ extension. This adapter is suitable for production.
 ```php
 use Phalcon\Annotations\Extended\Adapter\Apc;
 
-$di->set('annotations', function () {
-    return new Apc([
-        'lifetime' => 8600,               // Optional
-        'statsSey' => '_PHAN',            // Optional
-        'prefix'   => 'app-annotations-', // Optional
-    ]);
-});
+$di->set(
+    'annotations',
+    function () {
+        return new Apc(
+            [
+                'lifetime' => 8600,               // Optional
+                'statsSey' => '_PHAN',            // Optional
+                'prefix'   => 'app-annotations-', // Optional
+            ]
+        );
+    }
+);
 ```
 
 ## Memory
@@ -34,9 +39,12 @@ Stores the parsed annotations in the memory. This adapter is the suitable develo
 ```php
 use Phalcon\Annotations\Extended\Adapter\Memory;
 
-$di->set('annotations', function () {
-    return new Memory();
-});
+$di->set(
+    'annotations',
+    function () {
+        return new Memory();
+    }
+);
 ```
 
 ## Files

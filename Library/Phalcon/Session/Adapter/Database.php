@@ -57,7 +57,9 @@ class Database extends Adapter implements AdapterInterface
         unset($options['db']);
 
         if (!isset($options['table']) || empty($options['table']) || !is_string($options['table'])) {
-            throw new Exception("Parameter 'table' is required and it must be a non empty string");
+            throw new Exception(
+                "Parameter 'table' is required and it must be a non empty string"
+            );
         }
 
         $columns = ['session_id', 'data', 'created_at', 'modified_at'];
@@ -99,6 +101,7 @@ class Database extends Adapter implements AdapterInterface
     public function close()
     {
         $this->_started = false;
+
         return $this->isStarted();
     }
 

@@ -39,7 +39,10 @@ class RedisTest extends Test
 
     public function testHasRedis()
     {
-        $this->assertClassHasAttribute('redis', Redis::class);
+        $this->assertClassHasAttribute(
+            'redis',
+            Redis::class
+        );
     }
 
     /**
@@ -49,10 +52,18 @@ class RedisTest extends Test
      */
     public function testShouldReadAndWriteToRedisWithoutPrefix($key, $data)
     {
-        $object = new Redis(['host' => env('TEST_RS_HOST', 11211)]);
+        $object = new Redis(
+            [
+                'host' => env('TEST_RS_HOST', 11211),
+            ]
+        );
+
         $object->write($key, $data);
 
-        $this->assertEquals($data, $object->read($key));
+        $this->assertEquals(
+            $data,
+            $object->read($key)
+        );
     }
 
     /**
@@ -62,33 +73,77 @@ class RedisTest extends Test
      */
     public function testShouldReadAndWriteToRedisWithPrefix($key, $data)
     {
-        $object = new Redis(['host' => env('TEST_RS_HOST', 11211), 'prefix' => 'test_']);
+        $object = new Redis(
+            [
+                'host'   => env('TEST_RS_HOST', 11211),
+                'prefix' => 'test_',
+            ]
+        );
+
         $object->write($key, $data);
 
-        $this->assertEquals($data, $object->read($key));
+        $this->assertEquals(
+            $data,
+            $object->read($key)
+        );
     }
 
     public function testShouldGetCacheBackendThroughGetter()
     {
-        $object = new Redis(['host' => env('TEST_RS_HOST', 11211)]);
+        $object = new Redis(
+            [
+                'host' => env('TEST_RS_HOST', 11211),
+            ]
+        );
 
-        $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
+        $reflectedMethod = new ReflectionMethod(
+            get_class($object),
+            'getCacheBackend'
+        );
+
         $reflectedMethod->setAccessible(true);
-        $this->assertInstanceOf(CacheBackend::class, $reflectedMethod->invoke($object));
+
+        $this->assertInstanceOf(
+            CacheBackend::class,
+            $reflectedMethod->invoke($object)
+        );
     }
 
     public function testShouldGetCacheBackendThroughReflectionSetter()
     {
-        $object = new Redis(['host' => env('TEST_RS_HOST', 11211)]);
-        $mock = $this->getMock(CacheBackend::class, [], [], '', false);
+        $object = new Redis(
+            [
+                'host' => env('TEST_RS_HOST', 11211),
+            ]
+        );
 
-        $reflectedProperty = new ReflectionProperty(get_class($object), 'redis');
+        $mock = $this->getMock(
+            CacheBackend::class,
+            [],
+            [],
+            '',
+            false
+        );
+
+        $reflectedProperty = new ReflectionProperty(
+            get_class($object),
+            'redis'
+        );
+
         $reflectedProperty->setAccessible(true);
         $reflectedProperty->setValue($object, $mock);
 
-        $reflectedMethod = new ReflectionMethod(get_class($object), 'getCacheBackend');
+        $reflectedMethod = new ReflectionMethod(
+            get_class($object),
+            'getCacheBackend'
+        );
+
         $reflectedMethod->setAccessible(true);
-        $this->assertInstanceOf(CacheBackend::class, $reflectedMethod->invoke($object));
+
+        $this->assertInstanceOf(
+            CacheBackend::class,
+            $reflectedMethod->invoke($object)
+        );
     }
 
     /**
@@ -97,11 +152,23 @@ class RedisTest extends Test
      */
     public function testShouldPrepareKey($key)
     {
-        $object = new Redis(['host' => env('TEST_RS_HOST', 11211)]);
-        $reflectedMethod = new ReflectionMethod(get_class($object), 'prepareKey');
+        $object = new Redis(
+            [
+                'host' => env('TEST_RS_HOST', 11211),
+            ]
+        );
+
+        $reflectedMethod = new ReflectionMethod(
+            get_class($object),
+            'prepareKey'
+        );
+
         $reflectedMethod->setAccessible(true);
 
-        $this->assertEquals($key, $reflectedMethod->invoke($object, $key));
+        $this->assertEquals(
+            $key,
+            $reflectedMethod->invoke($object, $key)
+        );
     }
 
     /**
@@ -112,25 +179,72 @@ class RedisTest extends Test
     public function testShouldCreateRedisAdapterInstanceAndSetOptions($options, $expected)
     {
         $object = new Redis($options);
-        $reflectedProperty = new ReflectionProperty(get_class($object), 'options');
+
+        $reflectedProperty = new ReflectionProperty(
+            get_class($object),
+            'options'
+        );
+
         $reflectedProperty->setAccessible(true);
 
-        $this->assertEquals($expected, $reflectedProperty->getValue($object));
+        $this->assertEquals(
+            $expected,
+            $reflectedProperty->getValue($object)
+        );
     }
 
     public function providerReadWrite()
     {
         // This key is needed in order not to break your real data
-        $key = hash('sha256', json_encode([__CLASS__, __METHOD__, __FILE__, __LINE__]));
+        $key = hash(
+            'sha256',
+            json_encode(
+                [
+                    __CLASS__,
+                    __METHOD__,
+                    __FILE__,
+                    __LINE__,
+                ]
+            )
+        );
 
         return [
-            'string' => [$key . '_test1', 'data1'],
-            'object' => [$key . '_test1', (object) ['key' => 'value']],
-            'array'  => [$key . '_test1', ['key' => 'value']],
-            'null'   => [$key . '_test1', null],
-            'int'    => [$key . '_test1', PHP_INT_MAX],
-            'float'  => [$key . '_test1', 3.14],
-            'class'  => [$key . '_test1', new \stdClass()],
+            'string' => [
+                $key . '_test1',
+                'data1',
+            ],
+
+            'object' => [
+                $key . '_test1',
+                (object) ['key' => 'value'],
+            ],
+
+            'array'  => [
+                $key . '_test1',
+                [
+                    'key' => 'value'
+                ],
+            ],
+
+            'null'   => [
+                $key . '_test1',
+                null,
+            ],
+
+            'int'    => [
+                $key . '_test1',
+                PHP_INT_MAX,
+            ],
+
+            'float'  => [
+                $key . '_test1',
+                3.14,
+            ],
+
+            'class'  => [
+                $key . '_test1',
+                new \stdClass(),
+            ],
         ];
     }
 
@@ -139,7 +253,7 @@ class RedisTest extends Test
         return [
             ['key1'],
             [1],
-            ['_key1']
+            ['_key1'],
         ];
     }
 
@@ -148,127 +262,135 @@ class RedisTest extends Test
         return [
             [
                 [
-                    'host' => env('TEST_RS_HOST', 11211),
-                    'port' => env('TEST_RS_PORT', 6379),
-                    'lifetime' => 23
+                    'host'     => env('TEST_RS_HOST', 11211),
+                    'port'     => env('TEST_RS_PORT', 6379),
+                    'lifetime' => 23,
                 ],
                 [
-                    'host' => env('TEST_RS_HOST', 11211),
-                    'port' => env('TEST_RS_PORT', 6379),
-                    'lifetime' => 23,
-                    'prefix' => '',
-                    'persistent' => false
-                ]
+                    'host'       => env('TEST_RS_HOST', 11211),
+                    'port'       => env('TEST_RS_PORT', 6379),
+                    'lifetime'   => 23,
+                    'prefix'     => '',
+                    'persistent' => false,
+                ],
             ],
+
             [
                 [
-                    'host' => env('TEST_RS_HOST', 11211),
-                    'port' => env('TEST_RS_PORT', 6379),
-                    'lifetime' => 23,
-                    'persistent' => true
+                    'host'       => env('TEST_RS_HOST', 11211),
+                    'port'       => env('TEST_RS_PORT', 6379),
+                    'lifetime'   => 23,
+                    'persistent' => true,
                 ],
                 [
-                    'host' => env('TEST_RS_HOST', 11211),
-                    'port' => env('TEST_RS_PORT', 6379),
-                    'lifetime' => 23,
-                    'prefix' => '',
-                    'persistent' => true
-                ]
+                    'host'       => env('TEST_RS_HOST', 11211),
+                    'port'       => env('TEST_RS_PORT', 6379),
+                    'lifetime'   => 23,
+                    'prefix'     => '',
+                    'persistent' => true,
+                ],
             ],
+
             [
                 [
-                    'host' => env('TEST_RS_HOST', 11211),
-                    'port' => env('TEST_RS_PORT', 6379),
-                    'prefix' => 'test_'
-                ],
-                [
-                    'host' => env('TEST_RS_HOST', 11211),
-                    'port' => env('TEST_RS_PORT', 6379),
-                    'lifetime' => 8600,
+                    'host'   => env('TEST_RS_HOST', 11211),
+                    'port'   => env('TEST_RS_PORT', 6379),
                     'prefix' => 'test_',
-                    'persistent' => false
-                ]
-            ],
-            [
-                [
-                    'host' => env('TEST_RS_HOST', 11211),
-                    'port' => env('TEST_RS_PORT', 6379),
-                    'randomValue' => 'test_'
                 ],
                 [
-                    'host' => env('TEST_RS_HOST', 11211),
-                    'port' => env('TEST_RS_PORT', 6379),
+                    'host'       => env('TEST_RS_HOST', 11211),
+                    'port'       => env('TEST_RS_PORT', 6379),
+                    'lifetime'   => 8600,
+                    'prefix'     => 'test_',
+                    'persistent' => false,
+                ],
+            ],
+
+            [
+                [
+                    'host'        => env('TEST_RS_HOST', 11211),
+                    'port'        => env('TEST_RS_PORT', 6379),
                     'randomValue' => 'test_',
-                    'lifetime' => 8600,
-                    'prefix' => '',
-                    'persistent' => false
-                ]
-            ],
-            [
-                [
-                    'host' => env('TEST_RS_HOST', 11211),
-                    'port' => env('TEST_RS_PORT', 6379),
-                    123 => 'test_'
                 ],
                 [
-                    'host' => env('TEST_RS_HOST', 11211),
-                    'port' => env('TEST_RS_PORT', 6379),
-                    123 => 'test_',
-                    'lifetime' => 8600,
-                    'prefix' => '',
-                    'persistent' => false
-                ]
+                    'host'        => env('TEST_RS_HOST', 11211),
+                    'port'        => env('TEST_RS_PORT', 6379),
+                    'randomValue' => 'test_',
+                    'lifetime'    => 8600,
+                    'prefix'      => '',
+                    'persistent'  => false,
+                ],
             ],
+
             [
                 [
                     'host' => env('TEST_RS_HOST', 11211),
                     'port' => env('TEST_RS_PORT', 6379),
+                    123    => 'test_',
+                ],
+                [
+                    'host'       => env('TEST_RS_HOST', 11211),
+                    'port'       => env('TEST_RS_PORT', 6379),
+                    123          => 'test_',
+                    'lifetime'   => 8600,
+                    'prefix'     => '',
+                    'persistent' => false,
+                ],
+            ],
+
+            [
+                [
+                    'host'     => env('TEST_RS_HOST', 11211),
+                    'port'     => env('TEST_RS_PORT', 6379),
                     'lifetime' => 24,
-                    'prefix' => 'test_',
+                    'prefix'   => 'test_',
                 ],
                 [
-                    'host' => env('TEST_RS_HOST', 11211),
-                    'port' => env('TEST_RS_PORT', 6379),
-                    'lifetime' => 24,
-                    'prefix' => 'test_',
-                    'persistent' => false
-                ]
+                    'host'       => env('TEST_RS_HOST', 11211),
+                    'port'       => env('TEST_RS_PORT', 6379),
+                    'lifetime'   => 24,
+                    'prefix'     => 'test_',
+                    'persistent' => false,
+                ],
             ],
+
             [
                 [
                     'host' => env('TEST_RS_HOST', 11211),
                     'port' => env('TEST_RS_PORT', 6379),
                 ],
                 [
-                    'host' => env('TEST_RS_HOST', 11211),
-                    'port' => env('TEST_RS_PORT', 6379),
-                    'lifetime' => 8600,
-                    'prefix' => '',
-                    'persistent' => false
-                ]
+                    'host'       => env('TEST_RS_HOST', 11211),
+                    'port'       => env('TEST_RS_PORT', 6379),
+                    'lifetime'   => 8600,
+                    'prefix'     => '',
+                    'persistent' => false,
+                ],
             ],
+
             [
                 [
                     'host' => env('TEST_RS_HOST', 11211),
                 ],
                 [
-                    'host' => env('TEST_RS_HOST', 11211),
-                    'port' => env('TEST_RS_PORT', 6379),
-                    'lifetime' => 8600,
-                    'prefix' => '',
-                    'persistent' => false
-                ]
+                    'host'       => env('TEST_RS_HOST', 11211),
+                    'port'       => env('TEST_RS_PORT', 6379),
+                    'lifetime'   => 8600,
+                    'prefix'     => '',
+                    'persistent' => false,
+                ],
             ],
+
             [
                 [
                 ],
                 [
-                    'host' => '127.0.0.1',
-                    'port' => env('TEST_RS_PORT', 6379),
-                    'lifetime' => 8600,
-                    'prefix' => '',
-                    'persistent' => false
-                ]
+                    'host'       => '127.0.0.1',
+                    'port'       => env('TEST_RS_PORT', 6379),
+                    'lifetime'   => 8600,
+                    'prefix'     => '',
+                    'persistent' => false,
+                ],
             ],
         ];
     }

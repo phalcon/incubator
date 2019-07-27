@@ -31,23 +31,36 @@ class HeaderTest extends Test
 
         $testData = [
             $stringHeaderWithMessage => [
-                "statusCode" => 200,
+                "statusCode"    => 200,
                 "statusMessage" => "OK",
-                "status" => "HTTP/1.1 200 OK",
+                "status"        => "HTTP/1.1 200 OK",
             ],
             $stringHeaderNoMessage => [
-                "statusCode" => 550,
+                "statusCode"    => 550,
                 "statusMessage" => "",
-                "status" => "HTTP/1.1 550",
+                "status"        => "HTTP/1.1 550",
             ],
         ];
 
         foreach ($testData as $stringHeader => $expected) {
             $header = new Header();
+
             $header->parse($stringHeader);
-            $this->assertEquals($header->statusCode, $expected["statusCode"]);
-            $this->assertEquals($header->statusMessage, $expected["statusMessage"]);
-            $this->assertEquals($header->status, $expected["status"]);
+
+            $this->assertEquals(
+                $expected["statusCode"],
+                $header->statusCode
+            );
+
+            $this->assertEquals(
+                $expected["statusMessage"],
+                $header->statusMessage
+            );
+
+            $this->assertEquals(
+                $expected["status"],
+                $header->status
+            );
         }
     }
 }

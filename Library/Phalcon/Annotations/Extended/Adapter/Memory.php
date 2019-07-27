@@ -80,7 +80,6 @@ class Memory extends AbstractAdapter
 
         $this->data[$prefixedKey] = $reflection;
 
-
         return true;
     }
 

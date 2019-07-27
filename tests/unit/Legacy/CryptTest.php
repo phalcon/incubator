@@ -30,6 +30,7 @@ class CryptTest extends Test
     public function _before()
     {
         parent::_before();
+
         if (!extension_loaded('mcrypt')) {
             $this->markTestSkipped('Warning: mcrypt extension is not loaded');
         }
@@ -48,15 +49,18 @@ class CryptTest extends Test
             "Crypt constants are not correct",
             function ($const, $expected) {
                 expect($const)->equals($expected);
-            }, ['examples' => [
-                [Crypt::PADDING_DEFAULT,        0],
-                [Crypt::PADDING_ANSI_X_923,     1],
-                [Crypt::PADDING_PKCS7,          2],
-                [Crypt::PADDING_ISO_10126,      3],
-                [Crypt::PADDING_ISO_IEC_7816_4, 4],
-                [Crypt::PADDING_ZERO,           5],
-                [Crypt::PADDING_SPACE,          6],
-            ]]
+            },
+            [
+                'examples' => [
+                    [Crypt::PADDING_DEFAULT,        0],
+                    [Crypt::PADDING_ANSI_X_923,     1],
+                    [Crypt::PADDING_PKCS7,          2],
+                    [Crypt::PADDING_ISO_10126,      3],
+                    [Crypt::PADDING_ISO_IEC_7816_4, 4],
+                    [Crypt::PADDING_ZERO,           5],
+                    [Crypt::PADDING_SPACE,          6],
+                ],
+            ]
         );
     }
 
@@ -76,10 +80,11 @@ class CryptTest extends Test
                     MCRYPT_MODE_CBC,
                     MCRYPT_MODE_CFB,
                     MCRYPT_MODE_OFB,
-                    MCRYPT_MODE_NOFB
+                    MCRYPT_MODE_NOFB,
                 ];
 
                 $crypt = new Crypt();
+
                 foreach ($modes as $mode) {
                     $crypt->setMode($mode);
                     $crypt->setKey(substr($key, 0, 16));
@@ -90,13 +95,17 @@ class CryptTest extends Test
                     $encryption = $crypt->encrypt($test, substr($key, 0, 16));
                     expect(rtrim($crypt->decrypt($encryption, substr($key, 0, 16)), "\0"))->equals($test);
                 }
-            }, ['examples' => [
-                [md5(uniqid()),            str_repeat('x', mt_rand(1, 255))],
-                [time().time(),            str_shuffle(join('', range('a', 'z')))],
-                ['le$ki12432543543543543', null],
-            ]]
+            },
+            [
+                'examples' => [
+                    [md5(uniqid()),            str_repeat('x', mt_rand(1, 255))],
+                    [time().time(),            str_shuffle(join('', range('a', 'z')))],
+                    ['le$ki12432543543543543', null],
+                ],
+            ]
         );
     }
+
     /**
      * Tests the padding
      *
@@ -121,6 +130,7 @@ class CryptTest extends Test
                 }
 
                 $crypt = new Crypt();
+
                 $crypt->setCipher(MCRYPT_RIJNDAEL_256)
                     ->setKey(substr($key, 0, 16));
 
@@ -139,6 +149,7 @@ class CryptTest extends Test
             }
         );
     }
+
     /**
      * Tests the encryption base 64
      *
@@ -151,7 +162,9 @@ class CryptTest extends Test
             "encryption base 64does not return correct results",
             function () {
                 $crypt = new Crypt();
+
                 $crypt->setPadding(Crypt::PADDING_ANSI_X_923);
+
                 $key      = substr('phalcon notice 13123123', 0, 16);
                 $expected = 'https://github.com/phalcon/cphalcon/issues?state=open';
 

@@ -54,12 +54,14 @@ class Blameable extends Behavior implements BehaviorInterface
     public function __construct($options = null)
     {
         parent::__construct($options);
+
         if (isset($options['auditClass'])) {
             if (!in_array(AuditInterface::class, class_implements($options['auditClass']))) {
                 throw new Exception(
                     "Your class must implement Phalcon\\Mvc\\Model\\Behavior\\Blameable\\AuditInterface"
                 );
             }
+
             $this->auditClass = $options['auditClass'];
         }
 
@@ -69,6 +71,7 @@ class Blameable extends Behavior implements BehaviorInterface
                     "Your class must implement Phalcon\\Mvc\\Model\\Behavior\\Blameable\\AuditDetailInterface"
                 );
             }
+
             $this->auditDetailClass = $options['auditDetailClass'];
         }
 
@@ -76,6 +79,7 @@ class Blameable extends Behavior implements BehaviorInterface
             if (!is_callable($options['userCallback'])) {
                 throw new Exception("User callback must be callable!");
             }
+
             $this->userCallback = $options['userCallback'];
         }
 
@@ -118,8 +122,10 @@ class Blameable extends Behavior implements BehaviorInterface
     public function createAudit($type, ModelInterface $model)
     {
         $auditClass = $this->auditClass;
+
         /** @var AuditInterface $audit */
         $audit = new $auditClass();
+
         $audit->setUserCallback($this->userCallback);
         $audit->setModel($model);
         $audit->setType($type);
@@ -137,6 +143,7 @@ class Blameable extends Behavior implements BehaviorInterface
     {
         /** @var AuditInterface|ModelInterface $audit */
         $audit = $this->createAudit('C', $model);
+
         /** @var Model\MetaData $metaData */
         $metaData = $model->getModelsMetaData();
         $fields = $metaData->getAttributes($model);
@@ -147,13 +154,21 @@ class Blameable extends Behavior implements BehaviorInterface
         foreach ($fields as $field) {
             /** @var AuditDetailInterface $auditDetail */
             $auditDetail = new $auditDetailClass();
+
             $auditDetail->setOldValue(null);
+
             if (empty($columnMap)) {
                 $auditDetail->setFieldName($field);
-                $auditDetail->setNewValue($model->readAttribute($field));
+
+                $auditDetail->setNewValue(
+                    $model->readAttribute($field)
+                );
             } else {
                 $auditDetail->setFieldName($columnMap[$field]);
-                $auditDetail->setNewValue($model->readAttribute($columnMap[$field]));
+
+                $auditDetail->setNewValue(
+                    $model->readAttribute($columnMap[$field])
+                );
             }
 
             $details[] = $auditDetail;
@@ -191,15 +206,20 @@ class Blameable extends Behavior implements BehaviorInterface
         } else {
             $originalData = $model->getOldSnapshotData();
         }
+
         $auditDetailClass = $this->auditDetailClass;
 
         $details = [];
         foreach ($changedFields as $field) {
             /** @var AuditDetailInterface $auditDetail */
             $auditDetail = new $auditDetailClass();
+
             $auditDetail->setFieldName($field);
             $auditDetail->setOldValue($originalData[$field]);
-            $auditDetail->setNewValue($model->readAttribute($field));
+
+            $auditDetail->setNewValue(
+                $model->readAttribute($field)
+            );
 
             $details[] = $auditDetail;
         }

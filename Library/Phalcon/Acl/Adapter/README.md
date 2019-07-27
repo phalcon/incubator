@@ -10,17 +10,21 @@ This adapter uses a database to store the ACL list:
 use Phalcon\Acl\Adapter\Database as AclDb;
 use Phalcon\Db\Adapter\Pdo\Sqlite;
 
-$connection = new Sqlite(['dbname' => 'sample.db']);
+$connection = new Sqlite(
+    [
+        'dbname' => 'sample.db',
+    ]
+);
 
 $acl = AclDb(
-  [
-    'db'                => $connection,
-    'roles'             => 'roles',
-    'rolesInherits'     => 'roles_inherits',
-    'resources'         => 'resources',
-    'resourcesAccesses' => 'resources_accesses',
-    'accessList'        => 'access_list'
-  ]
+    [
+        'db'                => $connection,
+        'roles'             => 'roles',
+        'rolesInherits'     => 'roles_inherits',
+        'resources'         => 'resources',
+        'resourcesAccesses' => 'resources_accesses',
+        'accessList'        => 'access_list',
+    ]
 );
 
 ```
@@ -64,22 +68,33 @@ CREATE TABLE `roles_inherits` (
 Using the cache adapter:
 
 ```php
-
 // By default the action is deny access
-$acl->setDefaultAction(Phalcon\Acl::DENY);
+$acl->setDefaultAction(
+    \Phalcon\Acl::DENY
+);
 
 // You can add roles/resources/accesses to list or insert them directly in the tables
 
 // Add roles
-$acl->addRole(new Phalcon\Acl\Role('Admins'));
+$acl->addRole(
+    new \Phalcon\Acl\Role('Admins')
+);
 
 // Create the resource with its accesses
-$acl->addResource('Products', ['insert', 'update', 'delete']);
+$acl->addResource(
+    'Products',
+    [
+        'insert',
+        'update',
+        'delete',
+    ]
+);
 
 // Allow Admins to insert products
 $acl->allow('Admin', 'Products', 'insert');
 
 // Do Admins are allowed to insert Products?
-var_dump($acl->isAllowed('Admins', 'Products', 'update'));
-
+var_dump(
+    $acl->isAllowed('Admins', 'Products', 'update')
+);
 ```

@@ -27,7 +27,9 @@ class IpValidator extends Validator implements ValidatorInterface
                 'The IP is not valid'
             );
 
-            $validator->appendMessage(new Message($message, $attribute, 'Ip'));
+            $validator->appendMessage(
+                new Message($message, $attribute, 'Ip')
+            );
 
             return false;
         }

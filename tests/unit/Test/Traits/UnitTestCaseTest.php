@@ -30,9 +30,7 @@ class UnitTestCaseTest extends Unit
 
     public function _before()
     {
-        $this->testSubject = $this->getMockBuilder(
-            UnitTestCase::class
-        )->getMockForTrait();
+        $this->testSubject = $this->getMockBuilder(UnitTestCase::class)->getMockForTrait();
     }
 
     public function testConfig()
@@ -46,7 +44,14 @@ class UnitTestCaseTest extends Unit
 
         $this->di->set('config', $mockConfig);
 
-        $this->assertSame($this->testSubject, $this->testSubject->setConfig($mockConfig));
-        $this->assertSame($mockConfig, $this->testSubject->getConfig());
+        $this->assertSame(
+            $this->testSubject,
+            $this->testSubject->setConfig($mockConfig)
+        );
+
+        $this->assertSame(
+            $mockConfig,
+            $this->testSubject->getConfig()
+        );
     }
 }

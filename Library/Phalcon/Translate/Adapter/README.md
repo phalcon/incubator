@@ -11,14 +11,19 @@ First of all, you need to up your database. To do this, use [DI][1] (in `/public
 ```php
 use Phalcon\Db\Adapter\Pdo\Mysql;
 
-$di->set('db', function() {
-	return new Mysql([
-		'host'     => 'localhost',
-		'username' => 'root',
-		'password' => 123456,
-		'dbname'   => 'application'
-	]);
-});
+$di->set(
+    'db',
+    function () {
+        return new Mysql(
+            [
+                'host'     => 'localhost',
+                'username' => 'root',
+                'password' => 123456,
+                'dbname'   => 'application',
+            ]
+        );
+    }
+);
 ```
 
 Then, you should get the translation through your `controller`. Put this on it:
@@ -28,17 +33,18 @@ use Phalcon\Translate\Adapter\Database;
 
 class IndexController extends \Phalcon\Mvc\Controller
 {
-	protected function _getTranslation()
-	{
-		return new Database([
-		    'db'                     => $this->di->get('db'), // Here we're getting the database from DI
-		    'table'                  => 'translations', // The table that is storing the translations
-		    'language'               => $this->request->getBestLanguage(), // Now we're getting the best language for the user
-		    'useIcuMessageFormatter' => true, // Optional, if need formatting message using ICU MessageFormatter
-		]);
-	}
-	
-	// ...
+    protected function _getTranslation()
+    {
+        return new Database(
+            [
+                'db'       => $this->di->get('db'), // Here we're getting the database from DI
+                'table'    => 'translations', // The table that is storing the translations
+                'language' => $this->request->getBestLanguage(), // Now we're getting the best language for the user
+            ]
+        );
+    }
+
+    // ...
 }
 ```
 
@@ -68,15 +74,18 @@ from your database. *This step happens in your controller.* Follow the example:
 ```php
 class IndexController extends \Phalcon\Mvc\Controller
 {
-	protected function _getTranslation()
-	{
-		// ...
-	}
-	
-	public function indexAction()
-	{
-		$this->view->setVar('expression', $this->_getTranslation());
-	}
+    protected function _getTranslation()
+    {
+        // ...
+    }
+
+    public function indexAction()
+    {
+        $this->view->setVar(
+            'expression',
+            $this->_getTranslation()
+        );
+    }
 }
 ```
 
@@ -84,26 +93,18 @@ Then, just output the`phrase/sentence/word` in your view:
 
 ```php
 <html>
-	<head>
-		<!-- ... -->
-	</head>
-	<body>
-		<h1><?php echo $expression->_("IndexPage_Hello_World"); ?></h1>
-	</body>
+    <head>
+        <!-- ... -->
+    </head>
+    <body>
+        <h1><?php echo $expression->_("IndexPage_Hello_World"); ?></h1>
+    </body>
 </html>
 ```
 
 Or, if you wish you can use [Volt][2]:
 ```php
 <h1>{{ expression._("IndexPage_Hello_World") }}</h1>
-```
-
-ICU MessageFormatter Example
-```php
-// Example plural message with key 'cats'
-// Peter has {nbCats, plural, =0{no cat} =1{a cat} other{# cats}}
-
-$this->_getTranslation()->_('cats', ['nbCats' => rand(0, 10)]);
 ```
 
 ## Mongo
@@ -117,16 +118,12 @@ use MessageFormatter;
 use Phalcon\Translate\Adapter\Mongo;
 use My\Application\Collections\Translate;
 
-$fmt = new MessageFormatter(
-    "en_US",
-    "{0,number,integer} monkeys on {1,number,integer} trees make {2,number} monkeys per tree"
+$translate = new Mongo(
+    [
+        'collection' => Translate::class,
+        'language'   => 'en',
+    ]
 );
-
-$translate = new Mongo([
-    'collection' => Translate::class,
-    'language'   => 'en',
-    'formatter'  => $fmt,
-]);
 
 echo $translate->t('application.title');
 ```
@@ -141,14 +138,22 @@ The extension [intl][3] must be installed in PHP.
 ```php
 use Phalcon\Translate\Adapter\ResourceBundle;
 
-$translate = new ResourceBundle([
-    'bundle'   => '/path/to/bundle', // required
-    'locale'   => 'en',              // required
-    'fallback' => false              // optional, default - true
-]);
+$translate = new ResourceBundle(
+    [
+        'bundle'   => '/path/to/bundle', // required
+        'locale'   => 'en',              // required
+        'fallback' => false,             // optional, default - true
+    ]
+);
 
 echo $translate->t('application.title');
-echo $translate->t('application.copyright', ['currentYear' => new \DateTime('now')]);
+
+echo $translate->t(
+    'application.copyright',
+    [
+        'currentYear' => new \DateTime('now'),
+    ]
+);
 ```
 
 ResourceBundle source file example
@@ -165,3 +170,28 @@ root {
 [1]: http://docs.phalconphp.com/en/latest/api/Phalcon_DI.html
 [2]: http://docs.phalconphp.com/en/latest/reference/volt.html
 [3]: http://php.net/manual/en/book.intl.php
+
+## MultiCsv
+
+This adapter extends *Phalcon\Translate\Adapter\Csv* by allowing one csv file for several languages.
+
+* CSV example (blank spaces added for readability):
+```csv
+#ignored;     en_US;  fr_FR;   es_ES
+label_street; street; rue;     calle
+label_car;    car;    voiture; coche
+label_home;   home;   maison;  casa
+```
+* PHP example : 
+```php
+// the constructor is inherited from Phalcon\Translate\Adapter\Csv
+$titles_translater = new Phalcon\Translate\Adapter\MultiCsv(
+    [
+        'content' => "{$config->langDir}/titles.csv",
+    ]
+);
+
+$titles_translater->setLocale('es_ES');
+
+echo $titles_translater->query('label_home'); // string 'casa'
+```

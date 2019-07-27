@@ -47,6 +47,7 @@ class Wincache extends Backend implements BackendInterface
     {
         $prefixedKey    = $this->getPrefixedIdentifier($keyName);
         $cachedContent  = wincache_ucache_get($prefixedKey, $success);
+
         $this->_lastKey = $prefixedKey;
 
         if ($success === false) {
@@ -131,7 +132,9 @@ class Wincache extends Backend implements BackendInterface
      */
     public function delete($keyName)
     {
-        return wincache_ucache_delete($this->getPrefixedIdentifier($keyName));
+        return wincache_ucache_delete(
+            $this->getPrefixedIdentifier($keyName)
+        );
     }
 
     /**

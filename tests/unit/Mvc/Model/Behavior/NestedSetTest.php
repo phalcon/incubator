@@ -100,7 +100,12 @@ class NestedSetTest extends Helper
                 $category1->name = 'Mobile Phones';
                 $category1->saveNode();
 
-                $I->seeInDatabase(CategoriesManyRoots::$table, ['name' => 'Mobile Phones']);
+                $I->seeInDatabase(
+                    CategoriesManyRoots::$table,
+                    [
+                        'name' => 'Mobile Phones',
+                    ]
+                );
 
                 $category1 = CategoriesManyRoots::findFirst();
 
@@ -113,7 +118,12 @@ class NestedSetTest extends Helper
                 $category2->name = 'Cars';
                 $category2->saveNode();
 
-                $I->seeInDatabase(CategoriesManyRoots::$table, ['name' => 'Cars']);
+                $I->seeInDatabase(
+                    CategoriesManyRoots::$table,
+                    [
+                        'name' => 'Cars',
+                    ]
+                );
 
                 $category2 = CategoriesManyRoots::findFirst(2);
 
@@ -126,7 +136,12 @@ class NestedSetTest extends Helper
                 $category3->name = 'Computers';
                 $category3->saveNode();
 
-                $I->seeInDatabase(CategoriesManyRoots::$table, ['name' => 'Computers']);
+                $I->seeInDatabase(
+                    CategoriesManyRoots::$table,
+                    [
+                        'name' => 'Computers',
+                    ]
+                );
 
                 $category3 = CategoriesManyRoots::findFirst(3);
 
@@ -162,10 +177,11 @@ class NestedSetTest extends Helper
                 $category = new CategoriesOneRoot();
                 $category->name = 'Computers';
                 $category->saveNode();
-            }, [
+            },
+            [
                 'throws' => [
                     'Phalcon\Mvc\Model\Exception',
-                    'Cannot create more than one root in single root mode.'
+                    'Cannot create more than one root in single root mode.',
                 ]
             ]
         );
@@ -429,9 +445,10 @@ class NestedSetTest extends Helper
      */
     public function testShouldDeleteNode()
     {
-
         $this->createTree();
+
         $samsung = CategoriesManyRoots::findFirst(2);
+
         $actual = $samsung->deleteNode();
 
         $this->assertTrue($actual);

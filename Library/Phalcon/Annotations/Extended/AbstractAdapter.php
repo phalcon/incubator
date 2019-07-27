@@ -85,7 +85,10 @@ abstract class AbstractAdapter extends Adapter implements AdapterInterface
     {
         if (!is_string($key)) {
             throw new Exception(
-                sprintf('Invalid key type key to retrieve annotations. Expected string but got %s.', gettype($key))
+                sprintf(
+                    'Invalid key type key to retrieve annotations. Expected string but got %s.',
+                    gettype($key)
+                )
             );
         }
     }

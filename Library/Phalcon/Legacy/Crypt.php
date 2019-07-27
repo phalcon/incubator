@@ -167,6 +167,7 @@ class Crypt implements CryptInterface
 
         if ($mode == MCRYPT_MODE_CBC || $mode == MCRYPT_MODE_ECB) {
             $paddingSize = $blockSize - (strlen($text) % $blockSize);
+
             if ($paddingSize >= 256) {
                 throw new Exception("Block size is bigger than 256");
             }
@@ -174,28 +175,51 @@ class Crypt implements CryptInterface
             switch ($paddingType) {
                 case self::PADDING_ANSI_X_923:
                     $padding = str_repeat(chr(0), $paddingSize - 1) . chr($paddingSize);
+
                     break;
+
                 case self::PADDING_PKCS7:
-                    $padding = str_repeat(chr($paddingSize), $paddingSize);
+                    $padding = str_repeat(
+                        chr($paddingSize),
+                        $paddingSize
+                    );
+
                     break;
+
                 case self::PADDING_ISO_10126:
                     $padding = "";
+
                     foreach (range(0, $paddingSize - 2) as $i) {
-                        $padding .= chr(rand());
+                        $padding .= chr(
+                            rand()
+                        );
                     }
+
                     $padding .= chr($paddingSize);
+
                     break;
+
                 case self::PADDING_ISO_IEC_7816_4:
                     $padding = chr(0x80) . str_repeat(chr(0), $paddingSize - 1);
+
                     break;
+
                 case self::PADDING_ZERO:
-                    $padding = str_repeat(chr(0), $paddingSize);
+                    $padding = str_repeat(
+                        chr(0),
+                        $paddingSize
+                    );
+
                     break;
+
                 case self::PADDING_SPACE:
                     $padding = str_repeat(" ", $paddingSize);
+
                     break;
+
                 default:
                     $paddingSize = 0;
+
                     break;
             }
         }
@@ -231,55 +255,80 @@ class Crypt implements CryptInterface
                 case self::PADDING_ANSI_X_923:
                     $last = substr($text, $length - 1, 1);
                     $ord = (int) ord($last);
+
                     if ($ord <= $blockSize) {
                         $paddingSize = $ord;
+
                         $padding = str_repeat(chr(0), $paddingSize - 1) . $last;
+
                         if (substr($text, $length - $paddingSize) != $padding) {
                             $paddingSize = 0;
                         }
                     }
+
                     break;
+
                 case self::PADDING_PKCS7:
                     $last = substr($text, $length - 1, 1);
                     $ord = (int) ord($last);
+
                     if ($ord <= $blockSize) {
                         $paddingSize = $ord;
-                        $padding = str_repeat(chr($paddingSize), $paddingSize);
+
+                        $padding = str_repeat(
+                            chr($paddingSize),
+                            $paddingSize
+                        );
+
                         if (substr($text, $length - $paddingSize) != $padding) {
                             $paddingSize = 0;
                         }
                     }
+
                     break;
+
                 case self::PADDING_ISO_10126:
                     $last = substr($text, $length - 1, 1);
                     $paddingSize = (int) ord($last);
+
                     break;
+
                 case self::PADDING_ISO_IEC_7816_4:
                     $i = $length - 1;
+
                     while ($i > 0 && $text[$i] == 0x00 && $paddingSize < $blockSize) {
                         $paddingSize++;
                         $i--;
                     }
+
                     if ($text[$i] == 0x80) {
                         $paddingSize++;
                     } else {
                         $paddingSize = 0;
                     }
+
                     break;
+
                 case self::PADDING_ZERO:
                     $i = $length - 1;
+
                     while ($i >= 0 && $text[$i] == 0x00 && $paddingSize <= $blockSize) {
                         $paddingSize++;
                         $i--;
                     }
+
                     break;
+
                 case self::PADDING_SPACE:
                     $i = $length - 1;
+
                     while ($i >= 0 && $text[$i] == 0x20 && $paddingSize <= $blockSize) {
                         $paddingSize++;
                         $i--;
                     }
+
                     break;
+
                 default:
                     break;
             }
@@ -288,6 +337,7 @@ class Crypt implements CryptInterface
                 if ($paddingSize < $length) {
                     return substr($text, 0, $length - $paddingSize);
                 }
+
                 return "";
             }
         }
@@ -328,16 +378,32 @@ class Crypt implements CryptInterface
             throw new Exception("Size of key is too large for this algorithm");
         }
 
-        $iv = strval(mcrypt_create_iv($ivSize, MCRYPT_RAND));
-        $blockSize = intval(mcrypt_get_block_size($this->cipher, $this->mode));
+        $iv = strval(
+            mcrypt_create_iv($ivSize, MCRYPT_RAND)
+        );
+
+        $blockSize = intval(
+            mcrypt_get_block_size($this->cipher, $this->mode)
+        );
 
         if ($this->padding != 0 && ($this->mode == MCRYPT_MODE_CBC || $this->mode == MCRYPT_MODE_ECB)) {
-            $padded = $this->cryptPadText($text, $this->mode, $blockSize, $this->padding);
+            $padded = $this->cryptPadText(
+                $text,
+                $this->mode,
+                $blockSize,
+                $this->padding
+            );
         } else {
             $padded = $text;
         }
 
-        return $iv . mcrypt_encrypt($this->cipher, $encryptKey, $padded, $this->mode, $iv);
+        return $iv . mcrypt_encrypt(
+            $this->cipher,
+            $encryptKey,
+            $padded,
+            $this->mode,
+            $iv
+        );
     }
 
     /**
@@ -381,11 +447,24 @@ class Crypt implements CryptInterface
         }
 
         $data = substr($text, $ivSize);
-        $decrypted = mcrypt_decrypt($this->cipher, $decryptKey, $data, $this->mode, substr($text, 0, $ivSize));
+
+        $decrypted = mcrypt_decrypt(
+            $this->cipher,
+            $decryptKey,
+            $data,
+            $this->mode,
+            substr($text, 0, $ivSize)
+        );
+
         $blockSize = mcrypt_get_block_size($this->cipher, $this->mode);
 
         if ($this->mode == MCRYPT_MODE_CBC || $this->mode == MCRYPT_MODE_ECB) {
-            return $this->cryptUnpadText($decrypted, $this->mode, $blockSize, $this->padding);
+            return $this->cryptUnpadText(
+                $decrypted,
+                $this->mode,
+                $blockSize,
+                $this->padding
+            );
         }
 
         return $decrypted;
@@ -402,10 +481,18 @@ class Crypt implements CryptInterface
     public function encryptBase64($text, $key = null, $safe = false)
     {
         if ($safe) {
-            return strtr(base64_encode($this->encrypt($text, $key)), "+/", "-_");
+            return strtr(
+                base64_encode(
+                    $this->encrypt($text, $key)
+                ),
+                "+/",
+                "-_"
+            );
         }
 
-        return base64_encode($this->encrypt($text, $key));
+        return base64_encode(
+            $this->encrypt($text, $key)
+        );
     }
 
     /**
@@ -419,10 +506,22 @@ class Crypt implements CryptInterface
     public function decryptBase64($text, $key = null, $safe = false)
     {
         if ($safe) {
-            return $this->decrypt(base64_decode(strtr($text, "-_", "+/")), $key);
+            return $this->decrypt(
+                base64_decode(
+                    strtr(
+                        $text,
+                        "-_",
+                        "+/"
+                    )
+                ),
+                $key
+            );
         }
 
-        return $this->decrypt(base64_decode($text), $key);
+        return $this->decrypt(
+            base64_decode($text),
+            $key
+        );
     }
 
     /**

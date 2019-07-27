@@ -33,19 +33,23 @@ class NumericValidatorTest extends UnitTestCase
 
         $validation->add(
             'number',
-            new NumericValidator (
+            new NumericValidator(
                 [
-                    'min' => 1,                                                    // Optional
-                    'max' => 2000000000,                                           // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.',     // Optional
-                    'messageMinimum' => 'The value must be at least 1',            // Optional
-                    'messageMaximum' => 'The value must be lower than 12345678900' // Optional
+                    'min'            => 1,                                            // Optional
+                    'max'            => 2000000000,                                   // Optional
+                    'message'        => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 1',               // Optional
+                    'messageMaximum' => 'The value must be lower than 12345678900',   // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(0, count($messages));
+
+        $this->assertCount(
+            0,
+            $messages
+        );
     }
 
     public function testNumericValidatorOkSign()
@@ -56,20 +60,24 @@ class NumericValidatorTest extends UnitTestCase
 
         $validation->add(
             'number',
-            new NumericValidator (
+            new NumericValidator(
                 [
-                    'allowSign' => true,                                           // Optional, default false
-                    'min' => -20,                                                  // Optional
-                    'max' => 2000000000,                                           // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.',     // Optional
-                    'messageMinimum' => 'The value must be at least 1',            // Optional
-                    'messageMaximum' => 'The value must be lower than 12345678900' // Optional
+                    'allowSign'      => true,                                         // Optional, default false
+                    'min'            => -20,                                          // Optional
+                    'max'            => 2000000000,                                   // Optional
+                    'message'        => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 1',               // Optional
+                    'messageMaximum' => 'The value must be lower than 12345678900',   // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(0, count($messages));
+
+        $this->assertCount(
+            0,
+            $messages
+        );
     }
 
     public function testNumericValidatorFailingSign()
@@ -80,19 +88,23 @@ class NumericValidatorTest extends UnitTestCase
 
         $validation->add(
             'number',
-            new NumericValidator (
+            new NumericValidator(
                 [
-                    'min' => 2,                                                // Optional
-                    'max' => 10         ,                                      // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
-                    'messageMinimum' => 'The value must be at least 2',        // Optional
-                    'messageMaximum' => 'The value must be lower than 10'      // Optional
+                    'min'            => 2,                                            // Optional
+                    'max'            => 10,                                           // Optional
+                    'message'        => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',               // Optional
+                    'messageMaximum' => 'The value must be lower than 10',            // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(1, count($messages));
+
+        $this->assertCount(
+            1,
+            $messages
+        );
     }
 
     public function testNumericValidatorFailingMax()
@@ -103,19 +115,23 @@ class NumericValidatorTest extends UnitTestCase
 
         $validation->add(
             'number',
-            new NumericValidator (
+            new NumericValidator(
                 [
-                    'min' => 2,                                                // Optional
-                    'max' => 10         ,                                      // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
-                    'messageMinimum' => 'The value must be at least 2',        // Optional
-                    'messageMaximum' => 'The value must be lower than 10'      // Optional
+                    'min'            => 2,                                            // Optional
+                    'max'            => 10,                                           // Optional
+                    'message'        => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',               // Optional
+                    'messageMaximum' => 'The value must be lower than 10'             // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(1, count($messages));
+
+        $this->assertCount(
+            1,
+            $messages
+        );
     }
 
     public function testNumericValidatorFailingMin()
@@ -126,19 +142,23 @@ class NumericValidatorTest extends UnitTestCase
 
         $validation->add(
             'number',
-            new NumericValidator (
+            new NumericValidator(
                 [
-                    'min' => 2,                                                // Optional
-                    'max' => 10         ,                                      // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
-                    'messageMinimum' => 'The value must be at least 2',        // Optional
-                    'messageMaximum' => 'The value must be lower than 10'      // Optional
+                    'min'            => 2,                                            // Optional
+                    'max'            => 10,                                           // Optional
+                    'message'        => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',               // Optional
+                    'messageMaximum' => 'The value must be lower than 10',            // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(1, count($messages));
+
+        $this->assertCount(
+            1,
+            $messages
+        );
     }
 
     public function testNumericValidatorFailingComma()
@@ -149,19 +169,23 @@ class NumericValidatorTest extends UnitTestCase
 
         $validation->add(
             'number',
-            new NumericValidator (
+            new NumericValidator(
                 [
-                    'min' => 2,                                                // Optional
-                    'max' => 10         ,                                      // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
-                    'messageMinimum' => 'The value must be at least 2',        // Optional
-                    'messageMaximum' => 'The value must be lower than 10'      // Optional
+                    'min'            => 2,                                            // Optional
+                    'max'            => 10,                                           // Optional
+                    'message'        => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',               // Optional
+                    'messageMaximum' => 'The value must be lower than 10',            // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(1, count($messages));
+
+        $this->assertCount(
+            1,
+            $messages
+        );
     }
 
     public function testNumericValidatorFloatOk()
@@ -172,20 +196,24 @@ class NumericValidatorTest extends UnitTestCase
 
         $validation->add(
             'number',
-            new NumericValidator (
+            new NumericValidator(
                 [
-                    'allowFloat' => true,                                      // Optional, default: false
-                    'min' => 2,                                                // Optional
-                    'max' => 10         ,                                      // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
-                    'messageMinimum' => 'The value must be at least 2',        // Optional
-                    'messageMaximum' => 'The value must be lower than 10'      // Optional
+                    'allowFloat'     => true,                                         // Optional, default: false
+                    'min'            => 2,                                            // Optional
+                    'max'            => 10,                                           // Optional
+                    'message'        => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',               // Optional
+                    'messageMaximum' => 'The value must be lower than 10',            // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(0, count($messages));
+
+        $this->assertCount(
+            0,
+            $messages
+        );
     }
 
     public function testNumericValidatorFloatOkSignPlus()
@@ -196,20 +224,24 @@ class NumericValidatorTest extends UnitTestCase
 
         $validation->add(
             'number',
-            new NumericValidator (
+            new NumericValidator(
                 [
-                    'allowSign' => true,                                       // Optional, default: false
-                    'allowFloat' => true,                                      // Optional, default: false
-                    'max' => 10         ,                                      // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
-                    'messageMinimum' => 'The value must be at least 2',        // Optional
-                    'messageMaximum' => 'The value must be lower than 10'      // Optional
+                    'allowSign'      => true,                                         // Optional, default: false
+                    'allowFloat'     => true,                                         // Optional, default: false
+                    'max'            => 10,                                           // Optional
+                    'message'        => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',               // Optional
+                    'messageMaximum' => 'The value must be lower than 10',            // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(0, count($messages));
+
+        $this->assertCount(
+            0,
+            $messages
+        );
     }
 
     public function testNumericValidatorFloatOkSignMenus()
@@ -220,20 +252,24 @@ class NumericValidatorTest extends UnitTestCase
 
         $validation->add(
             'number',
-            new NumericValidator (
+            new NumericValidator(
                 [
-                    'allowSign' => true,                                       // Optional, default: false
-                    'allowFloat' => true,                                      // Optional, default: false
-                    'max' => 10         ,                                      // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
-                    'messageMinimum' => 'The value must be at least 2',        // Optional
-                    'messageMaximum' => 'The value must be lower than 10'      // Optional
+                    'allowSign'      => true,                                         // Optional, default: false
+                    'allowFloat'     => true,                                         // Optional, default: false
+                    'max'            => 10,                                           // Optional
+                    'message'        => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',               // Optional
+                    'messageMaximum' => 'The value must be lower than 10',            // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(0, count($messages));
+
+        $this->assertCount(
+            0,
+            $messages
+        );
     }
 
     public function testNumericValidatorFloatFailing()
@@ -244,20 +280,24 @@ class NumericValidatorTest extends UnitTestCase
 
         $validation->add(
             'number',
-            new NumericValidator (
+            new NumericValidator(
                 [
-                    'allowFloat' => true,                                      // Optional, default: false
-                    'min' => 2,                                                // Optional
-                    'max' => 10         ,                                      // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
-                    'messageMinimum' => 'The value must be at least 2',        // Optional
-                    'messageMaximum' => 'The value must be lower than 10'      // Optional
+                    'allowFloat'     => true,                                         // Optional, default: false
+                    'min'            => 2,                                            // Optional
+                    'max'            => 10,                                           // Optional
+                    'message'        => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',               // Optional
+                    'messageMaximum' => 'The value must be lower than 10',            // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(1, count($messages));
+
+        $this->assertCount(
+            1,
+            $messages
+        );
     }
 
     public function testNumericValidatorFloatFailingSign()
@@ -268,19 +308,23 @@ class NumericValidatorTest extends UnitTestCase
 
         $validation->add(
             'number',
-            new NumericValidator (
+            new NumericValidator(
                 [
-                    'allowFloat' => true,                                      // Optional, default: false
-                    'min' => 2,                                                // Optional
-                    'max' => 10         ,                                      // Optional
-                    'message' => 'Only numeric (0-9) characters are allowed.', // Optional
-                    'messageMinimum' => 'The value must be at least 2',        // Optional
-                    'messageMaximum' => 'The value must be lower than 10'      // Optional
+                    'allowFloat'     => true,                                         // Optional, default: false
+                    'min'            => 2,                                            // Optional
+                    'max'            => 10,                                           // Optional
+                    'message'        => 'Only numeric (0-9) characters are allowed.', // Optional
+                    'messageMinimum' => 'The value must be at least 2',               // Optional
+                    'messageMaximum' => 'The value must be lower than 10',            // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(2, count($messages));
+
+        $this->assertCount(
+            2,
+            $messages
+        );
     }
 }
