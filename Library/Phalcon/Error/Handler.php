@@ -22,7 +22,6 @@
 
 namespace Phalcon\Error;
 
-use Exception;
 use Phalcon\Di;
 use Phalcon\DiInterface;
 use Phalcon\Logger\Formatter;
@@ -77,7 +76,7 @@ class Handler
 
         set_exception_handler(
             function ($e) {
-                /** @var Exception|\Error $e */
+                /** @var \Exception|\Error $e */
                 $options = [
                     'type'        => $e->getCode(),
                     'message'     => $e->getMessage(),

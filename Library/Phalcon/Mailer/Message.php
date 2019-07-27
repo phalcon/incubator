@@ -19,12 +19,6 @@
 
 namespace Phalcon\Mailer;
 
-use Swift_Attachment;
-use Swift_ByteStream_FileByteStream;
-use Swift_Image;
-use Swift_Message;
-use Traversable;
-
 /**
  * Class Message
  *
@@ -43,12 +37,12 @@ class Message
     const CONTENT_TYPE_HTML = 'text/html';
 
     /**
-     * @var Manager
+     * @var \Phalcon\Mailer\Manager
      */
     protected $manager;
 
     /**
-     * @var Swift_Message
+     * @var \Swift_Message
      */
     protected $message;
 
@@ -605,7 +599,7 @@ class Message
     /**
      * Return a {@link \Swift_Message} instance
      *
-     * @return Swift_Message
+     * @return \Swift_Message
      */
     public function getMessage()
     {
@@ -619,7 +613,7 @@ class Message
     /**
      * Return a {@link \Phalcon\Mailer\Manager} instance
      *
-     * @return Manager
+     * @return \Phalcon\Mailer\Manager
      */
     public function getManager()
     {
@@ -683,14 +677,14 @@ class Message
     /**
      * Prepare and attach the given attachment.
      *
-     * @param  Swift_Attachment $attachment
+     * @param  \Swift_Attachment $attachment
      * @param  array $options optional
      *
      * @return $this
      *
      * @see \Swift_Message::attach()
      */
-    protected function prepareAttachment(Swift_Attachment $attachment, array $options = [])
+    protected function prepareAttachment(\Swift_Attachment $attachment, array $options = [])
     {
         if (isset($options['mime'])) {
             $attachment->setContentType($options['mime']);
@@ -736,13 +730,13 @@ class Message
      *
      * @param   string $file
      *
-     * @return Swift_Attachment
+     * @return \Swift_Attachment
      *
      * @see \Swift_Attachment::fromPath()
      */
     protected function createAttachmentViaPath($file)
     {
-        /** @var $byteStream Swift_ByteStream_FileByteStream */
+        /** @var $byteStream \Swift_ByteStream_FileByteStream */
         $byteStream = $this->getManager()->getDI()->get(
             '\Swift_ByteStream_FileByteStream',
             [
@@ -750,7 +744,7 @@ class Message
             ]
         );
 
-        /** @var $image Swift_Attachment */
+        /** @var $image \Swift_Attachment */
         $attachment = $this->getManager()->getDI()->get('\Swift_Attachment')
             ->setFile($byteStream);
 
@@ -763,7 +757,7 @@ class Message
      * @param string $data
      * @param string $name optional
      *
-     * @return Swift_Attachment
+     * @return \Swift_Attachment
      *
      * @see \Swift_Attachment::newInstance()
      */
@@ -783,13 +777,13 @@ class Message
      *
      * @param string $file
      *
-     * @return Swift_Image
+     * @return \Swift_Image
      *
      * @see \Swift_Image::fromPath()
      */
     protected function createEmbedViaPath($file)
     {
-        /** @var $byteStream Swift_ByteStream_FileByteStream */
+        /** @var $byteStream \Swift_ByteStream_FileByteStream */
         $byteStream = $this->getManager()->getDI()->get(
             '\Swift_ByteStream_FileByteStream',
             [
@@ -797,7 +791,7 @@ class Message
             ]
         );
 
-        /** @var $image Swift_Image */
+        /** @var $image \Swift_Image */
         $image = $this->getManager()->getDI()->get('\Swift_Image')
             ->setFile($byteStream);
 
@@ -810,7 +804,7 @@ class Message
      * @param string $data
      * @param string|null $name optional
      *
-     * @return Swift_Image
+     * @return \Swift_Image
      *
      * @see \Swift_Image::newInstance()
      */
@@ -834,7 +828,7 @@ class Message
      */
     protected function normalizeEmail($email)
     {
-        if (is_array($email) || $email instanceof Traversable) {
+        if (is_array($email) || $email instanceof \Traversable) {
             $emails = [];
 
             foreach ($email as $k => $v) {

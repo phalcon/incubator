@@ -19,7 +19,6 @@
 
 namespace Phalcon\Translate\Adapter;
 
-use ArrayAccess;
 use Phalcon\Translate\Exception;
 use Phalcon\Mvc\CollectionInterface;
 use Phalcon\Translate\Adapter;
@@ -35,7 +34,7 @@ use Phalcon\Translate\AdapterInterface;
  *
  * @package Phalcon\Translate\Adapter
  */
-class Mongo extends Adapter implements AdapterInterface, ArrayAccess
+class Mongo extends Adapter implements AdapterInterface, \ArrayAccess
 {
     protected $language;
     protected $collection;
@@ -60,7 +59,7 @@ class Mongo extends Adapter implements AdapterInterface, ArrayAccess
         }
 
         $this->setLanguage($options['language']);
-
+        
         parent::__construct($options);
     }
 

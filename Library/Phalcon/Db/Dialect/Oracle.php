@@ -59,7 +59,7 @@ class Oracle extends Dialect
      * @param string $sqlQuery
      * @return string
      */
-    public function sharedLock(string $sqlQuery): string
+    public function sharedLock($sqlQuery)
     {
         return $sqlQuery . ' LOCK IN SHARE MODE';
     }
@@ -71,7 +71,7 @@ class Oracle extends Dialect
      * @param mixed $number
      * @return string
      */
-    public function limit(string $sqlQuery, $number):string
+    public function limit($sqlQuery, $number)
     {
         $offset = 0;
 
@@ -104,7 +104,7 @@ class Oracle extends Dialect
      *
      * @throws Exception
      */
-    public function getColumnDefinition(ColumnInterface $column): string
+    public function getColumnDefinition(ColumnInterface $column)
     {
         $type = $column->getType();
         $size = $column->getSize();
@@ -159,7 +159,7 @@ class Oracle extends Dialect
      *
      * @throws Exception
      */
-    public function addColumn(string $tableName, string $schemaName, ColumnInterface $column): string
+    public function addColumn($tableName, $schemaName, ColumnInterface $column)
     {
         throw new Exception('Not implemented yet.');
     }
@@ -175,7 +175,7 @@ class Oracle extends Dialect
      *
      * @throws Exception
      */
-    public function modifyColumn(string $tableName, string $schemaName, ColumnInterface $column, ColumnInterface $current = null): string
+    public function modifyColumn($tableName, $schemaName, ColumnInterface $column, ColumnInterface $current = null)
     {
         throw new Exception('Not implemented yet.');
     }
@@ -190,7 +190,7 @@ class Oracle extends Dialect
      *
      * @throws Exception
      */
-    public function dropColumn(string $tableName, string $schemaName, string $columnName): string
+    public function dropColumn($tableName, $schemaName, $columnName)
     {
         throw new Exception('Not implemented yet.');
     }
@@ -205,7 +205,7 @@ class Oracle extends Dialect
      *
      * @throws Exception
      */
-    public function addIndex(string $tableName, string $schemaName, IndexInterface $index): string
+    public function addIndex($tableName, $schemaName, IndexInterface $index)
     {
         throw new Exception('Not implemented yet.');
     }
@@ -220,7 +220,7 @@ class Oracle extends Dialect
      *
      * @throws Exception
      */
-    public function dropIndex(string $tableName, string $schemaName, string $indexName): string
+    public function dropIndex($tableName, $schemaName, $indexName)
     {
         throw new Exception('Not implemented yet.');
     }
@@ -235,7 +235,7 @@ class Oracle extends Dialect
      *
      * @throws Exception
      */
-    public function addPrimaryKey(string $tableName, string $schemaName, IndexInterface $index): string
+    public function addPrimaryKey($tableName, $schemaName, IndexInterface $index)
     {
         throw new Exception('Not implemented yet.');
     }
@@ -249,7 +249,7 @@ class Oracle extends Dialect
      *
      * @throws Exception
      */
-    public function dropPrimaryKey(string $tableName, string $schemaName): string
+    public function dropPrimaryKey($tableName, $schemaName)
     {
         throw new Exception('Not implemented yet.');
     }
@@ -264,7 +264,7 @@ class Oracle extends Dialect
      *
      * @throws Exception
      */
-    public function addForeignKey(string $tableName, string $schemaName, ReferenceInterface $reference): string
+    public function addForeignKey($tableName, $schemaName, ReferenceInterface $reference)
     {
         throw new Exception('Not implemented yet.');
     }
@@ -279,7 +279,7 @@ class Oracle extends Dialect
      *
      * @throws Exception
      */
-    public function dropForeignKey(string $tableName, string $schemaName, string $referenceName): string
+    public function dropForeignKey($tableName, $schemaName, $referenceName)
     {
         throw new Exception('Not implemented yet.');
     }
@@ -294,7 +294,7 @@ class Oracle extends Dialect
      *
      * @throws Exception
      */
-    public function createTable(string $tableName, string $schemaName, array $definition): string
+    public function createTable($tableName, $schemaName, array $definition)
     {
         throw new Exception('Not implemented yet.');
     }
@@ -307,7 +307,7 @@ class Oracle extends Dialect
      * @param bool $ifExists
      * @return string
      */
-    public function dropTable(string $tableName, string $schemaName, $ifExists = true): string
+    public function dropTable($tableName, $schemaName, $ifExists = true)
     {
         $this->_escapeChar = '';
 
@@ -340,7 +340,7 @@ class Oracle extends Dialect
      * @param string $schemaName
      * @return string
      */
-    public function listTables(string $schemaName = null): string
+    public function listTables($schemaName = null)
     {
         $baseQuery = /** @lang text */
             "SELECT TABLE_NAME, OWNER FROM ALL_TABLES %s ORDER BY OWNER, TABLE_NAME";
@@ -366,7 +366,7 @@ class Oracle extends Dialect
      * @param string $schemaName
      * @return string
      */
-    public function tableExists(string $tableName, string $schemaName = null): string
+    public function tableExists($tableName, $schemaName = null)
     {
 
         $oldEscapeChar=$this->_escapeChar;
@@ -398,7 +398,7 @@ class Oracle extends Dialect
      *
      * @throws Exception
      */
-    public function createView(string $viewName, array $definition, string $schemaName = null): string
+    public function createView($viewName, array $definition, $schemaName = null)
     {
         if (!isset($definition['sql']) || empty($definition['sql'])) {
             throw new Exception("The index 'sql' is required in the definition array");
@@ -415,7 +415,7 @@ class Oracle extends Dialect
      * @param bool $ifExists
      * @return string
      */
-    public function dropView(string $viewName, string $schemaName = null, $ifExists = true): string
+    public function dropView($viewName, $schemaName = null, $ifExists = true)
     {
         $this->_escapeChar = '';
 
@@ -446,7 +446,7 @@ class Oracle extends Dialect
      *
      * @return string
      */
-    public function viewExists(string $viewName, string $schemaName = null): string
+    public function viewExists($viewName, $schemaName = null)
     {
         $view = $this->prepareTable($viewName, $schemaName);
         $baseSql = sprintf(
@@ -491,7 +491,7 @@ class Oracle extends Dialect
      * @param string $schema
      * @return string
      */
-    public function describeColumns(string $table, string $schema = null): string
+    public function describeColumns($table, $schema = null)
     {
         $oldEscapeChar= $this->_escapeChar;
         $this->_escapeChar = "'";
@@ -522,7 +522,7 @@ class Oracle extends Dialect
      * @param string $schema
      * @return string
      */
-    public function describeIndexes(string $table, string $schema = null): string
+    public function describeIndexes($table, $schema = null)
     {
         $table = $this->escape($table);
         $sql = 'SELECT I.TABLE_NAME, 0 AS C0, I.INDEX_NAME, IC.COLUMN_POSITION, IC.COLUMN_NAME ' .
@@ -538,12 +538,7 @@ class Oracle extends Dialect
         return $sql;
     }
 
-    /**
-     * @param string $table
-     * @param string|null $schema
-     * @return string
-     */
-    public function describeReferences(string $table, string $schema = null): string
+    public function describeReferences($table, $schema = null)
     {
         $table = $this->escape($table);
 
@@ -569,7 +564,7 @@ class Oracle extends Dialect
      * @param string $schema
      * @return string
      */
-    public function tableOptions(string $table, string $schema = null): string
+    public function tableOptions($table, $schema = null)
     {
         return '';
     }
@@ -579,7 +574,7 @@ class Oracle extends Dialect
      *
      * @return bool
      */
-    public function supportsSavepoints(): bool
+    public function supportsSavepoints()
     {
         return false;
     }
@@ -589,7 +584,7 @@ class Oracle extends Dialect
      *
      * @return bool
      */
-    public function supportsReleaseSavepoints(): bool
+    public function supportsReleaseSavepoints()
     {
         return false;
     }
@@ -603,7 +598,7 @@ class Oracle extends Dialect
      * @param string $escapeChar
      * @return string
      */
-    protected function prepareTable(string $table, string $schema = null, string $alias = null, string $escapeChar = null): string
+    protected function prepareTable($table, $schema = null, $alias = null, $escapeChar = null)
     {
         $table = $this->escape($table, $escapeChar);
 

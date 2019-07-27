@@ -1,12 +1,9 @@
 <?php namespace Phalcon\Mvc\Model\EagerLoading;
 
-use InvalidArgumentException;
 use Phalcon\Di;
 use Phalcon\Mvc\ModelInterface;
 use Phalcon\Mvc\Model\Relation;
 use Phalcon\Mvc\Model\Resultset\Simple;
-use ReflectionClass;
-use RuntimeException;
 
 final class Loader
 {
@@ -26,7 +23,7 @@ MSG;
     /**
      * @param ModelInterface|ModelInterface[]|Simple $from
      * @param ...$arguments
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function __construct($from)
     {
@@ -90,7 +87,7 @@ MSG;
         }
 
         if ($error) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 static::E_INVALID_SUBJECT
             );
         }
@@ -105,7 +102,7 @@ MSG;
      *
      * @param ModelInterface|ModelInterface[]|Simple $subject
      * @param mixed ...$arguments
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @return mixed
      */
     public static function from($subject)
@@ -126,7 +123,7 @@ MSG;
                 func_get_args()
             );
         } else {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 static::E_INVALID_SUBJECT
             );
         }
@@ -143,7 +140,7 @@ MSG;
      */
     public static function fromModel(ModelInterface $subject)
     {
-        $reflection = new ReflectionClass(__CLASS__);
+        $reflection = new \ReflectionClass(__CLASS__);
 
         $instance = $reflection->newInstanceArgs(
             func_get_args()
@@ -161,7 +158,7 @@ MSG;
      */
     public static function fromArray(array $subject)
     {
-        $reflection = new ReflectionClass(__CLASS__);
+        $reflection = new \ReflectionClass(__CLASS__);
 
         $instance = $reflection->newInstanceArgs(
             func_get_args()
@@ -179,7 +176,7 @@ MSG;
      */
     public static function fromResultset(Simple $subject)
     {
-        $reflection = new ReflectionClass(__CLASS__);
+        $reflection = new \ReflectionClass(__CLASS__);
 
         $instance = $reflection->newInstanceArgs(
             func_get_args()
@@ -214,13 +211,13 @@ MSG;
      * Parses the arguments that will be resolved to Relation instances
      *
      * @param array $arguments
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @return array
      */
     private static function parseArguments(array $arguments)
     {
         if (empty($arguments)) {
-            throw new InvalidArgumentException('Arguments can not be empty');
+            throw new \InvalidArgumentException('Arguments can not be empty');
         }
 
         $relations = [];
@@ -244,7 +241,7 @@ MSG;
         }
 
         if (empty($relations)) {
-            throw new InvalidArgumentException;
+            throw new \InvalidArgumentException;
         }
 
         return $relations;
@@ -258,7 +255,7 @@ MSG;
     public function addEagerLoad($relationAlias, $constraints = null)
     {
         if (!is_string($relationAlias)) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 sprintf(
                     '$relationAlias expects to be a string, `%s` given',
                     gettype($relationAlias)
@@ -267,7 +264,7 @@ MSG;
         }
 
         if ($constraints !== null && !is_callable($constraints)) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 sprintf(
                     '$constraints expects to be a callable, `%s` given',
                     gettype($constraints)
@@ -283,7 +280,7 @@ MSG;
     /**
      * Resolves the relations
      *
-     * @throws RuntimeException
+     * @throws \RuntimeException
      * @return EagerLoad[]
      */
     private function buildTree()
@@ -331,7 +328,7 @@ MSG;
                     $relation = $mM->getRelationByAlias($parentClassName, $alias);
 
                     if (!$relation instanceof Relation) {
-                        throw new RuntimeException(
+                        throw new \RuntimeException(
                             sprintf(
                                 'There is no defined relation for the model `%s` using alias `%s`',
                                 $parentClassName,
@@ -351,7 +348,7 @@ MSG;
                     $relType !== Relation::HAS_ONE &&
                     $relType !== Relation::HAS_MANY &&
                     $relType !== Relation::HAS_MANY_THROUGH) {
-                    throw new RuntimeException(
+                    throw new \RuntimeException(
                         sprintf(
                             'Unknown relation type `%s`',
                             $relType
@@ -360,7 +357,7 @@ MSG;
                 }
 
                 if (is_array($relation->getFields()) || is_array($relation->getReferencedFields())) {
-                    throw new RuntimeException(
+                    throw new \RuntimeException(
                         'Relations with composite keys are not supported'
                     );
                 }

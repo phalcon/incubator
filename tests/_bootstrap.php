@@ -2,7 +2,7 @@
 
 require_once realpath(dirname(__DIR__)) . '/vendor/autoload.php';
 
-(Dotenv\Dotenv::create(realpath(__DIR__)))->load();
+(new Dotenv\Dotenv(realpath(__DIR__)))->load();
 
 require_once '_support/functions.php';
 
@@ -21,8 +21,6 @@ if (extension_loaded('xdebug')) {
     ini_set('xdebug.max_nesting_level', 100);
     ini_set('xdebug.var_display_max_depth', 4);
 }
-
-ini_set('apc.enable_cli', 'on');
 
 clearstatcache();
 

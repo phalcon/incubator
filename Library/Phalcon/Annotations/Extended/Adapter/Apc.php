@@ -19,8 +19,6 @@
 
 namespace Phalcon\Annotations\Extended\Adapter;
 
-use APCIterator;
-use APCuIterator;
 use Phalcon\Annotations\Exception;
 use Phalcon\Annotations\Reflection;
 use Phalcon\Annotations\Extended\AbstractAdapter;
@@ -145,7 +143,7 @@ class Apc extends AbstractAdapter
         $prefixPattern = '#^_PHAN' . preg_quote("{$this->prefix}", '#') . '#';
 
         if (class_exists('\APCuIterator')) {
-            $iterator = new APCuIterator($prefixPattern);
+            $iterator = new \APCuIterator($prefixPattern);
 
             foreach ($iterator as $item) {
                 apcu_delete(
@@ -156,7 +154,7 @@ class Apc extends AbstractAdapter
             return true;
         }
 
-        $iterator = new APCIterator('user', $prefixPattern);
+        $iterator = new \APCIterator('user', $prefixPattern);
 
         foreach ($iterator as $item) {
             apc_delete(

@@ -19,16 +19,9 @@
 
 namespace Phalcon\Mailer;
 
-use InvalidArgumentException;
 use Phalcon\Config;
 use Phalcon\Mvc\User\Component;
 use Phalcon\Mvc\View;
-use Phalcon\Mvc\View\Simple;
-use Swift_Mailer;
-use Swift_MailTransport;
-use Swift_SendmailTransport;
-use Swift_SmtpTransport;
-use Swift_Transport;
 
 /**
  * Class Manager
@@ -52,17 +45,17 @@ class Manager extends Component
     protected $config = [];
 
     /**
-     * @var Swift_Transport
+     * @var \Swift_Transport
      */
     protected $transport;
 
     /**
-     * @var Swift_Mailer
+     * @var \Swift_Mailer
      */
     protected $mailer;
 
     /**
-     * @var Simple
+     * @var \Phalcon\Mvc\View\Simple
      */
     protected $view;
 
@@ -88,7 +81,7 @@ class Manager extends Component
      * - mailer:beforeCreateMessage
      * - mailer:afterCreateMessage
      *
-     * @return Message
+     * @return \Phalcon\Mailer\Message
      */
     public function createMessage()
     {
@@ -132,7 +125,7 @@ class Manager extends Component
      * @param array $params         optional
      * @param null|string $viewsDir optional
      *
-     * @return Message
+     * @return \Phalcon\Mailer\Message
      *
      * @see \Phalcon\Mailer\Manager::createMessage()
      */
@@ -151,7 +144,7 @@ class Manager extends Component
     /**
      * Return a {@link \Swift_Mailer} instance
      *
-     * @return Swift_Mailer
+     * @return \Swift_Mailer
      */
     public function getSwift()
     {
@@ -229,7 +222,7 @@ class Manager extends Component
                 break;
 
             default:
-                throw new InvalidArgumentException(
+                throw new \InvalidArgumentException(
                     sprintf(
                         'Driver-mail "%s" is not supported',
                         $driver
@@ -241,7 +234,7 @@ class Manager extends Component
     /**
      * Create a new SmtpTransport instance.
      *
-     * @return Swift_SmtpTransport
+     * @return \Swift_SmtpTransport
      *
      * @see \Swift_SmtpTransport
      */
@@ -249,7 +242,7 @@ class Manager extends Component
     {
         $config = $this->getConfig();
 
-        /** @var $transport Swift_SmtpTransport: */
+        /** @var $transport \Swift_SmtpTransport: */
         $transport = $this->getDI()->get('\Swift_SmtpTransport')
             ->setHost($config['host'])
             ->setPort($config['port']);
@@ -315,7 +308,7 @@ class Manager extends Component
     /**
      * Create a new MailTransport instance.
      *
-     * @return Swift_MailTransport
+     * @return \Swift_MailTransport
      *
      * @see \Swift_MailTransport
      */
@@ -327,13 +320,13 @@ class Manager extends Component
     /**
      * Create a new SendmailTransport instance.
      *
-     * @return Swift_SendmailTransport
+     * @return \Swift_SendmailTransport
      *
      * @see \Swift_SendmailTransport
      */
     protected function registerTransportSendmail()
     {
-        /** @var $transport Swift_SendmailTransport */
+        /** @var $transport \Swift_SendmailTransport */
         $transport = $this->getDI()->get('\Swift_SendmailTransport')
             ->setCommand($this->getConfig('sendmail', '/usr/sbin/sendmail -bs'));
 
@@ -384,19 +377,19 @@ class Manager extends Component
     /**
      * Return a {@link \Phalcon\Mvc\View\Simple} instance
      *
-     * @return Simple
+     * @return \Phalcon\Mvc\View\Simple
      */
     protected function getView()
     {
         if (!$this->view) {
-            /** @var $viewApp View */
+            /** @var $viewApp \Phalcon\Mvc\View */
             $viewApp = $this->getDI()->get('view');
 
             if (!($viewsDir = $this->getConfig('viewsDir'))) {
                 $viewsDir = $viewApp->getViewsDir();
             }
 
-            /** @var $view Simple */
+            /** @var $view \Phalcon\Mvc\View\Simple */
             $view = $this->getDI()->get('\Phalcon\Mvc\View\Simple');
             $view->setViewsDir($viewsDir);
 

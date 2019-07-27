@@ -44,7 +44,7 @@ class Redis extends Adapter implements AdapterInterface
      * Class constructor.
      *
      * @param array $options
-     * @throws Exception
+     * @throws \Phalcon\Translate\Exception
      */
     public function __construct(array $options)
     {
@@ -62,7 +62,7 @@ class Redis extends Adapter implements AdapterInterface
         if (isset($options['levels'])) {
             $this->levels = $options['levels'];
         }
-
+        
         parent::__construct($options);
     }
 
@@ -99,7 +99,7 @@ class Redis extends Adapter implements AdapterInterface
         $value = isset($this->cache[$key]) && isset($this->cache[$key][$index])
             ? $this->cache[$key][$index]
             : $translateKey;
-
+        
         return $this->replacePlaceholders($value, $placeholders);
     }
 
