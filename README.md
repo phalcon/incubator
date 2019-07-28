@@ -10,7 +10,7 @@ This is a repository to publish/share/experiment with new adapters, prototypes o
 
 We also welcome submissions of snippets from the community, to further extend the framework.
 
-The code in this repository is written in PHP.
+The code in this repository is written in PHP and uses the [php-psd](http://php-pds.com) standard.
 
 ## Installation
 
