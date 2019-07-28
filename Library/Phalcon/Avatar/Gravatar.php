@@ -201,7 +201,7 @@ class Gravatar implements Avatarable
         $default = strtolower(trim($image));
 
         if (!isset($this->validDefaults[$default])) {
-            if (!filter_var($image, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED)) {
+            if (!filter_var($image, FILTER_VALIDATE_URL)) {
                 throw new InvalidArgumentException(
                     'The default image specified is not a recognized gravatar "default" and is not a valid URL'
                 );
