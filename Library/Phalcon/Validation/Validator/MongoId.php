@@ -14,16 +14,16 @@
   | to license@phalconphp.com so we can send you a copy immediately.       |
   +------------------------------------------------------------------------+
   | Authors: Anton Kornilov <kachit@yandex.ru>                             |
+  | Maintainer: Wajdi Jurry <jurrywajdi@yahoo.com>
   +------------------------------------------------------------------------+
 */
 
 namespace Phalcon\Validation\Validator;
 
-use MongoId as Id;
+use \MongoDB\BSON\ObjectId;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator;
 use Phalcon\Validation\Message;
-use Phalcon\Validation\Exception as ValidationException;
 
 /**
  * MongoId validator
@@ -36,22 +36,22 @@ class MongoId extends Validator
      * @param Validation $validation
      * @param string $attribute
      * @return bool
-     * @throws ValidationException
      */
     public function validate(Validation $validation, $attribute)
     {
-        if (!extension_loaded('mongo')) {
-            throw new ValidationException('Mongo extension is not available');
-        }
-
         $value = $validation->getValue($attribute);
         $allowEmpty = $this->hasOption('allowEmpty');
-        $result = ($allowEmpty && empty($value)) ? true : Id::isValid($value);
 
-        if (!$result) {
-            $message = ($this->hasOption('message')) ? $this->getOption('message') : 'MongoId is not valid';
-            $validation->appendMessage(new Message($message, $attribute, 'MongoId'));
+        if ($allowEmpty && empty($value)) {
+            return true;
         }
-        return $result;
+
+        if ($value instanceof ObjectId || preg_match('/^[a-f\d]{24}$/i', $value)) {
+            return true;
+        }
+
+        $message = ($this->hasOption('message')) ? $this->getOption('message') : 'MongoId is not valid';
+        $validation->appendMessage(new Message($message, $attribute, 'MongoId'));
+        return false;
     }
 }
