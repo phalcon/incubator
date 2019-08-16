@@ -46,22 +46,33 @@ class Loader
             throw new Exception('Config file not found');
         }
 
-        $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+        $extension = strtolower(
+            pathinfo(
+                $filePath,
+                PATHINFO_EXTENSION
+            )
+        );
 
         switch ($extension) {
             case 'ini':
                 return new Ini($filePath);
+
             case 'json':
                 return new Json($filePath);
+
             case 'php':
             case 'php5':
             case 'inc':
                 return new Php($filePath);
+
             case 'yml':
             case 'yaml':
                 return new Yaml($filePath);
+
             default:
-                throw new Exception('Config adapter for .'  . $extension . ' files is not support');
+                throw new Exception(
+                    'Config adapter for .'  . $extension . ' files is not support'
+                );
         }
     }
 }

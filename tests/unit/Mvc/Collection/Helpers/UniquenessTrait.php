@@ -12,14 +12,20 @@ trait UniquenessTrait
     private function testSingleField(UnitTester $I)
     {
         $validation = new Validation();
+
         $validation->add('type', new Uniqueness());
+
         $messages = $validation->validate(null, $this->robot);
+
         $I->assertCount(0, $messages);
         $I->assertTrue($this->robot->save());
+
         $messages = $validation->validate(null, $this->robot);
         $I->assertCount(0, $messages);
+
         $messages = $validation->validate(null, $this->anotherRobot);
         $I->assertCount(0, $messages);
+
         $messages = $validation->validate(null, $this->deletedRobot);
         $I->assertCount(1, $messages);
     }
@@ -33,23 +39,30 @@ trait UniquenessTrait
                 [
                     'convert' => function (array $values) {
                         $values['type'] = 'hydraulic'; // mechanical -> hydraulic
+
                         return $values;
                     },
                 ]
             )
         );
+
         $messages = $validation->validate(null, $this->deletedRobot);
+
         $I->assertCount(0, $messages);
     }
 
     private function testSingleFieldWithNull(UnitTester $I)
     {
         $validation = new Validation();
+
         $validation->add('deleted', new Uniqueness());
+
         $messages = $validation->validate(null, $this->robot);
         $I->assertCount(0, $messages);
+
         $messages = $validation->validate(null, $this->anotherRobot);
         $I->assertCount(1, $messages);
+
         $messages = $validation->validate(null, $this->deletedRobot);
         $I->assertCount(0, $messages);
     }
@@ -57,11 +70,15 @@ trait UniquenessTrait
     private function testMultipleFields(UnitTester $I)
     {
         $validation = new Validation();
+
         $validation->add(['name', 'type'], new Uniqueness());
+
         $messages = $validation->validate(null, $this->robot);
         $I->assertCount(0, $messages);
+
         $messages = $validation->validate(null, $this->anotherRobot);
         $I->assertCount(0, $messages);
+
         $messages = $validation->validate(null, $this->deletedRobot);
         $I->assertCount(1, $messages);
     }
@@ -69,17 +86,20 @@ trait UniquenessTrait
     private function testMultipleFieldsConvert(UnitTester $I)
     {
         $validation = new Validation();
+
         $validation->add(
             ['name', 'type'],
             new Uniqueness(
                 [
                     'convert' => function (array $values) {
                         $values['type'] = 'hydraulic'; // mechanical -> hydraulic
+
                         return $values;
                     },
                 ]
             )
         );
+
         $messages = $validation->validate(null, $this->deletedRobot);
         $I->assertCount(0, $messages);
     }
@@ -87,7 +107,15 @@ trait UniquenessTrait
     private function testMultipleFieldsWithNull(UnitTester $I)
     {
         $validation = new Validation();
-        $validation->add(['type', 'deleted'], new Uniqueness());
+
+        $validation->add(
+            [
+                'type',
+                'deleted',
+            ],
+            new Uniqueness()
+        );
+
         $messages = $validation->validate(null, $this->robot);
         $I->assertCount(0, $messages);
         $messages = $validation->validate(null, $this->anotherRobot);
@@ -103,6 +131,7 @@ trait UniquenessTrait
     private function testExceptSingleFieldSingleExcept(UnitTester $I)
     {
         $validation = new Validation();
+
         $validation->add(
             'year',
             new Uniqueness(
@@ -111,6 +140,7 @@ trait UniquenessTrait
                 ]
             )
         );
+
         $messages = $validation->validate(null, $this->robot);
         $I->assertCount(0, $messages);
         $I->assertTrue($this->anotherRobot->save());
@@ -121,6 +151,7 @@ trait UniquenessTrait
     private function testExceptSingleFieldMultipleExcept(UnitTester $I)
     {
         $validation = new Validation();
+
         $validation->add(
             'year',
             new Uniqueness(
@@ -129,6 +160,7 @@ trait UniquenessTrait
                 ]
             )
         );
+
         $messages = $validation->validate(null, $this->robot);
         $I->assertCount(0, $messages);
         $messages = $validation->validate(null, $this->anotherRobot);
@@ -138,6 +170,7 @@ trait UniquenessTrait
     private function testExceptMultipleFieldSingleExcept(UnitTester $I)
     {
         $validation = new Validation();
+
         $validation->add(
             ['type', 'year'],
             new Uniqueness(
@@ -149,6 +182,7 @@ trait UniquenessTrait
                 ]
             )
         );
+
         $messages = $validation->validate(null, $this->deletedRobot);
         $I->assertCount(0, $messages);
         $this->deletedRobot->type = 'mechanical';
@@ -162,6 +196,7 @@ trait UniquenessTrait
     private function testExceptMultipleFieldMultipleExcept(UnitTester $I)
     {
         $validation = new Validation();
+
         $validation->add(
             ['year', 'type'],
             new Uniqueness(
@@ -173,8 +208,10 @@ trait UniquenessTrait
                 ]
             )
         );
+
         $messages = $validation->validate(null, $this->robot);
         $I->assertCount(0, $messages);
+
         $messages = $validation->validate(null, $this->anotherRobot);
         $I->assertCount(0, $messages);
     }
@@ -182,6 +219,7 @@ trait UniquenessTrait
     private function testConvertArrayReturnsArray(UnitTester $I)
     {
         $validation = new Validation();
+
         $validation->add(
             'type',
             new Uniqueness(
@@ -194,8 +232,10 @@ trait UniquenessTrait
                 ]
             )
         );
+
         try {
             $validation->validate(null, $this->robot);
+
             $I->assertTrue(false);
         } catch (\Exception $e) {
             $I->assertTrue(true);

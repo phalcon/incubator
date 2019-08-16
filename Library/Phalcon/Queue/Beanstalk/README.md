@@ -19,10 +19,12 @@ class IndexController extends Controller
     {
         if ($this->request->isPost()) {
             // Connect to the queue
-            $beanstalk = new BeanstalkExtended([
-                'host'   => '192.168.0.21',
-                'prefix' => 'project-name',
-            ]);
+            $beanstalk = new BeanstalkExtended(
+                [
+                    'host'   => '192.168.0.21',
+                    'prefix' => 'project-name',
+                ]
+            );
 
             // Save the video info in database and send it to post-process
             $beanstalk->putInTube('processVideo', 4871);
@@ -35,19 +37,20 @@ class IndexController extends Controller
     public function deleteVideoAction()
     {
         // Connect to the queue
-        $beanstalk = new BeanstalkExtended([
-            'host'   => '192.168.0.21',
-            'prefix' => 'project-name',
-        ]);
+        $beanstalk = new BeanstalkExtended(
+            [
+                'host'   => '192.168.0.21',
+                'prefix' => 'project-name',
+            ]
+        );
 
         // Send the command to physical unlink to the queue
         $beanstalk->putInTube('deleteVideo', 4871);
     }
-
 }
 ```
 
-Now handle the queues in console script (e.g.: php app/bin/video.php):
+Now handle the queues in console script (e.g.: `php app/bin/video.php`):
 
 ```php
 #!/usr/bin/env php
@@ -55,34 +58,45 @@ Now handle the queues in console script (e.g.: php app/bin/video.php):
 /**
  * Workers that handles queues related to the videos.
  */
+
 use Phalcon\Queue\Beanstalk\Extended as BeanstalkExtended;
 use Phalcon\Queue\Beanstalk\Job;
 
 $host = '192.168.0.21';
 
-$beanstalk = new BeanstalkExtended([
-    'host'   => $host,
-    'prefix' => 'project-name',
-]);
+$beanstalk = new BeanstalkExtended(
+    [
+        'host'   => $host,
+        'prefix' => 'project-name',
+    ]
+);
 
-$beanstalk->addWorker($host.'processVideo', function (Job $job) {
-    // Here we should collect the meta information,
-    // make the screenshots, convert the video to the FLV etc.
-    $videoId = $job->getBody();
+$beanstalk->addWorker(
+    $host . 'processVideo',
+    function (Job $job) {
+        // Here we should collect the meta information,
+        // make the screenshots, convert the video to the FLV etc.
+        $videoId = $job->getBody();
 
-    // It's very important to send the right exit code!
-    exit(0);
-});
+        // It's very important to send the right exit code!
+        exit(0);
+    }
+);
 
-$beanstalk->addWorker($host.'deleteVideo', function (Job $job) {
-    // Here we should collect the meta information,
-    // make the screenshots, convert the video to the FLV etc.
-    $videoId = $job->getBody();
+$beanstalk->addWorker(
+    $host . 'deleteVideo',
+    function (Job $job) {
+        // Here we should collect the meta information,
+        // make the screenshots, convert the video to the FLV etc.
+        $videoId = $job->getBody();
 
-    unlink('/var/www/data/' . $videoId . '.flv');
+        unlink(
+            '/var/www/data/' . $videoId . '.flv'
+        );
 
-    exit(0);
-});
+        exit(0);
+    }
+);
 
 // Start processing queues
 $beanstalk->doWork();
@@ -93,26 +107,35 @@ Simple console script that outputs tubes stats:
 ```php
 #!/usr/bin/env php
 <?php
+
 use Phalcon\Queue\Beanstalk\Extended as BeanstalkExtended;
 
 $prefix    = 'project-name';
-$beanstalk = new BeanstalkExtended([
-    'host'   => '192.168.0.21',
-    'prefix' => $prefix,
-]);
+$beanstalk = new BeanstalkExtended(
+    [
+        'host'   => '192.168.0.21',
+        'prefix' => $prefix,
+    ]
+);
 
-foreach ($beanstalk->getTubes() as $tube) {
-    if (0 === strpos($tube, $prefix)) {
-        try {
-            $stats = $beanstalk->getTubeStats($tube);
-            printf(
-                "%s:\n\tready: %d\n\treserved: %d\n",
-                $tube,
-                $stats['current-jobs-ready'],
-                $stats['current-jobs-reserved']
-            );
-        } catch (\Exception $e) {
-        }
+$tubes = $beanstalk->getTubes();
+
+foreach ($tubes as $tube) {
+    if (0 !== strpos($tube, $prefix)) {
+        continue;
+    }
+
+    try {
+        $stats = $beanstalk->getTubeStats($tube);
+
+        printf(
+            "%s:\n\tready: %d\n\treserved: %d\n",
+            $tube,
+            $stats['current-jobs-ready'],
+            $stats['current-jobs-reserved']
+        );
+    } catch (\Exception $e) {
+        // ...
     }
 }
 ```

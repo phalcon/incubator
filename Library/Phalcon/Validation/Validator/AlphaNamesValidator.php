@@ -20,11 +20,11 @@ class AlphaNamesValidator extends Validator implements ValidatorInterface
      *
      * @return boolean
      */
-    public function validate(\Phalcon\Validation $validator, $attribute)
+    public function validate(Validation $validator, $attribute)
     {
         $value = $validator->getValue($attribute);
 
-        $numbers = (bool)$this->getOption('numbers');
+        $numbers = (bool) $this->getOption('numbers');
         $numbers = $numbers ? '0-9' : '';
 
         if (!preg_match('/^([-\p{L}' . $numbers . '\'_\s])+$/u', $value)) {
@@ -40,7 +40,13 @@ class AlphaNamesValidator extends Validator implements ValidatorInterface
                 }
             }
 
-            $validator->appendMessage(new Message($message, $attribute, 'AlphaNames'));
+            $validator->appendMessage(
+                new Message(
+                    $message,
+                    $attribute,
+                    'AlphaNames'
+                )
+            );
         }
 
         if ($min = (int)$this->getOption('min')) {
@@ -50,22 +56,34 @@ class AlphaNamesValidator extends Validator implements ValidatorInterface
                     'The value must contain at least ' . $min . ' characters.'
                 );
 
-                $validator->appendMessage(new Message($messageMin, $attribute, 'AlphaNames'));
+                $validator->appendMessage(
+                    new Message(
+                        $messageMin,
+                        $attribute,
+                        'AlphaNames'
+                    )
+                );
             }
         }
 
-        if ($max = (int)$this->getOption('max')) {
+        if ($max = (int) $this->getOption('max')) {
             if (strlen($value) > $max) {
                 $messageMax = $this->getOption(
                     'messageMaximum',
                     'The value can contain maximum ' . $max . ' characters.'
                 );
 
-                $validator->appendMessage(new Message($messageMax, $attribute, 'AlphaNames'));
+                $validator->appendMessage(
+                    new Message(
+                        $messageMax,
+                        $attribute,
+                        'AlphaNames'
+                    )
+                );
+
                 return false;
             }
         }
-
 
         if (count($validator->getMessages())) {
             return false;

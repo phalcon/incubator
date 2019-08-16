@@ -28,13 +28,19 @@ class BaseTest extends Test
     {
         $mock = Mockery::mock('Phalcon\Mvc\Model\MetaData\Base');
 
-        $this->assertInstanceOf('Phalcon\Mvc\Model\MetaDataInterface', $mock);
+        $this->assertInstanceOf(
+            'Phalcon\Mvc\Model\MetaDataInterface',
+            $mock
+        );
     }
 
     public function testWincacheMetaDataAdapterImplementsMetaDataInterface()
     {
         $mock = Mockery::mock('Phalcon\Mvc\Model\MetaData\Wincache');
 
-        $this->assertInstanceOf('Phalcon\Mvc\Model\MetaDataInterface', $mock);
+        $this->assertInstanceOf(
+            'Phalcon\Mvc\Model\MetaDataInterface',
+            $mock
+        );
     }
 }

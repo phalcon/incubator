@@ -21,14 +21,14 @@ class AlphaNumericValidator extends Validator implements ValidatorInterface
      *
      * @return boolean
      */
-    public function validate(\Phalcon\Validation $validator, $attribute)
+    public function validate(Validation $validator, $attribute)
     {
         $value = $validator->getValue($attribute);
 
-        $whiteSpace = (bool)$this->getOption('whiteSpace');
+        $whiteSpace = (bool) $this->getOption('whiteSpace');
         $whiteSpace = $whiteSpace ? '\s' : '';
 
-        $underscore = (bool)$this->getOption('underscore');
+        $underscore = (bool) $this->getOption('underscore');
         $underscore = $underscore ? '_' : '';
 
         if (!preg_match('/^([\p{L}0-9' . $whiteSpace . $underscore . '])+$/u', $value)) {
@@ -46,7 +46,13 @@ class AlphaNumericValidator extends Validator implements ValidatorInterface
                 }
             }
 
-            $validator->appendMessage(new Message($message, $attribute, 'AlphaNumeric'));
+            $validator->appendMessage(
+                new Message(
+                    $message,
+                    $attribute,
+                    'AlphaNumeric'
+                )
+            );
         }
 
         if ($min = (int)$this->getOption('min')) {
@@ -56,7 +62,13 @@ class AlphaNumericValidator extends Validator implements ValidatorInterface
                     'The value must contain at least ' . $min . ' characters.'
                 );
 
-                $validator->appendMessage(new Message($messageMin, $attribute, 'AlphaNumeric'));
+                $validator->appendMessage(
+                    new Message(
+                        $messageMin,
+                        $attribute,
+                        'AlphaNumeric'
+                    )
+                );
             }
         }
 
@@ -67,7 +79,13 @@ class AlphaNumericValidator extends Validator implements ValidatorInterface
                     'The value can contain maximum ' . $max . ' characters.'
                 );
 
-                $validator->appendMessage(new Message($messageMax, $attribute, 'AlphaNumeric'));
+                $validator->appendMessage(
+                    new Message(
+                        $messageMax,
+                        $attribute,
+                        'AlphaNumeric'
+                    )
+                );
             }
         }
 

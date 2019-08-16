@@ -41,35 +41,55 @@ class ExtendedTest extends Test
      */
     protected function _before()
     {
-        $this->client = new Extended([
-            'host'   => env('TEST_BT_HOST', 6379),
-            'port'   => env('TEST_BT_PORT', 11300),
-            'prefix' => 'PHPUnit_',
-        ]);
+        $this->client = new Extended(
+            [
+                'host'   => env('TEST_BT_HOST', 6379),
+                'port'   => env('TEST_BT_PORT', 11300),
+                'prefix' => 'PHPUnit_',
+            ]
+        );
 
         if (!$this->client->connect()) {
-            $this->markTestSkipped(sprintf(
-                'Need a running beanstalkd server at %s:%d',
-                env('TEST_BT_HOST', 6379),
-                env('TEST_BT_PORT', 11300)
-            ));
+            $this->markTestSkipped(
+                sprintf(
+                    'Need a running beanstalkd server at %s:%d',
+                    env('TEST_BT_HOST', 6379),
+                    env('TEST_BT_PORT', 11300)
+                )
+            );
         }
 
-        $this->shmKey = round(microtime(true) * 1000);
+        $this->shmKey = round(
+            microtime(true) * 1000
+        );
     }
 
     public function testShouldPutAndReserve()
     {
-        $jobId = $this->client->putInTube(self::TUBE_NAME, 'testPutInTube');
+        $jobId = $this->client->putInTube(
+            self::TUBE_NAME,
+            'testPutInTube'
+        );
 
         $this->assertNotEquals(false, $jobId);
 
         $job = $this->client->reserveFromTube(self::TUBE_NAME);
 
         $this->assertNotEmpty($job);
-        $this->assertInstanceOf(Job::class, $job);
-        $this->assertEquals($jobId, $job->getId());
-        $this->assertTrue($job->delete());
+
+        $this->assertInstanceOf(
+            Job::class,
+            $job
+        );
+
+        $this->assertEquals(
+            $jobId,
+            $job->getId()
+        );
+
+        $this->assertTrue(
+            $job->delete()
+        );
     }
 
     /**
@@ -92,7 +112,9 @@ class ExtendedTest extends Test
                 $job = $this->client->reserve(0.1);
 
                 if ($job) {
-                    $this->assertTrue($job->delete());
+                    $this->assertTrue(
+                        $job->delete()
+                    );
                 } else {
                     $isRunning = false;
                 }
@@ -135,27 +157,41 @@ class ExtendedTest extends Test
 
         $that = $this;
 
-        $fork->call(function () use ($expected, $that) {
-            foreach ($expected as $tube => $value) {
-                $that->client->addWorker($tube, function (Job $job) {
-                    // Store string "test-tube-%JOB_BODY%" in a shared memory
-                    $memory  = shmop_open($this->shmKey, 'c', 0644, $this->shmLimit);
-                    $output  = trim(shmop_read($memory, 0, $this->shmLimit));
-                    $output .= sprintf("\ntest-tube-%s", $job->getBody());
+        $fork->call(
+            function () use ($expected, $that) {
+                foreach ($expected as $tube => $value) {
+                    $that->client->addWorker(
+                        $tube,
+                        function (Job $job) {
+                            // Store string "test-tube-%JOB_BODY%" in a shared memory
+                            $memory  = shmop_open($this->shmKey, 'c', 0644, $this->shmLimit);
 
-                    shmop_write($memory, $output, 0);
-                    shmop_close($memory);
+                            $output  = trim(shmop_read($memory, 0, $this->shmLimit));
+                            $output .= sprintf(
+                                "\ntest-tube-%s",
+                                $job->getBody()
+                            );
 
-                    throw new \RuntimeException('Forced exception to stop worker');
-                });
+                            shmop_write($memory, $output, 0);
+                            shmop_close($memory);
 
-                $that->assertNotEquals(false, $that->client->putInTube($tube, $value));
+                            throw new \RuntimeException(
+                                'Forced exception to stop worker'
+                            );
+                        }
+                    );
+
+                    $that->assertNotEquals(
+                        false,
+                        $that->client->putInTube($tube, $value)
+                    );
+                }
+
+                $that->client->doWork();
+
+                exit(0);
             }
-
-            $that->client->doWork();
-
-            exit(0);
-        });
+        );
 
         $reflectionFork    = new \ReflectionClass($fork);
         $reflectionThreads = $reflectionFork->getProperty('threads');
@@ -174,7 +210,10 @@ class ExtendedTest extends Test
 
         $this->assertNotEmpty($output);
 
-        $actual = explode("\n", trim($output));
+        $actual = explode(
+            "\n",
+            trim($output)
+        );
 
         $this->assertEquals(
             count($expected),

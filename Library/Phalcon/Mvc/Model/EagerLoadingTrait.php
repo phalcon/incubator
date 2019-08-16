@@ -41,11 +41,15 @@ trait EagerLoadingTrait
                 unset($arguments[$lastArg]);
 
                 if (isset($parameters['columns'])) {
-                    throw new \LogicException('Results from database must be full models, do not use `columns` key');
+                    throw new \LogicException(
+                        'Results from database must be full models, do not use `columns` key'
+                    );
                 }
             }
         } else {
-            throw new \BadMethodCallException(sprintf('%s requires at least one argument', __METHOD__));
+            throw new \BadMethodCallException(
+                sprintf('%s requires at least one argument', __METHOD__)
+            );
         }
 
         $ret = static::find($parameters);
@@ -53,7 +57,10 @@ trait EagerLoadingTrait
         if ($ret->count()) {
             array_unshift($arguments, $ret);
 
-            $ret = call_user_func_array('Phalcon\Mvc\Model\EagerLoading\Loader::fromResultset', $arguments);
+            $ret = call_user_func_array(
+                'Phalcon\Mvc\Model\EagerLoading\Loader::fromResultset',
+                $arguments
+            );
         }
 
         return $ret;
@@ -80,17 +87,27 @@ trait EagerLoadingTrait
                 unset($arguments[$lastArg]);
 
                 if (isset($parameters['columns'])) {
-                    throw new \LogicException('Results from database must be full models, do not use `columns` key');
+                    throw new \LogicException(
+                        'Results from database must be full models, do not use `columns` key'
+                    );
                 }
             }
         } else {
-            throw new \BadMethodCallException(sprintf('%s requires at least one argument', __METHOD__));
+            throw new \BadMethodCallException(
+                sprintf(
+                    '%s requires at least one argument',
+                    __METHOD__
+                )
+            );
         }
 
         if ($ret = static::findFirst($parameters)) {
             array_unshift($arguments, $ret);
 
-            $ret = call_user_func_array('Phalcon\Mvc\Model\EagerLoading\Loader::fromModel', $arguments);
+            $ret = call_user_func_array(
+                'Phalcon\Mvc\Model\EagerLoading\Loader::fromModel',
+                $arguments
+            );
         }
 
         return $ret;
@@ -118,6 +135,9 @@ trait EagerLoadingTrait
 
         array_unshift($arguments, $this);
 
-        return call_user_func_array('Phalcon\Mvc\Model\EagerLoading\Loader::fromModel', $arguments);
+        return call_user_func_array(
+            'Phalcon\Mvc\Model\EagerLoading\Loader::fromModel',
+            $arguments
+        );
     }
 }

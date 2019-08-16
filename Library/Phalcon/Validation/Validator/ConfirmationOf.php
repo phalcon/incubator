@@ -70,7 +70,11 @@ class ConfirmationOf extends Validator
         $message = ($this->hasOption('message') ? $this->getOption('message') : 'Value not confirmed');
 
         $validation->appendMessage(
-            new Validation\Message($message, $attribute, 'ConfirmationOfValidator')
+            new Validation\Message(
+                $message,
+                $attribute,
+                'ConfirmationOfValidator'
+            )
         );
 
         return false;

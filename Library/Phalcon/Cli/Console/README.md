@@ -51,24 +51,26 @@ Firstly you need to add some important values into the config.
 ```php
 use Phalcon\Config;
 
-$config =  new Config([
-    'appName' => 'My Console App',
-    'version' => '1.0',
+$config =  new Config(
+    [
+        'appName' => 'My Console App',
+        'version' => '1.0',
 
-    /**
-     * tasksDir is the absolute path to your tasks directory
-     * For instance, 'tasksDir' => realpath(dirname(dirname(__FILE__))).'/tasks',
-     */
-    'tasksDir' => '/path/to/your/project/tasks',
-    
-    /**
-     * annotationsAdapter is the choosen adapter to read annotations. 
-     * Adapter by default: memory
-     */
-    'annotationsAdapter' => 'memory',
-    
-    'printNewLine' => true
-]);
+        /**
+         * tasksDir is the absolute path to your tasks directory
+         * For instance, 'tasksDir' => realpath(dirname(dirname(__FILE__))).'/tasks',
+         */
+        'tasksDir' => '/path/to/your/project/tasks',
+
+        /**
+         * annotationsAdapter is the chosen adapter to read annotations.
+         * Adapter by default: memory
+         */
+        'annotationsAdapter' => 'memory',
+
+        'printNewLine' => true,
+    ]
+);
 ```
 
 Second you must to create an instance of the DI class and add the created config class under key 'config'.
@@ -77,9 +79,13 @@ Second you must to create an instance of the DI class and add the created config
 use Phalcon\DI\FactoryDefault\Cli as CliDi;
 
 $di = new CliDi();
-$di->set('config', function () use ($config) {
-    return $config;
-});
+
+$di->set(
+    'config',
+    function () use ($config) {
+        return $config;
+    }
+);
 ```
 
 Well, it's time to create an instance of Extended Console Class to handle the calls
@@ -88,7 +94,8 @@ Well, it's time to create an instance of Extended Console Class to handle the ca
 use Phalcon\Cli\Console\Extended as Console;
 
 $console = new Console();
-// Seting the above DI
+
+// Setting the above DI
 $console->setDI($di);
 
 /**
@@ -111,6 +118,7 @@ try {
     $console->handle($arguments);
 } catch (Exception $e) {
     echo $e->getMessage();
+
     exit(255);
 }
 ```
@@ -146,7 +154,7 @@ class LsTask extends Task
      */
     public function mainAction()
     {
-        echo 'Content list:'.PHP_EOL;
+        echo 'Content list:' . PHP_EOL;
         // Code to iterate a directory and show the content
     }
 
@@ -155,18 +163,21 @@ class LsTask extends Task
      * @param({'type'='string', 'name'='directory', 'description'='directory to be listed' })
      * @param({'type'='string', 'name'='Size unit', 'description'='Unit size to be shown' })
      */
-    public function hrAction(array $params) {
+    public function hrAction(array $params)
+    {
         $directoryToList = $params[0];
         $unitSize = $params[1];
+
         // Code to iterate a directory and show the content
     }
-    
+
     /**
      * @DoNotCover
      */
     public function secretAction()
     {
-        echo 'Secret list:'.PHP_EOL;
+        echo 'Secret list:' . PHP_EOL;
+
         // ...
     }
 }

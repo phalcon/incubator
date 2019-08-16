@@ -26,12 +26,16 @@ use Phalcon\Validation\Validator\ReCaptcha;
 
 $reCaptcha = new Hidden('g-recaptcha-response');
 
-$reCaptcha->setLabel('reCAPTCHA')->addValidators([
-    new ReCaptcha([
-        'message' => 'The captcha is not valid',
-        'secret'  => 'your_site_key',
-    ]),
-]);
+$reCaptcha->setLabel('reCAPTCHA')->addValidators(
+    [
+        new ReCaptcha(
+            [
+                'message' => 'The captcha is not valid',
+                'secret'  => 'your_site_key',
+            ]
+        ),
+    ]
+);
 
 $this->add($reCaptcha);
 ```
@@ -50,13 +54,13 @@ The IpValidator validates a valid ip address.
 ```php
 $data['ip'] = $this->request->getPost('ip');
 
-$validation = new Phalcon\Validation();
+$validation = new \Phalcon\Validation();
 
 $validation->add(
     'ip',
-    new MicheleAngioni\PhalconValidators\IpValidator (
+    new \MicheleAngioni\PhalconValidators\IpValidator(
         [
-            'message' => 'The IP is not valid.'       // Optional
+            'message' => 'The IP is not valid.', // Optional
         ]
     )
 );
@@ -65,7 +69,6 @@ $messages = $validation->validate($data);
 
 if (count($messages)) {
     // Some error occurred, handle messages
-
 }
 ```
 
@@ -83,20 +86,20 @@ Optionally also signed numbers are supported.
 ```php
 $data['number'] = $this->request->getPost('number');
 
-$validation = new Phalcon\Validation();
+$validation = new \Phalcon\Validation();
 
 $validation->add(
     'number',
-    new MicheleAngioni\PhalconValidators\NumericValidator (
+    new \MicheleAngioni\PhalconValidators\NumericValidator(
         [
-            'allowFloat' => true,                                           // Optional, default: false
-            'allowSign' => true,                                            // Optional, default: false
-            'min' => 2,                                                     // Optional
-            'min' => 2,                                                     // Optional
-            'max' => 50,                                                    // Optional
-            'message' => 'Only numeric (0-9,.) characters are allowed.',    // Optional
-            'messageMinimum' => 'The value must be at least 2',             // Optional
-            'messageMaximum' => 'The value must be lower than 50'           // Optional
+            'allowFloat' => true,                                        // Optional, default: false
+            'allowSign' => true,                                         // Optional, default: false
+            'min' => 2,                                                  // Optional
+            'min' => 2,                                                  // Optional
+            'max' => 50,                                                 // Optional
+            'message' => 'Only numeric (0-9,.) characters are allowed.', // Optional
+            'messageMinimum' => 'The value must be at least 2',          // Optional
+            'messageMaximum' => 'The value must be lower than 50',       // Optional
         ]
     )
 );
@@ -105,7 +108,6 @@ $messages = $validation->validate($data);
 
 if (count($messages)) {
     // Some error occurred, handle messages
-
 }
 
 // Validation succeeded without errors
@@ -119,19 +121,19 @@ Minimum and maximum string lengths can be specified.
 ```php
 $data['text'] = $this->request->getPost('text');
 
-$validation = new Phalcon\Validation();
+$validation = new \Phalcon\Validation();
 
 $validation->add(
     'text',
-    new MicheleAngioni\PhalconValidators\AlphaNumericValidator (
+    new \MicheleAngioni\PhalconValidators\AlphaNumericValidator(
         [
-            'whiteSpace' => true,                                                       // Optional, default false
-            'underscore' => true,                                                       // Optional, default false
-            'min' => 6,                                                                 // Optional
-            'max' => 30,                                                                // Optional
-            'message' => 'Validation failed.',                                          // Optional
-            'messageMinimum' => 'The value must contain at least 6 characters.',        // Optional
-            'messageMaximum' => 'The value can contain maximum 30 characters.'          // Optional
+            'whiteSpace'     => true,                                            // Optional, default false
+            'underscore'     => true,                                            // Optional, default false
+            'min'            => 6,                                               // Optional
+            'max'            => 30,                                              // Optional
+            'message'        => 'Validation failed.',                            // Optional
+            'messageMinimum' => 'The value must contain at least 6 characters.', // Optional
+            'messageMaximum' => 'The value can contain maximum 30 characters.',  // Optional
         ]
     )
 );
@@ -140,7 +142,6 @@ $messages = $validation->validate($data);
 
 if (count($messages)) {
     // Some error occurred, handle messages
-
 }
 
 // Validation succeeded without errors
@@ -155,18 +156,18 @@ Minimum and maximum string lengths can be specified.
 ```php
 $data['text'] = $this->request->getPost('text');
 
-$validation = new Phalcon\Validation();
+$validation = new \Phalcon\Validation();
 
 $validation->add(
     'text',
-    new MicheleAngioni\PhalconValidators\AlphaNamesValidator (
+    new \MicheleAngioni\PhalconValidators\AlphaNamesValidator(
         [
-            'numbers' => true,                                                          // Optional, default false
-            'min' => 6,                                                                 // Optional
-            'max' => 30,                                                                // Optional
-            'message' => 'Validation failed.',                                          // Optional
-            'messageMinimum' => 'The value must contain at least 6 characters.',        // Optional
-            'messageMaximum' => 'The value can contain maximum 30 characters.'          // Optional
+            'numbers'        => true,                                            // Optional, default false
+            'min'            => 6,                                               // Optional
+            'max'            => 30,                                              // Optional
+            'message'        => 'Validation failed.',                            // Optional
+            'messageMinimum' => 'The value must contain at least 6 characters.', // Optional
+            'messageMaximum' => 'The value can contain maximum 30 characters.',  // Optional
         ]
     )
 );
@@ -175,7 +176,6 @@ $messages = $validation->validate($data);
 
 if (count($messages)) {
     // Some error occurred, handle messages
-
 }
 
 // Validation succeeded without errors
@@ -190,20 +190,20 @@ Minimum and maximum string lengths can be specified.
 ```php
 $data['text'] = $this->request->getPost('text');
 
-$validation = new Phalcon\Validation();
+$validation = new \Phalcon\Validation();
 
 $validation->add(
     'text',
-    new MicheleAngioni\PhalconValidators\AlphaCompleteValidator (
+    new \MicheleAngioni\PhalconValidators\AlphaCompleteValidator(
         [
-            'allowBackslashes' => true,                                                 // Optional
-            'allowPipes' => true,                                                       // Optional
-            'allowUrlChars' => true,                                                    // Optional
-            'min' => 6,                                                                 // Optional
-            'max' => 30,                                                                // Optional
-            'message' => 'Validation failed.',                                          // Optional
-            'messageMinimum' => 'The value must contain at least 6 characters.',        // Optional
-            'messageMaximum' => 'The value can contain maximum 30 characters.'          // Optional
+            'allowBackslashes' => true,                                            // Optional
+            'allowPipes'       => true,                                            // Optional
+            'allowUrlChars'    => true,                                            // Optional
+            'min'              => 6,                                               // Optional
+            'max'              => 30,                                              // Optional
+            'message'          => 'Validation failed.',                            // Optional
+            'messageMinimum'   => 'The value must contain at least 6 characters.', // Optional
+            'messageMaximum'   => 'The value can contain maximum 30 characters.',  // Optional
         ]
     )
 );
@@ -212,7 +212,6 @@ $messages = $validation->validate($data);
 
 if (count($messages)) {
     // Some error occurred, handle messages
-
 }
 
 // Validation succeeded without errors

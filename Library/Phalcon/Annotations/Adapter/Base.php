@@ -80,7 +80,9 @@ abstract class Base extends Adapter
      */
     public function read($key)
     {
-        return $this->getCacheBackend()->get(
+        $backend = $this->getCacheBackend();
+
+        return $backend->get(
             $this->prepareKey($key),
             $this->options['lifetime']
         );
@@ -94,7 +96,9 @@ abstract class Base extends Adapter
      */
     public function write($key, $data)
     {
-        $this->getCacheBackend()->save(
+        $backend = $this->getCacheBackend();
+
+        $backend->save(
             $this->prepareKey($key),
             $data,
             $this->options['lifetime']

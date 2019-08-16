@@ -33,7 +33,13 @@ $robots = Loader::fromResultset(Robot::find(), 'Parts'); # Equivalent to the sec
 $robots = Robot::with('Parts', 'Foo.Bar');
 
 // And arguments can be passed to the find method
-$robots = Robot::with('Parts', 'Foo.Bar', ['limit' => 5]);
+$robots = Robot::with(
+	'Parts',
+	'Foo.Bar',
+	[
+		'limit' => 5,
+	]
+);
 
 // And constraints
 $robots = Robot::with(
@@ -42,10 +48,10 @@ $robots = Robot::with(
 		'Foo.Bar' => function (QueryBuilder $builder) {
 			// Limit Bar
 			$builder->limit(5);
-		}
+		},
 	],
 	[
-		'limit' => 5
+		'limit' => 5,
 	]
 );
 

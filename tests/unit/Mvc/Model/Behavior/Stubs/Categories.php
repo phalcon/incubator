@@ -65,8 +65,13 @@ class CategoriesManyRoots extends Model
     public function initialize()
     {
         $this->setSource(self::$table);
-        $this->addBehavior(new NestedSetBehavior([
-            'hasManyRoots' => true,
-        ]));
+
+        $this->addBehavior(
+            new NestedSetBehavior(
+                [
+                    'hasManyRoots' => true,
+                ]
+            )
+        );
     }
 }

@@ -39,6 +39,7 @@ trait FunctionalTestCase
             'dispatcher',
             function () {
                 $dispatcher = new PhDispatcher();
+
                 $dispatcher->setControllerName('test');
                 $dispatcher->setActionName('empty');
                 $dispatcher->setParams([]);
@@ -67,6 +68,7 @@ trait FunctionalTestCase
     protected function tearDownPhalcon()
     {
         $this->di->reset();
+
         $this->application = null;
 
         $_SESSION = [];
@@ -85,7 +87,10 @@ trait FunctionalTestCase
      */
     protected function dispatch($url)
     {
-        $this->di->setShared('response', $this->application->handle($url));
+        $this->di->setShared(
+            'response',
+            $this->application->handle($url)
+        );
     }
 
     /**
@@ -96,7 +101,10 @@ trait FunctionalTestCase
      */
     public function assertController($expected)
     {
-        $actual = $this->di->getShared('dispatcher')->getControllerName();
+        $dispatcher = $this->di->getShared('dispatcher');
+
+        $actual = $dispatcher->getControllerName();
+
         if ($actual != $expected) {
             throw new \PHPUnit\Framework\ExpectationFailedException(
                 sprintf(
@@ -118,7 +126,10 @@ trait FunctionalTestCase
      */
     public function assertAction($expected)
     {
-        $actual = $this->di->getShared('dispatcher')->getActionName();
+        $dispatcher = $this->di->getShared('dispatcher');
+
+        $actual = $dispatcher->getActionName();
+
         if ($actual != $expected) {
             throw new \PHPUnit\Framework\ExpectationFailedException(
                 sprintf(
@@ -128,6 +139,7 @@ trait FunctionalTestCase
                 )
             );
         }
+
         $this->assertEquals($expected, $actual);
     }
 
@@ -142,8 +154,13 @@ trait FunctionalTestCase
      */
     public function assertHeader(array $expected)
     {
+        $response = $this->di->getShared('response');
+
+        $headers = $response->getHeaders();
+
         foreach ($expected as $expectedField => $expectedValue) {
-            $actualValue = $this->di->getShared('response')->getHeaders()->get($expectedField);
+            $actualValue = $headers->get($expectedField);
+
             if ($actualValue != $expectedValue) {
                 throw new \PHPUnit\Framework\ExpectationFailedException(
                     sprintf(
@@ -155,6 +172,7 @@ trait FunctionalTestCase
                     )
                 );
             }
+
             $this->assertEquals($expectedValue, $actualValue);
         }
     }
@@ -172,7 +190,11 @@ trait FunctionalTestCase
             $expected = (string) $expected;
         }
 
-        $actualValue = $this->di->getShared('response')->getHeaders()->get('Status');
+        $response = $this->di->getShared('response');
+
+        $headers = $response->getHeaders();
+
+        $actualValue = $headers->get('Status');
 
         if (empty($actualValue) || stristr($actualValue, $expected) === false) {
             throw new \PHPUnit\Framework\ExpectationFailedException(
@@ -196,10 +218,13 @@ trait FunctionalTestCase
     {
         /* @var $dispatcher \Phalcon\Mvc\Dispatcher */
         $dispatcher = $this->di->getShared('dispatcher');
+
         $actual = $dispatcher->wasForwarded();
 
         if (!$actual) {
-            throw new \PHPUnit\Framework\ExpectationFailedException('Failed asserting dispatch was forwarded');
+            throw new \PHPUnit\Framework\ExpectationFailedException(
+                'Failed asserting dispatch was forwarded'
+            );
         }
 
         $this->assertTrue($actual);
@@ -213,18 +238,26 @@ trait FunctionalTestCase
      */
     public function assertRedirectTo($location)
     {
-        $actualLocation = $this->di->getShared('response')->getHeaders()->get('Location');
+        $response = $this->di->getShared('response');
+
+        $headers = $response->getHeaders();
+
+        $actualLocation = $headers->get('Location');
 
         if (!$actualLocation) {
-            throw new \PHPUnit\Framework\ExpectationFailedException('Failed asserting response caused a redirect');
+            throw new \PHPUnit\Framework\ExpectationFailedException(
+                'Failed asserting response caused a redirect'
+            );
         }
 
         if ($actualLocation !== $location) {
-            throw new \PHPUnit\Framework\ExpectationFailedException(sprintf(
-                'Failed asserting response redirects to "%s". It redirects to "%s".',
-                $location,
-                $actualLocation
-            ));
+            throw new \PHPUnit\Framework\ExpectationFailedException(
+                sprintf(
+                    'Failed asserting response redirects to "%s". It redirects to "%s".',
+                    $location,
+                    $actualLocation
+                )
+            );
         }
 
         $this->assertEquals($location, $actualLocation);
@@ -237,7 +270,9 @@ trait FunctionalTestCase
      */
     public function getContent()
     {
-        return $this->di->getShared('response')->getContent();
+        $response = $this->di->getShared('response');
+
+        return $response->getContent();
     }
 
     /**
@@ -247,6 +282,9 @@ trait FunctionalTestCase
      */
     public function assertResponseContentContains($string)
     {
-        $this->assertContains($string, $this->getContent());
+        $this->assertContains(
+            $string,
+            $this->getContent()
+        );
     }
 }
