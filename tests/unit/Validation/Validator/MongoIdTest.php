@@ -1,9 +1,4 @@
 <?php
-/**
- * User: Wajdi Jurry
- * Date: ١٦‏/٨‏/٢٠١٩
- * Time: ١:٥٥ م
- */
 
 namespace Phalcon\Test\Validation\Validator;
 
