@@ -20,7 +20,7 @@
 
 namespace Phalcon\Validation\Validator;
 
-use \MongoDB\BSON\ObjectId;
+use MongoDB\BSON\ObjectId;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator;
 use Phalcon\Validation\Message;
