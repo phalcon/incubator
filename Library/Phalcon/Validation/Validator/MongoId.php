@@ -50,7 +50,7 @@ class MongoId extends Validator
             return true;
         }
 
-        $message = ($this->hasOption('message')) ? $this->getOption('message') : 'MongoId is not valid';
+        $message = $this->hasOption('message') ? $this->getOption('message') : 'MongoId is not valid';
         $validation->appendMessage(new Message($message, $attribute, 'MongoId'));
         return false;
     }
