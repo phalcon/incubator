@@ -36,7 +36,7 @@ use Phalcon\Db\Adapter\MongoDB\Exception\InvalidArgumentException;
  */
 class Update implements Executable
 {
-    private static $wireVersionForDocumentLevelValidation=4;
+    private static $wireVersionForDocumentLevelValidation = 4;
 
     private $databaseName;
     private $collectionName;
@@ -61,31 +61,31 @@ class Update implements Executable
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
-     * @param string       $databaseName Database name
-     * @param string       $collectionName Collection name
+     * @param string $databaseName Database name
+     * @param string $collectionName Collection name
      * @param array|object $filter Query by which to delete documents
      * @param array|object $update Update to apply to the matched
      *                                     document(s) or a replacement document
-     * @param array        $options Command options
+     * @param array $options Command options
      *
      * @throws InvalidArgumentException
      */
     public function __construct($databaseName, $collectionName, $filter, $update, array $options = [])
     {
-        if (!is_array($filter)&&!is_object($filter)) {
+        if (! is_array($filter) && ! is_object($filter)) {
             throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
-        if (!is_array($update)&&!is_object($update)) {
+        if (! is_array($update) && ! is_object($update)) {
             throw InvalidArgumentException::invalidType('$update', $filter, 'array or object');
         }
 
-        $options+=[
-            'multi' =>false,
-            'upsert'=>false,
+        $options += [
+            'multi'  => false,
+            'upsert' => false,
         ];
 
-        if (isset($options['bypassDocumentValidation'])&&!is_bool($options['bypassDocumentValidation'])) {
+        if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType(
                 '"bypassDocumentValidation" option',
                 $options['bypassDocumentValidation'],
@@ -93,19 +93,27 @@ class Update implements Executable
             );
         }
 
-        if (!is_bool($options['multi'])) {
-            throw InvalidArgumentException::invalidType('"multi" option', $options['multi'], 'boolean');
+        if (! is_bool($options['multi'])) {
+            throw InvalidArgumentException::invalidType(
+                '"multi" option',
+                $options['multi'],
+                'boolean'
+            );
         }
 
-        if ($options['multi']&&!Functions::isFirstKeyOperator($update)) {
+        if ($options['multi'] && ! Functions::isFirstKeyOperator($update)) {
             throw new InvalidArgumentException('"multi" option cannot be true if $update is a replacement document');
         }
 
-        if (!is_bool($options['upsert'])) {
-            throw InvalidArgumentException::invalidType('"upsert" option', $options['upsert'], 'boolean');
+        if (! is_bool($options['upsert'])) {
+            throw InvalidArgumentException::invalidType(
+                '"upsert" option',
+                $options['upsert'],
+                'boolean'
+            );
         }
 
-        if (isset($options['writeConcern'])&&!$options['writeConcern'] instanceof WriteConcern) {
+        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
             throw InvalidArgumentException::invalidType(
                 '"writeConcern" option',
                 $options['writeConcern'],
@@ -113,11 +121,11 @@ class Update implements Executable
             );
         }
 
-        $this->databaseName  =(string)$databaseName;
-        $this->collectionName=(string)$collectionName;
-        $this->filter        =$filter;
-        $this->update        =$update;
-        $this->options       =$options;
+        $this->databaseName   = (string)$databaseName;
+        $this->collectionName = (string)$collectionName;
+        $this->filter         = $filter;
+        $this->update         = $update;
+        $this->options        = $options;
     }
 
     /**
@@ -131,26 +139,34 @@ class Update implements Executable
      */
     public function execute(Server $server)
     {
-        $updateOptions=[
-            'multi' =>$this->options['multi'],
-            'upsert'=>$this->options['upsert'],
+        $updateOptions = [
+            'multi'  => $this->options['multi'],
+            'upsert' => $this->options['upsert']
         ];
 
-        $bulkOptions=[];
+        if (isset($this->options['arrayFilters'])) {
+            $updateOptions['arrayFilters'] = $this->options['arrayFilters'];
+        }
 
-        if (isset($this->options['bypassDocumentValidation'])&&Functions::serverSupportsFeature(
+        $bulkOptions = [];
+
+        if (isset($this->options['bypassDocumentValidation']) && Functions::serverSupportsFeature(
             $server,
             self::$wireVersionForDocumentLevelValidation
         )
         ) {
-            $bulkOptions['bypassDocumentValidation']=$this->options['bypassDocumentValidation'];
+            $bulkOptions['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 
-        $bulk=new Bulk($bulkOptions);
+        $bulk = new Bulk($bulkOptions);
         $bulk->update($this->filter, $this->update, $updateOptions);
 
-        $writeConcern=isset($this->options['writeConcern'])?$this->options['writeConcern']:null;
-        $writeResult =$server->executeBulkWrite($this->databaseName.'.'.$this->collectionName, $bulk, $writeConcern);
+        $writeConcern = isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null;
+        $writeResult  = $server->executeBulkWrite(
+            $this->databaseName . '.' . $this->collectionName,
+            $bulk,
+            $writeConcern
+        );
 
         return new UpdateResult($writeResult);
     }

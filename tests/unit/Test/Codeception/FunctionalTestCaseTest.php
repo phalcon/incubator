@@ -50,7 +50,13 @@ class FunctionalTestCaseTest extends Unit
 
         $testSubject->setUp();
 
-        $reflectionProperty = new \ReflectionProperty(FunctionalTestCase::class, 'di');
+
+
+        $reflectionProperty = new \ReflectionProperty(
+            FunctionalTestCase::class,
+            'di'
+        );
+
         $reflectionProperty->setAccessible(true);
 
         $this->assertInstanceOf(

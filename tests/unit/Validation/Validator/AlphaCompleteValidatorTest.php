@@ -34,19 +34,23 @@ class AlphaCompleteValidatorTest extends UnitTestCase
 
         $validation->add(
             'text',
-            new AlphaCompleteValidator (
+            new AlphaCompleteValidator(
                 [
-                    'min' => 5,                                                          // Optional
-                    'max' => 100,                                                        // Optional
-                    'message' => 'Validation failed.',                                   // Optional
+                    'min'            => 5,                                               // Optional
+                    'max'            => 100,                                             // Optional
+                    'message'        => 'Validation failed.',                            // Optional
                     'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.', // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(0, count($messages));
+
+        $this->assertCount(
+            0,
+            $messages
+        );
     }
 
     public function testAlphaCompleteValidatorOkWithPipe()
@@ -57,20 +61,24 @@ class AlphaCompleteValidatorTest extends UnitTestCase
 
         $validation->add(
             'text',
-            new AlphaCompleteValidator (
+            new AlphaCompleteValidator(
                 [
-                    'allowPipes' => true,                                                // Optional
-                    'min' => 5,                                                          // Optional
-                    'max' => 100,                                                        // Optional
-                    'message' => 'Validation failed.',                                   // Optional
+                    'allowPipes'     => true,                                            // Optional
+                    'min'            => 5,                                               // Optional
+                    'max'            => 100,                                             // Optional
+                    'message'        => 'Validation failed.',                            // Optional
                     'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.', // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(0, count($messages));
+
+        $this->assertCount(
+            0,
+            $messages
+        );
     }
 
     public function testAlphaCompleteValidatorOkWithBackslackesh()
@@ -81,20 +89,24 @@ class AlphaCompleteValidatorTest extends UnitTestCase
 
         $validation->add(
             'text',
-            new AlphaCompleteValidator (
+            new AlphaCompleteValidator(
                 [
-                    'allowBackslashes' => true,                                          // Optional
-                    'min' => 5,                                                          // Optional
-                    'max' => 100,                                                        // Optional
-                    'message' => 'Validation failed.',                                   // Optional
-                    'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
+                    'allowBackslashes' => true,                                            // Optional
+                    'min'              => 5,                                               // Optional
+                    'max'              => 100,                                             // Optional
+                    'message'          => 'Validation failed.',                            // Optional
+                    'messageMinimum'   => 'The value must contain at least 5 characters.', // Optional
+                    'messageMaximum'   => 'The value can contain maximum 100 characters.', // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(0, count($messages));
+
+        $this->assertCount(
+            0,
+            $messages
+        );
     }
 
     public function testAlphaCompleteValidatorOkWithUrlChars()
@@ -105,21 +117,25 @@ class AlphaCompleteValidatorTest extends UnitTestCase
 
         $validation->add(
             'text',
-            new AlphaCompleteValidator (
+            new AlphaCompleteValidator(
                 [
-                    'allowPipes' => true,                                                // Optional
-                    'allowUrlChars' => true,                                             // Optional
-                    'min' => 5,                                                          // Optional
-                    'max' => 100,                                                        // Optional
-                    'message' => 'Validation failed.',                                   // Optional
+                    'allowPipes'     => true,                                            // Optional
+                    'allowUrlChars'  => true,                                            // Optional
+                    'min'            => 5,                                               // Optional
+                    'max'            => 100,                                             // Optional
+                    'message'        => 'Validation failed.',                            // Optional
                     'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.', // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(0, count($messages));
+
+        $this->assertCount(
+            0,
+            $messages
+        );
     }
 
     public function testAlphaCompleteValidatorFailingSymbols()
@@ -130,11 +146,11 @@ class AlphaCompleteValidatorTest extends UnitTestCase
 
         $validation->add(
             'text',
-            new AlphaCompleteValidator (
+            new AlphaCompleteValidator(
                 [
-                    'min' => 5,                                                          // Optional
-                    'max' => 100,                                                        // Optional
-                    'message' => 'Validation failed.',                                   // Optional
+                    'min'            => 5,                                               // Optional
+                    'max'            => 100,                                             // Optional
+                    'message'        => 'Validation failed.',                            // Optional
                     'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
                     'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
                 ]
@@ -142,7 +158,11 @@ class AlphaCompleteValidatorTest extends UnitTestCase
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(1, count($messages));
+
+        $this->assertCount(
+            1,
+            $messages
+        );
     }
 
     public function testAlphaCompleteValidatorFailingUrlCharsEquals()
@@ -153,19 +173,23 @@ class AlphaCompleteValidatorTest extends UnitTestCase
 
         $validation->add(
             'text',
-            new AlphaCompleteValidator (
+            new AlphaCompleteValidator(
                 [
-                    'min' => 5,                                                          // Optional
-                    'max' => 100,                                                        // Optional
-                    'message' => 'Validation failed.',                                   // Optional
+                    'min'            => 5,                                               // Optional
+                    'max'            => 100,                                             // Optional
+                    'message'        => 'Validation failed.',                            // Optional
                     'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.', // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(1, count($messages));
+
+        $this->assertCount(
+            1,
+            $messages
+        );
     }
 
     public function testAlphaCompleteValidatorFailingUrlCharsHashtag()
@@ -176,19 +200,23 @@ class AlphaCompleteValidatorTest extends UnitTestCase
 
         $validation->add(
             'text',
-            new AlphaCompleteValidator (
+            new AlphaCompleteValidator(
                 [
-                    'min' => 5,                                                          // Optional
-                    'max' => 100,                                                        // Optional
-                    'message' => 'Validation failed.',                                   // Optional
+                    'min'            => 5,                                               // Optional
+                    'max'            => 100,                                             // Optional
+                    'message'        => 'Validation failed.',                            // Optional
                     'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.', // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(1, count($messages));
+
+        $this->assertCount(
+            1,
+            $messages
+        );
     }
 
     public function testAlphaCompleteValidatorFailingPipe()
@@ -199,19 +227,23 @@ class AlphaCompleteValidatorTest extends UnitTestCase
 
         $validation->add(
             'text',
-            new AlphaCompleteValidator (
+            new AlphaCompleteValidator(
                 [
-                    'min' => 5,                                                          // Optional
-                    'max' => 100,                                                        // Optional
-                    'message' => 'Validation failed.',                                   // Optional
+                    'min'            => 5,                                               // Optional
+                    'max'            => 100,                                             // Optional
+                    'message'        => 'Validation failed.',                            // Optional
                     'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
-                    'messageMaximum' => 'The value can contain maximum 100 characters.'  // Optional
+                    'messageMaximum' => 'The value can contain maximum 100 characters.', // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(1, count($messages));
+
+        $this->assertCount(
+            1,
+            $messages
+        );
     }
 
     public function testAlphaCompleteValidatorFailingLength()
@@ -222,18 +254,22 @@ class AlphaCompleteValidatorTest extends UnitTestCase
 
         $validation->add(
             'text',
-            new AlphaCompleteValidator (
+            new AlphaCompleteValidator(
                 [
-                    'min' => 5,                                                          // Optional
-                    'max' => 10,                                                         // Optional
-                    'message' => 'Validation failed.',                                   // Optional
+                    'min'            => 5,                                               // Optional
+                    'max'            => 10,                                              // Optional
+                    'message'        => 'Validation failed.',                            // Optional
                     'messageMinimum' => 'The value must contain at least 5 characters.', // Optional
-                    'messageMaximum' => 'The value can contain maximum 10 characters.'   // Optional
+                    'messageMaximum' => 'The value can contain maximum 10 characters.',  // Optional
                 ]
             )
         );
 
         $messages = $validation->validate($data);
-        $this->assertEquals(1, count($messages));
+
+        $this->assertCount(
+            1,
+            $messages
+        );
     }
 }

@@ -8,12 +8,16 @@ final class QueryBuilder extends Builder
     
     public function distinct($distinct)
     {
-        throw new \LogicException(static::E_NOT_ALLOWED_METHOD_CALL);
+        throw new \LogicException(
+            static::E_NOT_ALLOWED_METHOD_CALL
+        );
     }
 
     public function columns($columns)
     {
-        throw new \LogicException(static::E_NOT_ALLOWED_METHOD_CALL);
+        throw new \LogicException(
+            static::E_NOT_ALLOWED_METHOD_CALL
+        );
     }
 
     public function where($conditions, $bindParams = null, $bindTypes = null)

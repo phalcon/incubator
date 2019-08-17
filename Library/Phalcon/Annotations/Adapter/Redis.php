@@ -70,7 +70,11 @@ class Redis extends Base
         parent::__construct($options);
 
         $this->redis = new BackendRedis(
-            new FrontendData(['lifetime' => $this->options['lifetime']]),
+            new FrontendData(
+                [
+                    'lifetime' => $this->options['lifetime'],
+                ]
+            ),
             $options
         );
     }

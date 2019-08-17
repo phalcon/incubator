@@ -61,7 +61,7 @@ class Files extends AbstractAdapter
     public function __construct(array $options = [])
     {
         if (!isset($options['annotationsDir'])) {
-            $options['annotationsDir'] =sys_get_temp_dir();
+            $options['annotationsDir'] = sys_get_temp_dir();
         }
 
         parent::__construct($options);
@@ -76,6 +76,7 @@ class Files extends AbstractAdapter
     protected function setAnnotationsDir($annotationsDir)
     {
         $annotationsDir = (string) $annotationsDir;
+
         $this->annotationsDir = rtrim($annotationsDir, '\\/') . DIRECTORY_SEPARATOR;
 
         return $this;
@@ -141,12 +142,15 @@ class Files extends AbstractAdapter
     public function flush()
     {
         $iterator = new \DirectoryIterator($this->annotationsDir);
+
         foreach ($iterator as $item) {
             if ($item->isDot() || !$item->isFile() || $item->getExtension() !== 'php') {
                 continue;
             }
 
-            unlink($item->getPathname());
+            unlink(
+                $item->getPathname()
+            );
         }
 
         return true;
@@ -160,7 +164,17 @@ class Files extends AbstractAdapter
      */
     protected function getPrefixedIdentifier($key)
     {
-        $key = strtolower(str_replace(['\\', '/', ':'], '_', $key));
+        $key = strtolower(
+            str_replace(
+                [
+                    '\\',
+                    '/',
+                    ':',
+                ],
+                '_',
+                $key
+            )
+        );
 
         return $this->annotationsDir . preg_replace('#_{2,}#', '_', $key) . '.php';
     }

@@ -30,11 +30,13 @@ class ResultSetTest extends Test
     /** @var \Phalcon\Test\Traits\ResultSet  */
     protected $testSubject = null;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->testSubject = $this;
     }
 
-    public function testCanMockResultSet() {
+    public function testCanMockResultSet()
+    {
         $mockModel = $this->getMockBuilder(Model::class)
             ->setMockClassName('ClassA')
             ->disableOriginalConstructor()
@@ -60,21 +62,36 @@ class ResultSetTest extends Test
         $mockResultSet = $this->testSubject->mockResultSet($mockData);
 
         //Testing Count
-        $this->assertEquals(3, $mockResultSet->count());
+        $this->assertEquals(
+            3,
+            $mockResultSet->count()
+        );
 
         //Testing Rewind/Valid/Current/Key/Next
-        foreach($mockResultSet as $currentKey => $testModel) {
-            $this->assertSame($mockData[$currentKey], $testModel);
+        foreach ($mockResultSet as $currentKey => $testModel) {
+            $this->assertSame(
+                $mockData[$currentKey],
+                $testModel
+            );
         }
 
         //Testing getFirst
-        $this->assertSame($mockModel, $mockResultSet->getFirst());
+        $this->assertSame(
+            $mockModel,
+            $mockResultSet->getFirst()
+        );
 
         //Testing getLast
-        $this->assertSame($mockThirdModel, $mockResultSet->getLast());
+        $this->assertSame(
+            $mockThirdModel,
+            $mockResultSet->getLast()
+        );
 
         //Testing toArray
-        $this->assertSame($mockData, $mockResultSet->toArray());
+        $this->assertSame(
+            $mockData,
+            $mockResultSet->toArray()
+        );
     }
 
     public function testCanMockEmptyResultSet()
@@ -82,14 +99,30 @@ class ResultSetTest extends Test
         /** @var \Phalcon\Mvc\Model\Resultset $mockResultSet */
         $mockResultSet = $this->testSubject->mockResultset([]);
 
-        $this->assertEquals(0, $mockResultSet->count());
-        $this->assertFalse($mockResultSet->getFirst());
-        $this->assertFalse($mockResultSet->getLast());
+        $this->assertEquals(
+            0,
+            $mockResultSet->count()
+        );
+
+        $this->assertFalse(
+            $mockResultSet->getFirst()
+        );
+
+        $this->assertFalse(
+            $mockResultSet->getLast()
+        );
     }
 
     public function testCanUseOtherResultSetClasses()
     {
-        $mockResultset = $this->mockResultset([], Simple::class);
-        $this->assertInstanceOf(Simple::class, $mockResultset);
+        $mockResultset = $this->mockResultset(
+            [],
+            Simple::class
+        );
+
+        $this->assertInstanceOf(
+            Simple::class,
+            $mockResultset
+        );
     }
 }

@@ -58,12 +58,21 @@ class Slug
         // Better to replace given $replace array as index => value
         // Example $replace['ı' => 'i', 'İ' => 'i'];
         if (!empty($replace) && is_array($replace)) {
-            $string = str_replace(array_keys($replace), array_values($replace), $string);
+            $string = str_replace(
+                array_keys($replace),
+                array_values($replace),
+                $string
+            );
         }
 
         $transliterator = Transliterator::create('Any-Latin; Latin-ASCII');
+
         $string = $transliterator->transliterate(
-            mb_convert_encoding(htmlspecialchars_decode($string), 'UTF-8', 'auto')
+            mb_convert_encoding(
+                htmlspecialchars_decode($string),
+                'UTF-8',
+                'auto'
+            )
         );
 
         self::restoreLocale($oldLocale);
@@ -77,7 +86,15 @@ class Slug
     protected static function restoreLocale($oldLocale)
     {
         if ((stripos($oldLocale, '=') > 0)) {
-            parse_str(str_replace(';', '&', $oldLocale), $loc);
+            parse_str(
+                str_replace(
+                    ';',
+                    '&',
+                    $oldLocale
+                ),
+                $loc
+            );
+
             $oldLocale = array_values($loc);
         }
 

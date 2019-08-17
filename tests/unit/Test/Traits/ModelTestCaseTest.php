@@ -31,7 +31,9 @@ class ModelTestCaseTest extends ModelTest
 
     public function _before()
     {
-        $this->testSubject = $this->di->get(ModelTest::class);
+        $this->testSubject = $this->di->get(
+            ModelTest::class
+        );
     }
 
     public function testDbWithDb()
@@ -56,10 +58,19 @@ class ModelTestCaseTest extends ModelTest
 
         $this->testSubject->setDI($this->di);
 
-        $reflectionMethod = new \ReflectionMethod(ModelTest::class, 'setDb');
+
+
+        $reflectionMethod = new \ReflectionMethod(
+            ModelTest::class,
+            'setDb'
+        );
+
         $reflectionMethod->setAccessible(true);
 
-        $this->assertSame($mockDb, $reflectionMethod->invoke($this->testSubject));
+        $this->assertSame(
+            $mockDb,
+            $reflectionMethod->invoke($this->testSubject)
+        );
     }
 
     public function testDbWithoutConfig()
@@ -91,7 +102,13 @@ class ModelTestCaseTest extends ModelTest
 
         $this->testSubject->setDI($this->di);
 
-        $reflectionMethod = new \ReflectionMethod(ModelTest::class, 'setDb');
+
+
+        $reflectionMethod = new \ReflectionMethod(
+            ModelTest::class,
+            'setDb'
+        );
+
         $reflectionMethod->setAccessible(true);
 
         $reflectionMethod->invoke($this->testSubject);

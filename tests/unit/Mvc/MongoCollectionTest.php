@@ -42,7 +42,7 @@ class CollectionsTest extends Test
             $this->markTestSkipped('mongodb extension not loaded');
         }
 
-        $this->di->set('mongo', function() {
+        $this->di->set('mongo', function () {
             $dsn = 'mongodb://' . env('TEST_MONGODB_HOST', '127.0.0.1') . ':' . env('TEST_MONGODB_PORT', 27017);
             $mongo = new Client($dsn);
 
@@ -54,7 +54,7 @@ class CollectionsTest extends Test
 
     public function testCollectionsSave()
     {
-       $car = new Cars();
+        $car = new Cars();
         $car->manufacturer = 'Mclaren';
         $car->model = '650S';
         $car->rank = 1;

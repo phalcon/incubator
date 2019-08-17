@@ -34,7 +34,13 @@ class PasswordStrengthTest extends Test
                    ->willReturn('Weak1');
 
         $validator = new PasswordStrength();
-        $this->assertTrue($validator->validate($validation, 'password'));
+
+        $this->assertTrue(
+            $validator->validate(
+                $validation,
+                'password'
+            )
+        );
     }
 
     public function testValidateVeryWeakOnDefaultScore()
@@ -50,7 +56,13 @@ class PasswordStrengthTest extends Test
                    ->willReturn(true);
 
         $validator = new PasswordStrength();
-        $this->assertFalse($validator->validate($validation, 'password'));
+
+        $this->assertFalse(
+            $validator->validate(
+                $validation,
+                'password'
+            )
+        );
     }
 
     public function testValidateMediumOnScore3()
@@ -61,8 +73,18 @@ class PasswordStrengthTest extends Test
                    ->method('getValue')
                    ->willReturn('Medium99');
 
-        $validator = new PasswordStrength(['minScore' => 3]);
-        $this->assertTrue($validator->validate($validation, 'password'));
+        $validator = new PasswordStrength(
+            [
+                'minScore' => 3,
+            ]
+        );
+
+        $this->assertTrue(
+            $validator->validate(
+                $validation,
+                'password'
+            )
+        );
     }
 
     public function testValidateWeakOnScore3()
@@ -77,8 +99,18 @@ class PasswordStrengthTest extends Test
                    ->method('appendMessage')
                    ->willReturn(true);
 
-        $validator = new PasswordStrength(['minScore' => 3]);
-        $this->assertFalse($validator->validate($validation, 'password'));
+        $validator = new PasswordStrength(
+            [
+                'minScore' => 3,
+            ]
+        );
+
+        $this->assertFalse(
+            $validator->validate(
+                $validation,
+                'password'
+            )
+        );
     }
 
     public function testValidateAllowEmpty()
@@ -89,8 +121,18 @@ class PasswordStrengthTest extends Test
                    ->method('getValue')
                    ->willReturn('');
 
-        $validator = new PasswordStrength(['allowEmpty' => true]);
-        $this->assertTrue($validator->validate($validation, 'password'));
+        $validator = new PasswordStrength(
+            [
+                'allowEmpty' => true,
+            ]
+        );
+
+        $this->assertTrue(
+            $validator->validate(
+                $validation,
+                'password'
+            )
+        );
     }
 
     public function testValidateNotAllowEmpty()
@@ -105,8 +147,18 @@ class PasswordStrengthTest extends Test
                    ->method('appendMessage')
                    ->willReturn(true);
 
-        $validator = new PasswordStrength(['allowEmpty' => false]);
-        $this->assertFalse($validator->validate($validation, 'password'));
+        $validator = new PasswordStrength(
+            [
+                'allowEmpty' => false,
+            ]
+        );
+
+        $this->assertFalse(
+            $validator->validate(
+                $validation,
+                'password'
+            )
+        );
     }
 
     public function testValidateInvalidValue()
@@ -122,7 +174,13 @@ class PasswordStrengthTest extends Test
                    ->willReturn(true);
 
         $validator = new PasswordStrength();
-        $this->assertFalse($validator->validate($validation, 'password'));
+
+        $this->assertFalse(
+            $validator->validate(
+                $validation,
+                'password'
+            )
+        );
     }
 
     public function testValidateMediumOnScore4()
@@ -137,8 +195,18 @@ class PasswordStrengthTest extends Test
                    ->method('appendMessage')
                    ->willReturn(true);
 
-        $validator = new PasswordStrength(['minScore' => 4]);
-        $this->assertFalse($validator->validate($validation, 'password'));
+        $validator = new PasswordStrength(
+            [
+                'minScore' => 4,
+            ]
+        );
+
+        $this->assertFalse(
+            $validator->validate(
+                $validation,
+                'password'
+            )
+        );
     }
 
     public function testValidateStrongOnScore4()
@@ -149,8 +217,18 @@ class PasswordStrengthTest extends Test
                    ->method('getValue')
                    ->willReturn('Strong-9');
 
-        $validator = new PasswordStrength(['minScore' => 4]);
-        $this->assertTrue($validator->validate($validation, 'password'));
+        $validator = new PasswordStrength(
+            [
+                'minScore' => 4,
+            ]
+        );
+
+        $this->assertTrue(
+            $validator->validate(
+                $validation,
+                'password'
+            )
+        );
     }
 
     protected function getValidationMock()

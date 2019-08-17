@@ -72,7 +72,13 @@ class Application extends \Phalcon\Mvc\Application
     private function registerAutoloaders()
     {
         $loader = new Loader();
-        $loader->registerNamespaces(['Phalcon\Error' => '.']);
+
+        $loader->registerNamespaces(
+            [
+                'Phalcon\Error' => '.',
+            ]
+        );
+
         $loader->register();
     }
 
@@ -85,27 +91,42 @@ class Application extends \Phalcon\Mvc\Application
     {
         $di = new FactoryDefault();
 
-        $di->set('config', function () {
-            ob_start();
-            $config = include APPLICATION_ENV . '.php';
-            ob_end_clean();
+        $di->set(
+            'config',
+            function () {
+                ob_start();
 
-            return new Config($config);
-        });
+                $config = include APPLICATION_ENV . '.php';
 
-        $di->set('dispatcher', function () {
-            $dispatcher = new Dispatcher();
-            $dispatcher->setDefaultNamespace('Application\Controllers\\');
+                ob_end_clean();
 
-            return $dispatcher;
-        });
+                return new Config($config);
+            }
+        );
 
-        $di->set('view', function () {
-            $view = new View();
-            $view->setViewsDir(ROOT_PATH . '/application/views/');
+        $di->set(
+            'dispatcher',
+            function () {
+                $dispatcher = new Dispatcher();
 
-            return $view;
-        });
+                $dispatcher->setDefaultNamespace('Application\Controllers\\');
+
+                return $dispatcher;
+            }
+        );
+
+        $di->set(
+            'view',
+            function () {
+                $view = new View();
+
+                $view->setViewsDir(
+                    ROOT_PATH . '/application/views/'
+                );
+
+                return $view;
+            }
+        );
 
         $this->setDI($di);
     }

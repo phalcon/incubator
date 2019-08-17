@@ -48,7 +48,9 @@ trait ConfigurableTrait
         }
 
         if (!is_array($parameters) && !($parameters instanceof Traversable)) {
-            throw new InvalidArgumentException('The $parameters argument must be either an array or Traversable');
+            throw new InvalidArgumentException(
+                'The $parameters argument must be either an array or Traversable'
+            );
         }
 
         foreach ($parameters as $key => $value) {

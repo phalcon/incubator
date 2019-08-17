@@ -1,8 +1,8 @@
 <?php
 
-require_once realpath(dirname(dirname(__FILE__))) .'/vendor/autoload.php';
+require_once realpath(dirname(__DIR__)) . '/vendor/autoload.php';
 
-(new Dotenv\Dotenv(realpath(dirname(__FILE__))))->load();
+(new Dotenv\Dotenv(realpath(__DIR__)))->load();
 
 require_once '_support/functions.php';
 
@@ -24,13 +24,33 @@ if (extension_loaded('xdebug')) {
 
 clearstatcache();
 
-$root = realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR;
+$root = realpath(__DIR__) . DIRECTORY_SEPARATOR;
 
 define('TESTS_PATH', $root);
-define('PROJECT_PATH', dirname(TESTS_PATH) . DIRECTORY_SEPARATOR);
-define('PATH_DATA', $root . '_data' . DIRECTORY_SEPARATOR);
-define('PATH_CACHE', $root . '_cache' . DIRECTORY_SEPARATOR);
-define('PATH_OUTPUT', $root . '_output' . DIRECTORY_SEPARATOR);
-define('INCUBATOR_FIXTURES', $root . '_fixtures' . DIRECTORY_SEPARATOR);
+
+define(
+    'PROJECT_PATH',
+    dirname(TESTS_PATH) . DIRECTORY_SEPARATOR
+);
+
+define(
+    'PATH_DATA',
+    $root . '_data' . DIRECTORY_SEPARATOR
+);
+
+define(
+    'PATH_CACHE',
+    $root . '_cache' . DIRECTORY_SEPARATOR
+);
+
+define(
+    'PATH_OUTPUT',
+    $root . '_output' . DIRECTORY_SEPARATOR
+);
+
+define(
+    'INCUBATOR_FIXTURES',
+    $root . '_fixtures' . DIRECTORY_SEPARATOR
+);
 
 unset($root);

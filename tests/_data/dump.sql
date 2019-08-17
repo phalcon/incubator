@@ -1290,3 +1290,17 @@ CREATE TABLE `sessions` (
   created_at INT,
   modified_at INT
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE if EXISTS `translations`;
+CREATE TABLE `translations` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `language` VARCHAR(5) NOT NULL COLLATE 'utf8_bin',
+    `key_name` VARCHAR(48) NOT NULL COLLATE 'utf8_bin',
+    `value` TEXT NOT NULL COLLATE 'utf8_bin',
+    PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `translations` (`language`,`key_name`,`value`) VALUES 
+    ('en_US','hello','Hello!'),
+    ('fr_FR','hello','Salut!'),
+    ('es_ES','hello','¡Hola!');
