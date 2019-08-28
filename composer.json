@@ -31,7 +31,7 @@
     },
     "require": {
         "php": ">=7.2",
-        "ext-phalcon": "~4"
+        "ext-phalcon": "~4.0.0-beta.2"
     },
     "require-dev": {
         "phpdocumentor/reflection-docblock": "2.0.4",
