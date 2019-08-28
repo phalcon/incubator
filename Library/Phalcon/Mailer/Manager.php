@@ -20,7 +20,7 @@
 namespace Phalcon\Mailer;
 
 use Phalcon\Config;
-use Phalcon\Mvc\User\Component;
+use Phalcon\Plugin;
 use Phalcon\Mvc\View;
 
 /**
@@ -37,7 +37,7 @@ use Phalcon\Mvc\View;
  *
  * @package Phalcon\Manager
  */
-class Manager extends Component
+class Manager extends Plugin
 {
     /**
      * @var array
