@@ -39,7 +39,7 @@ cache:
 env:
   global:
     - CC="ccache gcc"
-    - PHALCON_VERSION=v4.0.0-beta.1
+    - PHALCON_VERSION=v4.0.0-beta.2
 
 addons:
   apt:
