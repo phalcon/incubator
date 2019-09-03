@@ -12,19 +12,24 @@
 language: php
 
 sudo: false
-dist: trusty
+dist: bionic
 
 php:
   - 7.3
   - 7.2
+  - '7.4snapshot'
 
 services:
   - redis-server
   - mongodb
   - beanstalkd
+  - mysql
+  - postgresql
+  - memcached
 
 git:
   depth: 1
+  quiet: true
 
 cache:
   apt: true
