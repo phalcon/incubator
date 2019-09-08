@@ -19,7 +19,7 @@ The code in this repository is written in PHP.
 Install Composer in a common location or in your project:
 
 ```bash
-curl -s http://getcomposer.org/installer | php
+curl -s https://getcomposer.org/installer | php
 ```
 
 Then create the `composer.json` file as follows:
@@ -52,13 +52,13 @@ $ php composer.phar install
 
 Just clone the repository in a common location or inside your project:
 
-```
+```bash
 git clone https://github.com/phalcon/incubator.git
 ```
 
-For a specific git branch (eg 2.0.13) please use:
+For a specific git branch (eg `2.0.13`) please use:
 
-```
+```bash
 git clone -b 2.0.13 git@github.com:phalcon/incubator.git
 ```
 
@@ -68,7 +68,6 @@ Add or register the following namespace strategy to your `Phalcon\Loader` in ord
 to load classes from the incubator repository:
 
 ```php
-
 $loader = new Phalcon\Loader();
 
 $loader->registerNamespaces(
