@@ -640,9 +640,11 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
 
         $success = false;
 
-        $status = $collection->findOneAndUpdate($query,
+        $status = $collection->findOneAndUpdate(
+            $query,
             ['$setOnInsert' => $data],
-            ['new' => true, 'upsert' => true]);
+            ['new' => true, 'upsert' => true]
+        );
 
         if ($status === null) {
             $doc = $collection->findOne($query);
