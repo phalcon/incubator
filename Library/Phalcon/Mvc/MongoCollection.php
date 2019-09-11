@@ -625,7 +625,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
         /**
          * Execute the preSave hook
          */
-        if ($this->_preSave($this->_dependencyInjector, self::$_disableEvents, $exists) === false) {
+        if (false === $this->_preSave($this->_dependencyInjector, self::$_disableEvents, $exists)) {
             return false;
         }
 
@@ -644,7 +644,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
             ['$setOnInsert' => $data],
             ['new' => true, 'upsert' => true]);
 
-        if ($status == null) {
+        if ($status === null) {
             $doc = $collection->findOne($query);
 
             if (is_object($doc)) {

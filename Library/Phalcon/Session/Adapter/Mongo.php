@@ -23,6 +23,7 @@ namespace Phalcon\Session\Adapter;
 use Phalcon\Session\Adapter;
 use Phalcon\Session\AdapterInterface;
 use Phalcon\Session\Exception;
+use MongoDB\BSON\UTCDateTime;
 
 /**
  * Phalcon\Session\Adapter\Mongo
@@ -117,7 +118,7 @@ class Mongo extends Adapter implements AdapterInterface
 
         $sessionData = [
             '_id' => $sessionId,
-            'modified' => new \MongoDB\BSON\UTCDateTime(),
+            'modified' => new UTCDateTime(),
             'data' => $sessionData,
         ];
 
@@ -149,7 +150,7 @@ class Mongo extends Adapter implements AdapterInterface
             ]
         );
 
-        return (bool)$remove['ok'];
+        return (bool) $remove['ok'];
     }
 
     /**
@@ -166,7 +167,7 @@ class Mongo extends Adapter implements AdapterInterface
             )
         );
 
-        $minAgeMongo = new \MongoDB\BSON\UTCDateTime(
+        $minAgeMongo = new UTCDateTime(
             $minAge->getTimestamp()
         );
 

@@ -149,11 +149,11 @@ class Bucket
     {
         $file=$this->collectionWrapper->findFileById($id);
 
-        if ($file===null) {
+        if ($file === null) {
             throw FileNotFoundException::byId($id, $this->getFilesNamespace());
         }
 
-        $stream=new ReadableStream($this->collectionWrapper, $file);
+        $stream = new ReadableStream($this->collectionWrapper, $file);
         return $stream->getRawData();
     }
 
