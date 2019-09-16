@@ -590,6 +590,77 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
          */
         return $this->_postSave(self::$_disableEvents, $success, false);
     }
+  
+    /**
+     * {@inheritdoc}
+     *
+     * @param array $data
+     */
+    public function createIfNotExist(array $criteria)
+    {
+        if (empty($criteria)) {
+            throw new Exception("Criteria parameter must be array with one or more attributes of the model");
+        }
+      
+        /**
+         * Choose a collection according to the collection name
+         */
+        $collection = $this->prepareCU();
+      
+        /**
+         * Assume non-existence to fire beforeCreate events - no update does occur anyway
+         */
+        $exists = false;
+
+        /**
+         * Reset current operation
+         */
+        $this->_operationMade = self::OP_NONE;
+
+        /**
+         * The messages added to the validator are reset here
+         */
+        $this->_errorMessages = [];
+
+        /**
+         * Execute the preSave hook
+         */
+        if ($this->_preSave($this->_dependencyInjector, self::$_disableEvents, $exists) === false) {
+            return false;
+        }
+
+        $keys = array_flip($criteria);
+        $data = $this->toArray();
+
+        if (array_diff_key($keys, $data)) {
+            throw new \Exception("Criteria parameter must be array with one or more attributes of the model");
+        }
+
+        $query = array_intersect_key($data, $keys);
+
+        $success = false;
+
+        $status = $collection->findOneAndUpdate($query,
+            ['$setOnInsert' => $data],
+            ['new' => true, 'upsert' => true]);
+
+        if ($status == null) {
+            $doc = $collection->findOne($query);
+
+            if (is_object($doc)) {
+                $success = true;
+                $this->_operationMade = self::OP_CREATE;
+                $this->_id = $doc['_id'];
+            }
+        } else {
+            $this->appendMessage(new Message("Document already exists"));
+        }
+
+        /**
+         * Call the postSave hooks
+         */
+        return $this->_postSave(self::$_disableEvents, $success, $exists);
+    }
 
     /**
      * {@inheritdoc}
