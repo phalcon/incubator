@@ -111,6 +111,17 @@ class ReadableStream
         }
     }
 
+    public function getRawData()
+    {
+        $tmp = '';
+
+        while ($this->advanceChunks()) {
+            $tmp .= $this->chunksIterator->current()->data->getData();
+        }
+
+        return $tmp;
+    }
+
     public function getFile()
     {
         return $this->file;

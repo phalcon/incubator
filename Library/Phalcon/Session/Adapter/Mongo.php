@@ -23,6 +23,7 @@ namespace Phalcon\Session\Adapter;
 use Phalcon\Session\Adapter;
 use Phalcon\Session\AdapterInterface;
 use Phalcon\Session\Exception;
+use MongoDB\BSON\UTCDateTime;
 
 /**
  * Phalcon\Session\Adapter\Mongo
@@ -40,7 +41,7 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * Class constructor.
      *
-     * @param  array     $options
+     * @param array $options
      * @throws Exception
      */
     public function __construct($options = null)
@@ -49,7 +50,7 @@ class Mongo extends Adapter implements AdapterInterface
             throw new Exception("The parameter 'collection' is required");
         }
 
-        session_set_save_handler(
+        @session_set_save_handler(
             [$this, 'open'],
             [$this, 'close'],
             [$this, 'read'],
@@ -82,7 +83,7 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param  string $sessionId
+     * @param string $sessionId
      * @return string
      */
     public function read($sessionId)
@@ -105,8 +106,8 @@ class Mongo extends Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @param  string $sessionId
-     * @param  string $sessionData
+     * @param string $sessionId
+     * @param string $sessionData
      * @return bool
      */
     public function write($sessionId, $sessionData)
@@ -116,12 +117,18 @@ class Mongo extends Adapter implements AdapterInterface
         }
 
         $sessionData = [
-            '_id'      => $sessionId,
-            'modified' => new \MongoDate(),
-            'data'     => $sessionData,
+            '_id' => $sessionId,
+            'modified' => new UTCDateTime(),
+            'data' => $sessionData,
         ];
 
-        $this->getCollection()->save($sessionData);
+
+        $this->getCollection()->updateOne(
+            ['_id' => $sessionId],
+            ['$set' => $sessionData],
+            ['upsert' => true]
+        );
+
 
         return true;
     }
@@ -132,7 +139,7 @@ class Mongo extends Adapter implements AdapterInterface
     public function destroy($sessionId = null)
     {
         if (is_null($sessionId)) {
-            $sessionId =$this->getId();
+            $sessionId = $this->getId();
         }
 
         $this->data = null;
@@ -160,7 +167,7 @@ class Mongo extends Adapter implements AdapterInterface
             )
         );
 
-        $minAgeMongo = new \MongoDate(
+        $minAgeMongo = new UTCDateTime(
             $minAge->getTimestamp()
         );
 
@@ -172,7 +179,7 @@ class Mongo extends Adapter implements AdapterInterface
 
         $remove = $this->getCollection()->remove($query);
 
-        return (bool) $remove['ok'];
+        return (bool)$remove['ok'];
     }
 
     /**

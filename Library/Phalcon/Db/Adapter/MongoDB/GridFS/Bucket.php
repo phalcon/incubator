@@ -138,6 +138,26 @@ class Bucket
     }
 
     /**
+     * Returns the raw data
+     *
+     * @param mixed    $id File ID
+     *
+     * @return string File content
+     * @throws FileNotFoundException
+     */
+    public function getRawData($id)
+    {
+        $file = $this->collectionWrapper->findFileById($id);
+
+        if ($file === null) {
+            throw FileNotFoundException::byId($id, $this->getFilesNamespace());
+        }
+
+        $stream = new ReadableStream($this->collectionWrapper, $file);
+        return $stream->getRawData();
+    }
+
+    /**
      * Writes the contents of a GridFS file, which is selected by name and
      * revision, to a writable stream.
      *

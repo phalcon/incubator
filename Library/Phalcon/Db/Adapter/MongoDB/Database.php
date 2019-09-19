@@ -315,4 +315,9 @@ class Database
 
         return new Database($this->manager, $this->databaseName, $options);
     }
+
+    public function getManager()
+    {
+        return $this->manager;
+    }
 }
