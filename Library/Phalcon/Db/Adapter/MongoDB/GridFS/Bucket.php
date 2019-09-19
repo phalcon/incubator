@@ -147,7 +147,7 @@ class Bucket
      */
     public function getRawData($id)
     {
-        $file=$this->collectionWrapper->findFileById($id);
+        $file = $this->collectionWrapper->findFileById($id);
 
         if ($file === null) {
             throw FileNotFoundException::byId($id, $this->getFilesNamespace());
