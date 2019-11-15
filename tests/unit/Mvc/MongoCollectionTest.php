@@ -65,6 +65,25 @@ class CollectionsTest extends Test
         $this->clearData();
     }
 
+    public function testInitEmbeddedCollection()
+    {
+        $car = Cars::fromArray([
+            'manufacturer' => 'Mclaren',
+            'model'        => '650S',
+            'rank'         => 1,
+            'parts'        => [
+                [
+                    'name' => 'wheel',
+                ],
+                [
+                    'name' => 'engine',
+                ],
+            ],
+        ]);
+
+        $this->assertInstanceOf(MongoCollection::class, $car->parts[0]);
+    }
+
     /**
      * @depends testCollectionsSave
      */
