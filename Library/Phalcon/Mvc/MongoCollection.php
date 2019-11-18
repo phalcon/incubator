@@ -826,7 +826,6 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
 
             $this->{$field} = $object::fromArray($this->{$field});
             $this->{$field}->setParent($this);
-            $this->{$field}->initEmbedded();
         }
     }
 
@@ -879,6 +878,11 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
             }
 
             $collection->{$key} = $value;
+        }
+
+
+        if (method_exists($collection, "afterFetch")) {
+            $collection->afterFetch();
         }
 
         return $collection;
