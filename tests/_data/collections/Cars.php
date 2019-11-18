@@ -24,6 +24,8 @@ class Cars extends MongoCollection
         'parts' => Parts::class
     ];
 
+    public $parts = [];
+
     public function getSource()
     {
         return 'cars';
