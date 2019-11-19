@@ -40,7 +40,6 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
 {
     // @codingStandardsIgnoreStart
     static protected $_disableEvents;
-    // @codingStandardsIgnoreEnd
 
     /**
      * @var bool
@@ -66,6 +65,7 @@ abstract class MongoCollection extends PhalconCollection implements Unserializab
      * @var \Phalcon\Mvc\MongoCollection|null
      */
     protected $_parent;
+    // @codingStandardsIgnoreEnd
 
     /**
      * {@inheritdoc}
