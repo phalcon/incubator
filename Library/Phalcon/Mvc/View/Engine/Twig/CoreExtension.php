@@ -19,12 +19,15 @@
 
 namespace Phalcon\Mvc\View\Engine\Twig;
 
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
+
 /**
  * \Phalcon\Mvc\View\Engine\Twig\CoreExtension
  * Core extension for Twig engine.
  * Currently supports only work with \Phalcon\Assets\Manager.
  */
-class CoreExtension extends \Twig_Extension
+class CoreExtension extends AbstractExtension
 {
     /**
      * {@inheritdoc}
@@ -50,12 +53,12 @@ class CoreExtension extends \Twig_Extension
         ];
 
         return [
-            'assetsOutputCss' => new \Twig_SimpleFunction(
+            'assetsOutputCss' => new TwigFunction(
                 'assetsOutputCss',
                 [$this, 'functionAssetsOutputCss'],
                 $options
             ),
-            'assetsOutputJs' => new \Twig_SimpleFunction(
+            'assetsOutputJs' => new TwigFunction(
                 'assetsOutputJs',
                 [$this, 'functionAssetsOutputJs'],
                 $options
