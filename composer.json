@@ -52,7 +52,7 @@
         "sergeyklay/aerospike-php-stubs": "The most complete Aerospike PHP stubs which allows autocomplete in modern IDEs",
         "duncan3dc/fork-helper": "To use extended class to access the beanstalk queue service",
         "swiftmailer/swiftmailer": "~5.2",
-        "twig/twig": "~1.35|~2.0|~3.0"
+        "twig/twig": "~1.35|~2.4|~3.0"
     },
     "autoload": {
         "psr-4": {
