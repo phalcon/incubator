@@ -20,6 +20,8 @@
 namespace Phalcon\Mvc\View\Engine\Twig\TokenParsers;
 
 use Phalcon\Mvc\View\Engine\Twig\Nodes\Assets as Node;
+use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * \Phalcon\Mvc\View\Engine\Twig\TokenParsers\Assets
@@ -30,20 +32,20 @@ use Phalcon\Mvc\View\Engine\Twig\Nodes\Assets as Node;
  *  {% assets addJs('js/jquery.js') %}
  *  {% assets addJs('js/bootstrap.min.js') %}
  */
-class Assets extends \Twig_TokenParser
+class Assets extends AbstractTokenParser
 {
     /**
      * {@inheritdoc}
      *
-     * @param  \Twig_Token         $token
-     * @return \Twig_NodeInterface
+     * @param  \Twig\Token         $token
+     * @return \Twig\Node\Node
      */
-    public function parse(\Twig_Token $token)
+    public function parse(Token $token)
     {
-        $methodName = $this->parser->getStream()->expect(\Twig_Token::NAME_TYPE)->getValue();
+        $methodName = $this->parser->getStream()->expect(Token::NAME_TYPE)->getValue();
         $arguments = $this->parser->getExpressionParser()->parseArguments();
 
-        $this->parser->getStream()->expect(\Twig_Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
         return new Node(
             ['arguments' => $arguments],
