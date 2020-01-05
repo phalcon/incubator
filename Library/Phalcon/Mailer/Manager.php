@@ -21,6 +21,8 @@ namespace Phalcon\Mailer;
 
 use Phalcon\Config;
 use Phalcon\DI\Injectable;
+use Phalcon\Events\EventsAwareInterface;
+use Phalcon\Events\ManagerInterface;
 use Phalcon\Mvc\View;
 
 /**
@@ -37,7 +39,7 @@ use Phalcon\Mvc\View;
  *
  * @package Phalcon\Manager
  */
-class Manager extends Injectable
+class Manager extends Injectable implements EventsAwareInterface
 {
     /**
      * @var array
@@ -64,6 +66,8 @@ class Manager extends Injectable
      */
     protected $viewEngines = null;
 
+    protected $eventsManager;
+
     /**
      * Create a new MailerManager component using $config for configuring
      *
@@ -72,6 +76,16 @@ class Manager extends Injectable
     public function __construct(array $config)
     {
         $this->configure($config);
+    }
+
+    public function getEventsManager(): ?ManagerInterface
+    {
+        return $this->eventsManager;
+    }
+
+    public function setEventsManager(ManagerInterface $eventsManager)
+    {
+        $this->eventsManager = $eventsManager;
     }
 
     /**
