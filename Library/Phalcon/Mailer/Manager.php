@@ -83,7 +83,7 @@ class Manager extends Injectable implements EventsAwareInterface
         return $this->eventsManager;
     }
 
-    public function setEventsManager(ManagerInterface $eventsManager)
+    public function setEventsManager(ManagerInterface $eventsManager): void
     {
         $this->eventsManager = $eventsManager;
     }
