@@ -128,7 +128,11 @@ class DatabaseTest extends Test
             $backend->delete($this->key)
         );
 
+        $backend->save('key1', $this->data, $lifetime);
+        $backend->save('key2', $this->data, $lifetime);
 
+        $this->assertTrue($backend->flush());
+        $this->assertEmpty($backend->queryKeys());
 
         if (null !== $lifetime) {
             $backend->save($this->key, $this->data, $lifetime);

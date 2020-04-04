@@ -334,7 +334,7 @@ class Database extends Backend implements BackendInterface
      */
     public function flush()
     {
-        $this->db->execute("DELETE FROM {$this->table}");
+        $this->db->execute("TRUNCATE TABLE {$this->table}");
 
         return true;
     }
