@@ -30,8 +30,9 @@
         "email": "support@phalconphp.com"
     },
     "require": {
-        "php": ">=5.5",
-        "ext-phalcon": "~3.3"
+        "php": ">=7.2",
+        "ext-phalcon": "^4.0",
+        "phalcon/incubator-acl": "^1.0.0-alpha.1"
     },
     "require-dev": {
         "phpdocumentor/reflection-docblock": "2.0.4",
