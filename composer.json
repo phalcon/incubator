@@ -31,7 +31,8 @@
     },
     "require": {
         "php": ">=7.2",
-        "ext-phalcon": "~4.0.0"
+        "ext-phalcon": "^4.0",
+        "phalcon/incubator-acl": "^1.0.0-alpha.1"
     },
     "require-dev": {
         "phpdocumentor/reflection-docblock": "2.0.4",
