@@ -19,27 +19,44 @@
 
 namespace Phalcon\Logger\Adapter;
 
-use Phalcon\Db\Column;
 use Phalcon\Logger\Exception;
+use Phalcon\Logger\Formatter\FormatterInterface;
+use Phalcon\Logger\Item;
+use Phalcon\Db\Adapter\AdapterInterface as DbAdapterInterface;
 use Phalcon\Logger\Formatter\Line as LineFormatter;
-use Phalcon\Logger\Adapter as LoggerAdapter;
-use Phalcon\Logger\AdapterInterface;
-use Phalcon\Db\AdapterInterface as DbAdapterInterface;
+use Phalcon\Db\Column;
 
 /**
- * Database Logger
+ * Phalcon\Logger\Adapter\Database
  *
  * Adapter to store logs in a database table
- *
- * @package Phalcon\Logger\Adapter
  */
-class Database extends LoggerAdapter implements AdapterInterface
+class Database extends AbstractAdapter
 {
+    /**
+     * Database connection
+     *
+     * @var DbAdapterInterface
+     */
+    protected $db;
+
+    /**
+     * Table name
+     *
+     * @var string
+     */
+    protected $table = "log";
+
     /**
      * Name
      * @var string
      */
     protected $name = 'phalcon';
+
+    /**
+     * @var \Phalcon\Logger\Formatter\AbstractFormatter
+     */
+    protected $_formatter;
 
     /**
      * Adapter options
@@ -48,18 +65,9 @@ class Database extends LoggerAdapter implements AdapterInterface
     protected $options = [];
 
     /**
-     * @var \Phalcon\Db\AdapterInterface
+     * Constructor. Accepts the name and some options
      */
-    protected $db;
-
-    /**
-     * Class constructor.
-     *
-     * @param  string $name
-     * @param  array  $options
-     * @throws \Phalcon\Logger\Exception
-     */
-    public function __construct($name = 'phalcon', array $options = [])
+    public function __construct(string $name = 'phalcon', array $options = [])
     {
         if (!isset($options['db'])) {
             throw new Exception("Parameter 'db' is required");
@@ -76,6 +84,7 @@ class Database extends LoggerAdapter implements AdapterInterface
         }
 
         $this->db = $options['db'];
+        $this->table = $options['table'];
 
         if ($name) {
             $this->name = $name;
@@ -87,10 +96,10 @@ class Database extends LoggerAdapter implements AdapterInterface
     /**
      * Sets database connection
      *
-     * @param AdapterInterface $db
+     * @param DbAdapterInterface $db
      * @return $this
      */
-    public function setDb(AdapterInterface $db)
+    public function setDb(DbAdapterInterface $db)
     {
         $this->db = $db;
 
@@ -100,51 +109,9 @@ class Database extends LoggerAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @return \Phalcon\Logger\FormatterInterface
-     */
-    public function getFormatter()
-    {
-        if (!is_object($this->_formatter)) {
-            $this->_formatter = new LineFormatter('%message%');
-        }
-
-        return $this->_formatter;
-    }
-
-    /**
-     * Writes the log to the file itself
-     *
-     * @param string  $message
-     * @param integer $type
-     * @param integer $time
-     * @param array   $context
-     * @return bool
-     */
-    public function logInternal($message, $type, $time, $context = [])
-    {
-        return $this->db->execute(
-            'INSERT INTO ' . $this->options['table'] . ' VALUES (null, ?, ?, ?, ?)',
-            [
-                $this->name,
-                $type,
-                $this->getFormatter()->format($message, $type, $time, $context),
-                $time,
-            ],
-            [
-                Column::BIND_PARAM_STR,
-                Column::BIND_PARAM_INT,
-                Column::BIND_PARAM_STR,
-                Column::BIND_PARAM_INT,
-            ]
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @return boolean
      */
-    public function close()
+    public function close(): bool
     {
         if ($this->db->isUnderTransaction()) {
             $this->db->commit();
@@ -160,7 +127,7 @@ class Database extends LoggerAdapter implements AdapterInterface
      *
      * @return $this
      */
-    public function begin()
+    public function begin(): AdapterInterface
     {
         $this->db->begin();
 
@@ -172,7 +139,7 @@ class Database extends LoggerAdapter implements AdapterInterface
      *
      * @return $this
      */
-    public function commit()
+    public function commit(): AdapterInterface
     {
         $this->db->commit();
 
@@ -185,10 +152,46 @@ class Database extends LoggerAdapter implements AdapterInterface
      *
      * @return $this
      */
-    public function rollback()
+    public function rollback(): AdapterInterface
     {
         $this->db->rollback();
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return FormatterInterface
+     */
+    public function getFormatter(): FormatterInterface
+    {
+        if (!is_object($this->_formatter)) {
+            $this->_formatter = new LineFormatter('%message%');
+        }
+
+        return $this->_formatter;
+    }
+
+    /**
+     * Processes the message i.e. writes it to the file
+     */
+    public function process(Item $item): void
+    {
+        $this->db->execute(
+            'INSERT INTO ' . $this->table . ' VALUES (null, ?, ?, ?, ?)',
+            [
+                $this->name,
+                $item->getType(),
+                $this->getFormatter()->format($item),
+                $item->getTime(),
+            ],
+            [
+                Column::BIND_PARAM_STR,
+                Column::BIND_PARAM_INT,
+                Column::BIND_PARAM_STR,
+                Column::BIND_PARAM_INT,
+            ]
+        );
     }
 }

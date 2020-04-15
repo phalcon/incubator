@@ -45,7 +45,8 @@
         "codeception/verify": "^0.3",
         "vlucas/phpdotenv": "^2.4",
         "phalcon/dd": "^1.1",
-        "doctrine/instantiator": "1.0.5"
+        "doctrine/instantiator": "1.0.5",
+        "phalcon/ide-stubs": "4.x-dev"
     },
     "suggest": {
         "ext-aerospike": "*",
