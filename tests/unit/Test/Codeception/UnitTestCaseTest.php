@@ -5,7 +5,7 @@ use Codeception\Lib\Di;
 use Codeception\Test\Metadata;
 use Codeception\Test\Unit;
 use Phalcon\Test\Codeception\UnitTestCase;
-use Phalcon\DiInterface;
+use Phalcon\Di\DiInterface;
 
 /**
  * \Phalcon\Test\Test\Codeception\UnitTestCaseTest. Tests Integration With Trait.
