@@ -12,10 +12,11 @@
 language: php
 
 sudo: false
-dist: trusty
+dist: xenial
 
 php:
   - 7.2
+  - 7.3
 
 services:
   - redis-server
