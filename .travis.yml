@@ -22,6 +22,7 @@ services:
   - redis-server
   - mongodb
   - beanstalkd
+  - mysql
 
 git:
   depth: 1
