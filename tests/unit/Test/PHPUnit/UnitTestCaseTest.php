@@ -3,7 +3,7 @@ namespace Phalcon\Test\Test\PHPUnit;
 
 use Codeception\Test\Unit;
 use Phalcon\Test\PHPUnit\UnitTestCase;
-use Phalcon\DiInterface;
+use Phalcon\Di\DiInterface;
 
 /**
  * \Phalcon\Test\Test\PHPUnit\UnitTestCaseTest. Tests Integration With Trait.
