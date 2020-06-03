@@ -32,12 +32,12 @@ abstract class UnitTestCase extends TestCase implements InjectionAwareInterface
 {
     use UnitTestCaseTrait;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->setUpPhalcon();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->tearDownPhalcon();
 
