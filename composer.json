@@ -32,7 +32,8 @@
     "require": {
         "php": ">=7.2",
         "ext-phalcon": "^4.0",
-        "phalcon/incubator-acl": "^1.0.0-alpha.1"
+        "phalcon/incubator-acl": "^1.0.0-alpha.1",
+        "phalcon/incubator-session": "^1.0.0"
     },
     "require-dev": {
         "phpdocumentor/reflection-docblock": "2.0.4",
@@ -46,12 +47,10 @@
         "vlucas/phpdotenv": "^2.4",
         "phalcon/dd": "^1.1",
         "doctrine/instantiator": "1.0.5",
-        "phalcon/ide-stubs": "4.x-dev"
+        "phalcon/ide-stubs": "^4.0"
     },
     "suggest": {
-        "ext-aerospike": "*",
         "phalcon/ide-stubs": "Phalcon IDE Stubs",
-        "sergeyklay/aerospike-php-stubs": "The most complete Aerospike PHP stubs which allows autocomplete in modern IDEs",
         "duncan3dc/fork-helper": "To use extended class to access the beanstalk queue service",
         "swiftmailer/swiftmailer": "~5.2",
         "twig/twig": "~1.35|~2.0"
