@@ -22,7 +22,7 @@ use Phalcon\Di;
 use Phalcon\Config;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Di\InjectionAwareInterface;
-use Phalcon\DiInterface;
+use Phalcon\Di\DiInterface;
 use Phalcon\Escaper;
 use Phalcon\Mvc\Url;
 use Phalcon\Test\Traits\ResultSet;
