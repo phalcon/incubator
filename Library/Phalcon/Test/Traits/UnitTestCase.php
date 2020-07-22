@@ -174,7 +174,7 @@ trait UnitTestCase
      *
      * @see    Injectable::setDI
      * @param  DiInterface $di
-     * @return $this
+     * @return void
      */
     public function setDI(DiInterface $di) : void
     {
