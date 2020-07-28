@@ -174,13 +174,11 @@ trait UnitTestCase
      *
      * @see    Injectable::setDI
      * @param  DiInterface $di
-     * @return $this
+     * @return void
      */
-    public function setDI(DiInterface $di)
+    public function setDI(DiInterface $di) : void
     {
         $this->di = $di;
-
-        return $this;
     }
 
     /**
@@ -189,7 +187,7 @@ trait UnitTestCase
      * @see    Injectable::getDI
      * @return DiInterface
      */
-    public function getDI()
+    public function getDI() : DiInterface
     {
         if (!$this->di instanceof DiInterface) {
             return Di::getDefault();
