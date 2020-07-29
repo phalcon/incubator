@@ -7,13 +7,13 @@
         "phalcon",
         "incubator"
     ],
-    "homepage": "https://phalconphp.com",
+    "homepage": "https://phalcon.io",
     "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Phalcon Team",
             "email": "team@phalconphp.com",
-            "homepage": "https://phalconphp.com/en/team"
+            "homepage": "https://phalcon.io/en/team"
         },
         {
             "name": "Contributors",
@@ -23,34 +23,26 @@
     "support": {
         "issues": "https://github.com/phalcon/incubator/issues",
         "source": "https://github.com/phalcon/incubator",
-        "forum": "https://forum.phalconphp.com/",
-        "docs": "https://docs.phalconphp.com/",
-        "irc": "irc://irc.freenode.org/phalconphp",
-        "rss" : "https://blog.phalconphp.com/rss",
-        "email": "support@phalconphp.com"
+        "forum": "https://forum.phalcon.io",
+        "docs": "https://docs.phalcon.io/latest",
+        "email": "support@phalcon.io"
     },
     "require": {
         "php": ">=7.2",
         "ext-phalcon": "^4.0",
         "phalcon/incubator-acl": "^1.0.0-alpha.1",
-        "phalcon/incubator-session": "^1.0.0"
+        "phalcon/incubator-session": "^1.0.0",
+        "phalcon/incubator-test": "^1.0.0-alpha.1"
     },
     "require-dev": {
         "phpdocumentor/reflection-docblock": "2.0.4",
-        "phpunit/phpunit": "^4.8",
         "squizlabs/php_codesniffer": "^2.9",
-        "codeception/codeception": "^2.5",
-        "codeception/mockery-module": "0.2.2",
-        "codeception/aerospike-module": "^1.0",
-        "codeception/specify": "^0.4",
-        "codeception/verify": "^0.3",
         "vlucas/phpdotenv": "^2.4",
         "phalcon/dd": "^1.1",
         "doctrine/instantiator": "1.0.5",
         "phalcon/ide-stubs": "^4.0"
     },
     "suggest": {
-        "phalcon/ide-stubs": "Phalcon IDE Stubs",
         "duncan3dc/fork-helper": "To use extended class to access the beanstalk queue service",
         "swiftmailer/swiftmailer": "~5.2",
         "twig/twig": "~1.35|~2.0"
