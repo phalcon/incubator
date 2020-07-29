@@ -31,8 +31,9 @@
         "php": ">=7.2",
         "ext-phalcon": "^4.0",
         "phalcon/incubator-acl": "^1.0.0-alpha.1",
-        "phalcon/incubator-session": "^1.0.0",
-        "phalcon/incubator-test": "^1.0.0-alpha.1"
+        "phalcon/incubator-session": "^1.0",
+        "phalcon/incubator-test": "^1.0.0-alpha.1",
+        "phalcon/incubator-logger": "^1.0"
     },
     "require-dev": {
         "phpdocumentor/reflection-docblock": "2.0.4",
@@ -65,5 +66,7 @@
         "files": [
             "tests/_support/functions.php"
         ]
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
