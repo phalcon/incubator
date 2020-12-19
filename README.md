@@ -12,6 +12,12 @@ We also welcome submissions of snippets from the community, to further extend th
 
 The code in this repository is written in PHP.
 
+## Summary
+
+| Component | Version | Daily Downloads | Total Downloads
+| --------- | ------- | --------------- | ---------------
+| [Acl](https://github.com/phalcon/incubator-acl) | [![Version](https://img.shields.io/packagist/v/phalcon/incubator-acl.svg?style=flat-square)](https://packagist.org/packages/phalcon/incubator-acl) | [![Daily Downloads](https://img.shields.io/packagist/dd/phalcon/incubator-acl.svg?style=flat-square)](https://packagist.org/packages/phalcon/incubator-acl)
+
 ## Installation
 
 ### Installing via Composer
