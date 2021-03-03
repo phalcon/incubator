@@ -20,12 +20,13 @@
 
 namespace Phalcon\Translate\Adapter;
 
-use Phalcon\Db;
-use Phalcon\Translate\Adapter;
-use Phalcon\Translate\AdapterInterface;
+use Phalcon\Db\Enum;
+use Phalcon\Translate\Adapter\AbstractAdapter;
+use Phalcon\Translate\Adapter\AdapterInterface;
 use Phalcon\Translate\Exception;
+use Phalcon\Translate\InterpolatorFactory;
 
-class Database extends Adapter implements AdapterInterface, \ArrayAccess
+class Database extends AbstractAdapter implements AdapterInterface, \ArrayAccess
 {
     /**
      * @var array
@@ -73,10 +74,10 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
             'SELECT COUNT(*) AS `count` FROM %s WHERE language = :language AND key_name = :key_name',
             $options['table']
         );
-
+        $interpolator = new InterpolatorFactory();
         $this->options = $options;
         
-        parent::__construct($options);
+        parent::__construct($interpolator, $options);
     }
 
     /**
@@ -86,11 +87,11 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param  array  $placeholders
      * @return string
      */
-    public function query($translateKey, $placeholders = null)
+    public function query(string $translateKey, array $placeholders = []): string
     {
         $translation = $this->options['db']->fetchOne(
             $this->stmtSelect,
-            Db::FETCH_ASSOC,
+            Enum::FETCH_ASSOC,
             [
                 'language' => $this->options['language'],
                 'key_name' => $translateKey,
@@ -110,7 +111,7 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @return string
      */
     // @codingStandardsIgnoreStart
-    public function _($translateKey, $placeholders = null)
+    public function _(string $translateKey, array $placeholders = []): string
     {
         return $this->query($translateKey, $placeholders);
     }
@@ -122,11 +123,11 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param  string  $translateKey
      * @return boolean
      */
-    public function exists($translateKey)
+    public function exists(string $translateKey) : bool
     {
         $result = $this->options['db']->fetchOne(
             $this->stmtExists,
-            Db::FETCH_ASSOC,
+            Enum::FETCH_ASSOC,
             [
                 'language' => $this->options['language'],
                 'key_name' => $translateKey,
@@ -143,7 +144,7 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param  string  $message
      * @return boolean
      */
-    public function add($translateKey, $message)
+    public function add(string $translateKey, string $message)
     {
         $data = [
             'language' => $this->options['language'],
@@ -161,7 +162,7 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param  string  $message
      * @return boolean
      */
-    public function update($translateKey, $message)
+    public function update(string $translateKey, string $message)
     {
         $options = $this->options;
 
@@ -185,7 +186,7 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param  string  $translateKey
      * @return boolean
      */
-    public function delete($translateKey)
+    public function delete(string $translateKey)
     {
         $options = $this->options;
 
@@ -206,7 +207,7 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * @param  string  $message
      * @return boolean
      */
-    public function set($translateKey, $message)
+    public function set(string $translateKey, string $message)
     {
         return $this->exists($translateKey) ?
             $this->update($translateKey, $message) : $this->add($translateKey, $message);
@@ -216,9 +217,9 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * {@inheritdoc}
      *
      * @param  string $translateKey
-     * @return string
+     * @return boolean
      */
-    public function offsetExists($translateKey)
+    public function offsetExists($translateKey): bool
     {
         return $this->exists($translateKey);
     }
@@ -228,11 +229,11 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      *
      * @param  string $translateKey
      * @param  string $message
-     * @return string
+     * @return void
      */
-    public function offsetSet($translateKey, $message)
+    public function offsetSet($translateKey, $message): void
     {
-        return $this->update($translateKey, $message);
+        $this->update($translateKey, $message);
     }
 
     /**
@@ -250,10 +251,10 @@ class Database extends Adapter implements AdapterInterface, \ArrayAccess
      * {@inheritdoc}
      *
      * @param  string $translateKey
-     * @return string
+     * @return void
      */
-    public function offsetUnset($translateKey)
+    public function offsetUnset($translateKey): void
     {
-        return $this->delete($translateKey);
+        $this->delete($translateKey);
     }
 }
