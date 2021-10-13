@@ -57,7 +57,7 @@ class MysqlExtended extends Mysql
      *
      * @throws Exception
      */
-    public function getSqlExpression(array $expression, $escapeChar = null, $bindCounts = null)
+    public function getSqlExpression(array $expression, ?string $escapeChar = null, $bindCounts = null): string
     {
         if ($expression["type"] == 'functionCall') {
             $expressionName = strtoupper($expression["name"]);
